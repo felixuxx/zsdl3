@@ -102,9 +102,12 @@ pub const SDL_MouseMotionEvent = extern struct {
     reserved: Uint32,
     timestamp: Uint64,
     windowID: SDL_WindowID,
-    // ... other fields
+    which: Uint32, // SDL_MouseID
+    state: Uint32, // SDL_MouseButtonFlags
     x: f32,
     y: f32,
+    xrel: f32,
+    yrel: f32,
 };
 
 // Placeholder for SDL_PropertiesID
