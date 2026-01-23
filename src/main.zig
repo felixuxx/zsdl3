@@ -31,6 +31,10 @@ pub fn main() !void {
                 var window_w: c_int = 800;
                 var window_h: c_int = 600;
 
+                // Performance test: count frames
+                var frame_count: u32 = 0;
+                const start_time = zsdl3.getTicks();
+
                 while (running) {
                     // Get current window size
                     _ = zsdl3.getWindowSize(win, &window_w, &window_h);
@@ -77,11 +81,39 @@ pub fn main() !void {
                     // Present
                     zsdl3.renderPresent(rend);
 
+                    frame_count += 1;
+
                     // Delay to cap framerate
                     zsdl3.delay(16);
                 }
 
+                const end_time = zsdl3.getTicks();
+                const fps = @as(f32, @floatFromInt(frame_count)) / (@as(f32, @floatFromInt(end_time - start_time)) / 1000.0);
+                std.debug.print("Game loop ended. Average FPS: {d:.2}\n", .{fps});
                 zsdl3.logMessage(zsdl3.SDL_LOG_CATEGORY_APPLICATION, zsdl3.SDL_LogPriority.SDL_LOG_PRIORITY_INFO, "Game loop ended");
+
+                // Test some subsystems
+                const platform_name = zsdl3.getPlatform();
+                if (platform_name) |p| {
+                    std.debug.print("Platform: {s}\n", .{p});
+                }
+
+                const ram = zsdl3.getSystemRAM();
+                std.debug.print("System RAM: {d} MB\n", .{ram});
+
+                // Test sensors if available
+                var sensor_count: c_int = 0;
+                const sensors = zsdl3.getSensors(&sensor_count);
+                if (sensors != null and sensor_count > 0) {
+                    std.debug.print("Found {d} sensors\n", .{sensor_count});
+                }
+
+                // Test touches
+                var touch_count: c_int = 0;
+                const touches = zsdl3.getTouchDevices(&touch_count);
+                if (touches != null and touch_count > 0) {
+                    std.debug.print("Found {d} touch devices\n", .{touch_count});
+                }
             } else {
                 std.debug.print("Failed to create renderer: {s}\n", .{zsdl3.getError() orelse "Unknown error"});
             }
