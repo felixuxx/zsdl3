@@ -71,12 +71,7 @@ pub fn main() !void {
                     const rect = zsdl3.SDL_FRect{ .x = rect_x, .y = rect_y, .w = 200, .h = 150 };
                     _ = zsdl3.renderFillRect(rend, &rect);
 
-                    // Draw a simple border
-                    _ = zsdl3.setRenderDrawColor(rend, 255, 255, 255, 255);
-                    _ = zsdl3.renderLine(rend, 0, 0, @as(f32, @floatFromInt(window_w)), 0); // Top border
-                    _ = zsdl3.renderLine(rend, @as(f32, @floatFromInt(window_w)), 0, @as(f32, @floatFromInt(window_w)), @as(f32, @floatFromInt(window_h))); // Right border
-                    _ = zsdl3.renderLine(rend, @as(f32, @floatFromInt(window_w)), @as(f32, @floatFromInt(window_h)), 0, @as(f32, @floatFromInt(window_h))); // Bottom border
-                    _ = zsdl3.renderLine(rend, 0, @as(f32, @floatFromInt(window_h)), 0, 0); // Left border
+                    // No borders - clean rendering
 
                     // Present
                     zsdl3.renderPresent(rend);
