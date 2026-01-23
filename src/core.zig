@@ -46,7 +46,7 @@ pub const SDL_AppQuit_func = ?*const fn (?*anyopaque, SDL_AppResult) callconv(.C
 // Main thread callback
 pub const SDL_MainThreadCallback = ?*const fn (?*anyopaque) callconv(.C) void;
 
-// Placeholder for SDL_Event - defined in events.zig
+// SDL_Event - called in events.zig
 pub const SDL_Event = extern union {
     type: SDL_EventType,
     common: SDL_CommonEvent,
@@ -82,7 +82,7 @@ pub const SDL_EVENT_MOUSE_BUTTON_DOWN = 0x401;
 pub const SDL_EVENT_MOUSE_BUTTON_UP = 0x402;
 pub const SDL_EVENT_MOUSE_WHEEL = 0x403;
 
-// Placeholder for SDL_Event - defined in events.zig
+// SDL_Event - called in events.zig
 pub const SDL_KeyboardEvent = extern struct {
     type: SDL_EventType,
     reserved: Uint32,
@@ -110,7 +110,7 @@ pub const SDL_MouseMotionEvent = extern struct {
     yrel: f32,
 };
 
-// Placeholder for SDL_PropertiesID
+// SDL_PropertiesID
 pub const SDL_PropertiesID = Uint32;
 
 // Property constants

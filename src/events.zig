@@ -12,17 +12,7 @@ pub const SDL_QuitEvent = core.SDL_QuitEvent;
 pub const SDL_KeyboardEvent = core.SDL_KeyboardEvent;
 pub const SDL_MouseMotionEvent = core.SDL_MouseMotionEvent;
 pub const SDL_WindowID = core.SDL_WindowID;
-
-// SDL_Event union
-pub const SDL_Event = extern union {
-    type: SDL_EventType,
-    common: SDL_CommonEvent,
-    quit: SDL_QuitEvent,
-    key: SDL_KeyboardEvent,
-    motion: SDL_MouseMotionEvent,
-    // padding for ABI
-    padding: [128]core.Uint8,
-};
+pub const SDL_Event = core.SDL_Event;
 
 // Event functions
 extern fn SDL_PumpEvents() void;

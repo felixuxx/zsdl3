@@ -11,11 +11,9 @@ pub const SDL_WindowID = core.SDL_WindowID;
 
 // Keyboard
 pub const SDL_KeyboardID = Uint32;
-
-// Placeholder for keymod, keycode, scancode
-pub const SDL_Keymod = c_int;
-pub const SDL_Keycode = c_int;
-pub const SDL_Scancode = c_int;
+pub const SDL_Keymod = core.SDL_Keymod;
+pub const SDL_Keycode = core.SDL_Keycode;
+pub const SDL_Scancode = core.SDL_Scancode;
 
 // Mouse
 pub const SDL_MouseID = Uint32;

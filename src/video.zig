@@ -2,6 +2,7 @@
 // Window management, display handling
 
 const core = @import("core.zig");
+const pixels = @import("pixels.zig");
 
 // Import basic types
 pub const Uint32 = core.Uint32;
@@ -170,23 +171,10 @@ extern fn SDL_SetWindowHitTest(window: ?*SDL_Window, callback: ?*anyopaque, call
 extern fn SDL_SetWindowShape(window: ?*SDL_Window, shape: ?*SDL_Surface) bool;
 extern fn SDL_FlashWindow(window: ?*SDL_Window, operation: SDL_FlashOperation) bool;
 
-// Placeholders from other modules
-pub const SDL_Point = extern struct {
-    x: c_int,
-    y: c_int,
-};
-
-pub const SDL_FPoint = extern struct {
-    x: f32,
-    y: f32,
-};
-
-pub const SDL_Rect = extern struct {
-    x: c_int,
-    y: c_int,
-    w: c_int,
-    h: c_int,
-};
+// Import types from pixels
+pub const SDL_Point = pixels.SDL_Point;
+pub const SDL_FPoint = pixels.SDL_FPoint;
+pub const SDL_Rect = pixels.SDL_Rect;
 
 pub const SDL_FRect = extern struct {
     x: f32,
