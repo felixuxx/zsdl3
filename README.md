@@ -1,6 +1,7 @@
 # ZSDL3 - Zig Bindings for SDL3
 
-Pure Zig bindings for SDL3 without @cImport. Provides low-level access to SDL3's multimedia capabilities for game and application development.
+Pure Zig bindings for SDL3 without @cImport. Provides low-level access to SDL3's
+multimedia capabilities for game and application development.
 
 ## Features
 
@@ -19,7 +20,7 @@ Pure Zig bindings for SDL3 without @cImport. Provides low-level access to SDL3's
 Clone the repository and build with Zig:
 
 ```bash
-git clone https://github.com/your-repo/zsdl3.git
+git clone https://github.com/felixuxx/zsdl3.git
 cd zsdl3
 zig build
 ```
@@ -65,9 +66,10 @@ if (zsdl3.init(zsdl3.SDL_INIT_VIDEO)) {
 
 ## API Reference
 
-All SDL3 functions are available with Zig-friendly names (e.g., `SDL_Init` becomes `init`).
+All SDL3 functions are available with Zig-friendly names
+(e.g., `SDL_Init` becomes `init`).
 
-See SDL3 documentation at https://wiki.libsdl.org/SDL3/APIByCategory for detailed function descriptions.
+See SDL3 documentation at <https://wiki.libsdl.org/SDL3/APIByCategory> for detailed function descriptions.
 
 ## Building
 
