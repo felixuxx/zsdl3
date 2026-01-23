@@ -39,6 +39,13 @@ pub const sensor = @import("sensor.zig");
 pub const pen = @import("pen.zig");
 pub const touch = @import("touch.zig");
 pub const asyncio = @import("asyncio.zig");
+pub const atomic = @import("atomic.zig");
+pub const bits = @import("bits.zig");
+pub const cpuinfo = @import("cpuinfo.zig");
+pub const dialog = @import("dialog.zig");
+pub const endian = @import("endian.zig");
+pub const guid = @import("guid.zig");
+pub const intrinsics = @import("intrinsics.zig");
 
 // Re-export core functions
 pub const init = core.init;
@@ -249,7 +256,8 @@ pub const updateTexture = render.updateTexture;
 pub const renderTexture = render.renderTexture;
 pub const renderGeometry = render.renderGeometry;
 
-// Re-export audio functions
+// Re-export audio types and functions
+pub const SDL_AudioSpec = audio.SDL_AudioSpec;
 pub const openAudioDevice = audio.openAudioDevice;
 pub const closeAudioDevice = audio.closeAudioDevice;
 pub const pauseAudioDevice = audio.pauseAudioDevice;
@@ -550,6 +558,63 @@ pub const closeAsyncIO = asyncio.closeAsyncIO;
 pub const createAsyncIOQueue = asyncio.createAsyncIOQueue;
 pub const getAsyncIOResult = asyncio.getAsyncIOResult;
 pub const waitAsyncIOResult = asyncio.waitAsyncIOResult;
+
+// Re-export atomic types and functions
+pub const SDL_SpinLock = atomic.SDL_SpinLock;
+pub const tryLockSpinlock = atomic.tryLockSpinlock;
+pub const lockSpinlock = atomic.lockSpinlock;
+pub const unlockSpinlock = atomic.unlockSpinlock;
+pub const atomicIncRef = atomic.atomicIncRef;
+pub const atomicDecRef = atomic.atomicDecRef;
+pub const memoryBarrierReleaseFunction = atomic.memoryBarrierReleaseFunction;
+pub const memoryBarrierAcquireFunction = atomic.memoryBarrierAcquireFunction;
+
+// Re-export bits functions
+pub const mostSignificantBitIndex32 = bits.mostSignificantBitIndex32;
+pub const hasExactlyOneBitSet32 = bits.hasExactlyOneBitSet32;
+
+// Re-export cpuinfo functions
+pub const getCPUCount = cpuinfo.getCPUCount;
+pub const getCPUCacheLineSize = cpuinfo.getCPUCacheLineSize;
+pub const hasAltiVec = cpuinfo.hasAltiVec;
+pub const hasMMX = cpuinfo.hasMMX;
+pub const hasSSE = cpuinfo.hasSSE;
+pub const hasSSE2 = cpuinfo.hasSSE2;
+pub const hasSSE3 = cpuinfo.hasSSE3;
+pub const hasSSE41 = cpuinfo.hasSSE41;
+pub const hasSSE42 = cpuinfo.hasSSE42;
+pub const hasAVX = cpuinfo.hasAVX;
+pub const hasAVX2 = cpuinfo.hasAVX2;
+pub const hasAVX512F = cpuinfo.hasAVX512F;
+pub const hasNEON = cpuinfo.hasNEON;
+pub const hasLSX = cpuinfo.hasLSX;
+pub const hasLASX = cpuinfo.hasLASX;
+
+// Re-export dialog types and functions
+pub const SDL_DialogFileCallback = dialog.SDL_DialogFileCallback;
+pub const SDL_DialogFileFilter = dialog.SDL_DialogFileFilter;
+pub const showOpenFileDialog = dialog.showOpenFileDialog;
+pub const showSaveFileDialog = dialog.showSaveFileDialog;
+pub const showOpenFolderDialog = dialog.showOpenFolderDialog;
+pub const showFileDialogWithProperties = dialog.showFileDialogWithProperties;
+
+// Re-export endian functions and constants
+pub const SDL_BYTEORDER = endian.SDL_BYTEORDER;
+pub const SDL_LIL_ENDIAN = endian.SDL_LIL_ENDIAN;
+pub const SDL_BIG_ENDIAN = endian.SDL_BIG_ENDIAN;
+pub const swap16 = endian.SDL_Swap16;
+pub const swap32 = endian.SDL_Swap32;
+pub const swap64 = endian.SDL_Swap64;
+pub const swapFloat = endian.SDL_SwapFloat;
+
+// Re-export guid types and functions
+pub const SDL_GUID = guid.SDL_GUID;
+pub const guidToString = guid.guidToString;
+pub const stringToGUID = guid.stringToGUID;
+
+// Re-export intrinsics functions
+pub const hasARMSIMD = intrinsics.hasARMSIMD;
+pub const hasARMSVE = intrinsics.hasARMSVE;
 
 // Constants
 pub const SDL_INIT_AUDIO = core.SDL_INIT_AUDIO;

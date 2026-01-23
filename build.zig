@@ -87,6 +87,35 @@ pub fn build(b: *std.Build) void {
     });
     exe.linkSystemLibrary("SDL3");
 
+    // Additional examples
+    const gpu_example = b.addExecutable(.{
+        .name = "gpu_example",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/gpu_example.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "zsdl3", .module = mod },
+            },
+        }),
+    });
+    gpu_example.linkSystemLibrary("SDL3");
+    b.installArtifact(gpu_example);
+
+    const audio_example = b.addExecutable(.{
+        .name = "audio_example",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/audio_example.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "zsdl3", .module = mod },
+            },
+        }),
+    });
+    audio_example.linkSystemLibrary("SDL3");
+    b.installArtifact(audio_example);
+
     // This declares intent for the executable to be installed into the
     // install prefix when running `zig build` (i.e. when executing the default
     // step). By default the install prefix is `zig-out/` but can be overridden
