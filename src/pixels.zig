@@ -98,6 +98,17 @@ extern fn SDL_GetMasksForPixelFormat(format: SDL_PixelFormat, bpp: ?*c_int, Rmas
 // Blend mode function
 extern fn SDL_ComposeCustomBlendMode(srcColorFactor: SDL_BlendFactor, dstColorFactor: SDL_BlendFactor, colorOperation: SDL_BlendOperation, srcAlphaFactor: SDL_BlendFactor, dstAlphaFactor: SDL_BlendFactor, alphaOperation: SDL_BlendOperation) SDL_BlendMode;
 
+// Color mapping functions
+extern fn SDL_MapRGB(format: SDL_PixelFormat, palette: ?*SDL_Palette, r: Uint8, g: Uint8, b: Uint8) Uint32;
+extern fn SDL_MapRGBA(format: SDL_PixelFormat, palette: ?*SDL_Palette, r: Uint8, g: Uint8, b: Uint8, a: Uint8) Uint32;
+extern fn SDL_GetRGB(pixel: Uint32, format: SDL_PixelFormat, palette: ?*SDL_Palette, r: ?*Uint8, g: ?*Uint8, b: ?*Uint8) void;
+extern fn SDL_GetRGBA(pixel: Uint32, format: SDL_PixelFormat, palette: ?*SDL_Palette, r: ?*Uint8, g: ?*Uint8, b: ?*Uint8, a: ?*Uint8) void;
+
+// Palette functions
+extern fn SDL_AllocPalette(ncolors: c_int) ?*SDL_Palette;
+extern fn SDL_SetPaletteColors(palette: ?*SDL_Palette, colors: ?[*]const SDL_Color, firstcolor: c_int, ncolors: c_int) bool;
+extern fn SDL_FreePalette(palette: ?*SDL_Palette) void;
+
 // Rect functions (inline in C, implemented in Zig)
 pub fn SDL_PointInRect(p: ?*const SDL_Point, r: ?*const SDL_Rect) bool {
     return if (p != null and r != null and p.?.x >= r.?.x and p.?.x < r.?.x + r.?.w and p.?.y >= r.?.y and p.?.y < r.?.y + r.?.h) true else false;
@@ -111,3 +122,10 @@ pub fn SDL_RectEmpty(r: ?*const SDL_Rect) bool {
 pub const getPixelFormatName = SDL_GetPixelFormatName;
 pub const getMasksForPixelFormat = SDL_GetMasksForPixelFormat;
 pub const composeCustomBlendMode = SDL_ComposeCustomBlendMode;
+pub const mapRGB = SDL_MapRGB;
+pub const mapRGBA = SDL_MapRGBA;
+pub const getRGB = SDL_GetRGB;
+pub const getRGBA = SDL_GetRGBA;
+pub const allocPalette = SDL_AllocPalette;
+pub const setPaletteColors = SDL_SetPaletteColors;
+pub const freePalette = SDL_FreePalette;

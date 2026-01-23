@@ -170,6 +170,12 @@ extern fn SDL_ShowWindowSystemMenu(window: ?*SDL_Window, x: c_int, y: c_int) boo
 extern fn SDL_SetWindowHitTest(window: ?*SDL_Window, callback: ?*anyopaque, callback_data: ?*anyopaque) bool;
 extern fn SDL_SetWindowShape(window: ?*SDL_Window, shape: ?*SDL_Surface) bool;
 extern fn SDL_FlashWindow(window: ?*SDL_Window, operation: SDL_FlashOperation) bool;
+extern fn SDL_SetWindowGammaRamp(window: ?*SDL_Window, red: ?[*]const u16, green: ?[*]const u16, blue: ?[*]const u16) bool;
+extern fn SDL_GetWindowGammaRamp(window: ?*SDL_Window, red: ?[*]u16, green: ?[*]u16, blue: ?[*]u16) bool;
+extern fn SDL_DisableScreenSaver() bool;
+extern fn SDL_EnableScreenSaver() bool;
+extern fn SDL_IsScreenSaverEnabled() bool;
+extern fn SDL_GetWindowWMInfo(window: ?*SDL_Window, info: ?*SDL_SysWMinfo, version: SDL_version) bool;
 
 // Import types from pixels
 pub const SDL_Point = pixels.SDL_Point;
@@ -184,6 +190,38 @@ pub const SDL_FRect = extern struct {
 };
 
 pub const SDL_Surface = opaque {};
+
+pub const SDL_version = extern struct {
+    major: u8,
+    minor: u8,
+    patch: u8,
+};
+
+pub const SDL_SysWMinfo = extern struct {
+    version: SDL_version,
+    subsystem: SDL_SysWMType,
+    info: extern union {
+        dummy: [64]u8, // Placeholder for platform-specific data
+    },
+};
+
+pub const SDL_SysWMType = enum(c_int) {
+    SDL_SYSWM_UNKNOWN,
+    SDL_SYSWM_WINDOWS,
+    SDL_SYSWM_X11,
+    SDL_SYSWM_DIRECTFB,
+    SDL_SYSWM_COCOA,
+    SDL_SYSWM_UIKIT,
+    SDL_SYSWM_WAYLAND,
+    SDL_SYSWM_MIR,
+    SDL_SYSWM_WINRT,
+    SDL_SYSWM_ANDROID,
+    SDL_SYSWM_VIVANTE,
+    SDL_SYSWM_OS2,
+    SDL_SYSWM_HAIKU,
+    SDL_SYSWM_KMSDRM,
+    SDL_SYSWM_RISCOS,
+};
 
 // Public video API
 pub const getNumVideoDrivers = SDL_GetNumVideoDrivers;
@@ -260,3 +298,9 @@ pub const showWindowSystemMenu = SDL_ShowWindowSystemMenu;
 pub const setWindowHitTest = SDL_SetWindowHitTest;
 pub const setWindowShape = SDL_SetWindowShape;
 pub const flashWindow = SDL_FlashWindow;
+pub const setWindowGammaRamp = SDL_SetWindowGammaRamp;
+pub const getWindowGammaRamp = SDL_GetWindowGammaRamp;
+pub const disableScreenSaver = SDL_DisableScreenSaver;
+pub const enableScreenSaver = SDL_EnableScreenSaver;
+pub const isScreenSaverEnabled = SDL_IsScreenSaverEnabled;
+pub const getWindowWMInfo = SDL_GetWindowWMInfo;

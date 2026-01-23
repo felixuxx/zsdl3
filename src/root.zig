@@ -80,6 +80,13 @@ pub const SDL_RectEmpty = pixels.SDL_RectEmpty;
 pub const getPixelFormatName = pixels.getPixelFormatName;
 pub const getMasksForPixelFormat = pixels.getMasksForPixelFormat;
 pub const composeCustomBlendMode = pixels.composeCustomBlendMode;
+pub const mapRGB = pixels.mapRGB;
+pub const mapRGBA = pixels.mapRGBA;
+pub const getRGB = pixels.getRGB;
+pub const getRGBA = pixels.getRGBA;
+pub const allocPalette = pixels.allocPalette;
+pub const setPaletteColors = pixels.setPaletteColors;
+pub const freePalette = pixels.freePalette;
 
 // Re-export video functions
 pub const getNumVideoDrivers = video.getNumVideoDrivers;
@@ -156,6 +163,12 @@ pub const showWindowSystemMenu = video.showWindowSystemMenu;
 pub const setWindowHitTest = video.setWindowHitTest;
 pub const setWindowShape = video.setWindowShape;
 pub const flashWindow = video.flashWindow;
+pub const setWindowGammaRamp = video.setWindowGammaRamp;
+pub const getWindowGammaRamp = video.getWindowGammaRamp;
+pub const disableScreenSaver = video.disableScreenSaver;
+pub const enableScreenSaver = video.enableScreenSaver;
+pub const isScreenSaverEnabled = video.isScreenSaverEnabled;
+pub const getWindowWMInfo = video.getWindowWMInfo;
 
 // Re-export surface functions
 pub const createSurface = surface.createSurface;
@@ -212,6 +225,7 @@ pub const readSurfacePixel = surface.readSurfacePixel;
 
 // Re-export events types and functions
 pub const SDL_Event = events.SDL_Event;
+pub const SDL_EventAction = events.SDL_EventAction;
 pub const pumpEvents = events.pumpEvents;
 pub const pollEvent = events.pollEvent;
 pub const waitEvent = events.waitEvent;
@@ -220,6 +234,30 @@ pub const pushEvent = events.pushEvent;
 pub const filterEvents = events.filterEvents;
 pub const addEventWatch = events.addEventWatch;
 pub const delEventWatch = events.delEventWatch;
+pub const peepEvents = events.peepEvents;
+pub const hasEvent = events.hasEvent;
+pub const hasEvents = events.hasEvents;
+pub const flushEvent = events.flushEvent;
+pub const flushEvents = events.flushEvents;
+pub const setEventEnabled = events.setEventEnabled;
+pub const eventEnabled = events.eventEnabled;
+pub const registerEvents = events.registerEvents;
+pub const getEventFilter = events.getEventFilter;
+pub const setEventFilter = events.setEventFilter;
+pub const getNumTouchFingers = events.getNumTouchFingers;
+pub const getTouchFinger = events.getTouchFinger;
+
+// Re-export input types
+pub const SDL_JoystickType = input.SDL_JoystickType;
+pub const SDL_GamepadType = input.SDL_GamepadType;
+pub const SDL_GamepadAxis = input.SDL_GamepadAxis;
+pub const SDL_GamepadButton = input.SDL_GamepadButton;
+pub const SDL_GamepadButtonLabel = input.SDL_GamepadButtonLabel;
+pub const SDL_GamepadBindingType = input.SDL_GamepadBindingType;
+pub const SDL_GamepadBinding = input.SDL_GamepadBinding;
+pub const SDL_SystemCursor = input.SDL_SystemCursor;
+pub const SDL_Joystick = input.SDL_Joystick;
+pub const SDL_Gamepad = input.SDL_Gamepad;
 
 // Re-export input functions
 pub const hasKeyboard = input.hasKeyboard;
@@ -237,10 +275,84 @@ pub const warpMouseGlobal = input.warpMouseGlobal;
 pub const numJoysticks = input.numJoysticks;
 pub const joystickOpen = input.joystickOpen;
 pub const joystickClose = input.joystickClose;
+pub const joystickName = input.joystickName;
+pub const joystickPath = input.joystickPath;
+pub const joystickGetType = input.joystickGetType;
+pub const joystickGetGUID = input.joystickGetGUID;
+pub const joystickGetVendor = input.joystickGetVendor;
+pub const joystickGetProduct = input.joystickGetProduct;
+pub const joystickGetProductVersion = input.joystickGetProductVersion;
+pub const joystickGetFirmwareVersion = input.joystickGetFirmwareVersion;
+pub const joystickGetSerial = input.joystickGetSerial;
+pub const joystickGetAxis = input.joystickGetAxis;
+pub const joystickGetHat = input.joystickGetHat;
+pub const joystickGetBall = input.joystickGetBall;
+pub const joystickGetButton = input.joystickGetButton;
+pub const joystickRumble = input.joystickRumble;
+pub const joystickRumbleTriggers = input.joystickRumbleTriggers;
+pub const joystickHasLED = input.joystickHasLED;
+pub const joystickSetLED = input.joystickSetLED;
+pub const joystickSendEffect = input.joystickSendEffect;
 pub const numGamepads = input.numGamepads;
 pub const isGamepad = input.isGamepad;
 pub const openGamepad = input.openGamepad;
 pub const closeGamepad = input.closeGamepad;
+pub const getGamepadName = input.getGamepadName;
+pub const getGamepadPath = input.getGamepadPath;
+pub const getGamepadType = input.getGamepadType;
+pub const getGamepadGUID = input.getGamepadGUID;
+pub const getGamepadVendor = input.getGamepadVendor;
+pub const getGamepadProduct = input.getGamepadProduct;
+pub const getGamepadProductVersion = input.getGamepadProductVersion;
+pub const getGamepadFirmwareVersion = input.getGamepadFirmwareVersion;
+pub const getGamepadSerial = input.getGamepadSerial;
+pub const gamepadHasAxis = input.gamepadHasAxis;
+pub const getGamepadAxis = input.getGamepadAxis;
+pub const gamepadHasButton = input.gamepadHasButton;
+pub const getGamepadButton = input.getGamepadButton;
+pub const getGamepadButtonLabel = input.getGamepadButtonLabel;
+pub const setGamepadEventsEnabled = input.setGamepadEventsEnabled;
+pub const gamepadEventsEnabled = input.gamepadEventsEnabled;
+pub const getGamepadBindings = input.getGamepadBindings;
+pub const reloadGamepadMappings = input.reloadGamepadMappings;
+pub const getGamepadMapping = input.getGamepadMapping;
+pub const addGamepadMapping = input.addGamepadMapping;
+pub const getGamepadMappingForGUID = input.getGamepadMappingForGUID;
+pub const setGamepadMapping = input.setGamepadMapping;
+pub const hasGamepad = input.hasGamepad;
+pub const getGamepads = input.getGamepads;
+pub const getGamepadNameForID = input.getGamepadNameForID;
+pub const getGamepadPathForID = input.getGamepadPathForID;
+pub const getGamepadTypeForID = input.getGamepadTypeForID;
+pub const getGamepadGUIDForID = input.getGamepadGUIDForID;
+pub const getGamepadVendorForID = input.getGamepadVendorForID;
+pub const getGamepadProductForID = input.getGamepadProductForID;
+pub const getGamepadProductVersionForID = input.getGamepadProductVersionForID;
+pub const getGamepadFirmwareVersionForID = input.getGamepadFirmwareVersionForID;
+pub const getGamepadSerialForID = input.getGamepadSerialForID;
+pub const gamepadConnected = input.gamepadConnected;
+pub const getGamepadID = input.getGamepadID;
+pub const getGamepadFromID = input.getGamepadFromID;
+pub const getGamepadFromPlayerIndex = input.getGamepadFromPlayerIndex;
+pub const getGamepadPlayerIndex = input.getGamepadPlayerIndex;
+pub const setGamepadPlayerIndex = input.setGamepadPlayerIndex;
+pub const rumbleGamepad = input.rumbleGamepad;
+pub const rumbleGamepadTriggers = input.rumbleGamepadTriggers;
+pub const setGamepadLED = input.setGamepadLED;
+pub const sendGamepadEffect = input.sendGamepadEffect;
+pub const getGamepadSensorData = input.getGamepadSensorData;
+pub const setGamepadSensorEnabled = input.setGamepadSensorEnabled;
+pub const gamepadSensorEnabled = input.gamepadSensorEnabled;
+pub const getGamepadProperties = input.getGamepadProperties;
+pub const getGamepadIDMap = input.getGamepadIDMap;
+
+// Re-export render types
+pub const SDL_Renderer = render.SDL_Renderer;
+pub const SDL_Texture = render.SDL_Texture;
+pub const SDL_Vertex = render.SDL_Vertex;
+pub const SDL_FColor = render.SDL_FColor;
+pub const SDL_ScaleMode = render.SDL_ScaleMode;
+pub const SDL_RendererLogicalPresentation = render.SDL_RendererLogicalPresentation;
 
 // Re-export render functions
 pub const createRenderer = render.createRenderer;
@@ -256,8 +368,64 @@ pub const updateTexture = render.updateTexture;
 pub const renderTexture = render.renderTexture;
 pub const renderGeometry = render.renderGeometry;
 
+// Renderer properties
+pub const getRendererName = render.getRendererName;
+pub const getRendererProperties = render.getRendererProperties;
+pub const getRenderOutputSize = render.getRenderOutputSize;
+pub const getCurrentRenderOutputSize = render.getCurrentRenderOutputSize;
+pub const getRenderViewport = render.getRenderViewport;
+pub const setRenderViewport = render.setRenderViewport;
+pub const getRenderSafeArea = render.getRenderSafeArea;
+pub const getRenderWindow = render.getRenderWindow;
+pub const getRendererFromTexture = render.getRendererFromTexture;
+
+// Draw operations
+pub const renderPoints = render.renderPoints;
+pub const renderLines = render.renderLines;
+pub const renderRects = render.renderRects;
+pub const renderFillRects = render.renderFillRects;
+
+// Target rendering
+pub const setRenderTarget = render.setRenderTarget;
+pub const getRenderTarget = render.getRenderTarget;
+
+// Color and blend
+pub const getRenderDrawColor = render.getRenderDrawColor;
+pub const getRenderDrawBlendMode = render.getRenderDrawBlendMode;
+pub const setRenderDrawBlendMode = render.setRenderDrawBlendMode;
+
+// Texture operations
+pub const createTextureFromSurface = render.createTextureFromSurface;
+pub const queryTexture = render.queryTexture;
+pub const lockTexture = render.lockTexture;
+pub const unlockTexture = render.unlockTexture;
+pub const setTextureColorMod = render.setTextureColorMod;
+pub const getTextureColorMod = render.getTextureColorMod;
+pub const setTextureAlphaMod = render.setTextureAlphaMod;
+pub const getTextureAlphaMod = render.getTextureAlphaMod;
+pub const setTextureBlendMode = render.setTextureBlendMode;
+pub const getTextureBlendMode = render.getTextureBlendMode;
+pub const setTextureScaleMode = render.setTextureScaleMode;
+pub const getTextureScaleMode = render.getTextureScaleMode;
+
+// Clipping
+pub const setRenderClipRect = render.setRenderClipRect;
+pub const getRenderClipRect = render.getRenderClipRect;
+pub const renderClipEnabled = render.renderClipEnabled;
+
+// Logical presentation
+pub const setRenderLogicalPresentation = render.setRenderLogicalPresentation;
+pub const getRenderLogicalPresentation = render.getRenderLogicalPresentation;
+pub const setRenderLogicalSize = render.setRenderLogicalSize;
+pub const getRenderLogicalSize = render.getRenderLogicalSize;
+
+// Debug
+pub const renderDebugText = render.renderDebugText;
+
 // Re-export audio types and functions
 pub const SDL_AudioSpec = audio.SDL_AudioSpec;
+pub const SDL_AudioDeviceID = audio.SDL_AudioDeviceID;
+pub const SDL_AudioStream = audio.SDL_AudioStream;
 pub const openAudioDevice = audio.openAudioDevice;
 pub const closeAudioDevice = audio.closeAudioDevice;
 pub const pauseAudioDevice = audio.pauseAudioDevice;
@@ -265,15 +433,54 @@ pub const getAudioDeviceName = audio.getAudioDeviceName;
 pub const getNumAudioDrivers = audio.getNumAudioDrivers;
 pub const getAudioDriver = audio.getAudioDriver;
 pub const getCurrentAudioDriver = audio.getCurrentAudioDriver;
+pub const getAudioPlaybackDevices = audio.getAudioPlaybackDevices;
+pub const getAudioRecordingDevices = audio.getAudioRecordingDevices;
+pub const getAudioDeviceFormat = audio.getAudioDeviceFormat;
+pub const resumeAudioDevice = audio.resumeAudioDevice;
+pub const audioDevicePaused = audio.audioDevicePaused;
+pub const clearAudioStream = audio.clearAudioStream;
+pub const createAudioStream = audio.createAudioStream;
+pub const destroyAudioStream = audio.destroyAudioStream;
+pub const getAudioStreamData = audio.getAudioStreamData;
+pub const getAudioStreamDevice = audio.getAudioStreamDevice;
+pub const getAudioStreamFormat = audio.getAudioStreamFormat;
+pub const getAudioStreamProperties = audio.getAudioStreamProperties;
+pub const getAudioStreamQueued = audio.getAudioStreamQueued;
+pub const lockAudioStream = audio.lockAudioStream;
+pub const openAudioDeviceStream = audio.openAudioDeviceStream;
+pub const putAudioStreamData = audio.putAudioStreamData;
+pub const setAudioStreamFormat = audio.setAudioStreamFormat;
+pub const setAudioStreamGetCallback = audio.setAudioStreamGetCallback;
+pub const setAudioStreamPutCallback = audio.setAudioStreamPutCallback;
+pub const unlockAudioStream = audio.unlockAudioStream;
+pub const flushAudioStream = audio.flushAudioStream;
+pub const bindAudioStream = audio.bindAudioStream;
+pub const bindAudioStreams = audio.bindAudioStreams;
+pub const unbindAudioStream = audio.unbindAudioStream;
+pub const unbindAudioStreams = audio.unbindAudioStreams;
+pub const convertAudioSamples = audio.convertAudioSamples;
+pub const getAudioFormatName = audio.getAudioFormatName;
+pub const getSilenceValueForFormat = audio.getSilenceValueForFormat;
+pub const mixAudio = audio.mixAudio;
+pub const queueAudio = audio.queueAudio;
+pub const dequeueAudio = audio.dequeueAudio;
+pub const getQueuedAudioSize = audio.getQueuedAudioSize;
+pub const clearQueuedAudio = audio.clearQueuedAudio;
 
-// Re-export time functions
+// Re-export time types and functions
 pub const SDL_TimerID = time.SDL_TimerID;
 pub const SDL_TimerCallback = time.SDL_TimerCallback;
+pub const SDL_DateTime = time.SDL_DateTime;
 pub const getTicks = time.getTicks;
 pub const getTicksNS = time.getTicksNS;
 pub const delay = time.delay;
 pub const addTimer = time.addTimer;
 pub const removeTimer = time.removeTimer;
+pub const getPerformanceCounter = time.getPerformanceCounter;
+pub const getPerformanceFrequency = time.getPerformanceFrequency;
+pub const getCurrentTime = time.getCurrentTime;
+pub const timeToDateTime = time.timeToDateTime;
+pub const dateTimeToTime = time.dateTimeToTime;
 
 // Re-export thread types and functions
 pub const SDL_Condition = threads.SDL_Condition;
@@ -606,6 +813,14 @@ pub const swap16 = endian.SDL_Swap16;
 pub const swap32 = endian.SDL_Swap32;
 pub const swap64 = endian.SDL_Swap64;
 pub const swapFloat = endian.SDL_SwapFloat;
+pub const swapLE16 = endian.SDL_SwapLE16;
+pub const swapLE32 = endian.SDL_SwapLE32;
+pub const swapLE64 = endian.SDL_SwapLE64;
+pub const swapBE16 = endian.SDL_SwapBE16;
+pub const swapBE32 = endian.SDL_SwapBE32;
+pub const swapBE64 = endian.SDL_SwapBE64;
+pub const swapFloatLE = endian.SDL_SwapFloatLE;
+pub const swapFloatBE = endian.SDL_SwapFloatBE;
 
 // Re-export guid types and functions
 pub const SDL_GUID = guid.SDL_GUID;
@@ -754,6 +969,7 @@ pub const bindGPUComputeStorageTextures = gpu.bindGPUComputeStorageTextures;
 pub const bindGPUComputeStorageBuffers = gpu.bindGPUComputeStorageBuffers;
 pub const pushGPUComputeUniformData = gpu.pushGPUComputeUniformData;
 pub const dispatchGPUCompute = gpu.dispatchGPUCompute;
+pub const dispatchGPUComputeIndirect = gpu.dispatchGPUComputeIndirect;
 pub const endGPUComputePass = gpu.endGPUComputePass;
 pub const bindGPUVertexSamplers = gpu.bindGPUVertexSamplers;
 pub const bindGPUFragmentSamplers = gpu.bindGPUFragmentSamplers;

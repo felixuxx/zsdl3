@@ -606,6 +606,7 @@ extern fn SDL_BindGPUComputeStorageTextures(compute_pass: ?*SDL_GPUComputePass, 
 extern fn SDL_BindGPUComputeStorageBuffers(compute_pass: ?*SDL_GPUComputePass, first_slot: Uint32, storage_buffer_bindings: ?[*]const SDL_GPUStorageBufferReadWriteBinding, num_bindings: Uint32) void;
 extern fn SDL_PushGPUComputeUniformData(cmdbuf: ?*SDL_GPUCommandBuffer, slot_index: Uint32, data: ?*const anyopaque, length: Uint32) void;
 extern fn SDL_DispatchGPUCompute(compute_pass: ?*SDL_GPUComputePass, groupcount_x: Uint32, groupcount_y: Uint32, groupcount_z: Uint32) void;
+extern fn SDL_DispatchGPUComputeIndirect(compute_pass: ?*SDL_GPUComputePass, buffer: ?*SDL_GPUBuffer, offset: Uint32) void;
 extern fn SDL_EndGPUComputePass(compute_pass: ?*SDL_GPUComputePass) void;
 
 // Additional rendering functions
@@ -693,6 +694,7 @@ pub const bindGPUComputeStorageTextures = SDL_BindGPUComputeStorageTextures;
 pub const bindGPUComputeStorageBuffers = SDL_BindGPUComputeStorageBuffers;
 pub const pushGPUComputeUniformData = SDL_PushGPUComputeUniformData;
 pub const dispatchGPUCompute = SDL_DispatchGPUCompute;
+pub const dispatchGPUComputeIndirect = SDL_DispatchGPUComputeIndirect;
 pub const endGPUComputePass = SDL_EndGPUComputePass;
 pub const bindGPUVertexSamplers = SDL_BindGPUVertexSamplers;
 pub const bindGPUFragmentSamplers = SDL_BindGPUFragmentSamplers;
