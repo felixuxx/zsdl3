@@ -26,6 +26,13 @@ pub const locale = @import("locale.zig");
 pub const messagebox = @import("messagebox.zig");
 pub const misc = @import("misc.zig");
 pub const stdinc = @import("stdinc.zig");
+pub const vulkan = @import("vulkan.zig");
+pub const tray = @import("tray.zig");
+pub const hidapi = @import("hidapi.zig");
+pub const storage = @import("storage.zig");
+pub const assert = @import("assert.zig");
+pub const sharedobject = @import("sharedobject.zig");
+pub const haptic = @import("haptic.zig");
 
 // Re-export core functions
 pub const init = core.init;
@@ -384,6 +391,75 @@ pub const crc32 = misc.crc32;
 pub const murmur3_32 = misc.murmur3_32;
 pub const getNumAllocations = misc.getNumAllocations;
 pub const getFullPath = misc.getFullPath;
+
+// Re-export Vulkan functions
+pub const vulkanLoadLibrary = vulkan.loadLibrary;
+pub const vulkanGetVkGetInstanceProcAddr = vulkan.getVkGetInstanceProcAddr;
+pub const vulkanUnloadLibrary = vulkan.unloadLibrary;
+pub const vulkanGetInstanceExtensions = vulkan.getInstanceExtensions;
+pub const vulkanCreateSurface = vulkan.createSurface;
+pub const vulkanDestroySurface = vulkan.destroySurface;
+pub const vulkanGetPresentationSupport = vulkan.getPresentationSupport;
+
+// Re-export Tray types and functions
+pub const SDL_Tray = tray.SDL_Tray;
+pub const SDL_TrayMenu = tray.SDL_TrayMenu;
+pub const SDL_TrayEntry = tray.SDL_TrayEntry;
+pub const createTray = tray.createTray;
+pub const setTrayIcon = tray.setTrayIcon;
+pub const setTrayTooltip = tray.setTrayTooltip;
+pub const createTrayMenu = tray.createTrayMenu;
+pub const destroyTray = tray.destroyTray;
+pub const updateTrays = tray.updateTrays;
+
+// Re-export HIDAPI types and functions
+pub const SDL_hid_device = hidapi.SDL_hid_device;
+pub const SDL_hid_device_info = hidapi.SDL_hid_device_info;
+pub const hid_init = hidapi.hid_init;
+pub const hid_exit = hidapi.hid_exit;
+pub const hid_enumerate = hidapi.hid_enumerate;
+pub const hid_free_enumeration = hidapi.hid_free_enumeration;
+pub const hid_open = hidapi.hid_open;
+pub const hid_open_path = hidapi.hid_open_path;
+pub const hid_write = hidapi.hid_write;
+pub const hid_read = hidapi.hid_read;
+pub const hid_close = hidapi.hid_close;
+
+// Re-export Storage types and functions
+pub const SDL_Storage = storage.SDL_Storage;
+pub const SDL_PathInfo = storage.SDL_PathInfo;
+pub const openTitleStorage = storage.openTitleStorage;
+pub const openUserStorage = storage.openUserStorage;
+pub const openFileStorage = storage.openFileStorage;
+pub const closeStorage = storage.closeStorage;
+pub const storageReady = storage.storageReady;
+pub const readStorageFile = storage.readStorageFile;
+pub const writeStorageFile = storage.writeStorageFile;
+
+// Re-export Assert types and functions
+pub const SDL_AssertState = assert.SDL_AssertState;
+pub const SDL_AssertData = assert.SDL_AssertData;
+pub const setAssertionHandler = assert.setAssertionHandler;
+pub const getAssertionHandler = assert.getAssertionHandler;
+pub const getAssertionReport = assert.getAssertionReport;
+pub const resetAssertionReport = assert.resetAssertionReport;
+
+// Re-export SharedObject types and functions
+pub const SDL_SharedObject = sharedobject.SDL_SharedObject;
+pub const loadObject = sharedobject.loadObject;
+pub const loadFunction = sharedobject.loadFunction;
+pub const unloadObject = sharedobject.unloadObject;
+
+// Re-export Haptic types and functions
+pub const SDL_Haptic = haptic.SDL_Haptic;
+pub const SDL_HapticEffect = haptic.SDL_HapticEffect;
+pub const SDL_HapticDirection = haptic.SDL_HapticDirection;
+pub const numHaptics = haptic.numHaptics;
+pub const hapticOpen = haptic.hapticOpen;
+pub const hapticClose = haptic.hapticClose;
+pub const hapticRumbleSupported = haptic.hapticRumbleSupported;
+pub const hapticRumblePlay = haptic.hapticRumblePlay;
+pub const hapticRumbleStop = haptic.hapticRumbleStop;
 
 // Constants
 pub const SDL_INIT_AUDIO = core.SDL_INIT_AUDIO;
