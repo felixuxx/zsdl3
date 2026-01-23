@@ -235,7 +235,7 @@ pub const destroyRenderer = render.destroyRenderer;
 pub const renderClear = render.renderClear;
 pub const renderPresent = render.renderPresent;
 pub const setRenderDrawColor = render.setRenderDrawColor;
-pub const renderDrawLine = render.renderDrawLine;
+pub const renderLine = render.renderLine;
 pub const renderFillRect = render.renderFillRect;
 pub const createTexture = render.createTexture;
 pub const destroyTexture = render.destroyTexture;
@@ -330,7 +330,23 @@ pub const unlockProperties = properties.unlockProperties;
 
 // Re-export log types and functions
 pub const SDL_LogPriority = log.SDL_LogPriority;
+pub const SDL_LOG_PRIORITY_VERBOSE = 1;
+pub const SDL_LOG_PRIORITY_DEBUG = 2;
+pub const SDL_LOG_PRIORITY_INFO = 3;
+pub const SDL_LOG_PRIORITY_WARN = 4;
+pub const SDL_LOG_PRIORITY_ERROR = 5;
+pub const SDL_LOG_PRIORITY_CRITICAL = 6;
 pub const SDL_LogCategory = log.SDL_LogCategory;
+pub const SDL_LOG_CATEGORY_APPLICATION = 0;
+pub const SDL_LOG_CATEGORY_ERROR = 1;
+pub const SDL_LOG_CATEGORY_ASSERT = 2;
+pub const SDL_LOG_CATEGORY_SYSTEM = 3;
+pub const SDL_LOG_CATEGORY_AUDIO = 4;
+pub const SDL_LOG_CATEGORY_VIDEO = 5;
+pub const SDL_LOG_CATEGORY_RENDER = 6;
+pub const SDL_LOG_CATEGORY_INPUT = 7;
+pub const SDL_LOG_CATEGORY_TEST = 8;
+pub const SDL_LOG_CATEGORY_GPU = 9;
 pub const setLogPriorities = log.setLogPriorities;
 pub const setLogPriority = log.setLogPriority;
 pub const getLogPriority = log.getLogPriority;
@@ -494,6 +510,13 @@ pub const SDL_EVENT_KEY_UP = core.SDL_EVENT_KEY_UP;
 pub const SDL_EVENT_MOUSE_MOTION = core.SDL_EVENT_MOUSE_MOTION;
 pub const SDL_EVENT_MOUSE_BUTTON_DOWN = core.SDL_EVENT_MOUSE_BUTTON_DOWN;
 pub const SDL_EVENT_MOUSE_BUTTON_UP = core.SDL_EVENT_MOUSE_BUTTON_UP;
+
+// Key constants
+pub const SDLK_ESCAPE = 27;
+pub const SDLK_LEFT = 1073741904;
+pub const SDLK_RIGHT = 1073741903;
+pub const SDLK_UP = 1073741906;
+pub const SDLK_DOWN = 1073741905;
 
 // Re-export GPU types and functions
 pub const SDL_GPUDevice = gpu.SDL_GPUDevice;

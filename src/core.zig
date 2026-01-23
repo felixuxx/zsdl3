@@ -14,6 +14,10 @@ pub const Uint64 = u64;
 // Window and display IDs
 pub const SDL_DisplayID = Uint32;
 pub const SDL_WindowID = Uint32;
+pub const SDL_KeyboardID = Uint32;
+pub const SDL_Keymod = c_int;
+pub const SDL_Keycode = c_int;
+pub const SDL_Scancode = c_int;
 
 // Initialization flags
 pub const SDL_InitFlags = Uint32;
@@ -84,8 +88,13 @@ pub const SDL_KeyboardEvent = extern struct {
     reserved: Uint32,
     timestamp: Uint64,
     windowID: SDL_WindowID,
-    // ... other fields
+    which: SDL_KeyboardID,
+    scancode: SDL_Scancode,
+    key: SDL_Keycode,
+    mod: SDL_Keymod,
+    raw: Uint16,
     down: bool,
+    repeat: bool,
 };
 
 pub const SDL_MouseMotionEvent = extern struct {
