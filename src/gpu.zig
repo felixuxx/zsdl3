@@ -622,6 +622,12 @@ extern fn SDL_InsertGPUDebugLabel(cmdbuf: ?*SDL_GPUCommandBuffer, text: ?[*:0]co
 extern fn SDL_PushGPUDebugGroup(cmdbuf: ?*SDL_GPUCommandBuffer, name: ?[*:0]const u8) void;
 extern fn SDL_PopGPUDebugGroup(cmdbuf: ?*SDL_GPUCommandBuffer) void;
 extern fn SDL_SetGPUAllowedFramesInFlight(device: ?*SDL_GPUDevice, allowed_frames_in_flight: Uint32) bool;
+extern fn SDL_GPUSupportsShaderFormats(device: ?*SDL_GPUDevice, format_flags: Uint32, name: ?[*:0]const u8) bool;
+extern fn SDL_GPUSupportsProperties(props: core.SDL_PropertiesID) bool;
+extern fn SDL_GPUTextureSupportsFormat(device: ?*SDL_GPUDevice, format: SDL_GPUTextureFormat, type: SDL_GPUTextureType, usage: SDL_GPUTextureUsageFlags) bool;
+extern fn SDL_GPUBufferSize(buffer: ?*SDL_GPUBuffer) Uint32;
+extern fn SDL_GPUTextureFormatTexelBlockSize(format: SDL_GPUTextureFormat) Uint32;
+extern fn SDL_GPUTextureSupportsSampleCount(device: ?*SDL_GPUDevice, format: SDL_GPUTextureFormat, sample_count: SDL_GPUSampleCount) bool;
 
 // video import
 const video = @import("video.zig");
@@ -706,3 +712,9 @@ pub const insertGPUDebugLabel = SDL_InsertGPUDebugLabel;
 pub const pushGPUDebugGroup = SDL_PushGPUDebugGroup;
 pub const popGPUDebugGroup = SDL_PopGPUDebugGroup;
 pub const setGPUAllowedFramesInFlight = SDL_SetGPUAllowedFramesInFlight;
+pub const gpuSupportsShaderFormats = SDL_GPUSupportsShaderFormats;
+pub const gpuSupportsProperties = SDL_GPUSupportsProperties;
+pub const gpuTextureSupportsFormat = SDL_GPUTextureSupportsFormat;
+pub const gpuBufferSize = SDL_GPUBufferSize;
+pub const gpuTextureFormatTexelBlockSize = SDL_GPUTextureFormatTexelBlockSize;
+pub const gpuTextureSupportsSampleCount = SDL_GPUTextureSupportsSampleCount;

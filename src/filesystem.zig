@@ -79,6 +79,11 @@ extern fn SDL_WriteU64LE(stream: ?*SDL_IOStream, value: Uint64) bool;
 extern fn SDL_WriteS64LE(stream: ?*SDL_IOStream, value: Sint64) bool;
 extern fn SDL_WriteU64BE(stream: ?*SDL_IOStream, value: Uint64) bool;
 extern fn SDL_WriteS64BE(stream: ?*SDL_IOStream, value: Sint64) bool;
+extern fn SDL_IOFromConstMem(mem: ?*const anyopaque, size: usize) ?*SDL_IOStream;
+extern fn SDL_IOFromMem(mem: ?*anyopaque, size: usize) ?*SDL_IOStream;
+extern fn SDL_IOFromDynamicMem() ?*SDL_IOStream;
+extern fn SDL_GetIOProperties(stream: ?*SDL_IOStream) core.SDL_PropertiesID;
+extern fn SDL_GetIOStatus(stream: ?*SDL_IOStream) c_int;
 
 // Public API
 pub const getBasePath = SDL_GetBasePath;
@@ -120,3 +125,8 @@ pub const writeU64LE = SDL_WriteU64LE;
 pub const writeS64LE = SDL_WriteS64LE;
 pub const writeU64BE = SDL_WriteU64BE;
 pub const writeS64BE = SDL_WriteS64BE;
+pub const ioFromConstMem = SDL_IOFromConstMem;
+pub const ioFromMem = SDL_IOFromMem;
+pub const ioFromDynamicMem = SDL_IOFromDynamicMem;
+pub const getIOProperties = SDL_GetIOProperties;
+pub const getIOStatus = SDL_GetIOStatus;

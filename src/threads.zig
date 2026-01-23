@@ -34,6 +34,11 @@ extern fn SDL_SemTryWait(sem: ?*SDL_Semaphore) bool;
 extern fn SDL_SemWaitTimeout(sem: ?*SDL_Semaphore, ms: Sint32) bool;
 extern fn SDL_SemPost(sem: ?*SDL_Semaphore) bool;
 extern fn SDL_SemValue(sem: ?*SDL_Semaphore) Uint32;
+extern fn SDL_GetThreadName(thread: ?*SDL_Thread) ?[*:0]const u8;
+extern fn SDL_SetThreadPriority(priority: c_int) bool;
+extern fn SDL_GetCurrentThreadID() core.SDL_ThreadID;
+extern fn SDL_DetachThread(thread: ?*SDL_Thread) void;
+extern fn SDL_GetThreadID(thread: ?*SDL_Thread) core.SDL_ThreadID;
 
 // Public API
 pub const createThread = SDL_CreateThread;
@@ -56,3 +61,8 @@ pub const semTryWait = SDL_SemTryWait;
 pub const semWaitTimeout = SDL_SemWaitTimeout;
 pub const semPost = SDL_SemPost;
 pub const semValue = SDL_SemValue;
+pub const getThreadName = SDL_GetThreadName;
+pub const setThreadPriority = SDL_SetThreadPriority;
+pub const getCurrentThreadID = SDL_GetCurrentThreadID;
+pub const detachThread = SDL_DetachThread;
+pub const getThreadID = SDL_GetThreadID;

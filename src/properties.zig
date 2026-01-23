@@ -38,6 +38,8 @@ extern fn SDL_ClearProperty(props: SDL_PropertiesID, name: [*:0]const u8) bool;
 extern fn SDL_EnumerateProperties(props: SDL_PropertiesID, callback: ?*const fn (?*anyopaque, SDL_PropertiesID, [*:0]const u8) callconv(.C) void, userdata: ?*anyopaque) void;
 extern fn SDL_LockProperties(props: SDL_PropertiesID) void;
 extern fn SDL_UnlockProperties(props: SDL_PropertiesID) void;
+extern fn SDL_HasProperty(props: SDL_PropertiesID, name: [*:0]const u8) bool;
+extern fn SDL_CopyProperties(src: SDL_PropertiesID, dst: SDL_PropertiesID) bool;
 
 // Public API
 pub const createProperties = SDL_CreateProperties;
@@ -58,3 +60,5 @@ pub const clearProperty = SDL_ClearProperty;
 pub const enumerateProperties = SDL_EnumerateProperties;
 pub const lockProperties = SDL_LockProperties;
 pub const unlockProperties = SDL_UnlockProperties;
+pub const hasProperty = SDL_HasProperty;
+pub const copyProperties = SDL_CopyProperties;

@@ -111,6 +111,12 @@ extern fn SDL_GetRenderLogicalSize(renderer: ?*SDL_Renderer, w: ?*c_int, h: ?*c_
 
 // Debug
 extern fn SDL_RenderDebugText(renderer: ?*SDL_Renderer, x: f32, y: f32, str: ?[*:0]const u8) bool;
+extern fn SDL_RenderGeometryRaw(renderer: ?*SDL_Renderer, texture: ?*SDL_Texture, xy: ?[*]const f32, xy_stride: c_int, color: ?[*]const SDL_FColor, color_stride: c_int, uv: ?[*]const f32, uv_stride: c_int, num_vertices: c_int, indices: ?[*]const c_int, num_indices: c_int, size_indices: c_int) bool;
+extern fn SDL_RenderReadPixels(renderer: ?*SDL_Renderer, rect: ?*const SDL_FRect) ?*pixels.SDL_Surface;
+extern fn SDL_RenderFlush(renderer: ?*SDL_Renderer) bool;
+extern fn SDL_TextureSize(texture: ?*SDL_Texture, w: ?*f32, h: ?*f32) bool;
+extern fn SDL_GetRenderVSync(renderer: ?*SDL_Renderer, vsync: ?*c_int) bool;
+extern fn SDL_SetRenderVSync(renderer: ?*SDL_Renderer, vsync: c_int) bool;
 
 // Public API
 pub const createRenderer = SDL_CreateRenderer;
@@ -179,3 +185,9 @@ pub const getRenderLogicalSize = SDL_GetRenderLogicalSize;
 
 // Debug
 pub const renderDebugText = SDL_RenderDebugText;
+pub const renderGeometryRaw = SDL_RenderGeometryRaw;
+pub const renderReadPixels = SDL_RenderReadPixels;
+pub const renderFlush = SDL_RenderFlush;
+pub const textureSize = SDL_TextureSize;
+pub const getRenderVSync = SDL_GetRenderVSync;
+pub const setRenderVSync = SDL_SetRenderVSync;

@@ -8,6 +8,7 @@ extern fn SDL_SetHintWithPriority(name: [*:0]const u8, value: [*:0]const u8, pri
 extern fn SDL_ResetHint(name: [*:0]const u8) void;
 extern fn SDL_AddHintCallback(name: [*:0]const u8, callback: ?*const fn (?*anyopaque, [*:0]const u8, [*:0]const u8, [*:0]const u8) callconv(.C) void, userdata: ?*anyopaque) bool;
 extern fn SDL_DelHintCallback(name: [*:0]const u8, callback: ?*const fn (?*anyopaque, [*:0]const u8, [*:0]const u8, [*:0]const u8) callconv(.C) void, userdata: ?*anyopaque) void;
+extern fn SDL_GetHintBoolean(name: [*:0]const u8, default_value: bool) bool;
 
 // Priority enum
 pub const SDL_HintPriority = enum(c_int) {
@@ -23,3 +24,4 @@ pub const setHintWithPriority = SDL_SetHintWithPriority;
 pub const resetHint = SDL_ResetHint;
 pub const addHintCallback = SDL_AddHintCallback;
 pub const delHintCallback = SDL_DelHintCallback;
+pub const getHintBoolean = SDL_GetHintBoolean;

@@ -222,6 +222,8 @@ pub const blitSurface9Grid = surface.blitSurface9Grid;
 pub const mapSurfaceRGB = surface.mapSurfaceRGB;
 pub const mapSurfaceRGBA = surface.mapSurfaceRGBA;
 pub const readSurfacePixel = surface.readSurfacePixel;
+pub const softStretch = surface.softStretch;
+pub const softStretchLinear = surface.softStretchLinear;
 
 // Re-export events types and functions
 pub const SDL_Event = events.SDL_Event;
@@ -421,6 +423,12 @@ pub const getRenderLogicalSize = render.getRenderLogicalSize;
 
 // Debug
 pub const renderDebugText = render.renderDebugText;
+pub const renderGeometryRaw = render.renderGeometryRaw;
+pub const renderReadPixels = render.renderReadPixels;
+pub const renderFlush = render.renderFlush;
+pub const textureSize = render.textureSize;
+pub const getRenderVSync = render.getRenderVSync;
+pub const setRenderVSync = render.setRenderVSync;
 
 // Re-export audio types and functions
 pub const SDL_AudioSpec = audio.SDL_AudioSpec;
@@ -505,6 +513,11 @@ pub const semTryWait = threads.semTryWait;
 pub const semWaitTimeout = threads.semWaitTimeout;
 pub const semPost = threads.semPost;
 pub const semValue = threads.semValue;
+pub const getThreadName = threads.getThreadName;
+pub const setThreadPriority = threads.setThreadPriority;
+pub const getCurrentThreadID = threads.getCurrentThreadID;
+pub const detachThread = threads.detachThread;
+pub const getThreadID = threads.getThreadID;
 
 // Re-export filesystem functions
 pub const getBasePath = filesystem.getBasePath;
@@ -518,6 +531,39 @@ pub const getIOSize = filesystem.getIOSize;
 pub const flushIO = filesystem.flushIO;
 pub const loadFile = filesystem.loadFile;
 pub const saveFile = filesystem.saveFile;
+pub const readU8 = filesystem.readU8;
+pub const readS8 = filesystem.readS8;
+pub const readU16LE = filesystem.readU16LE;
+pub const readS16LE = filesystem.readS16LE;
+pub const readU16BE = filesystem.readU16BE;
+pub const readS16BE = filesystem.readS16BE;
+pub const readU32LE = filesystem.readU32LE;
+pub const readS32LE = filesystem.readS32LE;
+pub const readU32BE = filesystem.readU32BE;
+pub const readS32BE = filesystem.readS32BE;
+pub const readU64LE = filesystem.readU64LE;
+pub const readS64LE = filesystem.readS64LE;
+pub const readU64BE = filesystem.readU64BE;
+pub const readS64BE = filesystem.readS64BE;
+pub const writeU8 = filesystem.writeU8;
+pub const writeS8 = filesystem.writeS8;
+pub const writeU16LE = filesystem.writeU16LE;
+pub const writeS16LE = filesystem.writeS16LE;
+pub const writeU16BE = filesystem.writeU16BE;
+pub const writeS16BE = filesystem.writeS16BE;
+pub const writeU32LE = filesystem.writeU32LE;
+pub const writeS32LE = filesystem.writeS32LE;
+pub const writeU32BE = filesystem.writeU32BE;
+pub const writeS32BE = filesystem.writeS32BE;
+pub const writeU64LE = filesystem.writeU64LE;
+pub const writeS64LE = filesystem.writeS64LE;
+pub const writeU64BE = filesystem.writeU64BE;
+pub const writeS64BE = filesystem.writeS64BE;
+pub const ioFromConstMem = filesystem.ioFromConstMem;
+pub const ioFromMem = filesystem.ioFromMem;
+pub const ioFromDynamicMem = filesystem.ioFromDynamicMem;
+pub const getIOProperties = filesystem.getIOProperties;
+pub const getIOStatus = filesystem.getIOStatus;
 
 // Re-export hints types and functions
 pub const SDL_HintPriority = hints.SDL_HintPriority;
@@ -527,6 +573,7 @@ pub const setHintWithPriority = hints.setHintWithPriority;
 pub const resetHint = hints.resetHint;
 pub const addHintCallback = hints.addHintCallback;
 pub const delHintCallback = hints.delHintCallback;
+pub const getHintBoolean = hints.getHintBoolean;
 
 // Re-export properties types and functions
 pub const SDL_PropertyType = properties.SDL_PropertyType;
@@ -548,6 +595,8 @@ pub const clearProperty = properties.clearProperty;
 pub const enumerateProperties = properties.enumerateProperties;
 pub const lockProperties = properties.lockProperties;
 pub const unlockProperties = properties.unlockProperties;
+pub const hasProperty = properties.hasProperty;
+pub const copyProperties = properties.copyProperties;
 
 // Re-export log types and functions
 pub const SDL_LogPriority = log.SDL_LogPriority;
@@ -580,6 +629,7 @@ pub const logWarn = log.logWarn;
 pub const logError = log.logError;
 pub const logCritical = log.logCritical;
 pub const logMessage = log.logMessage;
+pub const setLogOutputFunction = log.setLogOutputFunction;
 
 // Re-export clipboard functions
 pub const setClipboardText = clipboard.setClipboardText;
@@ -981,3 +1031,9 @@ pub const insertGPUDebugLabel = gpu.insertGPUDebugLabel;
 pub const pushGPUDebugGroup = gpu.pushGPUDebugGroup;
 pub const popGPUDebugGroup = gpu.popGPUDebugGroup;
 pub const setGPUAllowedFramesInFlight = gpu.setGPUAllowedFramesInFlight;
+pub const gpuSupportsShaderFormats = gpu.gpuSupportsShaderFormats;
+pub const gpuSupportsProperties = gpu.gpuSupportsProperties;
+pub const gpuTextureSupportsFormat = gpu.gpuTextureSupportsFormat;
+pub const gpuBufferSize = gpu.gpuBufferSize;
+pub const gpuTextureFormatTexelBlockSize = gpu.gpuTextureFormatTexelBlockSize;
+pub const gpuTextureSupportsSampleCount = gpu.gpuTextureSupportsSampleCount;

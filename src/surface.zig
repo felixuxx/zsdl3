@@ -103,6 +103,8 @@ extern fn SDL_BlitSurface9Grid(src: ?*SDL_Surface, srcrect: ?*const SDL_Rect, le
 extern fn SDL_MapSurfaceRGB(surface: ?*SDL_Surface, r: Uint8, g: Uint8, b: Uint8) Uint32;
 extern fn SDL_MapSurfaceRGBA(surface: ?*SDL_Surface, r: Uint8, g: Uint8, b: Uint8, a: Uint8) Uint32;
 extern fn SDL_ReadSurfacePixel(surface: ?*SDL_Surface, x: c_int, y: c_int, r: ?*Uint8, g: ?*Uint8, b: ?*Uint8, a: ?*Uint8) bool;
+extern fn SDL_SoftStretch(src: ?*SDL_Surface, srcrect: ?*const SDL_Rect, dst: ?*SDL_Surface, dstrect: ?*const SDL_Rect, scaleMode: c_int) bool;
+extern fn SDL_SoftStretchLinear(src: ?*SDL_Surface, srcrect: ?*const SDL_Rect, dst: ?*SDL_Surface, dstrect: ?*const SDL_Rect) bool;
 
 // Public API
 pub const createSurface = SDL_CreateSurface;
@@ -156,3 +158,5 @@ pub const blitSurface9Grid = SDL_BlitSurface9Grid;
 pub const mapSurfaceRGB = SDL_MapSurfaceRGB;
 pub const mapSurfaceRGBA = SDL_MapSurfaceRGBA;
 pub const readSurfacePixel = SDL_ReadSurfacePixel;
+pub const softStretch = SDL_SoftStretch;
+pub const softStretchLinear = SDL_SoftStretchLinear;
