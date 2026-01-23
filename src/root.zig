@@ -80,8 +80,61 @@ pub const setError = SDL_SetError;
 pub const getVersion = SDL_GetVersion;
 pub const getRevision = SDL_GetRevision;
 
-// Placeholder for SDL_Event - will be defined in events module
-pub const SDL_Event = opaque {};
+// Event types
+pub const SDL_EventType = c_uint;
+pub const SDL_EVENT_FIRST = 0;
+pub const SDL_EVENT_QUIT = 0x100;
+pub const SDL_EVENT_KEY_DOWN = 0x300;
+pub const SDL_EVENT_KEY_UP = 0x301;
+pub const SDL_EVENT_MOUSE_MOTION = 0x400;
+pub const SDL_EVENT_MOUSE_BUTTON_DOWN = 0x401;
+pub const SDL_EVENT_MOUSE_BUTTON_UP = 0x402;
+pub const SDL_EVENT_MOUSE_WHEEL = 0x403;
+
+// Common event data
+pub const SDL_CommonEvent = extern struct {
+    type: SDL_EventType,
+    reserved: Uint32,
+    timestamp: Uint64,
+};
+
+// Quit event
+pub const SDL_QuitEvent = extern struct {
+    type: SDL_EventType,
+    reserved: Uint32,
+    timestamp: Uint64,
+};
+
+// Placeholder for keyboard, mouse events - full structs later
+pub const SDL_KeyboardEvent = extern struct {
+    type: SDL_EventType,
+    reserved: Uint32,
+    timestamp: Uint64,
+    windowID: SDL_WindowID,
+    // ... other fields
+    down: bool,
+};
+
+pub const SDL_MouseMotionEvent = extern struct {
+    type: SDL_EventType,
+    reserved: Uint32,
+    timestamp: Uint64,
+    windowID: SDL_WindowID,
+    // ... other fields
+    x: f32,
+    y: f32,
+};
+
+// SDL_Event union
+pub const SDL_Event = extern union {
+    type: SDL_EventType,
+    common: SDL_CommonEvent,
+    quit: SDL_QuitEvent,
+    key: SDL_KeyboardEvent,
+    motion: SDL_MouseMotionEvent,
+    // padding for ABI
+    padding: [128]Uint8,
+};
 
 // Video types
 pub const SDL_DisplayID = Uint32;
@@ -164,14 +217,109 @@ pub const SDL_DisplayMode = extern struct {
     internal: ?*anyopaque,
 };
 
-// Placeholder for SDL_PixelFormat - will be defined in pixels module
-pub const SDL_PixelFormat = opaque {};
-
 // Placeholder for SDL_Rect - will be defined in rect module
-pub const SDL_Rect = opaque {};
+// Point and Rect
+pub const SDL_Point = extern struct {
+    x: c_int,
+    y: c_int,
+};
 
-// Placeholder for SDL_Point
-pub const SDL_Point = opaque {};
+pub const SDL_FPoint = extern struct {
+    x: f32,
+    y: f32,
+};
+
+pub const SDL_Rect = extern struct {
+    x: c_int,
+    y: c_int,
+    w: c_int,
+    h: c_int,
+};
+
+pub const SDL_FRect = extern struct {
+    x: f32,
+    y: f32,
+    w: f32,
+    h: f32,
+};
+
+// Pixel format
+pub const SDL_PixelFormat = c_uint;
+
+// Key pixel formats
+pub const SDL_PIXELFORMAT_UNKNOWN = 0;
+pub const SDL_PIXELFORMAT_RGBA8888 = 0x16462004;
+pub const SDL_PIXELFORMAT_ARGB8888 = 0x16362004;
+pub const SDL_PIXELFORMAT_ABGR8888 = 0x16762004;
+pub const SDL_PIXELFORMAT_BGRA8888 = 0x16862004;
+pub const SDL_PIXELFORMAT_RGB565 = 0x15151002;
+
+// Color
+pub const SDL_Color = extern struct {
+    r: Uint8,
+    g: Uint8,
+    b: Uint8,
+    a: Uint8,
+};
+
+// Palette
+pub const SDL_Palette = extern struct {
+    ncolors: c_int,
+    colors: ?[*]SDL_Color,
+    version: Uint32,
+    refcount: c_int,
+};
+
+// Blend modes
+pub const SDL_BlendMode = Uint32;
+pub const SDL_BLENDMODE_NONE = 0x00000000;
+pub const SDL_BLENDMODE_BLEND = 0x00000001;
+pub const SDL_BLENDMODE_BLEND_PREMULTIPLIED = 0x00000010;
+pub const SDL_BLENDMODE_ADD = 0x00000002;
+pub const SDL_BLENDMODE_ADD_PREMULTIPLIED = 0x00000020;
+pub const SDL_BLENDMODE_MOD = 0x00000004;
+pub const SDL_BLENDMODE_MUL = 0x00000008;
+pub const SDL_BLENDMODE_INVALID = 0x7FFFFFFF;
+
+pub const SDL_BlendOperation = enum(c_int) {
+    SDL_BLENDOPERATION_ADD = 0x1,
+    SDL_BLENDOPERATION_SUBTRACT = 0x2,
+    SDL_BLENDOPERATION_REV_SUBTRACT = 0x3,
+    SDL_BLENDOPERATION_MINIMUM = 0x4,
+    SDL_BLENDOPERATION_MAXIMUM = 0x5,
+};
+
+pub const SDL_BlendFactor = enum(c_int) {
+    SDL_BLENDFACTOR_ZERO = 0x1,
+    SDL_BLENDFACTOR_ONE = 0x2,
+    SDL_BLENDFACTOR_SRC_COLOR = 0x3,
+    SDL_BLENDFACTOR_ONE_MINUS_SRC_COLOR = 0x4,
+    SDL_BLENDFACTOR_SRC_ALPHA = 0x5,
+    SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA = 0x6,
+    SDL_BLENDFACTOR_DST_COLOR = 0x7,
+    SDL_BLENDFACTOR_ONE_MINUS_DST_COLOR = 0x8,
+    SDL_BLENDFACTOR_DST_ALPHA = 0x9,
+    SDL_BLENDFACTOR_ONE_MINUS_DST_ALPHA = 0xA,
+};
+
+// Rect functions (inline in C, implemented in Zig)
+pub fn SDL_PointInRect(p: ?*const SDL_Point, r: ?*const SDL_Rect) bool {
+    return if (p != null and r != null and p.?.x >= r.?.x and p.?.x < r.?.x + r.?.w and p.?.y >= r.?.y and p.?.y < r.?.y + r.?.h) true else false;
+}
+
+pub fn SDL_RectEmpty(r: ?*const SDL_Rect) bool {
+    return (r == null or r.?.w <= 0 or r.?.h <= 0);
+}
+
+// Pixel functions
+extern fn SDL_GetPixelFormatName(format: SDL_PixelFormat) ?[*:0]const u8;
+extern fn SDL_GetMasksForPixelFormat(format: SDL_PixelFormat, bpp: ?*c_int, Rmask: ?*Uint32, Gmask: ?*Uint32, Bmask: ?*Uint32, Amask: ?*Uint32) bool;
+pub const getPixelFormatName = SDL_GetPixelFormatName;
+pub const getMasksForPixelFormat = SDL_GetMasksForPixelFormat;
+
+// Blend mode function
+extern fn SDL_ComposeCustomBlendMode(srcColorFactor: SDL_BlendFactor, dstColorFactor: SDL_BlendFactor, colorOperation: SDL_BlendOperation, srcAlphaFactor: SDL_BlendFactor, dstAlphaFactor: SDL_BlendFactor, alphaOperation: SDL_BlendOperation) SDL_BlendMode;
+pub const composeCustomBlendMode = SDL_ComposeCustomBlendMode;
 
 // Video extern functions
 extern fn SDL_GetNumVideoDrivers() c_int;
@@ -254,6 +402,172 @@ pub const SDL_Surface = opaque {};
 
 // Placeholder for SDL_PropertiesID
 pub const SDL_PropertiesID = Uint32;
+
+// Keyboard
+pub const SDL_KeyboardID = Uint32;
+
+// Placeholder for keymod, keycode, scancode
+pub const SDL_Keymod = c_int;
+pub const SDL_Keycode = c_int;
+pub const SDL_Scancode = c_int;
+
+// Keyboard functions
+extern fn SDL_HasKeyboard() bool;
+extern fn SDL_GetKeyboardState(numkeys: ?*c_int) ?[*]const bool;
+extern fn SDL_GetModState() SDL_Keymod;
+extern fn SDL_SetModState(modstate: SDL_Keymod) void;
+pub const hasKeyboard = SDL_HasKeyboard;
+pub const getKeyboardState = SDL_GetKeyboardState;
+pub const getModState = SDL_GetModState;
+pub const setModState = SDL_SetModState;
+
+// Mouse
+pub const SDL_MouseID = Uint32;
+pub const SDL_Cursor = opaque {};
+pub const SDL_SystemCursor = enum(c_int) {
+    SDL_SYSTEM_CURSOR_DEFAULT,
+    SDL_SYSTEM_CURSOR_TEXT,
+    SDL_SYSTEM_CURSOR_WAIT,
+    SDL_SYSTEM_CURSOR_CROSSHAIR,
+    SDL_SYSTEM_CURSOR_PROGRESS,
+    SDL_SYSTEM_CURSOR_NWSE_RESIZE,
+    SDL_SYSTEM_CURSOR_NESW_RESIZE,
+    SDL_SYSTEM_CURSOR_EW_RESIZE,
+    SDL_SYSTEM_CURSOR_NS_RESIZE,
+    SDL_SYSTEM_CURSOR_MOVE,
+    SDL_SYSTEM_CURSOR_NOT_ALLOWED,
+    SDL_SYSTEM_CURSOR_POINTER,
+    SDL_SYSTEM_CURSOR_NW_RESIZE,
+    SDL_SYSTEM_CURSOR_N_RESIZE,
+    SDL_SYSTEM_CURSOR_NE_RESIZE,
+    SDL_SYSTEM_CURSOR_E_RESIZE,
+    SDL_SYSTEM_CURSOR_SE_RESIZE,
+    SDL_SYSTEM_CURSOR_S_RESIZE,
+    SDL_SYSTEM_CURSOR_SW_RESIZE,
+    SDL_SYSTEM_CURSOR_W_RESIZE,
+    SDL_SYSTEM_CURSOR_COUNT,
+};
+pub const SDL_MouseButtonFlags = Uint32;
+
+// Mouse functions
+extern fn SDL_HasMouse() bool;
+extern fn SDL_GetMouseState(x: ?*f32, y: ?*f32) SDL_MouseButtonFlags;
+extern fn SDL_WarpMouseInWindow(window: ?*SDL_Window, x: f32, y: f32) void;
+pub const hasMouse = SDL_HasMouse;
+pub const getMouseState = SDL_GetMouseState;
+pub const warpMouseInWindow = SDL_WarpMouseInWindow;
+
+// Joystick/Gamepad
+pub const SDL_JoystickID = Uint32;
+pub const SDL_Joystick = opaque {};
+pub const SDL_Gamepad = opaque {};
+
+// Basic joystick functions
+extern fn SDL_NumJoysticks() c_int;
+extern fn SDL_JoystickOpen(instance_id: c_int) ?*SDL_Joystick;
+extern fn SDL_JoystickClose(joystick: ?*SDL_Joystick) void;
+pub const numJoysticks = SDL_NumJoysticks;
+pub const joystickOpen = SDL_JoystickOpen;
+pub const joystickClose = SDL_JoystickClose;
+
+// Basic gamepad functions
+extern fn SDL_NumGamepads() c_int;
+extern fn SDL_IsGamepad(instance_id: c_int) bool;
+extern fn SDL_OpenGamepad(instance_id: c_int) ?*SDL_Gamepad;
+extern fn SDL_CloseGamepad(gamepad: ?*SDL_Gamepad) void;
+pub const numGamepads = SDL_NumGamepads;
+pub const isGamepad = SDL_IsGamepad;
+pub const openGamepad = SDL_OpenGamepad;
+pub const closeGamepad = SDL_CloseGamepad;
+
+// Render
+pub const SDL_Renderer = opaque {};
+pub const SDL_Texture = opaque {};
+
+// Render functions
+extern fn SDL_CreateRenderer(window: ?*SDL_Window, name: ?[*:0]const u8, flags: Uint32) ?*SDL_Renderer;
+extern fn SDL_DestroyRenderer(renderer: ?*SDL_Renderer) void;
+extern fn SDL_RenderClear(renderer: ?*SDL_Renderer) bool;
+extern fn SDL_RenderPresent(renderer: ?*SDL_Renderer) void;
+extern fn SDL_SetRenderDrawColor(renderer: ?*SDL_Renderer, r: Uint8, g: Uint8, b: Uint8, a: Uint8) bool;
+extern fn SDL_RenderDrawLine(renderer: ?*SDL_Renderer, x1: f32, y1: f32, x2: f32, y2: f32) bool;
+extern fn SDL_RenderFillRect(renderer: ?*SDL_Renderer, rect: ?*const SDL_FRect) bool;
+pub const createRenderer = SDL_CreateRenderer;
+pub const destroyRenderer = SDL_DestroyRenderer;
+pub const renderClear = SDL_RenderClear;
+pub const renderPresent = SDL_RenderPresent;
+pub const setRenderDrawColor = SDL_SetRenderDrawColor;
+pub const renderDrawLine = SDL_RenderDrawLine;
+pub const renderFillRect = SDL_RenderFillRect;
+
+// Time
+extern fn SDL_GetTicks() Uint64;
+extern fn SDL_GetTicksNS() Uint64;
+extern fn SDL_Delay(ms: Uint32) void;
+pub const getTicks = SDL_GetTicks;
+pub const getTicksNS = SDL_GetTicksNS;
+pub const delay = SDL_Delay;
+
+// Audio
+pub const SDL_AudioDeviceID = Uint32;
+pub const SDL_AudioSpec = extern struct {
+    format: SDL_PixelFormat,
+    channels: c_int,
+    freq: c_int,
+};
+
+// Audio functions
+extern fn SDL_OpenAudioDevice(device: ?[*:0]const u8, recording: bool, spec: ?*const SDL_AudioSpec, obtained: ?*SDL_AudioSpec, allowed_changes: c_int) SDL_AudioDeviceID;
+extern fn SDL_CloseAudioDevice(dev: SDL_AudioDeviceID) void;
+extern fn SDL_PauseAudioDevice(dev: SDL_AudioDeviceID, pause_on: bool) bool;
+pub const openAudioDevice = SDL_OpenAudioDevice;
+pub const closeAudioDevice = SDL_CloseAudioDevice;
+pub const pauseAudioDevice = SDL_PauseAudioDevice;
+
+// Threads
+pub const SDL_Thread = opaque {};
+pub const SDL_Mutex = opaque {};
+
+// Thread functions
+extern fn SDL_CreateThread(func: ?*const fn (?*anyopaque) callconv(.C) c_int, name: ?[*:0]const u8, data: ?*anyopaque) ?*SDL_Thread;
+extern fn SDL_WaitThread(thread: ?*SDL_Thread, status: ?*c_int) void;
+extern fn SDL_CreateMutex() ?*SDL_Mutex;
+extern fn SDL_DestroyMutex(mutex: ?*SDL_Mutex) void;
+extern fn SDL_LockMutex(mutex: ?*SDL_Mutex) bool;
+extern fn SDL_UnlockMutex(mutex: ?*SDL_Mutex) bool;
+pub const createThread = SDL_CreateThread;
+pub const waitThread = SDL_WaitThread;
+pub const createMutex = SDL_CreateMutex;
+pub const destroyMutex = SDL_DestroyMutex;
+pub const lockMutex = SDL_LockMutex;
+pub const unlockMutex = SDL_UnlockMutex;
+
+// Filesystem
+pub const SDL_IOStream = opaque {};
+
+// Filesystem functions
+extern fn SDL_GetBasePath() ?[*:0]const u8;
+extern fn SDL_IOFromFile(file: ?[*:0]const u8, mode: ?[*:0]const u8) ?*SDL_IOStream;
+extern fn SDL_CloseIO(stream: ?*SDL_IOStream) bool;
+extern fn SDL_ReadIO(stream: ?*SDL_IOStream, ptr: ?*anyopaque, size: usize) usize;
+extern fn SDL_WriteIO(stream: ?*SDL_IOStream, ptr: ?*const anyopaque, size: usize) usize;
+pub const getBasePath = SDL_GetBasePath;
+pub const ioFromFile = SDL_IOFromFile;
+pub const closeIO = SDL_CloseIO;
+pub const readIO = SDL_ReadIO;
+pub const writeIO = SDL_WriteIO;
+
+// Event functions
+extern fn SDL_PumpEvents() void;
+extern fn SDL_PollEvent(event: ?*SDL_Event) bool;
+extern fn SDL_WaitEvent(event: ?*SDL_Event) bool;
+extern fn SDL_WaitEventTimeout(event: ?*SDL_Event, timeout: c_int) bool;
+extern fn SDL_PushEvent(event: ?*const SDL_Event) bool;
+pub const pumpEvents = SDL_PumpEvents;
+pub const pollEvent = SDL_PollEvent;
+pub const waitEvent = SDL_WaitEvent;
+pub const waitEventTimeout = SDL_WaitEventTimeout;
+pub const pushEvent = SDL_PushEvent;
 
 // Public video API
 pub const getNumVideoDrivers = SDL_GetNumVideoDrivers;
