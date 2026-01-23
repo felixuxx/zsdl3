@@ -16,6 +16,16 @@ pub const threads = @import("threads.zig");
 pub const filesystem = @import("filesystem.zig");
 pub const hints = @import("hints.zig");
 pub const properties = @import("properties.zig");
+pub const log = @import("log.zig");
+pub const clipboard = @import("clipboard.zig");
+pub const platform = @import("platform.zig");
+pub const power = @import("power.zig");
+pub const system = @import("system.zig");
+pub const keycode = @import("keycode.zig");
+pub const locale = @import("locale.zig");
+pub const messagebox = @import("messagebox.zig");
+pub const misc = @import("misc.zig");
+pub const stdinc = @import("stdinc.zig");
 
 // Re-export core functions
 pub const init = core.init;
@@ -310,6 +320,70 @@ pub const clearProperty = properties.clearProperty;
 pub const enumerateProperties = properties.enumerateProperties;
 pub const lockProperties = properties.lockProperties;
 pub const unlockProperties = properties.unlockProperties;
+
+// Re-export log types and functions
+pub const SDL_LogPriority = log.SDL_LogPriority;
+pub const SDL_LogCategory = log.SDL_LogCategory;
+pub const setLogPriorities = log.setLogPriorities;
+pub const setLogPriority = log.setLogPriority;
+pub const getLogPriority = log.getLogPriority;
+pub const resetLogPriorities = log.resetLogPriorities;
+pub const sdlLog = log.log;
+pub const logVerbose = log.logVerbose;
+pub const logDebug = log.logDebug;
+pub const logInfo = log.logInfo;
+pub const logWarn = log.logWarn;
+pub const logError = log.logError;
+pub const logCritical = log.logCritical;
+pub const logMessage = log.logMessage;
+
+// Re-export clipboard functions
+pub const setClipboardText = clipboard.setClipboardText;
+pub const getClipboardText = clipboard.getClipboardText;
+pub const hasClipboardText = clipboard.hasClipboardText;
+pub const setPrimarySelectionText = clipboard.setPrimarySelectionText;
+pub const getPrimarySelectionText = clipboard.getPrimarySelectionText;
+pub const hasPrimarySelectionText = clipboard.hasPrimarySelectionText;
+
+// Re-export platform functions
+pub const getPlatform = platform.getPlatform;
+
+// Re-export power types and functions
+pub const SDL_PowerState = power.SDL_PowerState;
+pub const getPowerInfo = power.getPowerInfo;
+
+// Re-export system functions
+pub const getSystemRAM = system.getSystemRAM;
+pub const getSIMDAlignment = system.getSIMDAlignment;
+
+// Re-export keycode functions
+pub const getKeyFromName = keycode.getKeyFromName;
+pub const getKeyName = keycode.getKeyName;
+pub const getScancodeFromName = keycode.getScancodeFromName;
+pub const getScancodeName = keycode.getScancodeName;
+pub const setScancodeName = keycode.setScancodeName;
+
+// Re-export locale types and functions
+pub const SDL_Locale = locale.SDL_Locale;
+pub const getPreferredLocales = locale.getPreferredLocales;
+
+// Re-export messagebox types and functions
+pub const SDL_MessageBoxFlags = messagebox.SDL_MessageBoxFlags;
+pub const SDL_MessageBoxButton = messagebox.SDL_MessageBoxButton;
+pub const SDL_MessageBoxColor = messagebox.SDL_MessageBoxColor;
+pub const SDL_MessageBoxColorScheme = messagebox.SDL_MessageBoxColorScheme;
+pub const SDL_MessageBoxData = messagebox.SDL_MessageBoxData;
+pub const showMessageBox = messagebox.showMessageBox;
+pub const showSimpleMessageBox = messagebox.showSimpleMessageBox;
+
+// Re-export misc functions
+pub const openURL = misc.openURL;
+pub const getDefaultLogOutputFunction = misc.getDefaultLogOutputFunction;
+pub const crc16 = misc.crc16;
+pub const crc32 = misc.crc32;
+pub const murmur3_32 = misc.murmur3_32;
+pub const getNumAllocations = misc.getNumAllocations;
+pub const getFullPath = misc.getFullPath;
 
 // Constants
 pub const SDL_INIT_AUDIO = core.SDL_INIT_AUDIO;
