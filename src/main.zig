@@ -28,8 +28,13 @@ pub fn main() !void {
                 var running = true;
                 var rect_x: f32 = 100;
                 var rect_y: f32 = 100;
+                var window_w: c_int = 800;
+                var window_h: c_int = 600;
 
                 while (running) {
+                    // Get current window size
+                    _ = zsdl3.getWindowSize(win, &window_w, &window_h);
+
                     // Handle events
                     var event: zsdl3.SDL_Event = undefined;
                     while (zsdl3.pollEvent(&event)) {
@@ -62,9 +67,12 @@ pub fn main() !void {
                     const rect = zsdl3.SDL_FRect{ .x = rect_x, .y = rect_y, .w = 200, .h = 150 };
                     _ = zsdl3.renderFillRect(rend, &rect);
 
-                    // Draw a line
-                    _ = zsdl3.setRenderDrawColor(rend, 255, 0, 255, 255);
-                    _ = zsdl3.renderLine(rend, 0, 0, 800, 600);
+                    // Draw a simple border
+                    _ = zsdl3.setRenderDrawColor(rend, 255, 255, 255, 255);
+                    _ = zsdl3.renderLine(rend, 0, 0, @as(f32, @floatFromInt(window_w)), 0); // Top border
+                    _ = zsdl3.renderLine(rend, @as(f32, @floatFromInt(window_w)), 0, @as(f32, @floatFromInt(window_w)), @as(f32, @floatFromInt(window_h))); // Right border
+                    _ = zsdl3.renderLine(rend, @as(f32, @floatFromInt(window_w)), @as(f32, @floatFromInt(window_h)), 0, @as(f32, @floatFromInt(window_h))); // Bottom border
+                    _ = zsdl3.renderLine(rend, 0, @as(f32, @floatFromInt(window_h)), 0, 0); // Left border
 
                     // Present
                     zsdl3.renderPresent(rend);
