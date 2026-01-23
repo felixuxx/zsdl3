@@ -315,6 +315,242 @@ pub const SDL_GPUBufferBinding = extern struct {
     offset: Uint32,
 };
 
+// Additional structs
+pub const SDL_GPUGraphicsPipelineCreateInfo = extern struct {
+    vertex_shader: ?*SDL_GPUShader,
+    fragment_shader: ?*SDL_GPUShader,
+    vertex_input_state: SDL_GPUVertexInputState,
+    primitive_type: SDL_GPUPrimitiveType,
+    rasterizer_state: SDL_GPURasterizerState,
+    multisample_state: SDL_GPUMultisampleState,
+    depth_stencil_state: SDL_GPUDepthStencilState,
+    target_info: SDL_GPUGraphicsPipelineTargetInfo,
+    props: core.SDL_PropertiesID,
+};
+
+pub const SDL_GPUVertexInputState = extern struct {
+    vertex_buffer_descriptions: ?[*]SDL_GPUVertexBufferDescription,
+    num_vertex_buffers: Uint32,
+    vertex_attributes: ?[*]SDL_GPUVertexAttribute,
+    num_vertex_attributes: Uint32,
+};
+
+pub const SDL_GPUVertexBufferDescription = extern struct {
+    slot: Uint32,
+    pitch: Uint32,
+    input_rate: SDL_GPUVertexInputRate,
+    instance_step_rate: Uint32,
+};
+
+pub const SDL_GPUVertexInputRate = enum(c_int) {
+    SDL_GPU_VERTEXINPUTRATE_VERTEX,
+    SDL_GPU_VERTEXINPUTRATE_INSTANCE,
+};
+
+pub const SDL_GPUVertexAttribute = extern struct {
+    location: Uint32,
+    buffer_slot: Uint32,
+    format: SDL_GPUVertexElementFormat,
+    offset: Uint32,
+};
+
+pub const SDL_GPUVertexElementFormat = enum(c_int) {
+    SDL_GPU_VERTEXELEMENTFORMAT_INVALID,
+    SDL_GPU_VERTEXELEMENTFORMAT_INT,
+    SDL_GPU_VERTEXELEMENTFORMAT_INT2,
+    SDL_GPU_VERTEXELEMENTFORMAT_INT3,
+    SDL_GPU_VERTEXELEMENTFORMAT_INT4,
+    SDL_GPU_VERTEXELEMENTFORMAT_UINT,
+    SDL_GPU_VERTEXELEMENTFORMAT_UINT2,
+    SDL_GPU_VERTEXELEMENTFORMAT_UINT3,
+    SDL_GPU_VERTEXELEMENTFORMAT_UINT4,
+    SDL_GPU_VERTEXELEMENTFORMAT_FLOAT,
+    SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2,
+    SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3,
+    SDL_GPU_VERTEXELEMENTFORMAT_FLOAT4,
+    SDL_GPU_VERTEXELEMENTFORMAT_BYTE2,
+    SDL_GPU_VERTEXELEMENTFORMAT_BYTE4,
+    SDL_GPU_VERTEXELEMENTFORMAT_UBYTE2,
+    SDL_GPU_VERTEXELEMENTFORMAT_UBYTE4,
+    SDL_GPU_VERTEXELEMENTFORMAT_SHORT2,
+    SDL_GPU_VERTEXELEMENTFORMAT_SHORT4,
+    SDL_GPU_VERTEXELEMENTFORMAT_USHORT2,
+    SDL_GPU_VERTEXELEMENTFORMAT_USHORT4,
+    SDL_GPU_VERTEXELEMENTFORMAT_HALF2,
+    SDL_GPU_VERTEXELEMENTFORMAT_HALF4,
+};
+
+pub const SDL_GPURasterizerState = extern struct {
+    fill_mode: SDL_GPUFillMode,
+    cull_mode: SDL_GPUCullMode,
+    front_face: SDL_GPUFrontFace,
+    depth_bias_constant_factor: f32,
+    depth_bias_clamp: f32,
+    depth_bias_slope_factor: f32,
+    enable_depth_bias: bool,
+    enable_depth_clip: bool,
+    padding: [2]Uint8,
+};
+
+pub const SDL_GPUFillMode = enum(c_int) {
+    SDL_GPU_FILLMODE_FILL,
+    SDL_GPU_FILLMODE_LINE,
+};
+
+pub const SDL_GPUCullMode = enum(c_int) {
+    SDL_GPU_CULLMODE_NONE,
+    SDL_GPU_CULLMODE_FRONT,
+    SDL_GPU_CULLMODE_BACK,
+};
+
+pub const SDL_GPUFrontFace = enum(c_int) {
+    SDL_GPU_FRONTFACE_COUNTER_CLOCKWISE,
+    SDL_GPU_FRONTFACE_CLOCKWISE,
+};
+
+pub const SDL_GPUMultisampleState = extern struct {
+    sample_count: SDL_GPUSampleCount,
+    sample_mask: Uint32,
+    enable_mask: bool,
+    padding: [3]Uint8,
+};
+
+pub const SDL_GPUDepthStencilState = extern struct {
+    enable_depth_test: bool,
+    enable_depth_write: bool,
+    enable_stencil_test: bool,
+    compare_op: SDL_GPUCompareOp,
+    back_stencil_state: SDL_GPUStencilOpState,
+    front_stencil_state: SDL_GPUStencilOpState,
+    depth_bounds_min: f32,
+    depth_bounds_max: f32,
+    enable_depth_bounds: bool,
+    write_mask: Uint8,
+    padding: [3]Uint8,
+};
+
+pub const SDL_GPUStencilOpState = extern struct {
+    fail_op: SDL_GPUStencilOp,
+    pass_op: SDL_GPUStencilOp,
+    depth_fail_op: SDL_GPUStencilOp,
+    compare_op: SDL_GPUCompareOp,
+    compare_mask: Uint8,
+    write_mask: Uint8,
+    reference: Uint8,
+    padding: Uint8,
+};
+
+pub const SDL_GPUStencilOp = enum(c_int) {
+    SDL_GPU_STENCILOP_KEEP,
+    SDL_GPU_STENCILOP_ZERO,
+    SDL_GPU_STENCILOP_REPLACE,
+    SDL_GPU_STENCILOP_INCREMENT_AND_CLAMP,
+    SDL_GPU_STENCILOP_DECREMENT_AND_CLAMP,
+    SDL_GPU_STENCILOP_INVERT,
+    SDL_GPU_STENCILOP_INCREMENT_AND_WRAP,
+    SDL_GPU_STENCILOP_DECREMENT_AND_WRAP,
+};
+
+pub const SDL_GPUGraphicsPipelineTargetInfo = extern struct {
+    color_target_descriptions: ?[*]SDL_GPUColorTargetDescription,
+    num_color_targets: Uint32,
+    depth_stencil_format: SDL_GPUTextureFormat,
+    has_depth_stencil_target: bool,
+    padding: [3]Uint8,
+};
+
+pub const SDL_GPUColorTargetDescription = extern struct {
+    format: SDL_GPUTextureFormat,
+    blend_state: SDL_GPUColorTargetBlendState,
+};
+
+pub const SDL_GPUColorTargetBlendState = extern struct {
+    src_color_blendfactor: SDL_GPUBlendFactor,
+    dst_color_blendfactor: SDL_GPUBlendFactor,
+    color_blend_op: SDL_GPUBlendOp,
+    src_alpha_blendfactor: SDL_GPUBlendFactor,
+    dst_alpha_blendfactor: SDL_GPUBlendFactor,
+    alpha_blend_op: SDL_GPUBlendOp,
+    color_write_mask: SDL_GPUColorComponentFlags,
+    enable_blend: bool,
+    enable_color_write_mask: bool,
+    padding: [2]Uint8,
+};
+
+pub const SDL_GPUBlendFactor = enum(c_int) {
+    SDL_GPU_BLENDFACTOR_ZERO,
+    SDL_GPU_BLENDFACTOR_ONE,
+    SDL_GPU_BLENDFACTOR_SRC_COLOR,
+    SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_COLOR,
+    SDL_GPU_BLENDFACTOR_DST_COLOR,
+    SDL_GPU_BLENDFACTOR_ONE_MINUS_DST_COLOR,
+    SDL_GPU_BLENDFACTOR_SRC_ALPHA,
+    SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
+    SDL_GPU_BLENDFACTOR_DST_ALPHA,
+    SDL_GPU_BLENDFACTOR_ONE_MINUS_DST_ALPHA,
+    SDL_GPU_BLENDFACTOR_CONSTANT_COLOR,
+    SDL_GPU_BLENDFACTOR_ONE_MINUS_CONSTANT_COLOR,
+    SDL_GPU_BLENDFACTOR_SRC_ALPHA_SATURATE,
+};
+
+pub const SDL_GPUBlendOp = enum(c_int) {
+    SDL_GPU_BLENDOP_ADD,
+    SDL_GPU_BLENDOP_SUBTRACT,
+    SDL_GPU_BLENDOP_REVERSE_SUBTRACT,
+    SDL_GPU_BLENDOP_MIN,
+    SDL_GPU_BLENDOP_MAX,
+};
+
+pub const SDL_GPUColorComponentFlags = Uint8;
+pub const SDL_GPU_COLORCOMPONENT_R = 1 << 0;
+pub const SDL_GPU_COLORCOMPONENT_G = 1 << 1;
+pub const SDL_GPU_COLORCOMPONENT_B = 1 << 2;
+pub const SDL_GPU_COLORCOMPONENT_A = 1 << 3;
+
+pub const SDL_GPUComputePipelineCreateInfo = extern struct {
+    compute_shader: ?*SDL_GPUShader,
+    read_only_storage_texture_count: Uint32,
+    read_only_storage_buffer_count: Uint32,
+    read_write_storage_texture_count: Uint32,
+    read_write_storage_buffer_count: Uint32,
+    thread_count_x: Uint32,
+    thread_count_y: Uint32,
+    thread_count_z: Uint32,
+    props: core.SDL_PropertiesID,
+};
+
+pub const SDL_GPUBlitInfo = extern struct {
+    source: SDL_GPUTextureRegion,
+    destination: SDL_GPUTextureRegion,
+    load_op: SDL_GPULoadOp,
+    clear_color: SDL_FColor,
+    flip_mode: SDL_GPUFlipMode,
+    filter: SDL_GPUFilter,
+    cycle: bool,
+    padding: [3]Uint8,
+};
+
+pub const SDL_GPUFlipMode = enum(c_int) {
+    SDL_GPU_FLIPMODE_NONE,
+    SDL_GPU_FLIPMODE_HORIZONTAL,
+    SDL_GPU_FLIPMODE_VERTICAL,
+    SDL_GPU_FLIPMODE_BOTH,
+};
+
+pub const SDL_GPUStorageTextureReadWriteBinding = extern struct {
+    texture: ?*SDL_GPUTexture,
+    mip_level: Uint32,
+    layer: Uint32,
+    cycle: bool,
+    padding: [3]Uint8,
+};
+
+pub const SDL_GPUStorageBufferReadWriteBinding = extern struct {
+    buffer: ?*SDL_GPUBuffer,
+    cycle: bool,
+    padding: [3]Uint8,
+};
+
 // Buffer functions
 extern fn SDL_CreateGPUBuffer(device: ?*SDL_GPUDevice, create_info: ?*const SDL_GPUBufferCreateInfo) ?*SDL_GPUBuffer;
 extern fn SDL_SetGPUBufferName(device: ?*SDL_GPUDevice, buffer: ?*SDL_GPUBuffer, text: ?[*:0]const u8) void;
@@ -356,6 +592,35 @@ extern fn SDL_BindGPUVertexBuffers(render_pass: ?*SDL_GPURenderPass, first_slot:
 extern fn SDL_BindGPUIndexBuffer(render_pass: ?*SDL_GPURenderPass, binding: ?*const SDL_GPUBufferBinding, index_element_size: SDL_GPUIndexElementSize) void;
 extern fn SDL_DrawGPUIndexedPrimitives(render_pass: ?*SDL_GPURenderPass, num_indices: Uint32, num_instances: Uint32, first_index: Uint32, vertex_offset: Sint32, first_instance: Uint32) void;
 extern fn SDL_EndGPURenderPass(render_pass: ?*SDL_GPURenderPass) void;
+
+// Pipeline functions
+extern fn SDL_CreateGPUGraphicsPipeline(device: ?*SDL_GPUDevice, create_info: ?*const SDL_GPUGraphicsPipelineCreateInfo) ?*SDL_GPUGraphicsPipeline;
+extern fn SDL_CreateGPUComputePipeline(device: ?*SDL_GPUDevice, create_info: ?*const SDL_GPUComputePipelineCreateInfo) ?*SDL_GPUComputePipeline;
+extern fn SDL_ReleaseGPUGraphicsPipeline(device: ?*SDL_GPUDevice, graphics_pipeline: ?*SDL_GPUGraphicsPipeline) void;
+extern fn SDL_ReleaseGPUComputePipeline(device: ?*SDL_GPUDevice, compute_pipeline: ?*SDL_GPUComputePipeline) void;
+
+// Compute pass functions
+extern fn SDL_BeginGPUComputePass(cmdbuf: ?*SDL_GPUCommandBuffer, storage_texture_bindings: ?[*]const SDL_GPUStorageTextureReadWriteBinding, num_storage_texture_bindings: Uint32, storage_buffer_bindings: ?[*]const SDL_GPUStorageBufferReadWriteBinding, num_storage_buffer_bindings: Uint32) ?*SDL_GPUComputePass;
+extern fn SDL_BindGPUComputePipeline(compute_pass: ?*SDL_GPUComputePass, compute_pipeline: ?*SDL_GPUComputePipeline) void;
+extern fn SDL_BindGPUComputeStorageTextures(compute_pass: ?*SDL_GPUComputePass, first_slot: Uint32, storage_texture_bindings: ?[*]const SDL_GPUStorageTextureReadWriteBinding, num_bindings: Uint32) void;
+extern fn SDL_BindGPUComputeStorageBuffers(compute_pass: ?*SDL_GPUComputePass, first_slot: Uint32, storage_buffer_bindings: ?[*]const SDL_GPUStorageBufferReadWriteBinding, num_bindings: Uint32) void;
+extern fn SDL_PushGPUComputeUniformData(cmdbuf: ?*SDL_GPUCommandBuffer, slot_index: Uint32, data: ?*const anyopaque, length: Uint32) void;
+extern fn SDL_DispatchGPUCompute(compute_pass: ?*SDL_GPUComputePass, groupcount_x: Uint32, groupcount_y: Uint32, groupcount_z: Uint32) void;
+extern fn SDL_EndGPUComputePass(compute_pass: ?*SDL_GPUComputePass) void;
+
+// Additional rendering functions
+extern fn SDL_BindGPUVertexSamplers(render_pass: ?*SDL_GPURenderPass, first_slot: Uint32, samplers: ?[*]?*SDL_GPUSampler) void;
+extern fn SDL_BindGPUFragmentSamplers(render_pass: ?*SDL_GPURenderPass, first_slot: Uint32, samplers: ?[*]?*SDL_GPUSampler) void;
+extern fn SDL_PushGPUVertexUniformData(cmdbuf: ?*SDL_GPUCommandBuffer, slot_index: Uint32, data: ?*const anyopaque, length: Uint32) void;
+extern fn SDL_PushGPUFragmentUniformData(cmdbuf: ?*SDL_GPUCommandBuffer, slot_index: Uint32, data: ?*const anyopaque, length: Uint32) void;
+extern fn SDL_BlitGPUTexture(cmdbuf: ?*SDL_GPUCommandBuffer, info: ?*const SDL_GPUBlitInfo) bool;
+extern fn SDL_GenerateMipmapsForGPUTexture(cmdbuf: ?*SDL_GPUCommandBuffer, texture: ?*SDL_GPUTexture) void;
+
+// Debug functions
+extern fn SDL_InsertGPUDebugLabel(cmdbuf: ?*SDL_GPUCommandBuffer, text: ?[*:0]const u8) void;
+extern fn SDL_PushGPUDebugGroup(cmdbuf: ?*SDL_GPUCommandBuffer, name: ?[*:0]const u8) void;
+extern fn SDL_PopGPUDebugGroup(cmdbuf: ?*SDL_GPUCommandBuffer) void;
+extern fn SDL_SetGPUAllowedFramesInFlight(device: ?*SDL_GPUDevice, allowed_frames_in_flight: Uint32) bool;
 
 // video import
 const video = @import("video.zig");
@@ -418,3 +683,24 @@ pub const bindGPUVertexBuffers = SDL_BindGPUVertexBuffers;
 pub const bindGPUIndexBuffer = SDL_BindGPUIndexBuffer;
 pub const drawGPUIndexedPrimitives = SDL_DrawGPUIndexedPrimitives;
 pub const endGPURenderPass = SDL_EndGPURenderPass;
+pub const createGPUGraphicsPipeline = SDL_CreateGPUGraphicsPipeline;
+pub const createGPUComputePipeline = SDL_CreateGPUComputePipeline;
+pub const releaseGPUGraphicsPipeline = SDL_ReleaseGPUGraphicsPipeline;
+pub const releaseGPUComputePipeline = SDL_ReleaseGPUComputePipeline;
+pub const beginGPUComputePass = SDL_BeginGPUComputePass;
+pub const bindGPUComputePipeline = SDL_BindGPUComputePipeline;
+pub const bindGPUComputeStorageTextures = SDL_BindGPUComputeStorageTextures;
+pub const bindGPUComputeStorageBuffers = SDL_BindGPUComputeStorageBuffers;
+pub const pushGPUComputeUniformData = SDL_PushGPUComputeUniformData;
+pub const dispatchGPUCompute = SDL_DispatchGPUCompute;
+pub const endGPUComputePass = SDL_EndGPUComputePass;
+pub const bindGPUVertexSamplers = SDL_BindGPUVertexSamplers;
+pub const bindGPUFragmentSamplers = SDL_BindGPUFragmentSamplers;
+pub const pushGPUVertexUniformData = SDL_PushGPUVertexUniformData;
+pub const pushGPUFragmentUniformData = SDL_PushGPUFragmentUniformData;
+pub const blitGPUTexture = SDL_BlitGPUTexture;
+pub const generateMipmapsForGPUTexture = SDL_GenerateMipmapsForGPUTexture;
+pub const insertGPUDebugLabel = SDL_InsertGPUDebugLabel;
+pub const pushGPUDebugGroup = SDL_PushGPUDebugGroup;
+pub const popGPUDebugGroup = SDL_PopGPUDebugGroup;
+pub const setGPUAllowedFramesInFlight = SDL_SetGPUAllowedFramesInFlight;
