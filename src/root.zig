@@ -15,6 +15,7 @@ pub const time = @import("time.zig");
 pub const threads = @import("threads.zig");
 pub const filesystem = @import("filesystem.zig");
 pub const hints = @import("hints.zig");
+pub const properties = @import("properties.zig");
 
 // Re-export core functions
 pub const init = core.init;
@@ -235,17 +236,37 @@ pub const getAudioDriver = audio.getAudioDriver;
 pub const getCurrentAudioDriver = audio.getCurrentAudioDriver;
 
 // Re-export time functions
+pub const SDL_TimerID = time.SDL_TimerID;
+pub const SDL_TimerCallback = time.SDL_TimerCallback;
 pub const getTicks = time.getTicks;
 pub const getTicksNS = time.getTicksNS;
 pub const delay = time.delay;
+pub const addTimer = time.addTimer;
+pub const removeTimer = time.removeTimer;
 
-// Re-export thread functions
+// Re-export thread types and functions
+pub const SDL_Condition = threads.SDL_Condition;
+pub const SDL_Semaphore = threads.SDL_Semaphore;
 pub const createThread = threads.createThread;
 pub const waitThread = threads.waitThread;
 pub const createMutex = threads.createMutex;
 pub const destroyMutex = threads.destroyMutex;
 pub const lockMutex = threads.lockMutex;
 pub const unlockMutex = threads.unlockMutex;
+pub const tryLockMutex = threads.tryLockMutex;
+pub const createCondition = threads.createCondition;
+pub const destroyCondition = threads.destroyCondition;
+pub const signalCondition = threads.signalCondition;
+pub const broadcastCondition = threads.broadcastCondition;
+pub const waitCondition = threads.waitCondition;
+pub const waitConditionTimeout = threads.waitConditionTimeout;
+pub const createSemaphore = threads.createSemaphore;
+pub const destroySemaphore = threads.destroySemaphore;
+pub const semWait = threads.semWait;
+pub const semTryWait = threads.semTryWait;
+pub const semWaitTimeout = threads.semWaitTimeout;
+pub const semPost = threads.semPost;
+pub const semValue = threads.semValue;
 
 // Re-export filesystem functions
 pub const getBasePath = filesystem.getBasePath;
@@ -253,6 +274,12 @@ pub const ioFromFile = filesystem.ioFromFile;
 pub const closeIO = filesystem.closeIO;
 pub const readIO = filesystem.readIO;
 pub const writeIO = filesystem.writeIO;
+pub const seekIO = filesystem.seekIO;
+pub const tellIO = filesystem.tellIO;
+pub const getIOSize = filesystem.getIOSize;
+pub const flushIO = filesystem.flushIO;
+pub const loadFile = filesystem.loadFile;
+pub const saveFile = filesystem.saveFile;
 
 // Re-export hints types and functions
 pub const SDL_HintPriority = hints.SDL_HintPriority;
@@ -262,6 +289,27 @@ pub const setHintWithPriority = hints.setHintWithPriority;
 pub const resetHint = hints.resetHint;
 pub const addHintCallback = hints.addHintCallback;
 pub const delHintCallback = hints.delHintCallback;
+
+// Re-export properties types and functions
+pub const SDL_PropertyType = properties.SDL_PropertyType;
+pub const createProperties = properties.createProperties;
+pub const destroyProperties = properties.destroyProperties;
+pub const setProperty = properties.setProperty;
+pub const setStringProperty = properties.setStringProperty;
+pub const setNumberProperty = properties.setNumberProperty;
+pub const setFloatProperty = properties.setFloatProperty;
+pub const setBooleanProperty = properties.setBooleanProperty;
+pub const getProperty = properties.getProperty;
+pub const getStringProperty = properties.getStringProperty;
+pub const getNumberProperty = properties.getNumberProperty;
+pub const getFloatProperty = properties.getFloatProperty;
+pub const getBooleanProperty = properties.getBooleanProperty;
+pub const getPropertyType = properties.getPropertyType;
+pub const propertyIterator = properties.propertyIterator;
+pub const clearProperty = properties.clearProperty;
+pub const enumerateProperties = properties.enumerateProperties;
+pub const lockProperties = properties.lockProperties;
+pub const unlockProperties = properties.unlockProperties;
 
 // Constants
 pub const SDL_INIT_AUDIO = core.SDL_INIT_AUDIO;
