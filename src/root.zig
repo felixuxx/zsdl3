@@ -14,6 +14,7 @@ pub const audio = @import("audio.zig");
 pub const time = @import("time.zig");
 pub const threads = @import("threads.zig");
 pub const filesystem = @import("filesystem.zig");
+pub const hints = @import("hints.zig");
 
 // Re-export core functions
 pub const init = core.init;
@@ -185,15 +186,23 @@ pub const pollEvent = events.pollEvent;
 pub const waitEvent = events.waitEvent;
 pub const waitEventTimeout = events.waitEventTimeout;
 pub const pushEvent = events.pushEvent;
+pub const filterEvents = events.filterEvents;
+pub const addEventWatch = events.addEventWatch;
+pub const delEventWatch = events.delEventWatch;
 
 // Re-export input functions
 pub const hasKeyboard = input.hasKeyboard;
 pub const getKeyboardState = input.getKeyboardState;
 pub const getModState = input.getModState;
 pub const setModState = input.setModState;
+pub const getKeyFromScancode = input.getKeyFromScancode;
+pub const getScancodeFromKey = input.getScancodeFromKey;
 pub const hasMouse = input.hasMouse;
 pub const getMouseState = input.getMouseState;
+pub const getGlobalMouseState = input.getGlobalMouseState;
+pub const getRelativeMouseState = input.getRelativeMouseState;
 pub const warpMouseInWindow = input.warpMouseInWindow;
+pub const warpMouseGlobal = input.warpMouseGlobal;
 pub const numJoysticks = input.numJoysticks;
 pub const joystickOpen = input.joystickOpen;
 pub const joystickClose = input.joystickClose;
@@ -210,11 +219,20 @@ pub const renderPresent = render.renderPresent;
 pub const setRenderDrawColor = render.setRenderDrawColor;
 pub const renderDrawLine = render.renderDrawLine;
 pub const renderFillRect = render.renderFillRect;
+pub const createTexture = render.createTexture;
+pub const destroyTexture = render.destroyTexture;
+pub const updateTexture = render.updateTexture;
+pub const renderTexture = render.renderTexture;
+pub const renderGeometry = render.renderGeometry;
 
 // Re-export audio functions
 pub const openAudioDevice = audio.openAudioDevice;
 pub const closeAudioDevice = audio.closeAudioDevice;
 pub const pauseAudioDevice = audio.pauseAudioDevice;
+pub const getAudioDeviceName = audio.getAudioDeviceName;
+pub const getNumAudioDrivers = audio.getNumAudioDrivers;
+pub const getAudioDriver = audio.getAudioDriver;
+pub const getCurrentAudioDriver = audio.getCurrentAudioDriver;
 
 // Re-export time functions
 pub const getTicks = time.getTicks;
@@ -235,6 +253,15 @@ pub const ioFromFile = filesystem.ioFromFile;
 pub const closeIO = filesystem.closeIO;
 pub const readIO = filesystem.readIO;
 pub const writeIO = filesystem.writeIO;
+
+// Re-export hints types and functions
+pub const SDL_HintPriority = hints.SDL_HintPriority;
+pub const setHint = hints.setHint;
+pub const getHint = hints.getHint;
+pub const setHintWithPriority = hints.setHintWithPriority;
+pub const resetHint = hints.resetHint;
+pub const addHintCallback = hints.addHintCallback;
+pub const delHintCallback = hints.delHintCallback;
 
 // Constants
 pub const SDL_INIT_AUDIO = core.SDL_INIT_AUDIO;

@@ -55,11 +55,16 @@ extern fn SDL_HasKeyboard() bool;
 extern fn SDL_GetKeyboardState(numkeys: ?*c_int) ?[*]const bool;
 extern fn SDL_GetModState() SDL_Keymod;
 extern fn SDL_SetModState(modstate: SDL_Keymod) void;
+extern fn SDL_GetKeyFromScancode(scancode: SDL_Scancode, modstate: SDL_Keymod, key_event: bool) SDL_Keycode;
+extern fn SDL_GetScancodeFromKey(key: SDL_Keycode, modstate: ?*SDL_Keymod) SDL_Scancode;
 
 // Mouse functions
 extern fn SDL_HasMouse() bool;
 extern fn SDL_GetMouseState(x: ?*f32, y: ?*f32) SDL_MouseButtonFlags;
+extern fn SDL_GetGlobalMouseState(x: ?*f32, y: ?*f32) SDL_MouseButtonFlags;
+extern fn SDL_GetRelativeMouseState(x: ?*f32, y: ?*f32) SDL_MouseButtonFlags;
 extern fn SDL_WarpMouseInWindow(window: ?*video.SDL_Window, x: f32, y: f32) void;
+extern fn SDL_WarpMouseGlobal(x: f32, y: f32) bool;
 
 // Joystick functions
 extern fn SDL_NumJoysticks() c_int;
@@ -77,10 +82,14 @@ pub const hasKeyboard = SDL_HasKeyboard;
 pub const getKeyboardState = SDL_GetKeyboardState;
 pub const getModState = SDL_GetModState;
 pub const setModState = SDL_SetModState;
-
+pub const getKeyFromScancode = SDL_GetKeyFromScancode;
+pub const getScancodeFromKey = SDL_GetScancodeFromKey;
 pub const hasMouse = SDL_HasMouse;
 pub const getMouseState = SDL_GetMouseState;
+pub const getGlobalMouseState = SDL_GetGlobalMouseState;
+pub const getRelativeMouseState = SDL_GetRelativeMouseState;
 pub const warpMouseInWindow = SDL_WarpMouseInWindow;
+pub const warpMouseGlobal = SDL_WarpMouseGlobal;
 
 pub const numJoysticks = SDL_NumJoysticks;
 pub const joystickOpen = SDL_JoystickOpen;
