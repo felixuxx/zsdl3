@@ -232,6 +232,9 @@ zig build run -- gpu_example
 
 # Audio example
 zig build run -- audio_example
+
+# 3D example (GPU + fallback 2D)
+zig build run -- 3d_example
 ```
 
 ### Release Build
@@ -294,10 +297,12 @@ src/
 ├── intrinsics.zig    # SIMD detection
 ├── metal.zig         # Metal interop
 ├── process.zig       # Process management
-├── root.zig          # Main module exports
-├── main.zig          # Basic example
-├── gpu_example.zig   # GPU example
-└── audio_example.zig # Audio example
+└── root.zig          # Main module exports
+└── main.zig          # Basic 2D example
+examples/
+├── gpu_example.zig   # GPU device testing
+├── audio_example.zig # Audio enumeration example
+└── 3d_example.zig    # 3D GPU rendering with fallback
 ```
 
 ## Contributing

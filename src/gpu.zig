@@ -62,6 +62,15 @@ const video = @import("video.zig");
 // Import types
 pub const Uint32 = core.Uint32;
 
+// Shader formats
+pub const SDL_GPU_SHADERFORMAT_INVALID = 0;
+pub const SDL_GPU_SHADERFORMAT_PRIVATE = 1 << 0;
+pub const SDL_GPU_SHADERFORMAT_SPIRV = 1 << 1;
+pub const SDL_GPU_SHADERFORMAT_DXBC = 1 << 2;
+pub const SDL_GPU_SHADERFORMAT_DXIL = 1 << 3;
+pub const SDL_GPU_SHADERFORMAT_MSL = 1 << 4;
+pub const SDL_GPU_SHADERFORMAT_METALLIB = 1 << 5;
+
 // Public API
 pub const createGPUDevice = SDL_CreateGPUDevice;
 pub const destroyGPUDevice = SDL_DestroyGPUDevice;

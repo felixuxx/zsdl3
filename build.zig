@@ -91,7 +91,7 @@ pub fn build(b: *std.Build) void {
     const gpu_example = b.addExecutable(.{
         .name = "gpu_example",
         .root_module = b.createModule(.{
-            .root_source_file = b.path("src/gpu_example.zig"),
+            .root_source_file = b.path("examples/gpu_example.zig"),
             .target = target,
             .optimize = optimize,
             .imports = &.{
@@ -105,7 +105,7 @@ pub fn build(b: *std.Build) void {
     const audio_example = b.addExecutable(.{
         .name = "audio_example",
         .root_module = b.createModule(.{
-            .root_source_file = b.path("src/audio_example.zig"),
+            .root_source_file = b.path("examples/audio_example.zig"),
             .target = target,
             .optimize = optimize,
             .imports = &.{
@@ -115,6 +115,20 @@ pub fn build(b: *std.Build) void {
     });
     audio_example.linkSystemLibrary("SDL3");
     b.installArtifact(audio_example);
+
+    const d3_example = b.addExecutable(.{
+        .name = "3d_example",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("examples/3d_example.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "zsdl3", .module = mod },
+            },
+        }),
+    });
+    d3_example.linkSystemLibrary("SDL3");
+    b.installArtifact(d3_example);
 
     // This declares intent for the executable to be installed into the
     // install prefix when running `zig build` (i.e. when executing the default
