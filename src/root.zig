@@ -33,6 +33,12 @@ pub const storage = @import("storage.zig");
 pub const assert = @import("assert.zig");
 pub const sharedobject = @import("sharedobject.zig");
 pub const haptic = @import("haptic.zig");
+pub const process = @import("process.zig");
+pub const metal = @import("metal.zig");
+pub const sensor = @import("sensor.zig");
+pub const pen = @import("pen.zig");
+pub const touch = @import("touch.zig");
+pub const asyncio = @import("asyncio.zig");
 
 // Re-export core functions
 pub const init = core.init;
@@ -476,6 +482,74 @@ pub const hapticClose = haptic.hapticClose;
 pub const hapticRumbleSupported = haptic.hapticRumbleSupported;
 pub const hapticRumblePlay = haptic.hapticRumblePlay;
 pub const hapticRumbleStop = haptic.hapticRumbleStop;
+
+// Re-export process types and functions
+pub const SDL_Process = process.SDL_Process;
+pub const SDL_ProcessIO = process.SDL_ProcessIO;
+pub const runProcess = process.runProcess;
+pub const getProcessInput = process.getProcessInput;
+pub const getProcessOutput = process.getProcessOutput;
+pub const getProcessError = process.getProcessError;
+pub const waitProcess = process.waitProcess;
+pub const killProcess = process.killProcess;
+pub const destroyProcess = process.destroyProcess;
+
+// Re-export metal types and functions
+pub const SDL_MetalView = metal.SDL_MetalView;
+pub const metalLoadLibrary = metal.loadLibrary;
+pub const metalGetLibrary = metal.getLibrary;
+pub const metalUnloadLibrary = metal.unloadLibrary;
+pub const metalCreateView = metal.createView;
+pub const metalDestroyView = metal.destroyView;
+pub const metalGetLayer = metal.getLayer;
+pub const metalGetDrawableSize = metal.getDrawableSize;
+
+// Re-export sensor types and functions
+pub const SDL_SensorType = sensor.SDL_SensorType;
+pub const SDL_Sensor = sensor.SDL_Sensor;
+pub const getSensors = sensor.getSensors;
+pub const getSensorNameForID = sensor.getSensorNameForID;
+pub const getSensorTypeForID = sensor.getSensorTypeForID;
+pub const openSensor = sensor.openSensor;
+pub const closeSensor = sensor.closeSensor;
+pub const getSensorData = sensor.getSensorData;
+pub const updateSensors = sensor.updateSensors;
+
+// Re-export pen types and functions
+pub const SDL_PenAxis = pen.SDL_PenAxis;
+pub const SDL_Pen = pen.SDL_Pen;
+pub const getPens = pen.getPens;
+pub const getPenName = pen.getPenName;
+pub const getPenCapabilities = pen.getPenCapabilities;
+pub const getPenStatus = pen.getPenStatus;
+pub const penConnected = pen.penConnected;
+pub const getPenFromID = pen.getPenFromID;
+pub const getPenID = pen.getPenID;
+pub const penAxisSupported = pen.penAxisSupported;
+
+// Re-export touch types and functions
+pub const SDL_TouchID = touch.SDL_TouchID;
+pub const SDL_FingerID = touch.SDL_FingerID;
+pub const SDL_TouchDeviceType = touch.SDL_TouchDeviceType;
+pub const SDL_Finger = touch.SDL_Finger;
+pub const getTouchDevices = touch.getTouchDevices;
+pub const getTouchDeviceName = touch.getTouchDeviceName;
+pub const getTouchDeviceType = touch.getTouchDeviceType;
+pub const getTouchFingers = touch.getTouchFingers;
+
+// Re-export asyncio types and functions
+pub const SDL_AsyncIO = asyncio.SDL_AsyncIO;
+pub const SDL_AsyncIOQueue = asyncio.SDL_AsyncIOQueue;
+pub const SDL_AsyncIOTaskType = asyncio.SDL_AsyncIOTaskType;
+pub const SDL_AsyncIOResult = asyncio.SDL_AsyncIOResult;
+pub const SDL_AsyncIOOutcome = asyncio.SDL_AsyncIOOutcome;
+pub const asyncIOFromFile = asyncio.asyncIOFromFile;
+pub const readAsyncIO = asyncio.readAsyncIO;
+pub const writeAsyncIO = asyncio.writeAsyncIO;
+pub const closeAsyncIO = asyncio.closeAsyncIO;
+pub const createAsyncIOQueue = asyncio.createAsyncIOQueue;
+pub const getAsyncIOResult = asyncio.getAsyncIOResult;
+pub const waitAsyncIOResult = asyncio.waitAsyncIOResult;
 
 // Constants
 pub const SDL_INIT_AUDIO = core.SDL_INIT_AUDIO;
