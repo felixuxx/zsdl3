@@ -679,7 +679,7 @@ pub const murmur3_32 = misc.murmur3_32;
 pub const getNumAllocations = misc.getNumAllocations;
 pub const getFullPath = misc.getFullPath;
 
-// Re-export Vulkan functions
+// Re-export Vulkan functions and types
 pub const vulkanLoadLibrary = vulkan.loadLibrary;
 pub const vulkanGetVkGetInstanceProcAddr = vulkan.getVkGetInstanceProcAddr;
 pub const vulkanUnloadLibrary = vulkan.unloadLibrary;
@@ -687,6 +687,8 @@ pub const vulkanGetInstanceExtensions = vulkan.getInstanceExtensions;
 pub const vulkanCreateSurface = vulkan.createSurface;
 pub const vulkanDestroySurface = vulkan.destroySurface;
 pub const vulkanGetPresentationSupport = vulkan.getPresentationSupport;
+
+// Note: Vulkan types are now handled through SDL3's GPU system
 
 // Re-export Tray types and functions
 pub const SDL_Tray = tray.SDL_Tray;
@@ -898,6 +900,7 @@ pub const SDL_WINDOW_BORDERLESS = video.SDL_WINDOW_BORDERLESS;
 pub const SDL_WINDOW_RESIZABLE = video.SDL_WINDOW_RESIZABLE;
 pub const SDL_WINDOW_MINIMIZED = video.SDL_WINDOW_MINIMIZED;
 pub const SDL_WINDOW_MAXIMIZED = video.SDL_WINDOW_MAXIMIZED;
+pub const SDL_WINDOW_VULKAN = video.SDL_WINDOW_VULKAN;
 
 pub const SDL_PIXELFORMAT_RGBA8888 = pixels.SDL_PIXELFORMAT_RGBA8888;
 pub const SDL_PIXELFORMAT_ARGB8888 = pixels.SDL_PIXELFORMAT_ARGB8888;
@@ -1037,3 +1040,13 @@ pub const gpuTextureSupportsFormat = gpu.gpuTextureSupportsFormat;
 pub const gpuBufferSize = gpu.gpuBufferSize;
 pub const gpuTextureFormatTexelBlockSize = gpu.gpuTextureFormatTexelBlockSize;
 pub const gpuTextureSupportsSampleCount = gpu.gpuTextureSupportsSampleCount;
+
+// GPU driver functions
+pub const getNumGPUDrivers = gpu.getNumGPUDrivers;
+pub const getGPUDriver = gpu.getGPUDriver;
+pub const getGPUDeviceDriver = gpu.getGPUDeviceDriver;
+
+// GPU device properties
+pub const SDL_PROP_GPU_DEVICE_DRIVER_NAME_STRING = gpu.SDL_PROP_GPU_DEVICE_DRIVER_NAME_STRING;
+pub const SDL_PROP_GPU_DEVICE_DRIVER_VERSION_STRING = gpu.SDL_PROP_GPU_DEVICE_DRIVER_VERSION_STRING;
+pub const SDL_PROP_GPU_DEVICE_DRIVER_INFO_STRING = gpu.SDL_PROP_GPU_DEVICE_DRIVER_INFO_STRING;

@@ -45,6 +45,11 @@ pub const SDL_GPUIndexElementSize = enum(c_int) {
     SDL_GPU_INDEXELEMENTSIZE_32BIT,
 };
 
+// GPU driver functions
+extern fn SDL_GetNumGPUDrivers() c_int;
+extern fn SDL_GetGPUDriver(index: c_int) ?[*:0]const u8;
+extern fn SDL_GetGPUDeviceDriver(device: ?*SDL_GPUDevice) ?[*:0]const u8;
+
 // Basic functions
 extern fn SDL_CreateGPUDevice(shader_formats: Uint32, debug_mode: bool, name: ?[*:0]const u8) ?*SDL_GPUDevice;
 extern fn SDL_DestroyGPUDevice(device: ?*SDL_GPUDevice) void;
@@ -718,3 +723,13 @@ pub const gpuTextureSupportsFormat = SDL_GPUTextureSupportsFormat;
 pub const gpuBufferSize = SDL_GPUBufferSize;
 pub const gpuTextureFormatTexelBlockSize = SDL_GPUTextureFormatTexelBlockSize;
 pub const gpuTextureSupportsSampleCount = SDL_GPUTextureSupportsSampleCount;
+
+// GPU driver functions
+pub const getNumGPUDrivers = SDL_GetNumGPUDrivers;
+pub const getGPUDriver = SDL_GetGPUDriver;
+pub const getGPUDeviceDriver = SDL_GetGPUDeviceDriver;
+
+// GPU device properties
+pub const SDL_PROP_GPU_DEVICE_DRIVER_NAME_STRING = "SDL.gpu.device.driver_name";
+pub const SDL_PROP_GPU_DEVICE_DRIVER_VERSION_STRING = "SDL.gpu.device.driver_version";
+pub const SDL_PROP_GPU_DEVICE_DRIVER_INFO_STRING = "SDL.gpu.device.driver_info";
