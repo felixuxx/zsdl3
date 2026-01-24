@@ -650,12 +650,203 @@ pub const getPowerInfo = power.getPowerInfo;
 pub const getSystemRAM = system.getSystemRAM;
 pub const getSIMDAlignment = system.getSIMDAlignment;
 
-// Re-export keycode functions
-pub const getKeyFromName = keycode.getKeyFromName;
-pub const getKeyName = keycode.getKeyName;
-pub const getScancodeFromName = keycode.getScancodeFromName;
-pub const getScancodeName = keycode.getScancodeName;
-pub const setScancodeName = keycode.setScancodeName;
+// Re-export all keycode types and constants
+pub const SDL_Keycode = keycode.SDL_Keycode;
+pub const SDL_Scancode = keycode.SDL_Scancode;
+
+// Re-export scancode constants
+pub const SDL_SCANCODE_UNKNOWN = keycode.SDL_SCANCODE_UNKNOWN;
+pub const SDL_SCANCODE_A = keycode.SDL_SCANCODE_A;
+pub const SDL_SCANCODE_B = keycode.SDL_SCANCODE_B;
+pub const SDL_SCANCODE_C = keycode.SDL_SCANCODE_C;
+pub const SDL_SCANCODE_D = keycode.SDL_SCANCODE_D;
+pub const SDL_SCANCODE_E = keycode.SDL_SCANCODE_E;
+pub const SDL_SCANCODE_F = keycode.SDL_SCANCODE_F;
+pub const SDL_SCANCODE_G = keycode.SDL_SCANCODE_G;
+pub const SDL_SCANCODE_H = keycode.SDL_SCANCODE_H;
+pub const SDL_SCANCODE_I = keycode.SDL_SCANCODE_I;
+pub const SDL_SCANCODE_J = keycode.SDL_SCANCODE_J;
+pub const SDL_SCANCODE_K = keycode.SDL_SCANCODE_K;
+pub const SDL_SCANCODE_L = keycode.SDL_SCANCODE_L;
+pub const SDL_SCANCODE_M = keycode.SDL_SCANCODE_M;
+pub const SDL_SCANCODE_N = keycode.SDL_SCANCODE_N;
+pub const SDL_SCANCODE_O = keycode.SDL_SCANCODE_O;
+pub const SDL_SCANCODE_P = keycode.SDL_SCANCODE_P;
+pub const SDL_SCANCODE_Q = keycode.SDL_SCANCODE_Q;
+pub const SDL_SCANCODE_R = keycode.SDL_SCANCODE_R;
+pub const SDL_SCANCODE_S = keycode.SDL_SCANCODE_S;
+pub const SDL_SCANCODE_T = keycode.SDL_SCANCODE_T;
+pub const SDL_SCANCODE_U = keycode.SDL_SCANCODE_U;
+pub const SDL_SCANCODE_V = keycode.SDL_SCANCODE_V;
+pub const SDL_SCANCODE_W = keycode.SDL_SCANCODE_W;
+pub const SDL_SCANCODE_X = keycode.SDL_SCANCODE_X;
+pub const SDL_SCANCODE_Y = keycode.SDL_SCANCODE_Y;
+pub const SDL_SCANCODE_Z = keycode.SDL_SCANCODE_Z;
+
+pub const SDL_SCANCODE_1 = keycode.SDL_SCANCODE_1;
+pub const SDL_SCANCODE_2 = keycode.SDL_SCANCODE_2;
+pub const SDL_SCANCODE_3 = keycode.SDL_SCANCODE_3;
+pub const SDL_SCANCODE_4 = keycode.SDL_SCANCODE_4;
+pub const SDL_SCANCODE_5 = keycode.SDL_SCANCODE_5;
+pub const SDL_SCANCODE_6 = keycode.SDL_SCANCODE_6;
+pub const SDL_SCANCODE_7 = keycode.SDL_SCANCODE_7;
+pub const SDL_SCANCODE_8 = keycode.SDL_SCANCODE_8;
+pub const SDL_SCANCODE_9 = keycode.SDL_SCANCODE_9;
+pub const SDL_SCANCODE_0 = keycode.SDL_SCANCODE_0;
+
+pub const SDL_SCANCODE_RETURN = keycode.SDL_SCANCODE_RETURN;
+pub const SDL_SCANCODE_ESCAPE = keycode.SDL_SCANCODE_ESCAPE;
+pub const SDL_SCANCODE_BACKSPACE = keycode.SDL_SCANCODE_BACKSPACE;
+pub const SDL_SCANCODE_TAB = keycode.SDL_SCANCODE_TAB;
+pub const SDL_SCANCODE_SPACE = keycode.SDL_SCANCODE_SPACE;
+pub const SDL_SCANCODE_CAPSLOCK = keycode.SDL_SCANCODE_CAPSLOCK;
+pub const SDL_SCANCODE_F1 = keycode.SDL_SCANCODE_F1;
+pub const SDL_SCANCODE_F2 = keycode.SDL_SCANCODE_F2;
+pub const SDL_SCANCODE_F3 = keycode.SDL_SCANCODE_F3;
+pub const SDL_SCANCODE_F4 = keycode.SDL_SCANCODE_F4;
+pub const SDL_SCANCODE_F5 = keycode.SDL_SCANCODE_F5;
+pub const SDL_SCANCODE_F6 = keycode.SDL_SCANCODE_F6;
+pub const SDL_SCANCODE_F7 = keycode.SDL_SCANCODE_F7;
+pub const SDL_SCANCODE_F8 = keycode.SDL_SCANCODE_F8;
+pub const SDL_SCANCODE_F9 = keycode.SDL_SCANCODE_F9;
+pub const SDL_SCANCODE_F10 = keycode.SDL_SCANCODE_F10;
+pub const SDL_SCANCODE_F11 = keycode.SDL_SCANCODE_F11;
+pub const SDL_SCANCODE_F12 = keycode.SDL_SCANCODE_F12;
+
+pub const SDL_SCANCODE_PRINTSCREEN = keycode.SDL_SCANCODE_PRINTSCREEN;
+pub const SDL_SCANCODE_SCROLLLOCK = keycode.SDL_SCANCODE_SCROLLLOCK;
+pub const SDL_SCANCODE_PAUSE = keycode.SDL_SCANCODE_PAUSE;
+pub const SDL_SCANCODE_INSERT = keycode.SDL_SCANCODE_INSERT;
+pub const SDL_SCANCODE_HOME = keycode.SDL_SCANCODE_HOME;
+pub const SDL_SCANCODE_PAGEUP = keycode.SDL_SCANCODE_PAGEUP;
+pub const SDL_SCANCODE_DELETE = keycode.SDL_SCANCODE_DELETE;
+pub const SDL_SCANCODE_END = keycode.SDL_SCANCODE_END;
+pub const SDL_SCANCODE_PAGEDOWN = keycode.SDL_SCANCODE_PAGEDOWN;
+pub const SDL_SCANCODE_RIGHT = keycode.SDL_SCANCODE_RIGHT;
+pub const SDL_SCANCODE_LEFT = keycode.SDL_SCANCODE_LEFT;
+pub const SDL_SCANCODE_DOWN = keycode.SDL_SCANCODE_DOWN;
+pub const SDL_SCANCODE_UP = keycode.SDL_SCANCODE_UP;
+
+// Re-export keycode constants
+pub const SDLK_UNKNOWN = keycode.SDLK_UNKNOWN;
+pub const SDLK_SCANCODE_MASK = keycode.SDLK_SCANCODE_MASK;
+pub const SDLK_EXTENDED_MASK = keycode.SDLK_EXTENDED_MASK;
+pub const SDL_SCANCODE_TO_KEYCODE = keycode.SDL_SCANCODE_TO_KEYCODE;
+
+pub const SDLK_RETURN = keycode.SDLK_RETURN;
+pub const SDLK_ESCAPE = keycode.SDLK_ESCAPE;
+pub const SDLK_BACKSPACE = keycode.SDLK_BACKSPACE;
+pub const SDLK_TAB = keycode.SDLK_TAB;
+pub const SDLK_SPACE = keycode.SDLK_SPACE;
+pub const SDLK_EXCLAIM = keycode.SDLK_EXCLAIM;
+pub const SDLK_DBLAPOSTROPHE = keycode.SDLK_DBLAPOSTROPHE;
+pub const SDLK_HASH = keycode.SDLK_HASH;
+pub const SDLK_DOLLAR = keycode.SDLK_DOLLAR;
+pub const SDLK_PERCENT = keycode.SDLK_PERCENT;
+pub const SDLK_AMPERSAND = keycode.SDLK_AMPERSAND;
+pub const SDLK_APOSTROPHE = keycode.SDLK_APOSTROPHE;
+pub const SDLK_LEFTPAREN = keycode.SDLK_LEFTPAREN;
+pub const SDLK_RIGHTPAREN = keycode.SDLK_RIGHTPAREN;
+pub const SDLK_ASTERISK = keycode.SDLK_ASTERISK;
+pub const SDLK_PLUS = keycode.SDLK_PLUS;
+pub const SDLK_COMMA = keycode.SDLK_COMMA;
+pub const SDLK_MINUS = keycode.SDLK_MINUS;
+pub const SDLK_PERIOD = keycode.SDLK_PERIOD;
+pub const SDLK_SLASH = keycode.SDLK_SLASH;
+pub const SDLK_0 = keycode.SDLK_0;
+pub const SDLK_1 = keycode.SDLK_1;
+pub const SDLK_2 = keycode.SDLK_2;
+pub const SDLK_3 = keycode.SDLK_3;
+pub const SDLK_4 = keycode.SDLK_4;
+pub const SDLK_5 = keycode.SDLK_5;
+pub const SDLK_6 = keycode.SDLK_6;
+pub const SDLK_7 = keycode.SDLK_7;
+pub const SDLK_8 = keycode.SDLK_8;
+pub const SDLK_9 = keycode.SDLK_9;
+pub const SDLK_COLON = keycode.SDLK_COLON;
+pub const SDLK_SEMICOLON = keycode.SDLK_SEMICOLON;
+pub const SDLK_LESS = keycode.SDLK_LESS;
+pub const SDLK_EQUALS = keycode.SDLK_EQUALS;
+pub const SDLK_GREATER = keycode.SDLK_GREATER;
+pub const SDLK_QUESTION = keycode.SDLK_QUESTION;
+pub const SDLK_AT = keycode.SDLK_AT;
+pub const SDLK_LEFTBRACKET = keycode.SDLK_LEFTBRACKET;
+pub const SDLK_BACKSLASH = keycode.SDLK_BACKSLASH;
+pub const SDLK_RIGHTBRACKET = keycode.SDLK_RIGHTBRACKET;
+pub const SDLK_CARET = keycode.SDLK_CARET;
+pub const SDLK_UNDERSCORE = keycode.SDLK_UNDERSCORE;
+pub const SDLK_BACKQUOTE = keycode.SDLK_BACKQUOTE;
+
+pub const SDLK_a = keycode.SDLK_a;
+pub const SDLK_b = keycode.SDLK_b;
+pub const SDLK_c = keycode.SDLK_c;
+pub const SDLK_d = keycode.SDLK_d;
+pub const SDLK_e = keycode.SDLK_e;
+pub const SDLK_f = keycode.SDLK_f;
+pub const SDLK_g = keycode.SDLK_g;
+pub const SDLK_h = keycode.SDLK_h;
+pub const SDLK_i = keycode.SDLK_i;
+pub const SDLK_j = keycode.SDLK_j;
+pub const SDLK_k = keycode.SDLK_k;
+pub const SDLK_l = keycode.SDLK_l;
+pub const SDLK_m = keycode.SDLK_m;
+pub const SDLK_n = keycode.SDLK_n;
+pub const SDLK_o = keycode.SDLK_o;
+pub const SDLK_p = keycode.SDLK_p;
+pub const SDLK_q = keycode.SDLK_q;
+pub const SDLK_r = keycode.SDLK_r;
+pub const SDLK_s = keycode.SDLK_s;
+pub const SDLK_t = keycode.SDLK_t;
+pub const SDLK_u = keycode.SDLK_u;
+pub const SDLK_v = keycode.SDLK_v;
+pub const SDLK_w = keycode.SDLK_w;
+pub const SDLK_x = keycode.SDLK_x;
+pub const SDLK_y = keycode.SDLK_y;
+pub const SDLK_z = keycode.SDLK_z;
+
+// Function keys
+pub const SDLK_F1 = keycode.SDLK_F1;
+pub const SDLK_F2 = keycode.SDLK_F2;
+pub const SDLK_F3 = keycode.SDLK_F3;
+pub const SDLK_F4 = keycode.SDLK_F4;
+pub const SDLK_F5 = keycode.SDLK_F5;
+pub const SDLK_F6 = keycode.SDLK_F6;
+pub const SDLK_F7 = keycode.SDLK_F7;
+pub const SDLK_F8 = keycode.SDLK_F8;
+pub const SDLK_F9 = keycode.SDLK_F9;
+pub const SDLK_F10 = keycode.SDLK_F10;
+pub const SDLK_F11 = keycode.SDLK_F11;
+pub const SDLK_F12 = keycode.SDLK_F12;
+
+// Arrow keys
+pub const SDLK_RIGHT = keycode.SDLK_RIGHT;
+pub const SDLK_LEFT = keycode.SDLK_LEFT;
+pub const SDLK_DOWN = keycode.SDLK_DOWN;
+pub const SDLK_UP = keycode.SDLK_UP;
+
+// Modifier constants
+pub const KMOD_NONE = keycode.KMOD_NONE;
+pub const KMOD_LSHIFT = keycode.KMOD_LSHIFT;
+pub const KMOD_RSHIFT = keycode.KMOD_RSHIFT;
+pub const KMOD_SHIFT = keycode.KMOD_SHIFT;
+pub const KMOD_LCTRL = keycode.KMOD_LCTRL;
+pub const KMOD_RCTRL = keycode.KMOD_RCTRL;
+pub const KMOD_CTRL = keycode.KMOD_CTRL;
+pub const KMOD_LALT = keycode.KMOD_LALT;
+pub const KMOD_RALT = keycode.KMOD_RALT;
+pub const KMOD_ALT = keycode.KMOD_ALT;
+pub const KMOD_LGUI = keycode.KMOD_LGUI;
+pub const KMOD_RGUI = keycode.KMOD_RGUI;
+pub const KMOD_GUI = keycode.KMOD_GUI;
+pub const KMOD_NUM = keycode.KMOD_NUM;
+pub const KMOD_CAPS = keycode.KMOD_CAPS;
+pub const KMOD_MODE = keycode.KMOD_MODE;
+pub const KMOD_SCROLL = keycode.KMOD_SCROLL;
+
+// Re-export additional keycode functions (some are already exported from input module)
+pub const isPrintable = keycode.isPrintable;
+pub const isScancodeKeycode = keycode.isScancodeKeycode;
+pub const keycodeToScancode = keycode.keycodeToScancode;
 
 // Re-export locale types and functions
 pub const SDL_Locale = locale.SDL_Locale;
@@ -918,12 +1109,7 @@ pub const SDL_EVENT_MOUSE_MOTION = core.SDL_EVENT_MOUSE_MOTION;
 pub const SDL_EVENT_MOUSE_BUTTON_DOWN = core.SDL_EVENT_MOUSE_BUTTON_DOWN;
 pub const SDL_EVENT_MOUSE_BUTTON_UP = core.SDL_EVENT_MOUSE_BUTTON_UP;
 
-// Key constants
-pub const SDLK_ESCAPE = 27;
-pub const SDLK_LEFT = 1073741904;
-pub const SDLK_RIGHT = 1073741903;
-pub const SDLK_UP = 1073741906;
-pub const SDLK_DOWN = 1073741905;
+// Key constants are now exported from keycode module above
 
 // Re-export GPU types and functions
 pub const SDL_GPUDevice = gpu.SDL_GPUDevice;
