@@ -58,7 +58,7 @@ development. Designed for performance and ease of use in modern Zig projects.
 
 ### Prerequisites
 
-- **Zig 0.15.0+**: [Download here](https://ziglang.org/download/)
+- **Zig 0.15.2+**: [Download here](https://ziglang.org/download/)
 - **SDL3**: Install from your package manager or build from source
 
 #### Linux (Ubuntu/Debian)
