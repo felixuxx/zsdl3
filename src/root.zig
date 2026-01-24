@@ -225,9 +225,90 @@ pub const readSurfacePixel = surface.readSurfacePixel;
 pub const softStretch = surface.softStretch;
 pub const softStretchLinear = surface.softStretchLinear;
 
-// Re-export events types and functions
+// Re-export event types (core already has basic ones)
 pub const SDL_Event = events.SDL_Event;
 pub const SDL_EventAction = events.SDL_EventAction;
+
+// Additional application event types (not in core)
+pub const SDL_EVENT_TERMINATING = events.SDL_EVENT_TERMINATING;
+pub const SDL_EVENT_LOW_MEMORY = events.SDL_EVENT_LOW_MEMORY;
+pub const SDL_EVENT_WILL_ENTER_BACKGROUND = events.SDL_EVENT_WILL_ENTER_BACKGROUND;
+pub const SDL_EVENT_DID_ENTER_BACKGROUND = events.SDL_EVENT_DID_ENTER_BACKGROUND;
+pub const SDL_EVENT_WILL_ENTER_FOREGROUND = events.SDL_EVENT_WILL_ENTER_FOREGROUND;
+pub const SDL_EVENT_DID_ENTER_FOREGROUND = events.SDL_EVENT_DID_ENTER_FOREGROUND;
+
+// Window event types (not in core)
+pub const SDL_EVENT_WINDOW_SHOWN = events.SDL_EVENT_WINDOW_SHOWN;
+pub const SDL_EVENT_WINDOW_HIDDEN = events.SDL_EVENT_WINDOW_HIDDEN;
+pub const SDL_EVENT_WINDOW_EXPOSED = events.SDL_EVENT_WINDOW_EXPOSED;
+pub const SDL_EVENT_WINDOW_MOVED = events.SDL_EVENT_WINDOW_MOVED;
+pub const SDL_EVENT_WINDOW_RESIZED = events.SDL_EVENT_WINDOW_RESIZED;
+pub const SDL_EVENT_WINDOW_SIZE_CHANGED = events.SDL_EVENT_WINDOW_SIZE_CHANGED;
+pub const SDL_EVENT_WINDOW_MINIMIZED = events.SDL_EVENT_WINDOW_MINIMIZED;
+pub const SDL_EVENT_WINDOW_MAXIMIZED = events.SDL_EVENT_WINDOW_MAXIMIZED;
+pub const SDL_EVENT_WINDOW_RESTORED = events.SDL_EVENT_WINDOW_RESTORED;
+pub const SDL_EVENT_WINDOW_MOUSE_ENTER = events.SDL_EVENT_WINDOW_MOUSE_ENTER;
+pub const SDL_EVENT_WINDOW_MOUSE_LEAVE = events.SDL_EVENT_WINDOW_MOUSE_LEAVE;
+pub const SDL_EVENT_WINDOW_FOCUS_GAINED = events.SDL_EVENT_WINDOW_FOCUS_GAINED;
+pub const SDL_EVENT_WINDOW_FOCUS_LOST = events.SDL_EVENT_WINDOW_FOCUS_LOST;
+pub const SDL_EVENT_WINDOW_CLOSE_REQUESTED = events.SDL_EVENT_WINDOW_CLOSE_REQUESTED;
+pub const SDL_EVENT_WINDOW_TAKE_FOCUS = events.SDL_EVENT_WINDOW_TAKE_FOCUS;
+pub const SDL_EVENT_WINDOW_HIT_TEST = events.SDL_EVENT_WINDOW_HIT_TEST;
+pub const SDL_EVENT_WINDOW_ICCPROF_CHANGED = events.SDL_EVENT_WINDOW_ICCPROF_CHANGED;
+pub const SDL_EVENT_WINDOW_DISPLAY_CHANGED = events.SDL_EVENT_WINDOW_DISPLAY_CHANGED;
+pub const SDL_EVENT_WINDOW_DISPLAY_STATE_CHANGED = events.SDL_EVENT_WINDOW_DISPLAY_STATE_CHANGED;
+pub const SDL_EVENT_WINDOW_OCCLUDED = events.SDL_EVENT_WINDOW_OCCLUDED;
+pub const SDL_EVENT_WINDOW_ENTER_FULLSCREEN = events.SDL_EVENT_WINDOW_ENTER_FULLSCREEN;
+pub const SDL_EVENT_WINDOW_LEAVE_FULLSCREEN = events.SDL_EVENT_WINDOW_LEAVE_FULLSCREEN;
+pub const SDL_EVENT_WINDOW_DESTROYED = events.SDL_EVENT_WINDOW_DESTROYED;
+pub const SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED = events.SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED;
+
+// Additional keyboard and text events (not in core)
+pub const SDL_EVENT_TEXT_EDITING = events.SDL_EVENT_TEXT_EDITING;
+pub const SDL_EVENT_TEXT_INPUT = events.SDL_EVENT_TEXT_INPUT;
+pub const SDL_EVENT_KEYMAP_CHANGED = events.SDL_EVENT_KEYMAP_CHANGED;
+
+// Window event structures
+pub const SDL_WindowEvent = events.SDL_WindowEvent;
+
+// Display event structures
+pub const SDL_DisplayEvent = events.SDL_DisplayEvent;
+
+// Keyboard device event structures
+pub const SDL_KeyboardDeviceEvent = events.SDL_KeyboardDeviceEvent;
+
+// Mouse event structures
+pub const SDL_MouseButtonEvent = events.SDL_MouseButtonEvent;
+pub const SDL_MouseWheelEvent = events.SDL_MouseWheelEvent;
+
+// Joystick event structures
+pub const SDL_JoystickDeviceEvent = events.SDL_JoystickDeviceEvent;
+pub const SDL_JoystickButtonEvent = events.SDL_JoystickButtonEvent;
+pub const SDL_JoystickHatEvent = events.SDL_JoystickHatEvent;
+pub const SDL_JoystickAxisEvent = events.SDL_JoystickAxisEvent;
+
+// Gamepad event structures
+pub const SDL_GamepadDeviceEvent = events.SDL_GamepadDeviceEvent;
+pub const SDL_GamepadButtonEvent = events.SDL_GamepadButtonEvent;
+pub const SDL_GamepadAxisEvent = events.SDL_GamepadAxisEvent;
+
+// Text event structures
+pub const SDL_TextEditingEvent = events.SDL_TextEditingEvent;
+pub const SDL_TextInputEvent = events.SDL_TextInputEvent;
+
+// Touch event structures
+pub const SDL_TouchFingerEvent = events.SDL_TouchFingerEvent;
+
+// Gesture event structures
+pub const SDL_GestureEvent = events.SDL_GestureEvent;
+
+// Drop and other event structures
+pub const SDL_DropEvent = events.SDL_DropEvent;
+pub const SDL_AudioDeviceEvent = events.SDL_AudioDeviceEvent;
+pub const SDL_CameraDeviceEvent = events.SDL_CameraDeviceEvent;
+pub const SDL_SensorEvent = events.SDL_SensorEvent;
+pub const SDL_PenEvent = events.SDL_PenEvent;
+pub const SDL_PenAxisEvent = events.SDL_PenAxisEvent;
 pub const pumpEvents = events.pumpEvents;
 pub const pollEvent = events.pollEvent;
 pub const waitEvent = events.waitEvent;
@@ -248,6 +329,7 @@ pub const getEventFilter = events.getEventFilter;
 pub const setEventFilter = events.setEventFilter;
 pub const getNumTouchFingers = events.getNumTouchFingers;
 pub const getTouchFinger = events.getTouchFinger;
+pub const getEventName = events.getEventName;
 
 // Re-export input types
 pub const SDL_JoystickType = input.SDL_JoystickType;
@@ -1129,6 +1211,66 @@ pub const SDL_EVENT_KEY_UP = core.SDL_EVENT_KEY_UP;
 pub const SDL_EVENT_MOUSE_MOTION = core.SDL_EVENT_MOUSE_MOTION;
 pub const SDL_EVENT_MOUSE_BUTTON_DOWN = core.SDL_EVENT_MOUSE_BUTTON_DOWN;
 pub const SDL_EVENT_MOUSE_BUTTON_UP = core.SDL_EVENT_MOUSE_BUTTON_UP;
+pub const SDL_EVENT_MOUSE_WHEEL = core.SDL_EVENT_MOUSE_WHEEL;
+
+// Joystick events (not in core)
+pub const SDL_EVENT_JOYSTICK_ADDED = events.SDL_EVENT_JOYSTICK_ADDED;
+pub const SDL_EVENT_JOYSTICK_REMOVED = events.SDL_EVENT_JOYSTICK_REMOVED;
+pub const SDL_EVENT_JOYSTICK_BATTERY_UPDATED = events.SDL_EVENT_JOYSTICK_BATTERY_UPDATED;
+pub const SDL_EVENT_JOYSTICK_BUTTON_DOWN = events.SDL_EVENT_JOYSTICK_BUTTON_DOWN;
+pub const SDL_EVENT_JOYSTICK_BUTTON_UP = events.SDL_EVENT_JOYSTICK_BUTTON_UP;
+pub const SDL_EVENT_JOYSTICK_HAT_MOTION = events.SDL_EVENT_JOYSTICK_HAT_MOTION;
+pub const SDL_EVENT_JOYSTICK_AXIS_MOTION = events.SDL_EVENT_JOYSTICK_AXIS_MOTION;
+
+// Gamepad events (not in core)
+pub const SDL_EVENT_GAMEPAD_ADDED = events.SDL_EVENT_GAMEPAD_ADDED;
+pub const SDL_EVENT_GAMEPAD_REMOVED = events.SDL_EVENT_GAMEPAD_REMOVED;
+pub const SDL_EVENT_GAMEPAD_BUTTON_DOWN = events.SDL_EVENT_GAMEPAD_BUTTON_DOWN;
+pub const SDL_EVENT_GAMEPAD_BUTTON_UP = events.SDL_EVENT_GAMEPAD_BUTTON_UP;
+pub const SDL_EVENT_GAMEPAD_AXIS_MOTION = events.SDL_EVENT_GAMEPAD_AXIS_MOTION;
+pub const SDL_EVENT_GAMEPAD_REMAPPED = events.SDL_EVENT_GAMEPAD_REMAPPED;
+pub const SDL_EVENT_GAMEPAD_STEAM_HANDLE_UPDATED = events.SDL_EVENT_GAMEPAD_STEAM_HANDLE_UPDATED;
+pub const SDL_EVENT_GAMEPAD_TOUCHPAD_DOWN = events.SDL_EVENT_GAMEPAD_TOUCHPAD_DOWN;
+pub const SDL_EVENT_GAMEPAD_TOUCHPAD_MOTION = events.SDL_EVENT_GAMEPAD_TOUCHPAD_MOTION;
+pub const SDL_EVENT_GAMEPAD_TOUCHPAD_UP = events.SDL_EVENT_GAMEPAD_TOUCHPAD_UP;
+pub const SDL_EVENT_GAMEPAD_SENSOR_UPDATE = events.SDL_EVENT_GAMEPAD_SENSOR_UPDATE;
+pub const SDL_EVENT_GAMEPAD_STEAM_HANDLE_CHANGED = events.SDL_EVENT_GAMEPAD_STEAM_HANDLE_CHANGED;
+
+// Touch and gesture events (not in core)
+pub const SDL_EVENT_FINGER_DOWN = events.SDL_EVENT_FINGER_DOWN;
+pub const SDL_EVENT_FINGER_UP = events.SDL_EVENT_FINGER_UP;
+pub const SDL_EVENT_FINGER_MOTION = events.SDL_EVENT_FINGER_MOTION;
+pub const SDL_EVENT_GESTURE_SWIPE = events.SDL_EVENT_GESTURE_SWIPE;
+pub const SDL_EVENT_GESTURE_MULTIGESTURE = events.SDL_EVENT_GESTURE_MULTIGESTURE;
+
+// Other events (not in core)
+pub const SDL_EVENT_CLIPBOARD_UPDATE = events.SDL_EVENT_CLIPBOARD_UPDATE;
+pub const SDL_EVENT_DROP_FILE = events.SDL_EVENT_DROP_FILE;
+pub const SDL_EVENT_DROP_TEXT = events.SDL_EVENT_DROP_TEXT;
+pub const SDL_EVENT_DROP_BEGIN = events.SDL_EVENT_DROP_BEGIN;
+pub const SDL_EVENT_DROP_COMPLETE = events.SDL_EVENT_DROP_COMPLETE;
+pub const SDL_EVENT_DROP_POSITION = events.SDL_EVENT_DROP_POSITION;
+pub const SDL_EVENT_AUDIO_DEVICE_ADDED = events.SDL_EVENT_AUDIO_DEVICE_ADDED;
+pub const SDL_EVENT_AUDIO_DEVICE_REMOVED = events.SDL_EVENT_AUDIO_DEVICE_REMOVED;
+pub const SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED = events.SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED;
+pub const SDL_EVENT_SENSOR_UPDATE = events.SDL_EVENT_SENSOR_UPDATE;
+pub const SDL_EVENT_DISPLAY_ORIENTATION = events.SDL_EVENT_DISPLAY_ORIENTATION;
+pub const SDL_EVENT_DISPLAY_CONNECTED = events.SDL_EVENT_DISPLAY_CONNECTED;
+pub const SDL_EVENT_DISPLAY_DISCONNECTED = events.SDL_EVENT_DISPLAY_DISCONNECTED;
+pub const SDL_EVENT_POWER_STATE_CHANGED = events.SDL_EVENT_POWER_STATE_CHANGED;
+pub const SDL_EVENT_PEN_DOWN = events.SDL_EVENT_PEN_DOWN;
+pub const SDL_EVENT_PEN_UP = events.SDL_EVENT_PEN_UP;
+pub const SDL_EVENT_PEN_MOTION = events.SDL_EVENT_PEN_MOTION;
+pub const SDL_EVENT_PEN_BUTTON_DOWN = events.SDL_EVENT_PEN_BUTTON_DOWN;
+pub const SDL_EVENT_PEN_BUTTON_UP = events.SDL_EVENT_PEN_BUTTON_UP;
+pub const SDL_EVENT_PEN_ERASER_DOWN = events.SDL_EVENT_PEN_ERASER_DOWN;
+pub const SDL_EVENT_PEN_ERASER_UP = events.SDL_EVENT_PEN_ERASER_UP;
+pub const SDL_EVENT_PEN_AXIS = events.SDL_EVENT_PEN_AXIS;
+pub const SDL_EVENT_CAMERA_DEVICE_ADDED = events.SDL_EVENT_CAMERA_DEVICE_ADDED;
+pub const SDL_EVENT_CAMERA_DEVICE_REMOVED = events.SDL_EVENT_CAMERA_DEVICE_REMOVED;
+pub const SDL_EVENT_CAMERA_DEVICE_APPROVED = events.SDL_EVENT_CAMERA_DEVICE_APPROVED;
+pub const SDL_EVENT_CAMERA_DEVICE_DENIED = events.SDL_EVENT_CAMERA_DEVICE_DENIED;
+pub const SDL_EVENT_USER = events.SDL_EVENT_USER;
 
 // Key constants are now exported from keycode module above
 
