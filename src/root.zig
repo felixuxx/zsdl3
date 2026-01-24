@@ -384,6 +384,7 @@ pub const getRendererFromTexture = render.getRendererFromTexture;
 // Draw operations
 pub const renderPoints = render.renderPoints;
 pub const renderLines = render.renderLines;
+pub const renderRect = render.renderRect;
 pub const renderRects = render.renderRects;
 pub const renderFillRects = render.renderFillRects;
 
@@ -842,6 +843,18 @@ pub const KMOD_NUM = keycode.KMOD_NUM;
 pub const KMOD_CAPS = keycode.KMOD_CAPS;
 pub const KMOD_MODE = keycode.KMOD_MODE;
 pub const KMOD_SCROLL = keycode.KMOD_SCROLL;
+
+// Re-export mouse button constants
+pub const SDL_BUTTON_LEFT = keycode.SDL_BUTTON_LEFT;
+pub const SDL_BUTTON_MIDDLE = keycode.SDL_BUTTON_MIDDLE;
+pub const SDL_BUTTON_RIGHT = keycode.SDL_BUTTON_RIGHT;
+pub const SDL_BUTTON_X1 = keycode.SDL_BUTTON_X1;
+pub const SDL_BUTTON_X2 = keycode.SDL_BUTTON_X2;
+pub const SDL_BUTTON_LMASK = keycode.SDL_BUTTON_LMASK;
+pub const SDL_BUTTON_MMASK = keycode.SDL_BUTTON_MMASK;
+pub const SDL_BUTTON_RMASK = keycode.SDL_BUTTON_RMASK;
+pub const SDL_BUTTON_X1MASK = keycode.SDL_BUTTON_X1MASK;
+pub const SDL_BUTTON_X2MASK = keycode.SDL_BUTTON_X2MASK;
 
 // Re-export additional keycode functions (some are already exported from input module)
 pub const isPrintable = keycode.isPrintable;

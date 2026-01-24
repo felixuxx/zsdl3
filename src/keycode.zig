@@ -545,6 +545,21 @@ pub const SDLK_SLEEP = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_SLEEP);
 pub const SDLK_APP1 = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_APP1);
 pub const SDLK_APP2 = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_APP2);
 
+// === Mouse Button Constants ===
+// These are handled through mouse events but included for completeness
+pub const SDL_BUTTON_LEFT = 1;
+pub const SDL_BUTTON_MIDDLE = 2;
+pub const SDL_BUTTON_RIGHT = 3;
+pub const SDL_BUTTON_X1 = 4;
+pub const SDL_BUTTON_X2 = 5;
+
+// Mouse button masks
+pub const SDL_BUTTON_LMASK = 1 << (SDL_BUTTON_LEFT - 1);
+pub const SDL_BUTTON_MMASK = 1 << (SDL_BUTTON_MIDDLE - 1);
+pub const SDL_BUTTON_RMASK = 1 << (SDL_BUTTON_RIGHT - 1);
+pub const SDL_BUTTON_X1MASK = 1 << (SDL_BUTTON_X1 - 1);
+pub const SDL_BUTTON_X2MASK = 1 << (SDL_BUTTON_X2 - 1);
+
 // === Key Modifier constants ===
 pub const KMOD_NONE = 0x0000;
 pub const KMOD_LSHIFT = 0x0001;

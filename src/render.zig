@@ -72,6 +72,7 @@ extern fn SDL_GetRendererFromTexture(texture: ?*SDL_Texture) ?*SDL_Renderer;
 // Draw operations
 extern fn SDL_RenderPoints(renderer: ?*SDL_Renderer, points: ?[*]const pixels.SDL_FPoint, count: c_int) bool;
 extern fn SDL_RenderLines(renderer: ?*SDL_Renderer, points: ?[*]const pixels.SDL_FPoint, count: c_int) bool;
+extern fn SDL_RenderRect(renderer: ?*SDL_Renderer, rect: ?*const SDL_FRect) bool;
 extern fn SDL_RenderRects(renderer: ?*SDL_Renderer, rects: ?[*]const SDL_FRect, count: c_int) bool;
 extern fn SDL_RenderFillRects(renderer: ?*SDL_Renderer, rects: ?[*]const SDL_FRect, count: c_int) bool;
 
@@ -146,6 +147,7 @@ pub const getRendererFromTexture = SDL_GetRendererFromTexture;
 // Draw operations
 pub const renderPoints = SDL_RenderPoints;
 pub const renderLines = SDL_RenderLines;
+pub const renderRect = SDL_RenderRect;
 pub const renderRects = SDL_RenderRects;
 pub const renderFillRects = SDL_RenderFillRects;
 
