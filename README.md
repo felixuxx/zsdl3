@@ -1,6 +1,6 @@
 # ZSDL3 - Zig Bindings for SDL3
 
-[![Zig](https://img.shields.io/badge/Zig-0.13.0+-blue.svg)](https://ziglang.org)
+[![Zig](https://img.shields.io/badge/Zig-0.15.2+-blue.svg)](https://ziglang.org)
 [![SDL3](https://img.shields.io/badge/SDL-3.2.0+-green.svg)](https://www.libsdl.org/)
 
 Pure Zig bindings for SDL3 without `@cImport`. Provides comprehensive,
