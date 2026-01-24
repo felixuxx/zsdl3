@@ -654,6 +654,7 @@ pub const getSIMDAlignment = system.getSIMDAlignment;
 // Re-export all keycode types and constants
 pub const SDL_Keycode = keycode.SDL_Keycode;
 pub const SDL_Scancode = keycode.SDL_Scancode;
+pub const SDL_Keymod = core.SDL_Keymod;
 
 // Re-export scancode constants
 pub const SDL_SCANCODE_UNKNOWN = keycode.SDL_SCANCODE_UNKNOWN;
@@ -855,6 +856,13 @@ pub const SDL_BUTTON_MMASK = keycode.SDL_BUTTON_MMASK;
 pub const SDL_BUTTON_RMASK = keycode.SDL_BUTTON_RMASK;
 pub const SDL_BUTTON_X1MASK = keycode.SDL_BUTTON_X1MASK;
 pub const SDL_BUTTON_X2MASK = keycode.SDL_BUTTON_X2MASK;
+
+// Re-export keycode functions
+pub const getKeyFromName = keycode.getKeyFromName;
+pub const getKeyName = keycode.getKeyName;
+pub const getScancodeFromName = keycode.getScancodeFromName;
+pub const getScancodeName = keycode.getScancodeName;
+pub const setScancodeName = keycode.setScancodeName;
 
 // Re-export additional keycode functions (some are already exported from input module)
 pub const isPrintable = keycode.isPrintable;

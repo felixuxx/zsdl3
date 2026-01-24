@@ -20,8 +20,11 @@ pub fn main() !void {
                 defer zsdl3.destroyRenderer(rend);
 
                 var running = true;
-                var current_mod: u16 = 0;
-                var key_info: [256]u8 = "Press any key to see details...".*;
+                var current_mod: zsdl3.SDL_Keymod = 0;
+                var key_info: [256]u8 = std.mem.zeroes([256]u8);
+                _ = std.fmt.bufPrint(&key_info, "Press any key to see details...", .{}) catch |err| {
+                    std.log.err("Failed to format initial key info: {}", .{err});
+                };
 
                 while (running) {
                     // Handle events
@@ -49,7 +52,7 @@ pub fn main() !void {
 
                                 // Test utility functions
                                 if (zsdl3.isPrintable(keycode)) {
-                                    std.debug.print("Printable character: '{c}'\n", .{@intCast(keycode)});
+                                    std.debug.print("Printable keycode: {} (ASCII printable)\n", .{keycode});
                                 }
 
                                 if (zsdl3.isScancodeKeycode(keycode)) {
@@ -61,7 +64,7 @@ pub fn main() !void {
                             zsdl3.SDL_EVENT_KEY_UP => {
                                 const key_event = event.key;
                                 current_mod = key_event.mod;
-                                std.debug.print("Key released\n");
+                                std.debug.print("Key released\n", .{});
                             },
                             else => {},
                         }
@@ -93,7 +96,7 @@ pub fn main() !void {
 
 fn drawKeyIndicator(renderer: *zsdl3.SDL_Renderer, x: f32, y: f32, scancode: zsdl3.SDL_Scancode) void {
     const keyboard_state = zsdl3.getKeyboardState(null);
-    const is_pressed = keyboard_state[@intCast(scancode)] != 0;
+    const is_pressed = if (keyboard_state) |ks| ks[@intCast(scancode)] else false;
 
     if (is_pressed) {
         _ = zsdl3.setRenderDrawColor(renderer, 100, 200, 100, 255);
@@ -110,7 +113,7 @@ fn drawKeyIndicator(renderer: *zsdl3.SDL_Renderer, x: f32, y: f32, scancode: zsd
     _ = zsdl3.renderRect(renderer, &border_rect);
 }
 
-fn drawModifierIndicator(renderer: *zsdl3.SDL_Renderer, x: f32, y: f32, modifier: u16, current_mod: u16) void {
+fn drawModifierIndicator(renderer: *zsdl3.SDL_Renderer, x: f32, y: f32, modifier: zsdl3.SDL_Keymod, current_mod: zsdl3.SDL_Keymod) void {
     const is_active = (current_mod & modifier) != 0;
 
     if (is_active) {

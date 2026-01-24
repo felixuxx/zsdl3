@@ -130,6 +130,21 @@ pub fn build(b: *std.Build) void {
     d3_example.linkSystemLibrary("SDL3");
     b.installArtifact(d3_example);
 
+    // Keyboard test example
+    const keyboard_test = b.addExecutable(.{
+        .name = "keyboard_test",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("examples/keyboard_test.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "zsdl3", .module = mod },
+            },
+        }),
+    });
+    keyboard_test.linkSystemLibrary("SDL3");
+    b.installArtifact(keyboard_test);
+
     // This declares intent for the executable to be installed into the
     // install prefix when running `zig build` (i.e. when executing the default
     // step). By default the install prefix is `zig-out/` but can be overridden

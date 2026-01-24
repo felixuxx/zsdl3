@@ -615,7 +615,7 @@ pub fn isScancodeKeycode(keycode: SDL_Keycode) bool {
 /// Get the scancode from a keycode if it represents one
 pub fn keycodeToScancode(keycode: SDL_Keycode) ?SDL_Scancode {
     if (isScancodeKeycode(keycode)) {
-        return @intCast(keycode & ~SDLK_SCANCODE_MASK);
+        return @intCast(keycode & ~@as(SDL_Keycode, SDLK_SCANCODE_MASK));
     }
     return null;
 }
