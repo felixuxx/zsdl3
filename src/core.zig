@@ -48,38 +48,15 @@ pub const SDL_AppQuit_func = ?*const fn (?*anyopaque, SDL_AppResult) callconv(.C
 // Main thread callback
 pub const SDL_MainThreadCallback = ?*const fn (?*anyopaque) callconv(.C) void;
 
-// SDL_Event - complete union with all event types
+// SDL_Event - called in events.zig
 pub const SDL_Event = extern union {
     type: SDL_EventType,
-    window: SDL_WindowEvent,
-    display: SDL_DisplayEvent,
-    kdevice: SDL_KeyboardDeviceEvent,
-    text: SDL_TextEditingEvent,
-    edit_candidates: SDL_TextEditingCandidatesEvent,
-    text_input: SDL_TextInputEvent,
-    mdevice: SDL_MouseDeviceEvent,
-    button: SDL_MouseButtonEvent,
-    motion: SDL_MouseMotionEvent,
-    wheel: SDL_MouseWheelEvent,
-    jdevice: SDL_JoystickDeviceEvent,
-    jbutton: SDL_JoystickButtonEvent,
-    jhat: SDL_JoystickHatEvent,
-    jaxis: SDL_JoystickAxisEvent,
-    gdevice: SDL_GamepadDeviceEvent,
-    gbutton: SDL_GamepadButtonEvent,
-    gaxis: SDL_GamepadAxisEvent,
-    tfinger: SDL_TouchFingerEvent,
     common: SDL_CommonEvent,
     quit: SDL_QuitEvent,
     key: SDL_KeyboardEvent,
-    gesture: SDL_GestureEvent,
-    drop: SDL_DropEvent,
-    adevice: SDL_AudioDeviceEvent,
-    cdevice: SDL_CameraDeviceEvent,
-    sensor: SDL_SensorEvent,
-    pen: SDL_PenEvent,
+    motion: SDL_MouseMotionEvent,
     // padding for ABI
-    padding: [64]Uint8,
+    padding: [128]Uint8,
 };
 
 // Common event data
