@@ -15,6 +15,8 @@ pub const SDL_WindowID = core.SDL_WindowID;
 pub const SDL_JoystickID = core.SDL_JoystickID;
 pub const SDL_GUID = guid.SDL_GUID;
 pub const SDL_SensorType = sensor.SDL_SensorType;
+pub const SDL_SensorID = core.SDL_SensorID;
+pub const SDL_Sensor = sensor.SDL_Sensor;
 
 // Joystick type
 pub const SDL_JoystickType = enum(c_int) {
@@ -259,6 +261,13 @@ extern fn SDL_SetGamepadSensorEnabled(gamepad: ?*SDL_Gamepad, sensor: SDL_Sensor
 extern fn SDL_GamepadSensorEnabled(gamepad: ?*SDL_Gamepad, sensor: SDL_SensorType) bool;
 extern fn SDL_GetGamepadProperties(gamepad: ?*SDL_Gamepad) core.SDL_PropertiesID;
 extern fn SDL_GetGamepadIDMap() ?*anyopaque;
+
+//Sensor functions
+extern fn SDL_GetSensorFromID(instance_id: SDL_SensorID) ?*SDL_Sensor;
+extern fn SDL_GetSensorName(sensor: ?*SDL_Sensor) ?[*:0]const u8;
+extern fn SDL_GetSensorType(sensor: ?*SDL_Sensor) SDL_SensorType;
+extern fn SDL_GetSensorNonPortableType(sensor: ?*SDL_Sensor) c_int;
+extern fn SDL_GetSensorInstanceID(sensor: ?*SDL_Sensor) SDL_SensorID;
 
 // Public API
 pub const hasKeyboard = SDL_HasKeyboard;

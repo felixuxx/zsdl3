@@ -175,7 +175,7 @@ extern fn SDL_GetWindowGammaRamp(window: ?*SDL_Window, red: ?[*]u16, green: ?[*]
 extern fn SDL_DisableScreenSaver() bool;
 extern fn SDL_EnableScreenSaver() bool;
 extern fn SDL_IsScreenSaverEnabled() bool;
-extern fn SDL_GetWindowWMInfo(window: ?*SDL_Window, info: ?*SDL_SysWMinfo, version: SDL_version) bool;
+extern fn SDL_GetWindowWMInfo(window: ?*SDL_Window, info: ?*SDL_SysWMinfo, version: SDL_Version) bool;
 
 // Import types from pixels
 pub const SDL_Point = pixels.SDL_Point;
@@ -191,17 +191,27 @@ pub const SDL_FRect = extern struct {
 
 pub const SDL_Surface = opaque {};
 
-pub const SDL_version = extern struct {
+pub const SDL_Version = extern struct {
     major: u8,
     minor: u8,
     patch: u8,
 };
 
 pub const SDL_SysWMinfo = extern struct {
-    version: SDL_version,
+    version: SDL_Version,
     subsystem: SDL_SysWMType,
     info: extern union {
-        dummy: [64]u8, // Placeholder for platform-specific data
+        win: struct {
+            window: ?*anyopaque,
+            hdc: ?*anyopaque,
+            hinstance: ?*anyopaque,
+        },
+        x11: struct {
+            display: ?*anyopaque,
+            window: c_ulong,
+        },
+        // Add other platforms as needed
+        dummy: [64]u8, // Fallback
     },
 };
 

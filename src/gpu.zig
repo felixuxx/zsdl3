@@ -597,6 +597,8 @@ extern fn SDL_BindGPUVertexBuffers(render_pass: ?*SDL_GPURenderPass, first_slot:
 extern fn SDL_BindGPUIndexBuffer(render_pass: ?*SDL_GPURenderPass, binding: ?*const SDL_GPUBufferBinding, index_element_size: SDL_GPUIndexElementSize) void;
 extern fn SDL_DrawGPUIndexedPrimitives(render_pass: ?*SDL_GPURenderPass, num_indices: Uint32, num_instances: Uint32, first_index: Uint32, vertex_offset: Sint32, first_instance: Uint32) void;
 extern fn SDL_EndGPURenderPass(render_pass: ?*SDL_GPURenderPass) void;
+extern fn SDL_CreateGPUVertexBuffer(device: ?*SDL_GPUDevice, create_info: ?*const SDL_GPUBufferCreateInfo) ?*SDL_GPUBuffer;
+extern fn SDL_CreateGPUIndexBuffer(device: ?*SDL_GPUDevice, create_info: ?*const SDL_GPUBufferCreateInfo) ?*SDL_GPUBuffer;
 
 // Pipeline functions
 extern fn SDL_CreateGPUGraphicsPipeline(device: ?*SDL_GPUDevice, create_info: ?*const SDL_GPUGraphicsPipelineCreateInfo) ?*SDL_GPUGraphicsPipeline;
