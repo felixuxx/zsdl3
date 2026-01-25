@@ -241,6 +241,9 @@ pub const softStretchLinear = surface.softStretchLinear;
 // Re-export event types (core already has basic ones)
 pub const SDL_Event = events.SDL_Event;
 pub const SDL_EventAction = events.SDL_EventAction;
+pub const SDL_Window = video.SDL_Window;
+
+pub const SDL_WINDOW_HIGH_PIXEL_DENSITY = video.SDL_WINDOW_HIGH_PIXEL_DENSITY;
 
 // Additional application event types (not in core)
 pub const SDL_EVENT_TERMINATING = events.SDL_EVENT_TERMINATING;
