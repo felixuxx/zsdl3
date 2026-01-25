@@ -87,11 +87,11 @@ pub fn build(b: *std.Build) void {
     });
     exe.linkSystemLibrary("SDL3");
 
-    // Additional examples
-    const gpu_example = b.addExecutable(.{
-        .name = "gpu_example",
+    // Enhanced renderer visual test
+    const enhanced_visual_test = b.addExecutable(.{
+        .name = "test_enhanced_renderer_visual",
         .root_module = b.createModule(.{
-            .root_source_file = b.path("examples/gpu_example.zig"),
+            .root_source_file = b.path("examples/test_enhanced_renderer_visual.zig"),
             .target = target,
             .optimize = optimize,
             .imports = &.{
@@ -99,96 +99,8 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    gpu_example.linkSystemLibrary("SDL3");
-    b.installArtifact(gpu_example);
-
-    const audio_example = b.addExecutable(.{
-        .name = "audio_example",
-        .root_module = b.createModule(.{
-            .root_source_file = b.path("examples/audio_example.zig"),
-            .target = target,
-            .optimize = optimize,
-            .imports = &.{
-                .{ .name = "zsdl3", .module = mod },
-            },
-        }),
-    });
-    audio_example.linkSystemLibrary("SDL3");
-    b.installArtifact(audio_example);
-
-    const d3_example = b.addExecutable(.{
-        .name = "3d_example",
-        .root_module = b.createModule(.{
-            .root_source_file = b.path("examples/3d_example.zig"),
-            .target = target,
-            .optimize = optimize,
-            .imports = &.{
-                .{ .name = "zsdl3", .module = mod },
-            },
-        }),
-    });
-    d3_example.linkSystemLibrary("SDL3");
-    b.installArtifact(d3_example);
-
-    // Keyboard test example
-    const keyboard_test = b.addExecutable(.{
-        .name = "keyboard_test",
-        .root_module = b.createModule(.{
-            .root_source_file = b.path("examples/keyboard_test.zig"),
-            .target = target,
-            .optimize = optimize,
-            .imports = &.{
-                .{ .name = "zsdl3", .module = mod },
-            },
-        }),
-    });
-    keyboard_test.linkSystemLibrary("SDL3");
-    b.installArtifact(keyboard_test);
-
-    // Enhanced renderer test
-    const enhanced_renderer_test = b.addExecutable(.{
-        .name = "test_enhanced_renderer",
-        .root_module = b.createModule(.{
-            .root_source_file = b.path("examples/test_enhanced_renderer.zig"),
-            .target = target,
-            .optimize = optimize,
-            .imports = &.{
-                .{ .name = "zsdl3", .module = mod },
-            },
-        }),
-    });
-    enhanced_renderer_test.linkSystemLibrary("SDL3");
-    b.installArtifact(enhanced_renderer_test);
-
-    // High priority renderer test
-    const high_priority_test = b.addExecutable(.{
-        .name = "test_high_priority_renderer",
-        .root_module = b.createModule(.{
-            .root_source_file = b.path("examples/test_high_priority_renderer.zig"),
-            .target = target,
-            .optimize = optimize,
-            .imports = &.{
-                .{ .name = "zsdl3", .module = mod },
-            },
-        }),
-    });
-    high_priority_test.linkSystemLibrary("SDL3");
-    b.installArtifact(high_priority_test);
-
-    // Events test example
-    //const events_test = b.addExecutable(.{
-    //    .name = "events_test",
-    //    .root_module = b.createModule(.{
-    //        .root_source_file = b.path("examples/events_test.zig"),
-    //        .target = target,
-    //        .optimize = optimize,
-    //        .imports = &.{
-    //            .{ .name = "zsdl3", .module = mod },
-    //        },
-    //    }),
-    //});
-    //events_test.linkSystemLibrary("SDL3");
-    //b.installArtifact(events_test);
+    enhanced_visual_test.linkSystemLibrary("SDL3");
+    b.installArtifact(enhanced_visual_test);
 
     // This declares intent for the executable to be installed into the
     // install prefix when running `zig build` (i.e. when executing the default
