@@ -145,6 +145,36 @@ pub fn build(b: *std.Build) void {
     keyboard_test.linkSystemLibrary("SDL3");
     b.installArtifact(keyboard_test);
 
+    // Enhanced renderer test
+    const enhanced_renderer_test = b.addExecutable(.{
+        .name = "test_enhanced_renderer",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("examples/test_enhanced_renderer.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "zsdl3", .module = mod },
+            },
+        }),
+    });
+    enhanced_renderer_test.linkSystemLibrary("SDL3");
+    b.installArtifact(enhanced_renderer_test);
+
+    // High priority renderer test
+    const high_priority_test = b.addExecutable(.{
+        .name = "test_high_priority_renderer",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("examples/test_high_priority_renderer.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "zsdl3", .module = mod },
+            },
+        }),
+    });
+    high_priority_test.linkSystemLibrary("SDL3");
+    b.installArtifact(high_priority_test);
+
     // Events test example
     //const events_test = b.addExecutable(.{
     //    .name = "events_test",

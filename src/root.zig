@@ -454,15 +454,42 @@ pub const SDL_FColor = render.SDL_FColor;
 pub const SDL_ScaleMode = render.SDL_ScaleMode;
 pub const SDL_RendererLogicalPresentation = render.SDL_RendererLogicalPresentation;
 
+// Re-export renderer constants
+pub const SDL_RENDERER_SOFTWARE = render.SDL_RENDERER_SOFTWARE;
+pub const SDL_RENDERER_ACCELERATED = render.SDL_RENDERER_ACCELERATED;
+pub const SDL_RENDERER_PRESENTVSYNC = render.SDL_RENDERER_PRESENTVSYNC;
+pub const SDL_RENDERER_TARGETTEXTURE = render.SDL_RENDERER_TARGETTEXTURE;
+
+// Re-export texture enums
+pub const SDL_TextureAccess = render.SDL_TextureAccess;
+pub const SDL_TEXTUREACCESS_STATIC = render.SDL_TEXTUREACCESS_STATIC;
+pub const SDL_TEXTUREACCESS_STREAMING = render.SDL_TEXTUREACCESS_STREAMING;
+pub const SDL_TEXTUREACCESS_TARGET = render.SDL_TEXTUREACCESS_TARGET;
+pub const SDL_TextureAddressMode = render.SDL_TextureAddressMode;
+pub const SDL_Colorspace = render.SDL_Colorspace;
+
+// Re-export texture creation property constants
+pub const SDL_PROP_TEXTURE_CREATE_FORMAT_NUMBER = render.SDL_PROP_TEXTURE_CREATE_FORMAT_NUMBER;
+pub const SDL_PROP_TEXTURE_CREATE_ACCESS_NUMBER = render.SDL_PROP_TEXTURE_CREATE_ACCESS_NUMBER;
+pub const SDL_PROP_TEXTURE_CREATE_WIDTH_NUMBER = render.SDL_PROP_TEXTURE_CREATE_WIDTH_NUMBER;
+pub const SDL_PROP_TEXTURE_CREATE_HEIGHT_NUMBER = render.SDL_PROP_TEXTURE_CREATE_HEIGHT_NUMBER;
+pub const SDL_PROP_TEXTURE_CREATE_COLORSPACE_NUMBER = render.SDL_PROP_TEXTURE_CREATE_COLORSPACE_NUMBER;
+
 // Re-export render functions
 pub const createRenderer = render.createRenderer;
+pub const createRendererWithProperties = render.createRendererWithProperties;
+pub const createSoftwareRenderer = render.createSoftwareRenderer;
+pub const createWindowAndRenderer = render.createWindowAndRenderer;
 pub const destroyRenderer = render.destroyRenderer;
 pub const renderClear = render.renderClear;
 pub const renderPresent = render.renderPresent;
 pub const setRenderDrawColor = render.setRenderDrawColor;
+pub const setRenderDrawColorFloat = render.setRenderDrawColorFloat;
+pub const renderPoint = render.renderPoint;
 pub const renderLine = render.renderLine;
 pub const renderFillRect = render.renderFillRect;
 pub const createTexture = render.createTexture;
+pub const createTextureWithProperties = render.createTextureWithProperties;
 pub const destroyTexture = render.destroyTexture;
 pub const updateTexture = render.updateTexture;
 pub const renderTexture = render.renderTexture;
@@ -492,6 +519,8 @@ pub const getRenderTarget = render.getRenderTarget;
 
 // Color and blend
 pub const getRenderDrawColor = render.getRenderDrawColor;
+pub const setRenderScale = render.setRenderScale;
+pub const getRenderScale = render.getRenderScale;
 pub const getRenderDrawBlendMode = render.getRenderDrawBlendMode;
 pub const setRenderDrawBlendMode = render.setRenderDrawBlendMode;
 
@@ -501,9 +530,13 @@ pub const queryTexture = render.queryTexture;
 pub const lockTexture = render.lockTexture;
 pub const unlockTexture = render.unlockTexture;
 pub const setTextureColorMod = render.setTextureColorMod;
+pub const setTextureColorModFloat = render.setTextureColorModFloat;
 pub const getTextureColorMod = render.getTextureColorMod;
+pub const getTextureColorModFloat = render.getTextureColorModFloat;
 pub const setTextureAlphaMod = render.setTextureAlphaMod;
+pub const setTextureAlphaModFloat = render.setTextureAlphaModFloat;
 pub const getTextureAlphaMod = render.getTextureAlphaMod;
+pub const getTextureAlphaModFloat = render.getTextureAlphaModFloat;
 pub const setTextureBlendMode = render.setTextureBlendMode;
 pub const getTextureBlendMode = render.getTextureBlendMode;
 pub const setTextureScaleMode = render.setTextureScaleMode;
@@ -522,6 +555,7 @@ pub const getRenderLogicalSize = render.getRenderLogicalSize;
 
 // Debug
 pub const renderDebugText = render.renderDebugText;
+pub const renderDebugTextFormat = render.renderDebugTextFormat;
 pub const renderGeometryRaw = render.renderGeometryRaw;
 pub const renderReadPixels = render.renderReadPixels;
 pub const renderFlush = render.renderFlush;
