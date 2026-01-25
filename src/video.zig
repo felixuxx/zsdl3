@@ -167,7 +167,7 @@ extern fn SDL_GetWindowOpacity(window: ?*SDL_Window) f32;
 extern fn SDL_SetWindowModalFor(window: ?*SDL_Window, parent_window: ?*SDL_Window) bool;
 extern fn SDL_SetWindowFocusable(window: ?*SDL_Window, focusable: bool) bool;
 extern fn SDL_ShowWindowSystemMenu(window: ?*SDL_Window, x: c_int, y: c_int) bool;
-extern fn SDL_SetWindowHitTest(window: ?*SDL_Window, callback: ?*anyopaque, callback_data: ?*anyopaque) bool;
+extern fn SDL_SetWindowHitTest(window: ?*SDL_Window, callback: SDL_HitTestCallback, callback_data: ?*anyopaque) bool;
 extern fn SDL_SetWindowShape(window: ?*SDL_Window, shape: ?*SDL_Surface) bool;
 extern fn SDL_FlashWindow(window: ?*SDL_Window, operation: SDL_FlashOperation) bool;
 extern fn SDL_SetWindowGammaRamp(window: ?*SDL_Window, red: ?[*]const u16, green: ?[*]const u16, blue: ?[*]const u16) bool;
@@ -232,6 +232,21 @@ pub const SDL_SysWMType = enum(c_int) {
     SDL_SYSWM_KMSDRM,
     SDL_SYSWM_RISCOS,
 };
+
+pub const SDL_HitTestResult = enum(c_int) {
+    SDL_HITTEST_NORMAL,
+    SDL_HITTEST_DRAGGABLE,
+    SDL_HITTEST_RESIZE_TOPLEFT,
+    SDL_HITTEST_RESIZE_TOP,
+    SDL_HITTEST_RESIZE_TOPRIGHT,
+    SDL_HITTEST_RESIZE_RIGHT,
+    SDL_HITTEST_RESIZE_BOTTOMRIGHT,
+    SDL_HITTEST_RESIZE_BOTTOM,
+    SDL_HITTEST_RESIZE_BOTTOMLEFT,
+    SDL_HITTEST_RESIZE_LEFT,
+};
+
+pub const SDL_HitTestCallback = ?*const fn (?*anyopaque, ?*SDL_Window, ?*SDL_Point, ?*anyopaque) callconv(.C) SDL_HitTestResult;
 
 // Public video API
 pub const getNumVideoDrivers = SDL_GetNumVideoDrivers;

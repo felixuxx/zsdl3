@@ -3,6 +3,7 @@
 
 // Import all subsystems
 pub const core = @import("core.zig");
+pub const camera = @import("camera.zig");
 pub const pixels = @import("pixels.zig");
 pub const video = @import("video.zig");
 pub const surface = @import("surface.zig");
@@ -63,6 +64,18 @@ pub const clearError = core.clearError;
 pub const setError = core.setError;
 pub const getVersion = core.getVersion;
 pub const getRevision = core.getRevision;
+
+// Re-export camera functions
+pub const getNumCameraDrivers = camera.getNumCameraDrivers;
+pub const getCameraDriver = camera.getCameraDriver;
+pub const getCameraDevices = camera.getCameraDevices;
+pub const getCameraDeviceName = camera.getCameraDeviceName;
+pub const openCameraDevice = camera.openCameraDevice;
+pub const closeCameraDevice = camera.closeCameraDevice;
+pub const getCameraSpec = camera.getCameraSpec;
+pub const startCamera = camera.startCamera;
+pub const stopCamera = camera.stopCamera;
+pub const getCameraFrame = camera.getCameraFrame;
 
 // Re-export pixel/rect types and functions
 pub const SDL_Point = pixels.SDL_Point;

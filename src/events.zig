@@ -14,7 +14,7 @@ pub const SDL_KeyboardEvent = core.SDL_KeyboardEvent;
 pub const SDL_MouseMotionEvent = core.SDL_MouseMotionEvent;
 pub const SDL_WindowID = core.SDL_WindowID;
 pub const SDL_Event = core.SDL_Event;
-pub const SDL_TouchID = core.SDL_TouchID;
+pub const SDL_TouchID = touch.SDL_TouchID;
 pub const SDL_Finger = touch.SDL_Finger;
 
 // === Complete SDL3 Event Type Constants ===
@@ -394,8 +394,8 @@ extern fn SDL_SetEventFilter(filter: ?*const fn (?*anyopaque, ?*SDL_Event) callc
 extern fn SDL_GetEventName(type: SDL_EventType) ?[*:0]const u8;
 
 // Touch functions
-extern fn SDL_GetNumTouchFingers(touchID: core.SDL_TouchID) c_int;
-extern fn SDL_GetTouchFinger(touchID: core.SDL_TouchID, index: c_int) ?*SDL_Finger;
+extern fn SDL_GetNumTouchFingers(touchID: touch.SDL_TouchID) c_int;
+extern fn SDL_GetTouchFinger(touchID: touch.SDL_TouchID, index: c_int) ?*SDL_Finger;
 
 // === Public API ===
 // Basic event handling

@@ -5,6 +5,7 @@ const core = @import("core.zig");
 const video = @import("video.zig");
 const guid = @import("guid.zig");
 const sensor = @import("sensor.zig");
+const touch = @import("touch.zig");
 
 // Import types
 pub const Uint8 = core.Uint8;
@@ -17,6 +18,10 @@ pub const SDL_GUID = guid.SDL_GUID;
 pub const SDL_SensorType = sensor.SDL_SensorType;
 pub const SDL_SensorID = core.SDL_SensorID;
 pub const SDL_Sensor = sensor.SDL_Sensor;
+pub const SDL_TouchID = touch.SDL_TouchID;
+pub const SDL_TouchDeviceType = touch.SDL_TouchDeviceType;
+pub const SDL_FingerID = touch.SDL_FingerID;
+pub const SDL_Finger = touch.SDL_Finger;
 
 // Joystick type
 pub const SDL_JoystickType = enum(c_int) {
@@ -261,6 +266,10 @@ extern fn SDL_SetGamepadSensorEnabled(gamepad: ?*SDL_Gamepad, sensor: SDL_Sensor
 extern fn SDL_GamepadSensorEnabled(gamepad: ?*SDL_Gamepad, sensor: SDL_SensorType) bool;
 extern fn SDL_GetGamepadProperties(gamepad: ?*SDL_Gamepad) core.SDL_PropertiesID;
 extern fn SDL_GetGamepadIDMap() ?*anyopaque;
+
+//Touch functions
+extern fn SDL_GetTouchDeviceType(device_id: SDL_TouchID) SDL_TouchDeviceType;
+extern fn SDL_GetTouchFinger(device_id: SDL_TouchID, finger_id: SDL_FingerID) ?*SDL_Finger;
 
 //Sensor functions
 extern fn SDL_GetSensorFromID(instance_id: SDL_SensorID) ?*SDL_Sensor;
