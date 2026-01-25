@@ -661,6 +661,8 @@ pub const SDL_GPU_SHADERFORMAT_METALLIB = 1 << 5;
 
 // Public API
 pub const createGPUDevice = SDL_CreateGPUDevice;
+pub const createGPUVertexBuffer = SDL_CreateGPUVertexBuffer;
+pub const createGPUIndexBuffer = SDL_CreateGPUIndexBuffer;
 pub const destroyGPUDevice = SDL_DestroyGPUDevice;
 pub const claimWindowForGPUDevice = SDL_ClaimWindowForGPUDevice;
 pub const releaseWindowFromGPUDevice = SDL_ReleaseWindowFromGPUDevice;
