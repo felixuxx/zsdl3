@@ -567,6 +567,7 @@ pub const setRenderVSync = render.setRenderVSync;
 pub const SDL_AudioSpec = audio.SDL_AudioSpec;
 pub const SDL_AudioDeviceID = audio.SDL_AudioDeviceID;
 pub const SDL_AudioStream = audio.SDL_AudioStream;
+pub const SDL_AudioFormat = audio.SDL_AudioFormat;
 pub const openAudioDevice = audio.openAudioDevice;
 pub const closeAudioDevice = audio.closeAudioDevice;
 pub const pauseAudioDevice = audio.pauseAudioDevice;
@@ -607,6 +608,10 @@ pub const queueAudio = audio.queueAudio;
 pub const dequeueAudio = audio.dequeueAudio;
 pub const getQueuedAudioSize = audio.getQueuedAudioSize;
 pub const clearQueuedAudio = audio.clearQueuedAudio;
+pub const getAudioStreamGain = audio.getAudioStreamGain;
+pub const setAudioStreamGain = audio.setAudioStreamGain;
+pub const loadWAV_IO = audio.loadWAV_IO;
+pub const loadWAV = audio.loadWAV;
 
 // Re-export time types and functions
 pub const SDL_TimerID = time.SDL_TimerID;
