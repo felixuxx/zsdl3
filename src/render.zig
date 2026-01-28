@@ -7,6 +7,9 @@ const pixels = @import("pixels.zig");
 pub const SDL_PixelFormat = pixels.SDL_PixelFormat;
 pub const SDL_BlendMode = pixels.SDL_BlendMode;
 pub const SDL_FRect = pixels.SDL_FRect;
+pub const SDL_FPoint = pixels.SDL_FPoint;
+const surface = @import("surface.zig");
+pub const SDL_FlipMode = surface.SDL_FlipMode;
 const video = @import("video.zig");
 
 // Import types
@@ -84,7 +87,7 @@ pub const SDL_PROP_TEXTURE_CREATE_HEIGHT_NUMBER = "height";
 pub const SDL_PROP_TEXTURE_CREATE_COLORSPACE_NUMBER = "colorspace";
 
 // Render functions
-extern fn SDL_CreateRenderer(window: ?*video.SDL_Window, name: ?[*:0]const u8, flags: Uint32) ?*SDL_Renderer;
+extern fn SDL_CreateRenderer(window: ?*video.SDL_Window, name: ?[*:0]const u8) ?*SDL_Renderer;
 extern fn SDL_CreateRendererWithProperties(props: core.SDL_PropertiesID) ?*SDL_Renderer;
 extern fn SDL_CreateSoftwareRenderer(surface: ?*pixels.SDL_Surface) ?*SDL_Renderer;
 extern fn SDL_CreateWindowAndRenderer(title: ?[*:0]const u8, width: c_int, height: c_int, window_flags: video.SDL_WindowFlags, window: ?*?*video.SDL_Window, renderer: ?*?*SDL_Renderer) bool;
@@ -163,7 +166,7 @@ extern fn SDL_GetRenderLogicalSize(renderer: ?*SDL_Renderer, w: ?*c_int, h: ?*c_
 extern fn SDL_RenderDebugText(renderer: ?*SDL_Renderer, x: f32, y: f32, str: ?[*:0]const u8) bool;
 extern fn SDL_RenderDebugTextFormat(renderer: ?*SDL_Renderer, x: f32, y: f32, fmt: ?[*:0]const u8, ...) bool;
 extern fn SDL_RenderGeometryRaw(renderer: ?*SDL_Renderer, texture: ?*SDL_Texture, xy: ?[*]const f32, xy_stride: c_int, color: ?[*]const SDL_FColor, color_stride: c_int, uv: ?[*]const f32, uv_stride: c_int, num_vertices: c_int, indices: ?[*]const c_int, num_indices: c_int, size_indices: c_int) bool;
-extern fn SDL_RenderReadPixels(renderer: ?*SDL_Renderer, rect: ?*const SDL_FRect) ?*pixels.SDL_Surface;
+extern fn SDL_RenderReadPixels(renderer: ?*SDL_Renderer, rect: ?*const pixels.SDL_Rect) ?*pixels.SDL_Surface;
 extern fn SDL_RenderFlush(renderer: ?*SDL_Renderer) bool;
 extern fn SDL_FlushRenderer(renderer: ?*SDL_Renderer) bool;
 
@@ -194,11 +197,11 @@ extern fn SDL_SetRenderTextureAddressMode(renderer: ?*SDL_Renderer, address_mode
 extern fn SDL_GetRenderTextureAddressMode(renderer: ?*SDL_Renderer, address_mode: ?*SDL_TextureAddressMode) bool;
 
 // Advanced texture rendering
-extern fn SDL_RenderTexture9Grid(renderer: ?*SDL_Renderer, texture: ?*SDL_Texture, srcrect: ?*const SDL_FRect, dstrect: ?*const SDL_FRect, scale_w: f32, scale_h: f32) bool;
-extern fn SDL_RenderTexture9GridTiled(renderer: ?*SDL_Renderer, texture: ?*SDL_Texture, srcrect: ?*const SDL_FRect, dstrect: ?*const SDL_FRect, scale_w: f32, scale_h: f32, tile_w: f32, tile_h: f32) bool;
-extern fn SDL_RenderTextureAffine(renderer: ?*SDL_Renderer, texture: ?*SDL_Texture, srcrect: ?*const SDL_FRect, dstrect: ?*const SDL_FRect, angle: f32, center_x: f32, center_y: f32, scale_x: f32, scale_y: f32) bool;
-extern fn SDL_RenderTextureRotated(renderer: ?*SDL_Renderer, texture: ?*SDL_Texture, srcrect: ?*const SDL_FRect, dstrect: ?*const SDL_FRect, angle: f32, center_x: f32, center_y: f32) bool;
-extern fn SDL_RenderTextureTiled(renderer: ?*SDL_Renderer, texture: ?*SDL_Texture, srcrect: ?*const SDL_FRect, dstrect: ?*const SDL_FRect, tile_w: f32, tile_h: f32) bool;
+extern fn SDL_RenderTexture9Grid(renderer: ?*SDL_Renderer, texture: ?*SDL_Texture, srcrect: ?*const SDL_FRect, left_width: f32, right_width: f32, top_height: f32, bottom_height: f32, scale: f32, dstrect: ?*const SDL_FRect) bool;
+extern fn SDL_RenderTexture9GridTiled(renderer: ?*SDL_Renderer, texture: ?*SDL_Texture, srcrect: ?*const SDL_FRect, left_width: f32, right_width: f32, top_height: f32, bottom_height: f32, scale: f32, dstrect: ?*const SDL_FRect, tileScale: f32) bool;
+extern fn SDL_RenderTextureAffine(renderer: ?*SDL_Renderer, texture: ?*SDL_Texture, srcrect: ?*const SDL_FRect, origin: ?*const SDL_FPoint, right: ?*const SDL_FPoint, down: ?*const SDL_FPoint) bool;
+extern fn SDL_RenderTextureRotated(renderer: ?*SDL_Renderer, texture: ?*SDL_Texture, srcrect: ?*const SDL_FRect, dstrect: ?*const SDL_FRect, angle: f64, center: ?*const SDL_FPoint, flip: SDL_FlipMode) bool;
+extern fn SDL_RenderTextureTiled(renderer: ?*SDL_Renderer, texture: ?*SDL_Texture, srcrect: ?*const SDL_FRect, scale: f32, dstrect: ?*const SDL_FRect) bool;
 
 // Utility functions
 extern fn SDL_GetDefaultTextureScaleMode() SDL_ScaleMode;

@@ -2,17 +2,24 @@
 // Software surfaces for drawing
 
 const core = @import("core.zig");
-const pixels = @import("pixels.zig");
-
-// Import types
 pub const Uint8 = core.Uint8;
 pub const Uint32 = core.Uint32;
+const pixels = @import("pixels.zig");
 pub const SDL_PixelFormat = pixels.SDL_PixelFormat;
 pub const SDL_Palette = pixels.SDL_Palette;
 pub const SDL_Rect = pixels.SDL_Rect;
 
+// Import types
 // Placeholder for SDL_IOStream
 pub const SDL_IOStream = opaque {};
+
+// Flip mode
+pub const SDL_FlipMode = enum(c_int) {
+    SDL_FLIP_NONE = 0,
+    SDL_FLIP_HORIZONTAL = 1,
+    SDL_FLIP_VERTICAL = 2,
+    SDL_FLIP_HORIZONTAL_AND_VERTICAL = 3, // SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL
+};
 
 // Surface struct
 pub const SDL_Surface = extern struct {
@@ -84,7 +91,7 @@ extern fn SDL_SetSurfaceBlendMode(surface: ?*SDL_Surface, blendMode: pixels.SDL_
 extern fn SDL_GetSurfaceBlendMode(surface: ?*SDL_Surface, blendMode: ?*pixels.SDL_BlendMode) bool;
 extern fn SDL_SetSurfaceClipRect(surface: ?*SDL_Surface, rect: ?*const SDL_Rect) bool;
 extern fn SDL_GetSurfaceClipRect(surface: ?*SDL_Surface, rect: ?*SDL_Rect) bool;
-extern fn SDL_FlipSurface(surface: ?*SDL_Surface, flip: c_int) bool;
+extern fn SDL_FlipSurface(surface: ?*SDL_Surface, flip: SDL_FlipMode) bool;
 extern fn SDL_DuplicateSurface(surface: ?*SDL_Surface) ?*SDL_Surface;
 extern fn SDL_ScaleSurface(surface: ?*SDL_Surface, width: c_int, height: c_int, scaleMode: c_int) ?*SDL_Surface;
 extern fn SDL_ConvertSurface(surface: ?*SDL_Surface, format: SDL_PixelFormat) ?*SDL_Surface;
