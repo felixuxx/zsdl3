@@ -2,6 +2,18 @@
 // 3D rendering and compute
 
 const core = @import("core.zig");
+pub const Uint8 = core.Uint8;
+pub const Uint32 = core.Uint32;
+pub const Sint32 = core.Sint32;
+pub const SDL_GPUShaderFormat = Uint32;
+pub const SDL_GPUBufferUsageFlags = Uint32;
+pub const SDL_GPUTextureUsageFlags = Uint32;
+pub const SDL_GPUColorComponentFlags = Uint8;
+const pixels = @import("pixels.zig");
+pub const SDL_Rect = pixels.SDL_Rect;
+const render = @import("render.zig");
+pub const SDL_FColor = render.SDL_FColor;
+const video = @import("video.zig");
 
 // Opaque structs
 pub const SDL_GPUDevice = opaque {};
@@ -45,19 +57,38 @@ pub const SDL_GPUIndexElementSize = enum(c_int) {
     SDL_GPU_INDEXELEMENTSIZE_32BIT,
 };
 
+pub const SDL_GPUPresentMode = enum(c_int) {
+    SDL_GPU_PRESENTMODE_VSYNC,
+    SDL_GPU_PRESENTMODE_IMMEDIATE,
+    SDL_GPU_PRESENTMODE_MAILBOX,
+};
+
+pub const SDL_GPUSwapchainComposition = enum(c_int) {
+    SDL_GPU_SWAPCHAINCOMPOSITION_SDR,
+    SDL_GPU_SWAPCHAINCOMPOSITION_SDR_LINEAR,
+    SDL_GPU_SWAPCHAINCOMPOSITION_HDR_EXTENDED_LINEAR,
+    SDL_GPU_SWAPCHAINCOMPOSITION_HDR10_ST2084,
+};
+
 // GPU driver functions
 extern fn SDL_GetNumGPUDrivers() c_int;
 extern fn SDL_GetGPUDriver(index: c_int) ?[*:0]const u8;
 extern fn SDL_GetGPUDeviceDriver(device: ?*SDL_GPUDevice) ?[*:0]const u8;
 
 // Basic functions
-extern fn SDL_CreateGPUDevice(shader_formats: Uint32, debug_mode: bool, name: ?[*:0]const u8) ?*SDL_GPUDevice;
+extern fn SDL_CreateGPUDevice(shader_formats: SDL_GPUShaderFormat, debug_mode: bool, name: ?[*:0]const u8) ?*SDL_GPUDevice;
+extern fn SDL_CreateGPUDeviceWithProperties(props: core.SDL_PropertiesID) ?*SDL_GPUDevice;
 extern fn SDL_DestroyGPUDevice(device: ?*SDL_GPUDevice) void;
+extern fn SDL_GetGPUShaderFormats(device: ?*SDL_GPUDevice) SDL_GPUShaderFormat;
 extern fn SDL_ClaimWindowForGPUDevice(device: ?*SDL_GPUDevice, window: ?*video.SDL_Window) bool;
 extern fn SDL_ReleaseWindowFromGPUDevice(device: ?*SDL_GPUDevice, window: ?*video.SDL_Window) void;
+extern fn SDL_AcquireGPUSwapchainTexture(command_buffer: ?*SDL_GPUCommandBuffer, window: ?*video.SDL_Window, swapchain_texture: ?*?*SDL_GPUTexture, swapchain_texture_width: ?*Uint32, swapchain_texture_height: ?*Uint32) bool;
+extern fn SDL_WaitForGPUSwapchain(device: ?*SDL_GPUDevice, window: ?*video.SDL_Window) bool;
+extern fn SDL_WaitAndAcquireGPUSwapchainTexture(command_buffer: ?*SDL_GPUCommandBuffer, window: ?*video.SDL_Window, swapchain_texture: ?*?*SDL_GPUTexture, swapchain_texture_width: ?*Uint32, swapchain_texture_height: ?*Uint32) bool;
 extern fn SDL_AcquireGPUCommandBuffer(device: ?*SDL_GPUDevice) ?*SDL_GPUCommandBuffer;
 extern fn SDL_SubmitGPUCommandBuffer(command_buffer: ?*SDL_GPUCommandBuffer) bool;
 extern fn SDL_SubmitGPUCommandBufferAndAcquireFence(command_buffer: ?*SDL_GPUCommandBuffer) ?*SDL_GPUFence;
+extern fn SDL_CancelGPUCommandBuffer(command_buffer: ?*SDL_GPUCommandBuffer) bool;
 extern fn SDL_WaitForGPUFences(device: ?*SDL_GPUDevice, wait_all: bool, fences: ?[*]?*SDL_GPUFence, num_fences: Uint32) bool;
 extern fn SDL_ReleaseGPUFence(device: ?*SDL_GPUDevice, fence: ?*SDL_GPUFence) void;
 
@@ -68,7 +99,6 @@ pub const SDL_GPUBufferCreateInfo = extern struct {
     props: core.SDL_PropertiesID,
 };
 
-pub const SDL_GPUBufferUsageFlags = Uint32;
 pub const SDL_GPU_BUFFERUSAGE_VERTEX = 1 << 0;
 pub const SDL_GPU_BUFFERUSAGE_INDEX = 1 << 1;
 pub const SDL_GPU_BUFFERUSAGE_INDIRECT = 1 << 2;
@@ -80,10 +110,9 @@ pub const SDL_GPUTextureCreateInfo = extern struct {
     type: SDL_GPUTextureType,
     format: SDL_GPUTextureFormat,
     usage: SDL_GPUTextureUsageFlags,
-    w: Uint32,
-    h: Uint32,
-    d: Uint32,
-    layer_count_or_depth_plane_count: Uint32,
+    width: Uint32,
+    height: Uint32,
+    layer_count_or_depth: Uint32,
     num_levels: Uint32,
     sample_count: SDL_GPUSampleCount,
     props: core.SDL_PropertiesID,
@@ -162,7 +191,6 @@ pub const SDL_GPUTextureFormat = enum(c_int) {
     SDL_GPU_TEXTUREFORMAT_D32_FLOAT_S8_UINT,
 };
 
-pub const SDL_GPUTextureUsageFlags = Uint32;
 pub const SDL_GPU_TEXTUREUSAGE_SAMPLER = 1 << 0;
 pub const SDL_GPU_TEXTUREUSAGE_COLOR_TARGET = 1 << 1;
 pub const SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET = 1 << 2;
@@ -264,6 +292,20 @@ pub const SDL_GPUTransferBufferLocation = extern struct {
     offset: Uint32,
 };
 
+pub const SDL_GPUTextureLocation = extern struct {
+    texture: ?*SDL_GPUTexture,
+    mip_level: Uint32,
+    layer: Uint32,
+    x: Uint32,
+    y: Uint32,
+    z: Uint32,
+};
+
+pub const SDL_GPUBufferLocation = extern struct {
+    buffer: ?*SDL_GPUBuffer,
+    offset: Uint32,
+};
+
 pub const SDL_GPUTextureRegion = extern struct {
     texture: ?*SDL_GPUTexture,
     mip_level: Uint32,
@@ -318,6 +360,21 @@ pub const SDL_GPUViewport = extern struct {
 pub const SDL_GPUBufferBinding = extern struct {
     buffer: ?*SDL_GPUBuffer,
     offset: Uint32,
+};
+
+pub const SDL_GPUIndirectDrawCommand = extern struct {
+    num_vertices: Uint32,
+    num_instances: Uint32,
+    first_vertex: Uint32,
+    first_instance: Uint32,
+};
+
+pub const SDL_GPUIndexedIndirectDrawCommand = extern struct {
+    num_indices: Uint32,
+    num_instances: Uint32,
+    first_index: Uint32,
+    vertex_offset: Sint32,
+    first_instance: Uint32,
 };
 
 // Additional structs
@@ -506,7 +563,6 @@ pub const SDL_GPUBlendOp = enum(c_int) {
     SDL_GPU_BLENDOP_MAX,
 };
 
-pub const SDL_GPUColorComponentFlags = Uint8;
 pub const SDL_GPU_COLORCOMPONENT_R = 1 << 0;
 pub const SDL_GPU_COLORCOMPONENT_G = 1 << 1;
 pub const SDL_GPU_COLORCOMPONENT_B = 1 << 2;
@@ -586,6 +642,10 @@ extern fn SDL_ReleaseGPUTransferBuffer(device: ?*SDL_GPUDevice, transfer_buffer:
 extern fn SDL_BeginGPUCopyPass(cmdbuf: ?*SDL_GPUCommandBuffer) ?*SDL_GPUCopyPass;
 extern fn SDL_UploadToGPUTexture(cmdbuf: ?*SDL_GPUCommandBuffer, copy_pass: ?*SDL_GPUCopyPass, source: ?*const SDL_GPUTextureTransferInfo, destination: ?*const SDL_GPUTextureRegion, cycle: bool) bool;
 extern fn SDL_UploadToGPUBuffer(cmdbuf: ?*SDL_GPUCommandBuffer, copy_pass: ?*SDL_GPUCopyPass, source: ?*const SDL_GPUTransferBufferLocation, destination: ?*const SDL_GPUBufferRegion, cycle: bool) bool;
+extern fn SDL_DownloadFromGPUTexture(copy_pass: ?*SDL_GPUCopyPass, source: ?*const SDL_GPUTextureRegion, destination: ?*const SDL_GPUTextureTransferInfo) void;
+extern fn SDL_DownloadFromGPUBuffer(copy_pass: ?*SDL_GPUCopyPass, source: ?*const SDL_GPUBufferRegion, destination: ?*const SDL_GPUTransferBufferLocation) void;
+extern fn SDL_CopyGPUTextureToTexture(copy_pass: ?*SDL_GPUCopyPass, source: ?*const SDL_GPUTextureLocation, destination: ?*const SDL_GPUTextureLocation, w: Uint32, h: Uint32, d: Uint32, cycle: bool) void;
+extern fn SDL_CopyGPUBufferToBuffer(copy_pass: ?*SDL_GPUCopyPass, source: ?*const SDL_GPUBufferLocation, destination: ?*const SDL_GPUBufferLocation, size: Uint32, cycle: bool) void;
 extern fn SDL_EndGPUCopyPass(copy_pass: ?*SDL_GPUCopyPass) void;
 
 // Render pass functions
@@ -595,7 +655,10 @@ extern fn SDL_SetGPUViewport(render_pass: ?*SDL_GPURenderPass, viewport: ?*const
 extern fn SDL_SetGPUScissor(render_pass: ?*SDL_GPURenderPass, scissor: ?*const SDL_Rect) void;
 extern fn SDL_BindGPUVertexBuffers(render_pass: ?*SDL_GPURenderPass, first_slot: Uint32, bindings: ?[*]const SDL_GPUBufferBinding, num_bindings: Uint32) void;
 extern fn SDL_BindGPUIndexBuffer(render_pass: ?*SDL_GPURenderPass, binding: ?*const SDL_GPUBufferBinding, index_element_size: SDL_GPUIndexElementSize) void;
+extern fn SDL_DrawGPUPrimitives(render_pass: ?*SDL_GPURenderPass, num_vertices: Uint32, num_instances: Uint32, first_vertex: Uint32, first_instance: Uint32) void;
 extern fn SDL_DrawGPUIndexedPrimitives(render_pass: ?*SDL_GPURenderPass, num_indices: Uint32, num_instances: Uint32, first_index: Uint32, vertex_offset: Sint32, first_instance: Uint32) void;
+extern fn SDL_DrawGPUPrimitivesIndirect(render_pass: ?*SDL_GPURenderPass, buffer: ?*SDL_GPUBuffer, offset: Uint32, draw_count: Uint32) void;
+extern fn SDL_DrawGPUIndexedPrimitivesIndirect(render_pass: ?*SDL_GPURenderPass, buffer: ?*SDL_GPUBuffer, offset: Uint32, draw_count: Uint32) void;
 extern fn SDL_EndGPURenderPass(render_pass: ?*SDL_GPURenderPass) void;
 extern fn SDL_CreateGPUVertexBuffer(device: ?*SDL_GPUDevice, create_info: ?*const SDL_GPUBufferCreateInfo) ?*SDL_GPUBuffer;
 extern fn SDL_CreateGPUIndexBuffer(device: ?*SDL_GPUDevice, create_info: ?*const SDL_GPUBufferCreateInfo) ?*SDL_GPUBuffer;
@@ -629,7 +692,7 @@ extern fn SDL_InsertGPUDebugLabel(cmdbuf: ?*SDL_GPUCommandBuffer, text: ?[*:0]co
 extern fn SDL_PushGPUDebugGroup(cmdbuf: ?*SDL_GPUCommandBuffer, name: ?[*:0]const u8) void;
 extern fn SDL_PopGPUDebugGroup(cmdbuf: ?*SDL_GPUCommandBuffer) void;
 extern fn SDL_SetGPUAllowedFramesInFlight(device: ?*SDL_GPUDevice, allowed_frames_in_flight: Uint32) bool;
-extern fn SDL_GPUSupportsShaderFormats(device: ?*SDL_GPUDevice, format_flags: Uint32, name: ?[*:0]const u8) bool;
+extern fn SDL_GPUSupportsShaderFormats(device: ?*SDL_GPUDevice, format_flags: SDL_GPUShaderFormat, name: ?[*:0]const u8) bool;
 extern fn SDL_GPUSupportsProperties(props: core.SDL_PropertiesID) bool;
 extern fn SDL_GPUTextureSupportsFormat(device: ?*SDL_GPUDevice, format: SDL_GPUTextureFormat, type: SDL_GPUTextureType, usage: SDL_GPUTextureUsageFlags) bool;
 extern fn SDL_GPUBufferSize(buffer: ?*SDL_GPUBuffer) Uint32;
@@ -637,38 +700,34 @@ extern fn SDL_GPUTextureFormatTexelBlockSize(format: SDL_GPUTextureFormat) Uint3
 extern fn SDL_GPUTextureSupportsSampleCount(device: ?*SDL_GPUDevice, format: SDL_GPUTextureFormat, sample_count: SDL_GPUSampleCount) bool;
 
 // video import
-const video = @import("video.zig");
-const render = @import("render.zig");
-const pixels = @import("pixels.zig");
-
 // Import types
-pub const SDL_FColor = render.SDL_FColor;
-pub const SDL_Rect = pixels.SDL_Rect;
-
 // Import types
-pub const Uint8 = core.Uint8;
-pub const Uint32 = core.Uint32;
-pub const Sint32 = core.Sint32;
-
+// Shader format type
 // Shader formats
-pub const SDL_GPU_SHADERFORMAT_INVALID = 0;
-pub const SDL_GPU_SHADERFORMAT_PRIVATE = 1 << 0;
-pub const SDL_GPU_SHADERFORMAT_SPIRV = 1 << 1;
-pub const SDL_GPU_SHADERFORMAT_DXBC = 1 << 2;
-pub const SDL_GPU_SHADERFORMAT_DXIL = 1 << 3;
-pub const SDL_GPU_SHADERFORMAT_MSL = 1 << 4;
-pub const SDL_GPU_SHADERFORMAT_METALLIB = 1 << 5;
+pub const SDL_GPU_SHADERFORMAT_INVALID: SDL_GPUShaderFormat = 0;
+pub const SDL_GPU_SHADERFORMAT_PRIVATE: SDL_GPUShaderFormat = 1 << 0;
+pub const SDL_GPU_SHADERFORMAT_SPIRV: SDL_GPUShaderFormat = 1 << 1;
+pub const SDL_GPU_SHADERFORMAT_DXBC: SDL_GPUShaderFormat = 1 << 2;
+pub const SDL_GPU_SHADERFORMAT_DXIL: SDL_GPUShaderFormat = 1 << 3;
+pub const SDL_GPU_SHADERFORMAT_MSL: SDL_GPUShaderFormat = 1 << 4;
+pub const SDL_GPU_SHADERFORMAT_METALLIB: SDL_GPUShaderFormat = 1 << 5;
 
 // Public API
 pub const createGPUDevice = SDL_CreateGPUDevice;
+pub const createGPUDeviceWithProperties = SDL_CreateGPUDeviceWithProperties;
+pub const getGPUShaderFormats = SDL_GetGPUShaderFormats;
 pub const createGPUVertexBuffer = SDL_CreateGPUVertexBuffer;
 pub const createGPUIndexBuffer = SDL_CreateGPUIndexBuffer;
 pub const destroyGPUDevice = SDL_DestroyGPUDevice;
 pub const claimWindowForGPUDevice = SDL_ClaimWindowForGPUDevice;
 pub const releaseWindowFromGPUDevice = SDL_ReleaseWindowFromGPUDevice;
+pub const acquireGPUSwapchainTexture = SDL_AcquireGPUSwapchainTexture;
+pub const waitForGPUSwapchain = SDL_WaitForGPUSwapchain;
+pub const waitAndAcquireGPUSwapchainTexture = SDL_WaitAndAcquireGPUSwapchainTexture;
 pub const acquireGPUCommandBuffer = SDL_AcquireGPUCommandBuffer;
 pub const submitGPUCommandBuffer = SDL_SubmitGPUCommandBuffer;
 pub const submitGPUCommandBufferAndAcquireFence = SDL_SubmitGPUCommandBufferAndAcquireFence;
+pub const cancelGPUCommandBuffer = SDL_CancelGPUCommandBuffer;
 pub const waitForGPUFences = SDL_WaitForGPUFences;
 pub const releaseGPUFence = SDL_ReleaseGPUFence;
 pub const createGPUBuffer = SDL_CreateGPUBuffer;
@@ -690,6 +749,10 @@ pub const releaseGPUTransferBuffer = SDL_ReleaseGPUTransferBuffer;
 pub const beginGPUCopyPass = SDL_BeginGPUCopyPass;
 pub const uploadToGPUTexture = SDL_UploadToGPUTexture;
 pub const uploadToGPUBuffer = SDL_UploadToGPUBuffer;
+pub const downloadFromGPUTexture = SDL_DownloadFromGPUTexture;
+pub const downloadFromGPUBuffer = SDL_DownloadFromGPUBuffer;
+pub const copyGPUTextureToTexture = SDL_CopyGPUTextureToTexture;
+pub const copyGPUBufferToBuffer = SDL_CopyGPUBufferToBuffer;
 pub const endGPUCopyPass = SDL_EndGPUCopyPass;
 pub const beginGPURenderPass = SDL_BeginGPURenderPass;
 pub const bindGPUGraphicsPipeline = SDL_BindGPUGraphicsPipeline;
@@ -697,7 +760,10 @@ pub const setGPUViewport = SDL_SetGPUViewport;
 pub const setGPUScissor = SDL_SetGPUScissor;
 pub const bindGPUVertexBuffers = SDL_BindGPUVertexBuffers;
 pub const bindGPUIndexBuffer = SDL_BindGPUIndexBuffer;
+pub const drawGPUPrimitives = SDL_DrawGPUPrimitives;
 pub const drawGPUIndexedPrimitives = SDL_DrawGPUIndexedPrimitives;
+pub const drawGPUPrimitivesIndirect = SDL_DrawGPUPrimitivesIndirect;
+pub const drawGPUIndexedPrimitivesIndirect = SDL_DrawGPUIndexedPrimitivesIndirect;
 pub const endGPURenderPass = SDL_EndGPURenderPass;
 pub const createGPUGraphicsPipeline = SDL_CreateGPUGraphicsPipeline;
 pub const createGPUComputePipeline = SDL_CreateGPUComputePipeline;
@@ -733,7 +799,42 @@ pub const getNumGPUDrivers = SDL_GetNumGPUDrivers;
 pub const getGPUDriver = SDL_GetGPUDriver;
 pub const getGPUDeviceDriver = SDL_GetGPUDeviceDriver;
 
+// GPU device creation properties
+pub const SDL_PROP_GPU_DEVICE_CREATE_DEBUGMODE_BOOLEAN = "SDL.gpu.device.create.debugmode";
+pub const SDL_PROP_GPU_DEVICE_CREATE_PREFERLOWPOWER_BOOLEAN = "SDL.gpu.device.create.preferlowpower";
+pub const SDL_PROP_GPU_DEVICE_CREATE_VERBOSE_BOOLEAN = "SDL.gpu.device.create.verbose";
+pub const SDL_PROP_GPU_DEVICE_CREATE_NAME_STRING = "SDL.gpu.device.create.name";
+pub const SDL_PROP_GPU_DEVICE_CREATE_FEATURE_CLIP_DISTANCE_BOOLEAN = "SDL.gpu.device.create.feature.clip_distance";
+pub const SDL_PROP_GPU_DEVICE_CREATE_FEATURE_DEPTH_CLAMPING_BOOLEAN = "SDL.gpu.device.create.feature.depth_clamping";
+pub const SDL_PROP_GPU_DEVICE_CREATE_FEATURE_INDIRECT_DRAW_FIRST_INSTANCE_BOOLEAN = "SDL.gpu.device.create.feature.indirect_draw_first_instance";
+pub const SDL_PROP_GPU_DEVICE_CREATE_FEATURE_ANISOTROPY_BOOLEAN = "SDL.gpu.device.create.feature.anisotropy";
+pub const SDL_PROP_GPU_DEVICE_CREATE_SHADERS_PRIVATE_BOOLEAN = "SDL.gpu.device.create.shaders.private";
+pub const SDL_PROP_GPU_DEVICE_CREATE_SHADERS_SPIRV_BOOLEAN = "SDL.gpu.device.create.shaders.spirv";
+pub const SDL_PROP_GPU_DEVICE_CREATE_SHADERS_DXBC_BOOLEAN = "SDL.gpu.device.create.shaders.dxbc";
+pub const SDL_PROP_GPU_DEVICE_CREATE_SHADERS_DXIL_BOOLEAN = "SDL.gpu.device.create.shaders.dxil";
+pub const SDL_PROP_GPU_DEVICE_CREATE_SHADERS_MSL_BOOLEAN = "SDL.gpu.device.create.shaders.msl";
+pub const SDL_PROP_GPU_DEVICE_CREATE_SHADERS_METALLIB_BOOLEAN = "SDL.gpu.device.create.shaders.metallib";
+pub const SDL_PROP_GPU_DEVICE_CREATE_D3D12_ALLOW_FEWER_RESOURCE_SLOTS_BOOLEAN = "SDL.gpu.device.create.d3d12.allowtier1resourcebinding";
+pub const SDL_PROP_GPU_DEVICE_CREATE_D3D12_SEMANTIC_NAME_STRING = "SDL.gpu.device.create.d3d12.semantic";
+pub const SDL_PROP_GPU_DEVICE_CREATE_VULKAN_REQUIRE_HARDWARE_ACCELERATION_BOOLEAN = "SDL.gpu.device.create.vulkan.requirehardwareacceleration";
+pub const SDL_PROP_GPU_DEVICE_CREATE_VULKAN_OPTIONS_POINTER = "SDL.gpu.device.create.vulkan.options";
+
 // GPU device properties
 pub const SDL_PROP_GPU_DEVICE_DRIVER_NAME_STRING = "SDL.gpu.device.driver_name";
 pub const SDL_PROP_GPU_DEVICE_DRIVER_VERSION_STRING = "SDL.gpu.device.driver_version";
 pub const SDL_PROP_GPU_DEVICE_DRIVER_INFO_STRING = "SDL.gpu.device.driver_info";
+
+// GPU shader creation properties
+pub const SDL_PROP_GPU_SHADER_CREATE_NAME_STRING = "SDL.gpu.shader.create.name";
+
+// GPU texture creation properties
+pub const SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_R_FLOAT = "SDL.gpu.texture.create.d3d12.clear.r";
+pub const SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_G_FLOAT = "SDL.gpu.texture.create.d3d12.clear.g";
+pub const SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_B_FLOAT = "SDL.gpu.texture.create.d3d12.clear.b";
+pub const SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_A_FLOAT = "SDL.gpu.texture.create.d3d12.clear.a";
+pub const SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_DEPTH_FLOAT = "SDL.gpu.texture.create.d3d12.clear.depth";
+pub const SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_STENCIL_NUMBER = "SDL.gpu.texture.create.d3d12.clear.stencil";
+pub const SDL_PROP_GPU_TEXTURE_CREATE_NAME_STRING = "SDL.gpu.texture.create.name";
+
+// GPU buffer creation properties
+pub const SDL_PROP_GPU_BUFFER_CREATE_NAME_STRING = "SDL.gpu.buffer.create.name";

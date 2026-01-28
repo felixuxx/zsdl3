@@ -2,15 +2,14 @@
 // 2D accelerated rendering
 
 const core = @import("core.zig");
-const video = @import("video.zig");
-const pixels = @import("pixels.zig");
-
-// Import types
 pub const Uint32 = core.Uint32;
+const pixels = @import("pixels.zig");
 pub const SDL_PixelFormat = pixels.SDL_PixelFormat;
 pub const SDL_BlendMode = pixels.SDL_BlendMode;
 pub const SDL_FRect = pixels.SDL_FRect;
+const video = @import("video.zig");
 
+// Import types
 // Render structs
 pub const SDL_Renderer = opaque {};
 pub const SDL_Texture = opaque {};
@@ -53,10 +52,10 @@ pub const SDL_TextureAccess = enum(c_int) {
 
 // Texture address mode
 pub const SDL_TextureAddressMode = enum(c_int) {
-    SDL_TEXTUREADDRESS_NONE = 0,
-    SDL_TEXTUREADDRESS_WRAP = 1,
-    SDL_TEXTUREADDRESS_MIRROR = 2,
-    SDL_TEXTUREADDRESS_CLAMP = 3,
+    SDL_TEXTURE_ADDRESS_INVALID = -1,
+    SDL_TEXTURE_ADDRESS_AUTO,
+    SDL_TEXTURE_ADDRESS_CLAMP,
+    SDL_TEXTURE_ADDRESS_WRAP,
 };
 
 // Colorspace support
@@ -88,7 +87,7 @@ pub const SDL_PROP_TEXTURE_CREATE_COLORSPACE_NUMBER = "colorspace";
 extern fn SDL_CreateRenderer(window: ?*video.SDL_Window, name: ?[*:0]const u8, flags: Uint32) ?*SDL_Renderer;
 extern fn SDL_CreateRendererWithProperties(props: core.SDL_PropertiesID) ?*SDL_Renderer;
 extern fn SDL_CreateSoftwareRenderer(surface: ?*pixels.SDL_Surface) ?*SDL_Renderer;
-extern fn SDL_CreateWindowAndRenderer(window: ?*video.SDL_Window, renderer: ?*?*SDL_Renderer) ?*SDL_Renderer;
+extern fn SDL_CreateWindowAndRenderer(title: ?[*:0]const u8, width: c_int, height: c_int, window_flags: video.SDL_WindowFlags, window: ?*?*video.SDL_Window, renderer: ?*?*SDL_Renderer) bool;
 extern fn SDL_DestroyRenderer(renderer: ?*SDL_Renderer) void;
 extern fn SDL_RenderClear(renderer: ?*SDL_Renderer) bool;
 extern fn SDL_RenderPresent(renderer: ?*SDL_Renderer) void;
@@ -191,8 +190,8 @@ extern fn SDL_SetTextureAlphaModFloat(texture: ?*SDL_Texture, alpha: f32) bool;
 extern fn SDL_GetTextureAlphaModFloat(texture: ?*SDL_Texture, alpha: ?*f32) bool;
 
 // Address modes
-extern fn SDL_SetRenderTextureAddressMode(renderer: ?*SDL_Renderer, address_mode: c_int) bool;
-extern fn SDL_GetRenderTextureAddressMode(renderer: ?*SDL_Renderer, address_mode: ?*c_int) bool;
+extern fn SDL_SetRenderTextureAddressMode(renderer: ?*SDL_Renderer, address_mode: SDL_TextureAddressMode) bool;
+extern fn SDL_GetRenderTextureAddressMode(renderer: ?*SDL_Renderer, address_mode: ?*SDL_TextureAddressMode) bool;
 
 // Advanced texture rendering
 extern fn SDL_RenderTexture9Grid(renderer: ?*SDL_Renderer, texture: ?*SDL_Texture, srcrect: ?*const SDL_FRect, dstrect: ?*const SDL_FRect, scale_w: f32, scale_h: f32) bool;

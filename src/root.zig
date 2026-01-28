@@ -566,8 +566,6 @@ pub const setRenderVSync = render.setRenderVSync;
 // Re-export audio types and functions
 pub const SDL_AudioSpec = audio.SDL_AudioSpec;
 pub const SDL_AudioDeviceID = audio.SDL_AudioDeviceID;
-pub const SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK = audio.SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK;
-pub const SDL_AUDIO_DEVICE_DEFAULT_RECORDING = audio.SDL_AUDIO_DEVICE_DEFAULT_RECORDING;
 pub const SDL_AudioStream = audio.SDL_AudioStream;
 pub const SDL_AudioFormat = audio.SDL_AudioFormat;
 pub const openAudioDevice = audio.openAudioDevice;
@@ -612,10 +610,6 @@ pub const getQueuedAudioSize = audio.getQueuedAudioSize;
 pub const clearQueuedAudio = audio.clearQueuedAudio;
 pub const getAudioStreamGain = audio.getAudioStreamGain;
 pub const setAudioStreamGain = audio.setAudioStreamGain;
-pub const getAudioDeviceGain = audio.getAudioDeviceGain;
-pub const setAudioDeviceGain = audio.setAudioDeviceGain;
-pub const getAudioDeviceProperties = audio.getAudioDeviceProperties;
-pub const getAudioDeviceChannelMap = audio.getAudioDeviceChannelMap;
 pub const loadWAV_IO = audio.loadWAV_IO;
 pub const loadWAV = audio.loadWAV;
 

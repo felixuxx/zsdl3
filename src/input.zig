@@ -2,27 +2,34 @@
 // Keyboard, mouse, joystick, gamepad, touch, pen, sensors, HIDAPI
 
 const core = @import("core.zig");
-const video = @import("video.zig");
-const guid = @import("guid.zig");
-const sensor = @import("sensor.zig");
-const touch = @import("touch.zig");
-
-// Import types
 pub const Uint8 = core.Uint8;
 pub const Uint16 = core.Uint16;
 pub const Uint32 = core.Uint32;
 pub const Sint16 = core.Sint16;
 pub const SDL_WindowID = core.SDL_WindowID;
 pub const SDL_JoystickID = core.SDL_JoystickID;
-pub const SDL_GUID = guid.SDL_GUID;
-pub const SDL_SensorType = sensor.SDL_SensorType;
 pub const SDL_SensorID = core.SDL_SensorID;
+pub const SDL_KeyboardID = Uint32;
+pub const SDL_Keymod = core.SDL_Keymod;
+pub const SDL_Keycode = core.SDL_Keycode;
+pub const SDL_Scancode = core.SDL_Scancode;
+pub const SDL_MouseID = Uint32;
+pub const SDL_MouseButtonFlags = Uint32;
+const guid = @import("guid.zig");
+pub const SDL_GUID = guid.SDL_GUID;
+const sensor = @import("sensor.zig");
+pub const SDL_SensorType = sensor.SDL_SensorType;
 pub const SDL_Sensor = sensor.SDL_Sensor;
+const surface = @import("surface.zig");
+const touch = @import("touch.zig");
 pub const SDL_TouchID = touch.SDL_TouchID;
 pub const SDL_TouchDeviceType = touch.SDL_TouchDeviceType;
 pub const SDL_FingerID = touch.SDL_FingerID;
 pub const SDL_Finger = touch.SDL_Finger;
+const video = @import("video.zig");
+pub const SDL_Cursor = video.SDL_Cursor;
 
+// Import types
 // Joystick type
 pub const SDL_JoystickType = enum(c_int) {
     SDL_JOYSTICK_TYPE_UNKNOWN,
@@ -50,11 +57,8 @@ pub const SDL_GamepadType = enum(c_int) {
     SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_LEFT,
     SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT,
     SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_PAIR,
-    SDL_GAMEPAD_TYPE_AMAZON_LUNA,
-    SDL_GAMEPAD_TYPE_GOOGLE_STADIA,
-    SDL_GAMEPAD_TYPE_NVIDIA_SHIELD,
-    SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_DOWN,
-    SDL_GAMEPAD_TYPE_MAX,
+    SDL_GAMEPAD_TYPE_GAMECUBE,
+    SDL_GAMEPAD_TYPE_COUNT,
 };
 
 // Gamepad axis
@@ -66,7 +70,7 @@ pub const SDL_GamepadAxis = enum(c_int) {
     SDL_GAMEPAD_AXIS_RIGHTY,
     SDL_GAMEPAD_AXIS_LEFT_TRIGGER,
     SDL_GAMEPAD_AXIS_RIGHT_TRIGGER,
-    SDL_GAMEPAD_AXIS_MAX,
+    SDL_GAMEPAD_AXIS_COUNT,
 };
 
 // Gamepad button
@@ -98,7 +102,7 @@ pub const SDL_GamepadButton = enum(c_int) {
     SDL_GAMEPAD_BUTTON_MISC4,
     SDL_GAMEPAD_BUTTON_MISC5,
     SDL_GAMEPAD_BUTTON_MISC6,
-    SDL_GAMEPAD_BUTTON_MAX,
+    SDL_GAMEPAD_BUTTON_COUNT,
 };
 
 // Gamepad button label
@@ -116,35 +120,39 @@ pub const SDL_GamepadButtonLabel = enum(c_int) {
 
 // Gamepad binding
 pub const SDL_GamepadBindingType = enum(c_int) {
-    SDL_GAMEPAD_BINDINGTYPE_NONE,
-    SDL_GAMEPAD_BINDINGTYPE_BUTTON,
-    SDL_GAMEPAD_BINDINGTYPE_AXIS,
-    SDL_GAMEPAD_BINDINGTYPE_HAT,
+    SDL_GAMEPAD_BINDTYPE_NONE = 0,
+    SDL_GAMEPAD_BINDTYPE_BUTTON,
+    SDL_GAMEPAD_BINDTYPE_AXIS,
+    SDL_GAMEPAD_BINDTYPE_HAT,
 };
 
-pub const SDL_GamepadBinding = extern union {
+pub const SDL_GamepadBinding = extern struct {
     input_type: SDL_GamepadBindingType,
-    button: extern struct {
+    input: extern union {
+        button: c_int,
+        axis: extern struct {
+            axis: c_int,
+            axis_min: c_int,
+            axis_max: c_int,
+        },
+        hat: extern struct {
+            hat: c_int,
+            hat_mask: c_int,
+        },
+    },
+    output_type: SDL_GamepadBindingType,
+    output: extern union {
         button: SDL_GamepadButton,
-    },
-    axis: extern struct {
-        axis: SDL_GamepadAxis,
-    },
-    hat: extern struct {
-        hat: c_int,
-        hat_mask: c_int,
+        axis: extern struct {
+            axis: SDL_GamepadAxis,
+            axis_min: c_int,
+            axis_max: c_int,
+        },
     },
 };
 
 // Keyboard
-pub const SDL_KeyboardID = Uint32;
-pub const SDL_Keymod = core.SDL_Keymod;
-pub const SDL_Keycode = core.SDL_Keycode;
-pub const SDL_Scancode = core.SDL_Scancode;
-
 // Mouse
-pub const SDL_MouseID = Uint32;
-pub const SDL_Cursor = video.SDL_Cursor;
 pub const SDL_SystemCursor = enum(c_int) {
     SDL_SYSTEM_CURSOR_DEFAULT,
     SDL_SYSTEM_CURSOR_TEXT,
@@ -168,7 +176,14 @@ pub const SDL_SystemCursor = enum(c_int) {
     SDL_SYSTEM_CURSOR_W_RESIZE,
     SDL_SYSTEM_CURSOR_COUNT,
 };
-pub const SDL_MouseButtonFlags = Uint32;
+pub const SDL_MouseWheelDirection = enum(c_int) {
+    SDL_MOUSEWHEEL_NORMAL,
+    SDL_MOUSEWHEEL_FLIPPED,
+};
+
+// Special mouse IDs for touch/pen virtual mouse
+pub const SDL_TOUCH_MOUSEID: SDL_MouseID = 0xFFFFFFFF;
+pub const SDL_PEN_MOUSEID: SDL_MouseID = 0xFFFFFFFE;
 
 // Joystick/Gamepad
 pub const SDL_Joystick = opaque {};
@@ -176,7 +191,11 @@ pub const SDL_Gamepad = opaque {};
 
 // Keyboard functions
 extern fn SDL_HasKeyboard() bool;
+extern fn SDL_GetKeyboards(count: ?*c_int) ?[*]SDL_KeyboardID;
+extern fn SDL_GetKeyboardNameForID(instance_id: SDL_KeyboardID) ?[*:0]const u8;
+extern fn SDL_GetKeyboardFocus() ?*video.SDL_Window;
 extern fn SDL_GetKeyboardState(numkeys: ?*c_int) ?[*]const bool;
+extern fn SDL_ResetKeyboard() void;
 extern fn SDL_GetModState() SDL_Keymod;
 extern fn SDL_SetModState(modstate: SDL_Keymod) void;
 extern fn SDL_GetKeyFromScancode(scancode: SDL_Scancode, modstate: SDL_Keymod, key_event: bool) SDL_Keycode;
@@ -184,11 +203,37 @@ extern fn SDL_GetScancodeFromKey(key: SDL_Keycode, modstate: ?*SDL_Keymod) SDL_S
 
 // Mouse functions
 extern fn SDL_HasMouse() bool;
+extern fn SDL_GetMice(count: ?*c_int) ?[*]SDL_MouseID;
+extern fn SDL_GetMouseNameForID(instance_id: SDL_MouseID) ?[*:0]const u8;
+extern fn SDL_GetMouseFocus() ?*video.SDL_Window;
 extern fn SDL_GetMouseState(x: ?*f32, y: ?*f32) SDL_MouseButtonFlags;
 extern fn SDL_GetGlobalMouseState(x: ?*f32, y: ?*f32) SDL_MouseButtonFlags;
 extern fn SDL_GetRelativeMouseState(x: ?*f32, y: ?*f32) SDL_MouseButtonFlags;
 extern fn SDL_WarpMouseInWindow(window: ?*video.SDL_Window, x: f32, y: f32) void;
 extern fn SDL_WarpMouseGlobal(x: f32, y: f32) bool;
+extern fn SDL_CaptureMouse(enabled: bool) bool;
+extern fn SDL_GetMouseCapture() bool;
+extern fn SDL_SetWindowRelativeMouseMode(window: ?*video.SDL_Window, enabled: bool) bool;
+extern fn SDL_GetWindowRelativeMouseMode(window: ?*video.SDL_Window) bool;
+extern fn SDL_SetRelativeMouseTransform(callback: ?*const fn (?*anyopaque, core.Uint64, ?*video.SDL_Window, SDL_MouseID, ?*f32, ?*f32) callconv(.C) void, userdata: ?*anyopaque) bool;
+extern fn SDL_GetRelativeMouseTransform(callback: ?*?*const fn (?*anyopaque, core.Uint64, ?*video.SDL_Window, SDL_MouseID, ?*f32, ?*f32) callconv(.C) void, userdata: ?*?*anyopaque) bool;
+
+// Cursor functions
+pub const SDL_CursorFrameInfo = extern struct {
+    surface: ?*surface.SDL_Surface,
+    duration: Uint32,
+};
+extern fn SDL_CreateCursor(data: ?[*]const Uint8, mask: ?[*]const Uint8, w: c_int, h: c_int, hot_x: c_int, hot_y: c_int) ?*SDL_Cursor;
+extern fn SDL_CreateColorCursor(surface: ?*surface.SDL_Surface, hot_x: c_int, hot_y: c_int) ?*SDL_Cursor;
+extern fn SDL_CreateAnimatedCursor(frames: ?[*]SDL_CursorFrameInfo, frame_count: c_int, hot_x: c_int, hot_y: c_int) ?*SDL_Cursor;
+extern fn SDL_CreateSystemCursor(id: SDL_SystemCursor) ?*SDL_Cursor;
+extern fn SDL_SetCursor(cursor: ?*SDL_Cursor) bool;
+extern fn SDL_GetCursor() ?*SDL_Cursor;
+extern fn SDL_GetDefaultCursor() ?*SDL_Cursor;
+extern fn SDL_DestroyCursor(cursor: ?*SDL_Cursor) void;
+extern fn SDL_ShowCursor() bool;
+extern fn SDL_HideCursor() bool;
+extern fn SDL_CursorVisible() bool;
 
 // Joystick functions
 extern fn SDL_NumJoysticks() c_int;
@@ -280,17 +325,41 @@ extern fn SDL_GetSensorInstanceID(sensor: ?*SDL_Sensor) SDL_SensorID;
 
 // Public API
 pub const hasKeyboard = SDL_HasKeyboard;
+pub const getKeyboards = SDL_GetKeyboards;
+pub const getKeyboardNameForID = SDL_GetKeyboardNameForID;
+pub const getKeyboardFocus = SDL_GetKeyboardFocus;
+pub const resetKeyboard = SDL_ResetKeyboard;
 pub const getKeyboardState = SDL_GetKeyboardState;
 pub const getModState = SDL_GetModState;
 pub const setModState = SDL_SetModState;
 pub const getKeyFromScancode = SDL_GetKeyFromScancode;
 pub const getScancodeFromKey = SDL_GetScancodeFromKey;
 pub const hasMouse = SDL_HasMouse;
+pub const getMice = SDL_GetMice;
+pub const getMouseNameForID = SDL_GetMouseNameForID;
+pub const getMouseFocus = SDL_GetMouseFocus;
 pub const getMouseState = SDL_GetMouseState;
 pub const getGlobalMouseState = SDL_GetGlobalMouseState;
 pub const getRelativeMouseState = SDL_GetRelativeMouseState;
 pub const warpMouseInWindow = SDL_WarpMouseInWindow;
 pub const warpMouseGlobal = SDL_WarpMouseGlobal;
+pub const captureMouse = SDL_CaptureMouse;
+pub const getMouseCapture = SDL_GetMouseCapture;
+pub const setWindowRelativeMouseMode = SDL_SetWindowRelativeMouseMode;
+pub const getWindowRelativeMouseMode = SDL_GetWindowRelativeMouseMode;
+pub const setRelativeMouseTransform = SDL_SetRelativeMouseTransform;
+pub const getRelativeMouseTransform = SDL_GetRelativeMouseTransform;
+pub const createCursor = SDL_CreateCursor;
+pub const createColorCursor = SDL_CreateColorCursor;
+pub const createAnimatedCursor = SDL_CreateAnimatedCursor;
+pub const createSystemCursor = SDL_CreateSystemCursor;
+pub const setCursor = SDL_SetCursor;
+pub const getCursor = SDL_GetCursor;
+pub const getDefaultCursor = SDL_GetDefaultCursor;
+pub const destroyCursor = SDL_DestroyCursor;
+pub const showCursor = SDL_ShowCursor;
+pub const hideCursor = SDL_HideCursor;
+pub const cursorVisible = SDL_CursorVisible;
 
 pub const numJoysticks = SDL_NumJoysticks;
 pub const joystickOpen = SDL_JoystickOpen;
