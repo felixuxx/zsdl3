@@ -2,12 +2,6 @@
 // Complete event handling and polling
 
 const core = @import("core.zig");
-const video = @import("video.zig");
-const input = @import("input.zig");
-const touch = @import("touch.zig");
-const pen = @import("pen.zig");
-
-// Import types
 pub const SDL_EventType = core.SDL_EventType;
 pub const SDL_CommonEvent = core.SDL_CommonEvent;
 pub const SDL_QuitEvent = core.SDL_QuitEvent;
@@ -15,10 +9,15 @@ pub const SDL_KeyboardEvent = core.SDL_KeyboardEvent;
 pub const SDL_MouseMotionEvent = core.SDL_MouseMotionEvent;
 pub const SDL_WindowID = core.SDL_WindowID;
 pub const SDL_Event = core.SDL_Event;
+const input = @import("input.zig");
+const pen = @import("pen.zig");
+const touch = @import("touch.zig");
 pub const SDL_TouchID = touch.SDL_TouchID;
 pub const SDL_Finger = touch.SDL_Finger;
 pub const SDL_FingerID = touch.SDL_FingerID;
+const video = @import("video.zig");
 
+// Import types
 // === Complete SDL3 Event Type Constants ===
 // Application events
 pub const SDL_EVENT_FIRST = 0;
@@ -547,6 +546,9 @@ pub const SDL_ClipboardEvent = extern struct {
     reserved: core.Uint32,
     timestamp: core.Uint64,
     owner: bool,
+    padding1: core.Uint8,
+    padding2: core.Uint8,
+    padding3: core.Uint8,
     num_mime_types: core.Sint32,
     mime_types: [*c]const [*c]const u8,
 };
