@@ -30,7 +30,9 @@ extern fn SDL_GetSensorName(sensor: ?*SDL_Sensor) ?[*:0]const u8;
 extern fn SDL_GetSensorType(sensor: ?*SDL_Sensor) SDL_SensorType;
 extern fn SDL_GetSensorNonPortableType(sensor: ?*SDL_Sensor) c_int;
 extern fn SDL_IsSensorEnabled(sensor: ?*SDL_Sensor) bool;
-extern fn SDL_GetSensorData(sensor: ?*SDL_Sensor, data: ?[*]f32, num_values: c_int) c_int;
+extern fn SDL_GetSensorData(sensor: ?*SDL_Sensor, data: ?[*]f32, num_values: c_int) bool;
+extern fn SDL_GetSensorProperties(sensor: ?*SDL_Sensor) core.SDL_PropertiesID;
+extern fn SDL_SetSensorEnabled(sensor: ?*SDL_Sensor, enabled: bool) bool;
 extern fn SDL_CloseSensor(sensor: ?*SDL_Sensor) void;
 extern fn SDL_UpdateSensors() void;
 
@@ -47,5 +49,7 @@ pub const getSensorType = SDL_GetSensorType;
 pub const getSensorNonPortableType = SDL_GetSensorNonPortableType;
 pub const isSensorEnabled = SDL_IsSensorEnabled;
 pub const getSensorData = SDL_GetSensorData;
+pub const getSensorProperties = SDL_GetSensorProperties;
+pub const setSensorEnabled = SDL_SetSensorEnabled;
 pub const closeSensor = SDL_CloseSensor;
 pub const updateSensors = SDL_UpdateSensors;

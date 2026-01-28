@@ -5,6 +5,9 @@ const core = @import("core.zig");
 
 // Atomic types
 pub const SDL_SpinLock = c_int;
+pub const SDL_AtomicInt = extern struct {
+    value: c_int,
+};
 
 // Atomic functions
 extern fn SDL_TryLockSpinlock(lock: ?*SDL_SpinLock) bool;
