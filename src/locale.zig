@@ -2,7 +2,7 @@
 // Locale preferences
 
 // Locale functions
-extern fn SDL_GetPreferredLocales() ?[*]?*SDL_Locale;
+extern fn SDL_GetPreferredLocales(count: ?*c_int) ?[*]?*SDL_Locale;
 
 // Locale struct
 pub const SDL_Locale = extern struct {
