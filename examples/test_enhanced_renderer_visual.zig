@@ -10,7 +10,7 @@ pub fn main() !void {
         if (window) |win| {
             defer zsdl3.destroyWindow(win);
 
-            const renderer = zsdl3.createRenderer(win, null, zsdl3.SDL_RENDERER_ACCELERATED);
+            const renderer = zsdl3.createRenderer(win, null);
             if (renderer) |rend| {
                 defer zsdl3.destroyRenderer(rend);
 
