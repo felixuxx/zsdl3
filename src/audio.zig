@@ -3,6 +3,10 @@
 
 const core = @import("core.zig");
 pub const SDL_AudioDeviceID = core.Uint32;
+
+// Audio device constants
+pub const SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK: SDL_AudioDeviceID = 0xFFFFFFFF;
+pub const SDL_AUDIO_DEVICE_DEFAULT_RECORDING: SDL_AudioDeviceID = 0xFFFFFFFE;
 const pixels = @import("pixels.zig");
 
 // Audio format (matches SDL_AudioFormat in SDL3)
@@ -37,7 +41,7 @@ extern fn SDL_GetAudioDriver(index: c_int) ?[*:0]const u8;
 extern fn SDL_GetCurrentAudioDriver() ?[*:0]const u8;
 extern fn SDL_GetAudioPlaybackDevices(count: ?*c_int) ?[*]SDL_AudioDeviceID;
 extern fn SDL_GetAudioRecordingDevices(count: ?*c_int) ?[*]SDL_AudioDeviceID;
-extern fn SDL_GetAudioDeviceFormat(devid: SDL_AudioDeviceID, spec: ?*SDL_AudioSpec) bool;
+extern fn SDL_GetAudioDeviceFormat(devid: SDL_AudioDeviceID, spec: ?*SDL_AudioSpec, sample_frames: ?*c_int) bool;
 extern fn SDL_ResumeAudioDevice(dev: SDL_AudioDeviceID) bool;
 extern fn SDL_AudioDevicePaused(dev: SDL_AudioDeviceID) bool;
 extern fn SDL_ClearAudioStream(stream: ?*SDL_AudioStream) bool;
@@ -72,6 +76,12 @@ extern fn SDL_ClearQueuedAudio(dev: SDL_AudioDeviceID) void;
 // Additional SDL3 audio APIs
 extern fn SDL_GetAudioStreamGain(stream: ?*SDL_AudioStream) f32;
 extern fn SDL_SetAudioStreamGain(stream: ?*SDL_AudioStream, gain: f32) bool;
+
+// Missing critical audio device management functions
+extern fn SDL_GetAudioDeviceGain(devid: SDL_AudioDeviceID) f32;
+extern fn SDL_SetAudioDeviceGain(devid: SDL_AudioDeviceID, gain: f32) bool;
+extern fn SDL_GetAudioDeviceProperties(devid: SDL_AudioDeviceID) core.SDL_PropertiesID;
+extern fn SDL_GetAudioDeviceChannelMap(devid: SDL_AudioDeviceID, count: ?*c_int) ?[*]c_int;
 
 pub const SDL_IOStream = opaque {};
 extern fn SDL_LoadWAV_IO(src: ?*SDL_IOStream, closeio: bool, spec: ?*SDL_AudioSpec, audio_buf: ?*?*u8, audio_len: ?*core.Uint32) bool;
@@ -120,5 +130,9 @@ pub const getQueuedAudioSize = SDL_GetQueuedAudioSize;
 pub const clearQueuedAudio = SDL_ClearQueuedAudio;
 pub const getAudioStreamGain = SDL_GetAudioStreamGain;
 pub const setAudioStreamGain = SDL_SetAudioStreamGain;
+pub const getAudioDeviceGain = SDL_GetAudioDeviceGain;
+pub const setAudioDeviceGain = SDL_SetAudioDeviceGain;
+pub const getAudioDeviceProperties = SDL_GetAudioDeviceProperties;
+pub const getAudioDeviceChannelMap = SDL_GetAudioDeviceChannelMap;
 pub const loadWAV_IO = SDL_LoadWAV_IO;
 pub const loadWAV = SDL_LoadWAV;
