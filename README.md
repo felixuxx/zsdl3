@@ -91,6 +91,58 @@ brew install sdl3
 Download SDL3 development libraries from
 [SDL releases](https://github.com/libsdl-org/SDL/releases) and place in your PATH.
 
+## Using as Library
+
+```bash
+zig fetch --save git+https://github.com/felixuxx/zsdl3.git
+```
+
+### Add to `build.zig`
+
+```zig
+const std = @import("std");
+
+pub fn build(b: *std.Build) void {
+
+    const target = b.standardTargetOptions(.{});
+
+    const optimize = b.standardOptimizeOption(.{});
+
+    const mod = b.addModule("your-project-name", .{
+
+        .root_source_file = b.path("src/root.zig"),
+
+        .target = target,
+
+        // Add these
+        .link_libc = true,
+        .imports = &.{
+            .{ .name = "zsdl3", .module = b.dependency("zsdl3", .{}).module("zsdl3") },
+        },
+    });
+    
+    // Add this
+    mod.linkSystemLibrary("SDL3", .{});
+
+    const exe = b.addExecutable(.{
+        .name = "your-project-name",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/main.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "your-project-name", .module = mod },
+                // Add this
+                .{ .name = "zsdl3", .module = b.dependency("zsdl3", .{}).module("zsdl3") },
+            },
+        }),
+    });
+    
+    b.installArtifact(exe);
+// Rest of the build.zig code
+
+```
+
 ### Building ZSDL3
 
 ```bash
