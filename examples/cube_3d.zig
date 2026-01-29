@@ -98,6 +98,11 @@ pub fn main() !void {
         _ = zsdl3.setRenderDrawColor(renderer, 30, 30, 30, 255);
         _ = zsdl3.renderClear(renderer);
 
+        // Get current render output size (adapts to window size changes)
+        var output_w: c_int = 800;
+        var output_h: c_int = 600;
+        _ = zsdl3.getCurrentRenderOutputSize(renderer, &output_w, &output_h);
+
         // Draw a simple representation of a cube using 2D primitives
         // (This is a placeholder - full 3D would require GPU API with shaders)
         angle += 0.02;
@@ -105,10 +110,12 @@ pub fn main() !void {
             angle -= 2.0 * std.math.pi;
         }
 
-        // Draw cube wireframe representation
-        const center_x: f32 = 400.0;
-        const center_y: f32 = 300.0;
-        const size: f32 = 150.0;
+        // Draw cube wireframe representation - adapt to window size
+        const center_x: f32 = @as(f32, @floatFromInt(output_w)) / 2.0;
+        const center_y: f32 = @as(f32, @floatFromInt(output_h)) / 2.0;
+        // Scale cube size based on smaller dimension, keeping it proportional
+        const min_dim = @min(@as(f32, @floatFromInt(output_w)), @as(f32, @floatFromInt(output_h)));
+        const size: f32 = min_dim * 0.2; // 20% of smaller dimension
 
         // Project 3D cube to 2D (simple isometric projection)
         const cos_a = @cos(angle);

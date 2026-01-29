@@ -102,6 +102,15 @@ pub fn build(b: *std.Build) void {
     enhanced_visual_test.linkSystemLibrary("SDL3");
     b.installArtifact(enhanced_visual_test);
 
+    // Run step for enhanced renderer visual test
+    const run_enhanced_visual_test_step = b.step("run-test-enhanced-renderer-visual", "Run the enhanced renderer visual test");
+    const run_enhanced_visual_test_cmd = b.addRunArtifact(enhanced_visual_test);
+    run_enhanced_visual_test_step.dependOn(&run_enhanced_visual_test_cmd.step);
+    run_enhanced_visual_test_cmd.step.dependOn(b.getInstallStep());
+    if (b.args) |args| {
+        run_enhanced_visual_test_cmd.addArgs(args);
+    }
+
     // 3D Cube example
     const cube_3d = b.addExecutable(.{
         .name = "cube_3d",
@@ -116,6 +125,15 @@ pub fn build(b: *std.Build) void {
     });
     cube_3d.linkSystemLibrary("SDL3");
     b.installArtifact(cube_3d);
+
+    // Run step for cube_3d example
+    const run_cube_3d_step = b.step("run-cube-3d", "Run the 3D cube example");
+    const run_cube_3d_cmd = b.addRunArtifact(cube_3d);
+    run_cube_3d_step.dependOn(&run_cube_3d_cmd.step);
+    run_cube_3d_cmd.step.dependOn(b.getInstallStep());
+    if (b.args) |args| {
+        run_cube_3d_cmd.addArgs(args);
+    }
 
     // This declares intent for the executable to be installed into the
     // install prefix when running `zig build` (i.e. when executing the default
