@@ -2,14 +2,17 @@
 // Vulkan graphics interop
 
 const core = @import("core.zig");
+pub const Uint32 = core.Uint32;
 const video = @import("video.zig");
 
 // Import types
-pub const Uint32 = core.Uint32;
+// Vulkan function pointer type for vkGetInstanceProcAddr
+// vkGetInstanceProcAddr signature: void* (VkInstance instance, const char* pName)
+pub const PFN_vkGetInstanceProcAddr = ?*const fn (?*anyopaque, ?[*:0]const u8) callconv(.C) ?*anyopaque;
 
 // Vulkan functions
 extern fn SDL_Vulkan_LoadLibrary(path: ?[*:0]const u8) bool;
-extern fn SDL_Vulkan_GetVkGetInstanceProcAddr() ?*const fn () callconv(.C) void;
+extern fn SDL_Vulkan_GetVkGetInstanceProcAddr() ?PFN_vkGetInstanceProcAddr;
 extern fn SDL_Vulkan_UnloadLibrary() void;
 extern fn SDL_Vulkan_GetInstanceExtensions(count: ?*Uint32) ?[*]const ?[*:0]const u8;
 extern fn SDL_Vulkan_CreateSurface(window: ?*video.SDL_Window, instance: ?*anyopaque, surface: ?*?*anyopaque) bool;
