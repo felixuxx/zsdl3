@@ -14,8 +14,8 @@ pub const PFN_vkGetInstanceProcAddr = ?*const fn (?*anyopaque, ?[*:0]const u8) c
 extern fn SDL_Vulkan_LoadLibrary(path: ?[*:0]const u8) bool;
 extern fn SDL_Vulkan_GetVkGetInstanceProcAddr() ?PFN_vkGetInstanceProcAddr;
 extern fn SDL_Vulkan_UnloadLibrary() void;
-extern fn SDL_Vulkan_GetInstanceExtensions(count: ?*Uint32) ?[*]const ?[*:0]const u8;
-extern fn SDL_Vulkan_CreateSurface(window: ?*video.SDL_Window, instance: ?*anyopaque, surface: *?*anyopaque) bool;
+extern fn SDL_Vulkan_GetInstanceExtensions(count: ?*Uint32) ?[*]const [*:0]const u8;
+extern fn SDL_Vulkan_CreateSurface(window: ?*video.SDL_Window, instance: ?*anyopaque, allocator: ?*const anyopaque, surface: *?*anyopaque) bool;
 extern fn SDL_Vulkan_DestroySurface(instance: ?*anyopaque, surface: ?*anyopaque, allocator: ?*const anyopaque) void;
 extern fn SDL_Vulkan_GetPresentationSupport(instance: ?*anyopaque, physicalDevice: ?*anyopaque, queueFamilyIndex: Uint32) bool;
 
