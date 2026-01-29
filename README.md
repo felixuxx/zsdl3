@@ -97,7 +97,7 @@ Download SDL3 development libraries from
 zig fetch --save git+https://github.com/felixuxx/zsdl3.git
 ```
 
-### Add to `build.zig`
+### Inside `build.zig`
 
 ```zig
 const std = @import("std");
