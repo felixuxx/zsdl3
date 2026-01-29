@@ -68,6 +68,18 @@ sudo apt update
 sudo apt install libsdl3-dev
 ```
 
+#### Linux (Arch)
+
+```bash
+sudo pacman -S sdl3
+```
+
+#### Linux (Fedora)
+
+```bash
+sudo dnf install SDL3-devel
+```
+
 #### macOS (Homebrew)
 
 ```bash
