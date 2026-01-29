@@ -119,10 +119,13 @@ pub fn build(b: *std.Build) void {
         .imports = &.{
             .{ .name = "zsdl3", .module = b.dependency("zsdl3", .{}).module("zsdl3") },
         },
+        //
+
     });
     
     // Add this
     mod.linkSystemLibrary("SDL3", .{});
+    //
 
     const exe = b.addExecutable(.{
         .name = "your-project-name",
@@ -132,8 +135,11 @@ pub fn build(b: *std.Build) void {
             .optimize = optimize,
             .imports = &.{
                 .{ .name = "your-project-name", .module = mod },
+
                 // Add this
                 .{ .name = "zsdl3", .module = b.dependency("zsdl3", .{}).module("zsdl3") },
+                //
+
             },
         }),
     });
@@ -226,54 +232,6 @@ pub fn main() void {
     }
 }
 
-```
-
-### Audio Playback
-
-```zig
-// Initialize with audio
-if (zsdl3.init(zsdl3.SDL_INIT_AUDIO)) {
-    defer zsdl3.quit();
-
-    // Open audio device
-    var spec: zsdl3.SDL_AudioSpec = undefined;
-    const device = zsdl3.openAudioDevice(null, false, &spec, &spec, 0);
-    if (device != 0) {
-        defer zsdl3.closeAudioDevice(device);
-        // Audio device ready for playback
-    }
-}
-```
-
-### GPU Rendering
-
-```zig
-// Create GPU device
-const device = zsdl3.createGPUDevice(0, false, null);
-if (device) |dev| {
-    defer zsdl3.destroyGPUDevice(dev);
-
-    // Claim window and submit commands
-    const cmdbuf = zsdl3.acquireGPUCommandBuffer(dev);
-    if (cmdbuf) |_| {
-        // GPU rendering operations
-        _ = zsdl3.submitGPUCommandBuffer(cmdbuf);
-    }
-}
-```
-
-### Multithreading
-
-```zig
-// Create mutex
-const mutex = zsdl3.createMutex();
-if (mutex) |mtx| {
-    defer zsdl3.destroyMutex(mtx);
-
-    zsdl3.lockMutex(mtx);
-    // Critical section
-    zsdl3.unlockMutex(mtx);
-}
 ```
 
 ## API Reference
@@ -389,6 +347,7 @@ src/
 examples/
 ├── gpu_example.zig   # GPU device testing
 ├── audio_example.zig # Audio enumeration example
+├── basic_2d.zig      # Basic 2D rendering
 └── 3d_example.zig    # 3D GPU rendering with fallback
 ```
 
