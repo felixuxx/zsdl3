@@ -135,6 +135,30 @@ pub fn build(b: *std.Build) void {
         run_cube_3d_cmd.addArgs(args);
     }
 
+    // Basic 2D example
+    const basic_2d = b.addExecutable(.{
+        .name = "basic_2d",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("examples/basic_2d.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "zsdl3", .module = mod },
+            },
+        }),
+    });
+    basic_2d.linkSystemLibrary("SDL3");
+    b.installArtifact(basic_2d);
+
+    // Run step for basic_2d example
+    const run_basic_2d_step = b.step("run-basic-2d", "Run the basic 2D example");
+    const run_basic_2d_cmd = b.addRunArtifact(basic_2d);
+    run_basic_2d_step.dependOn(&run_basic_2d_cmd.step);
+    run_basic_2d_cmd.step.dependOn(b.getInstallStep());
+    if (b.args) |args| {
+        run_basic_2d_cmd.addArgs(args);
+    }
+
     // This declares intent for the executable to be installed into the
     // install prefix when running `zig build` (i.e. when executing the default
     // step). By default the install prefix is `zig-out/` but can be overridden

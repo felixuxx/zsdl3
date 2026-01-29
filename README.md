@@ -156,53 +156,76 @@ zig build
 ### Basic 2D Rendering
 
 ```zig
+const std = @import("std");
+
 const zsdl3 = @import("zsdl3");
 
-pub fn main() !void {
-    // Initialize SDL
-    if (zsdl3.init(zsdl3.SDL_INIT_VIDEO)) {
-        defer zsdl3.quit();
+pub fn main() void {
+    // Initialize SDL with video subsystem
+    if (!zsdl3.init(zsdl3.SDL_INIT_VIDEO)) {
+        const err = zsdl3.getError() orelse "Unknown error";
+        std.debug.print("Failed to initialize SDL: {s}\n", .{err});
+        return;
+    }
+    defer zsdl3.quit();
 
-        // Create window
-        const window = zsdl3.createWindow("My Game", 800, 600, zsdl3.SDL_WINDOW_RESIZABLE);
-        if (window) |win| {
-            defer zsdl3.destroyWindow(win);
+    // Create a window
+    const window = zsdl3.createWindow("Basic 2D Example", 800, 600, zsdl3.SDL_WINDOW_RESIZABLE);
+    if (window == null) {
+        const err = zsdl3.getError() orelse "Unknown error";
+        std.debug.print("Failed to create window: {s}\n", .{err});
+        return;
+    }
+    defer zsdl3.destroyWindow(window);
 
-            // Create renderer
-            const renderer = zsdl3.createRenderer(win, null, 0);
-            if (renderer) |rend| {
-                defer zsdl3.destroyRenderer(rend);
+    // Create a renderer
+    const renderer = zsdl3.createRenderer(window, null);
+    if (renderer == null) {
+        const err = zsdl3.getError() orelse "Unknown error";
+        std.debug.print("Failed to create renderer: {s}\n", .{err});
+        return;
+    }
+    defer zsdl3.destroyRenderer(renderer);
 
-                var running = true;
-                while (running) {
-                    // Handle events
-                    var event: zsdl3.SDL_Event = undefined;
-                    while (zsdl3.pollEvent(&event)) {
-                        switch (event.type) {
-                            zsdl3.SDL_EVENT_QUIT => running = false,
-                            zsdl3.SDL_EVENT_KEY_DOWN => {
-                                if (event.key.scancode == 41) running = false; // ESC
-                            },
-                            else => {},
-                        }
+    // Main loop
+    var running = true;
+    while (running) {
+        // Handle events
+        var event: zsdl3.SDL_Event = undefined;
+        while (zsdl3.pollEvent(&event)) {
+            switch (event.type) {
+                zsdl3.SDL_EVENT_QUIT => running = false,
+                zsdl3.SDL_EVENT_KEY_DOWN => {
+                    if (event.key.scancode == zsdl3.SDL_SCANCODE_ESCAPE) {
+                        running = false;
                     }
-
-                    // Render
-                    _ = zsdl3.setRenderDrawColor(rend, 100, 149, 237, 255); // Cornflower blue
-                    _ = zsdl3.renderClear(rend);
-
-                    // Draw a rectangle
-                    _ = zsdl3.setRenderDrawColor(rend, 255, 255, 0, 255); // Yellow
-                    const rect = zsdl3.SDL_FRect{ .x = 100, .y = 100, .w = 200, .h = 150 };
-                    _ = zsdl3.renderFillRect(rend, &rect);
-
-                    zsdl3.renderPresent(rend);
-                    zsdl3.delay(16); // ~60 FPS
-                }
+                },
+                else => {},
             }
         }
+
+        // Clear screen with a color (dark blue)
+        _ = zsdl3.setRenderDrawColor(renderer, 30, 60, 90, 255);
+        _ = zsdl3.renderClear(renderer);
+
+        // Draw a simple rectangle (yellow)
+        _ = zsdl3.setRenderDrawColor(renderer, 255, 255, 0, 255);
+        const rect = zsdl3.SDL_FRect{
+            .x = 300,
+            .y = 200,
+            .w = 200,
+            .h = 200,
+        };
+        _ = zsdl3.renderFillRect(renderer, &rect);
+
+        // Present the rendered frame
+        zsdl3.renderPresent(renderer);
+
+        // Small delay to prevent 100% CPU usage
+        zsdl3.delay(16); // ~60 FPS
     }
 }
+
 ```
 
 ### Audio Playback
