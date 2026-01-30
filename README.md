@@ -3,7 +3,7 @@
 [![Zig](https://img.shields.io/badge/Zig-0.15.2+-blue.svg)](https://ziglang.org)
 [![SDL3](https://img.shields.io/badge/SDL-3.2.0+-green.svg)](https://www.libsdl.org/)
 
-Pure Zig bindings for SDL3 without `@cImport`. Provides comprehensive,
+High Quality Zig bindings for SDL3 without `@cImport`. Provides comprehensive,
 low-level access to SDL3's multimedia capabilities for game and application
 development. Designed for performance and ease of use in modern Zig projects.
 
