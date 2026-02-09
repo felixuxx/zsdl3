@@ -6,7 +6,7 @@ const filesystem = @import("filesystem.zig");
 
 // Import types
 pub const Uint64 = core.Uint64;
-pub const SDL_Time = Uint64; // Placeholder
+pub const SDL_Time = core.Sint64; // SDL_Time is Sint64 (nanoseconds since epoch)
 
 // Storage structs
 pub const SDL_Storage = opaque {};
