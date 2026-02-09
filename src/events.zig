@@ -12,6 +12,7 @@ pub const SDL_Event = core.SDL_Event;
 const input = @import("input.zig");
 const pen = @import("pen.zig");
 const touch = @import("touch.zig");
+const power = @import("power.zig");
 pub const SDL_TouchID = touch.SDL_TouchID;
 pub const SDL_Finger = touch.SDL_Finger;
 pub const SDL_FingerID = touch.SDL_FingerID;
@@ -276,7 +277,7 @@ pub const SDL_MouseWheelEvent = extern struct {
     which: input.SDL_MouseID,
     x: f32,
     y: f32,
-    direction: c_int, // SDL_MouseWheelDirection
+    direction: input.SDL_MouseWheelDirection,
     mouse_x: f32,
     mouse_y: f32,
     integer_x: core.Sint32,
@@ -349,7 +350,7 @@ pub const SDL_JoyBatteryEvent = extern struct {
     reserved: core.Uint32,
     timestamp: core.Uint64,
     which: core.SDL_JoystickID,
-    state: c_int, // SDL_PowerState
+    state: power.SDL_PowerState,
     percent: c_int,
 };
 
