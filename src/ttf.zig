@@ -152,9 +152,8 @@ extern fn TTF_GetGlyphMetrics(font: ?*const TTF_Font, ch: core.Uint32, minx: ?*c
 extern fn TTF_GetGlyphAdvance(font: ?*const TTF_Font, ch: core.Uint32) c_int;
 
 // Text size
-extern fn TTF_SizeText(font: ?*const TTF_Font, text: [*:0]const u8, w: ?*c_int, h: ?*c_int) bool;
-extern fn TTF_SizeUTF8(font: ?*const TTF_Font, text: [*:0]const u8, w: ?*c_int, h: ?*c_int) bool;
-extern fn TTF_SizeUNICODE(font: ?*const TTF_Font, text: [*]const core.Uint16, w: ?*c_int, h: ?*c_int) bool;
+extern fn TTF_GetStringSize(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, w: ?*c_int, h: ?*c_int) bool;
+extern fn TTF_GetStringSizeWrapped(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, wrap_width: c_int, w: ?*c_int, h: ?*c_int) bool;
 
 // Text rendering (Solid)
 extern fn TTF_RenderText_Solid(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color) ?*SDL_Surface;
@@ -231,9 +230,8 @@ pub const getFontFamilyName = TTF_GetFontFamilyName;
 pub const getFontStyleName = TTF_GetFontStyleName;
 pub const getGlyphMetrics = TTF_GetGlyphMetrics;
 pub const getGlyphAdvance = TTF_GetGlyphAdvance;
-pub const sizeText = TTF_SizeText;
-pub const sizeUTF8 = TTF_SizeUTF8;
-pub const sizeUNICODE = TTF_SizeUNICODE;
+pub const getStringSize = TTF_GetStringSize;
+pub const getStringSizeWrapped = TTF_GetStringSizeWrapped;
 pub const renderTextSolid = TTF_RenderText_Solid;
 pub const renderUTF8Solid = TTF_RenderUTF8_Solid;
 pub const renderUNICODESolid = TTF_RenderUNICODE_Solid;

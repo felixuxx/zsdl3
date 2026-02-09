@@ -185,6 +185,31 @@ pub fn build(b: *std.Build) void {
         run_ttf_example_cmd.addArgs(args);
     }
 
+    // Text editor example
+    const text_editor = b.addExecutable(.{
+        .name = "text_editor",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("examples/text_editor.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "zsdl3", .module = mod },
+            },
+        }),
+    });
+    text_editor.linkSystemLibrary("SDL3");
+    text_editor.linkSystemLibrary("SDL3_ttf");
+    b.installArtifact(text_editor);
+
+    // Run step for text_editor
+    const run_text_editor_step = b.step("run-text-editor", "Run the text editor example");
+    const run_text_editor_cmd = b.addRunArtifact(text_editor);
+    run_text_editor_step.dependOn(&run_text_editor_cmd.step);
+    run_text_editor_cmd.step.dependOn(b.getInstallStep());
+    if (b.args) |args| {
+        run_text_editor_cmd.addArgs(args);
+    }
+
     // This declares intent for the executable to be installed into the
     // install prefix when running `zig build` (i.e. when executing the default
     // step). By default the install prefix is `zig-out/` but can be overridden
