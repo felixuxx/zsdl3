@@ -32,9 +32,11 @@ pub const SDL_FColor = extern struct {
 
 // Scale mode
 pub const SDL_ScaleMode = enum(c_int) {
+    SDL_SCALEMODE_INVALID = -1,
     SDL_SCALEMODE_NEAREST,
     SDL_SCALEMODE_LINEAR,
     SDL_SCALEMODE_BEST,
+    SDL_SCALEMODE_PIXELART, // Available since SDL 3.4.0
 };
 
 // Logical presentation
@@ -89,6 +91,8 @@ pub const SDL_PROP_TEXTURE_CREATE_COLORSPACE_NUMBER = "colorspace";
 // Render functions
 extern fn SDL_CreateRenderer(window: ?*video.SDL_Window, name: ?[*:0]const u8) ?*SDL_Renderer;
 extern fn SDL_CreateRendererWithProperties(props: core.SDL_PropertiesID) ?*SDL_Renderer;
+extern fn SDL_CreateGPURenderer(device: ?*anyopaque, window: ?*video.SDL_Window) ?*SDL_Renderer; // SDL_GPUDevice* - available since SDL 3.4.0
+extern fn SDL_GetGPURendererDevice(renderer: ?*SDL_Renderer) ?*anyopaque; // Returns SDL_GPUDevice* - available since SDL 3.4.0
 extern fn SDL_CreateSoftwareRenderer(surface: ?*pixels.SDL_Surface) ?*SDL_Renderer;
 extern fn SDL_CreateWindowAndRenderer(title: ?[*:0]const u8, width: c_int, height: c_int, window_flags: video.SDL_WindowFlags, window: ?*?*video.SDL_Window, renderer: ?*?*SDL_Renderer) bool;
 extern fn SDL_DestroyRenderer(renderer: ?*SDL_Renderer) void;
@@ -216,6 +220,8 @@ extern fn SDL_SetRenderVSync(renderer: ?*SDL_Renderer, vsync: c_int) bool;
 // Public API - Creation
 pub const createRenderer = SDL_CreateRenderer;
 pub const createRendererWithProperties = SDL_CreateRendererWithProperties;
+pub const createGPURenderer = SDL_CreateGPURenderer;
+pub const getGPURendererDevice = SDL_GetGPURendererDevice;
 pub const createSoftwareRenderer = SDL_CreateSoftwareRenderer;
 pub const createWindowAndRenderer = SDL_CreateWindowAndRenderer;
 pub const destroyRenderer = SDL_DestroyRenderer;
