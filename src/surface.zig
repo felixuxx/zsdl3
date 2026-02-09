@@ -60,7 +60,7 @@ pub const SDL_PixelFormatDetails = extern struct {
 
 // Surface functions
 extern fn SDL_CreateSurface(width: c_int, height: c_int, format: SDL_PixelFormat) ?*SDL_Surface;
-extern fn SDL_CreateSurfaceFrom(pixels: ?*anyopaque, width: c_int, height: c_int, pitch: c_int, format: SDL_PixelFormat) ?*SDL_Surface;
+extern fn SDL_CreateSurfaceFrom(width: c_int, height: c_int, format: SDL_PixelFormat, pixels: ?*anyopaque, pitch: c_int) ?*SDL_Surface;
 extern fn SDL_DestroySurface(surface: ?*SDL_Surface) void;
 extern fn SDL_GetSurfaceProperties(surface: ?*SDL_Surface) core.SDL_PropertiesID;
 extern fn SDL_SetSurfaceColorspace(surface: ?*SDL_Surface, colorspace: c_uint) bool;

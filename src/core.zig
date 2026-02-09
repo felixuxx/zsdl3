@@ -177,8 +177,10 @@ extern fn SDL_SetAppMetadata(appname: ?[*:0]const u8, appversion: ?[*:0]const u8
 extern fn SDL_SetAppMetadataProperty(name: [*:0]const u8, value: ?[*:0]const u8) bool;
 extern fn SDL_GetAppMetadataProperty(name: [*:0]const u8) ?[*:0]const u8;
 extern fn SDL_GetError() ?[*:0]const u8;
-extern fn SDL_ClearError() void;
+extern fn SDL_ClearError() bool;
 extern fn SDL_SetError(fmt: [*:0]const u8, ...) bool;
+extern fn SDL_SetErrorV(fmt: [*:0]const u8, ap: [*c]u8) bool; // va_list is platform-specific, using [*c]u8 as approximation
+extern fn SDL_OutOfMemory() bool;
 
 // Version
 pub const SDL_Version = extern struct {
@@ -187,7 +189,7 @@ pub const SDL_Version = extern struct {
     patch: Uint8,
 };
 
-extern fn SDL_GetVersion() SDL_Version;
+extern fn SDL_GetVersion() c_int; // Returns version number as int (e.g., 3005000 for 3.5.0)
 extern fn SDL_GetRevision() ?[*:0]const u8;
 
 // Public API
@@ -204,5 +206,7 @@ pub const getAppMetadataProperty = SDL_GetAppMetadataProperty;
 pub const getError = SDL_GetError;
 pub const clearError = SDL_ClearError;
 pub const setError = SDL_SetError;
+pub const setErrorV = SDL_SetErrorV;
+pub const outOfMemory = SDL_OutOfMemory;
 pub const getVersion = SDL_GetVersion;
 pub const getRevision = SDL_GetRevision;
