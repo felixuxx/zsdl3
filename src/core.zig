@@ -50,14 +50,53 @@ pub const SDL_AppQuit_func = ?*const fn (?*anyopaque, SDL_AppResult) callconv(.C
 // Main thread callback
 pub const SDL_MainThreadCallback = ?*const fn (?*anyopaque) callconv(.C) void;
 
+// Text input event structures (also defined in events.zig for re-export)
+// These are defined here so they can be used in the SDL_Event union
+pub const SDL_TextEditingEvent = extern struct {
+    type: SDL_EventType,
+    reserved: Uint32,
+    timestamp: Uint64,
+    windowID: SDL_WindowID,
+    text: [*c]const u8,
+    start: Sint32,
+    length: Sint32,
+};
+
+pub const SDL_TextEditingCandidatesEvent = extern struct {
+    type: SDL_EventType,
+    reserved: Uint32,
+    timestamp: Uint64,
+    windowID: SDL_WindowID,
+    candidates: [*c]const [*c]const u8,
+    num_candidates: Sint32,
+    selected_candidate: Sint32,
+    horizontal: bool,
+    padding1: Uint8,
+    padding2: Uint8,
+    padding3: Uint8,
+};
+
+pub const SDL_TextInputEvent = extern struct {
+    type: SDL_EventType,
+    reserved: Uint32,
+    timestamp: Uint64,
+    windowID: SDL_WindowID,
+    text: [*c]const u8,
+};
+
 // SDL_Event - called in events.zig
+// Note: This union uses padding for ABI compatibility
+// Individual event structs are defined in events.zig
 pub const SDL_Event = extern union {
     type: SDL_EventType,
     common: SDL_CommonEvent,
     quit: SDL_QuitEvent,
     key: SDL_KeyboardEvent,
     motion: SDL_MouseMotionEvent,
-    // padding for ABI
+    edit: SDL_TextEditingEvent,
+    edit_candidates: SDL_TextEditingCandidatesEvent,
+    text: SDL_TextInputEvent,
+    // padding for ABI - all event types can be accessed via casting
     padding: [128]Uint8,
 };
 

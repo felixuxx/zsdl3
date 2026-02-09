@@ -9,6 +9,10 @@ pub const SDL_KeyboardEvent = core.SDL_KeyboardEvent;
 pub const SDL_MouseMotionEvent = core.SDL_MouseMotionEvent;
 pub const SDL_WindowID = core.SDL_WindowID;
 pub const SDL_Event = core.SDL_Event;
+// Re-export text input event structs from core (they're defined there for the union)
+pub const SDL_TextEditingEvent = core.SDL_TextEditingEvent;
+pub const SDL_TextEditingCandidatesEvent = core.SDL_TextEditingCandidatesEvent;
+pub const SDL_TextInputEvent = core.SDL_TextInputEvent;
 const input = @import("input.zig");
 const pen = @import("pen.zig");
 const touch = @import("touch.zig");
@@ -210,40 +214,14 @@ pub const SDL_KeyboardDeviceEvent = extern struct {
     which: core.SDL_KeyboardID,
 };
 
-// Text editing event structure
-pub const SDL_TextEditingEvent = extern struct {
-    type: SDL_EventType,
-    reserved: core.Uint32,
-    timestamp: core.Uint64,
-    windowID: SDL_WindowID,
-    text: [*c]const u8,
-    start: core.Sint32,
-    length: core.Sint32,
-};
+// Text editing event structure (defined in core.zig for union access, re-exported here)
+// pub const SDL_TextEditingEvent = ... (see core.zig)
 
-// Text editing candidates event structure
-pub const SDL_TextEditingCandidatesEvent = extern struct {
-    type: SDL_EventType,
-    reserved: core.Uint32,
-    timestamp: core.Uint64,
-    windowID: SDL_WindowID,
-    candidates: [*c]const [*c]const u8,
-    num_candidates: core.Sint32,
-    selected_candidate: core.Sint32,
-    horizontal: bool,
-    padding1: core.Uint8,
-    padding2: core.Uint8,
-    padding3: core.Uint8,
-};
+// Text editing candidates event structure (defined in core.zig for union access, re-exported here)
+// pub const SDL_TextEditingCandidatesEvent = ... (see core.zig)
 
-// Text input event structure
-pub const SDL_TextInputEvent = extern struct {
-    type: SDL_EventType,
-    reserved: core.Uint32,
-    timestamp: core.Uint64,
-    windowID: SDL_WindowID,
-    text: [*c]const u8,
-};
+// Text input event structure (defined in core.zig for union access, re-exported here)
+// pub const SDL_TextInputEvent = ... (see core.zig)
 
 // Mouse device event structure
 pub const SDL_MouseDeviceEvent = extern struct {
