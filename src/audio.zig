@@ -8,6 +8,10 @@ const pixels = @import("pixels.zig");
 // Audio format (matches SDL_AudioFormat in SDL3)
 pub const SDL_AudioFormat = c_uint;
 
+// Audio device constants
+pub const SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK: SDL_AudioDeviceID = 0xFFFFFFFF;
+pub const SDL_AUDIO_DEVICE_DEFAULT_RECORDING: SDL_AudioDeviceID = 0xFFFFFFFE;
+
 pub const SDL_AUDIO_UNKNOWN: SDL_AudioFormat = 0x0000;
 pub const SDL_AUDIO_U8: SDL_AudioFormat = 0x0008;
 pub const SDL_AUDIO_S8: SDL_AudioFormat = 0x8008;
@@ -28,7 +32,7 @@ pub const SDL_AudioSpec = extern struct {
 pub const SDL_AudioStream = opaque {};
 
 // Audio functions
-extern fn SDL_OpenAudioDevice(device: ?[*:0]const u8, recording: bool, spec: ?*const SDL_AudioSpec, obtained: ?*SDL_AudioSpec, allowed_changes: c_int) SDL_AudioDeviceID;
+extern fn SDL_OpenAudioDevice(devid: SDL_AudioDeviceID, spec: ?*const SDL_AudioSpec) SDL_AudioDeviceID;
 extern fn SDL_CloseAudioDevice(dev: SDL_AudioDeviceID) void;
 extern fn SDL_PauseAudioDevice(dev: SDL_AudioDeviceID, pause_on: bool) bool;
 extern fn SDL_GetAudioDeviceName(devid: SDL_AudioDeviceID) ?[*:0]const u8;
@@ -37,7 +41,10 @@ extern fn SDL_GetAudioDriver(index: c_int) ?[*:0]const u8;
 extern fn SDL_GetCurrentAudioDriver() ?[*:0]const u8;
 extern fn SDL_GetAudioPlaybackDevices(count: ?*c_int) ?[*]SDL_AudioDeviceID;
 extern fn SDL_GetAudioRecordingDevices(count: ?*c_int) ?[*]SDL_AudioDeviceID;
-extern fn SDL_GetAudioDeviceFormat(devid: SDL_AudioDeviceID, spec: ?*SDL_AudioSpec) bool;
+extern fn SDL_GetAudioDeviceFormat(devid: SDL_AudioDeviceID, spec: ?*SDL_AudioSpec, sample_frames: ?*c_int) bool;
+extern fn SDL_GetAudioDeviceChannelMap(devid: SDL_AudioDeviceID, count: ?*c_int) ?[*]c_int;
+extern fn SDL_IsAudioDevicePhysical(devid: SDL_AudioDeviceID) bool;
+extern fn SDL_IsAudioDevicePlayback(devid: SDL_AudioDeviceID) bool;
 extern fn SDL_ResumeAudioDevice(dev: SDL_AudioDeviceID) bool;
 extern fn SDL_AudioDevicePaused(dev: SDL_AudioDeviceID) bool;
 extern fn SDL_ClearAudioStream(stream: ?*SDL_AudioStream) bool;
@@ -88,6 +95,9 @@ pub const getCurrentAudioDriver = SDL_GetCurrentAudioDriver;
 pub const getAudioPlaybackDevices = SDL_GetAudioPlaybackDevices;
 pub const getAudioRecordingDevices = SDL_GetAudioRecordingDevices;
 pub const getAudioDeviceFormat = SDL_GetAudioDeviceFormat;
+pub const getAudioDeviceChannelMap = SDL_GetAudioDeviceChannelMap;
+pub const isAudioDevicePhysical = SDL_IsAudioDevicePhysical;
+pub const isAudioDevicePlayback = SDL_IsAudioDevicePlayback;
 pub const resumeAudioDevice = SDL_ResumeAudioDevice;
 pub const audioDevicePaused = SDL_AudioDevicePaused;
 pub const clearAudioStream = SDL_ClearAudioStream;
