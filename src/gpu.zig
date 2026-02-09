@@ -89,6 +89,7 @@ extern fn SDL_AcquireGPUCommandBuffer(device: ?*SDL_GPUDevice) ?*SDL_GPUCommandB
 extern fn SDL_SubmitGPUCommandBuffer(command_buffer: ?*SDL_GPUCommandBuffer) bool;
 extern fn SDL_SubmitGPUCommandBufferAndAcquireFence(command_buffer: ?*SDL_GPUCommandBuffer) ?*SDL_GPUFence;
 extern fn SDL_CancelGPUCommandBuffer(command_buffer: ?*SDL_GPUCommandBuffer) bool;
+extern fn SDL_QueryGPUFence(device: ?*SDL_GPUDevice, fence: ?*SDL_GPUFence) bool;
 extern fn SDL_WaitForGPUFences(device: ?*SDL_GPUDevice, wait_all: bool, fences: ?[*]?*SDL_GPUFence, num_fences: Uint32) bool;
 extern fn SDL_ReleaseGPUFence(device: ?*SDL_GPUDevice, fence: ?*SDL_GPUFence) void;
 
@@ -128,6 +129,7 @@ pub const SDL_GPUTextureType = enum(c_int) {
 
 pub const SDL_GPUTextureFormat = enum(c_int) {
     SDL_GPU_TEXTUREFORMAT_INVALID = -1,
+    SDL_GPU_TEXTUREFORMAT_A8_UNORM,
     SDL_GPU_TEXTUREFORMAT_R8_UNORM,
     SDL_GPU_TEXTUREFORMAT_R8G8_UNORM,
     SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
@@ -655,6 +657,8 @@ extern fn SDL_SetGPUViewport(render_pass: ?*SDL_GPURenderPass, viewport: ?*const
 extern fn SDL_SetGPUScissor(render_pass: ?*SDL_GPURenderPass, scissor: ?*const SDL_Rect) void;
 extern fn SDL_BindGPUVertexBuffers(render_pass: ?*SDL_GPURenderPass, first_slot: Uint32, bindings: ?[*]const SDL_GPUBufferBinding, num_bindings: Uint32) void;
 extern fn SDL_BindGPUIndexBuffer(render_pass: ?*SDL_GPURenderPass, binding: ?*const SDL_GPUBufferBinding, index_element_size: SDL_GPUIndexElementSize) void;
+extern fn SDL_BindGPUVertexStorageBuffers(render_pass: ?*SDL_GPURenderPass, first_slot: Uint32, storage_buffers: ?[*]const ?*SDL_GPUBuffer, num_bindings: Uint32) void;
+extern fn SDL_BindGPUFragmentStorageBuffers(render_pass: ?*SDL_GPURenderPass, first_slot: Uint32, storage_buffers: ?[*]const ?*SDL_GPUBuffer, num_bindings: Uint32) void;
 extern fn SDL_DrawGPUPrimitives(render_pass: ?*SDL_GPURenderPass, num_vertices: Uint32, num_instances: Uint32, first_vertex: Uint32, first_instance: Uint32) void;
 extern fn SDL_DrawGPUIndexedPrimitives(render_pass: ?*SDL_GPURenderPass, num_indices: Uint32, num_instances: Uint32, first_index: Uint32, vertex_offset: Sint32, first_instance: Uint32) void;
 extern fn SDL_DrawGPUPrimitivesIndirect(render_pass: ?*SDL_GPURenderPass, buffer: ?*SDL_GPUBuffer, offset: Uint32, draw_count: Uint32) void;
@@ -682,6 +686,8 @@ extern fn SDL_EndGPUComputePass(compute_pass: ?*SDL_GPUComputePass) void;
 // Additional rendering functions
 extern fn SDL_BindGPUVertexSamplers(render_pass: ?*SDL_GPURenderPass, first_slot: Uint32, samplers: ?[*]?*SDL_GPUSampler) void;
 extern fn SDL_BindGPUFragmentSamplers(render_pass: ?*SDL_GPURenderPass, first_slot: Uint32, samplers: ?[*]?*SDL_GPUSampler) void;
+extern fn SDL_BindGPUVertexStorageTextures(render_pass: ?*SDL_GPURenderPass, first_slot: Uint32, storage_textures: ?[*]const ?*SDL_GPUTexture, num_bindings: Uint32) void;
+extern fn SDL_BindGPUFragmentStorageTextures(render_pass: ?*SDL_GPURenderPass, first_slot: Uint32, storage_textures: ?[*]const ?*SDL_GPUTexture, num_bindings: Uint32) void;
 extern fn SDL_PushGPUVertexUniformData(cmdbuf: ?*SDL_GPUCommandBuffer, slot_index: Uint32, data: ?*const anyopaque, length: Uint32) void;
 extern fn SDL_PushGPUFragmentUniformData(cmdbuf: ?*SDL_GPUCommandBuffer, slot_index: Uint32, data: ?*const anyopaque, length: Uint32) void;
 extern fn SDL_BlitGPUTexture(cmdbuf: ?*SDL_GPUCommandBuffer, info: ?*const SDL_GPUBlitInfo) bool;
@@ -728,6 +734,7 @@ pub const acquireGPUCommandBuffer = SDL_AcquireGPUCommandBuffer;
 pub const submitGPUCommandBuffer = SDL_SubmitGPUCommandBuffer;
 pub const submitGPUCommandBufferAndAcquireFence = SDL_SubmitGPUCommandBufferAndAcquireFence;
 pub const cancelGPUCommandBuffer = SDL_CancelGPUCommandBuffer;
+pub const queryGPUFence = SDL_QueryGPUFence;
 pub const waitForGPUFences = SDL_WaitForGPUFences;
 pub const releaseGPUFence = SDL_ReleaseGPUFence;
 pub const createGPUBuffer = SDL_CreateGPUBuffer;
@@ -760,6 +767,8 @@ pub const setGPUViewport = SDL_SetGPUViewport;
 pub const setGPUScissor = SDL_SetGPUScissor;
 pub const bindGPUVertexBuffers = SDL_BindGPUVertexBuffers;
 pub const bindGPUIndexBuffer = SDL_BindGPUIndexBuffer;
+pub const bindGPUVertexStorageBuffers = SDL_BindGPUVertexStorageBuffers;
+pub const bindGPUFragmentStorageBuffers = SDL_BindGPUFragmentStorageBuffers;
 pub const drawGPUPrimitives = SDL_DrawGPUPrimitives;
 pub const drawGPUIndexedPrimitives = SDL_DrawGPUIndexedPrimitives;
 pub const drawGPUPrimitivesIndirect = SDL_DrawGPUPrimitivesIndirect;
@@ -779,6 +788,8 @@ pub const dispatchGPUComputeIndirect = SDL_DispatchGPUComputeIndirect;
 pub const endGPUComputePass = SDL_EndGPUComputePass;
 pub const bindGPUVertexSamplers = SDL_BindGPUVertexSamplers;
 pub const bindGPUFragmentSamplers = SDL_BindGPUFragmentSamplers;
+pub const bindGPUVertexStorageTextures = SDL_BindGPUVertexStorageTextures;
+pub const bindGPUFragmentStorageTextures = SDL_BindGPUFragmentStorageTextures;
 pub const pushGPUVertexUniformData = SDL_PushGPUVertexUniformData;
 pub const pushGPUFragmentUniformData = SDL_PushGPUFragmentUniformData;
 pub const blitGPUTexture = SDL_BlitGPUTexture;
