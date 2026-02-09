@@ -47,6 +47,7 @@ pub const dialog = @import("dialog.zig");
 pub const endian = @import("endian.zig");
 pub const guid = @import("guid.zig");
 pub const intrinsics = @import("intrinsics.zig");
+pub const ttf = @import("ttf.zig");
 
 // Re-export core functions
 pub const init = core.init;

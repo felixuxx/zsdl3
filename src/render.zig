@@ -137,10 +137,10 @@ extern fn SDL_GetRenderDrawBlendMode(renderer: ?*SDL_Renderer, blendMode: ?*SDL_
 extern fn SDL_SetRenderDrawBlendMode(renderer: ?*SDL_Renderer, blendMode: SDL_BlendMode) bool;
 
 // Texture operations
-extern fn SDL_CreateTextureFromSurface(renderer: ?*SDL_Renderer, surface: ?*pixels.SDL_Surface) ?*SDL_Texture;
+extern fn SDL_CreateTextureFromSurface(renderer: ?*SDL_Renderer, surface: ?*surface.SDL_Surface) ?*SDL_Texture;
 extern fn SDL_QueryTexture(texture: ?*SDL_Texture, format: ?*Uint32, access: ?*c_int, w: ?*c_int, h: ?*c_int) bool;
 extern fn SDL_LockTexture(texture: ?*SDL_Texture, rect: ?*const pixels.SDL_Rect, pixels: ?*?*anyopaque, pitch: ?*c_int) bool;
-extern fn SDL_LockTextureToSurface(texture: ?*SDL_Texture, rect: ?*const pixels.SDL_Rect) ?*pixels.SDL_Surface;
+extern fn SDL_LockTextureToSurface(texture: ?*SDL_Texture, rect: ?*const pixels.SDL_Rect) ?*surface.SDL_Surface;
 extern fn SDL_UnlockTexture(texture: ?*SDL_Texture) void;
 extern fn SDL_UpdateNVTexture(texture: ?*SDL_Texture, rect: ?*const pixels.SDL_Rect, y_plane: ?[*]const u8, uv_plane: ?[*]const u8, pitch: c_int) bool;
 extern fn SDL_UpdateYUVTexture(texture: ?*SDL_Texture, rect: ?*const pixels.SDL_Rect, y_plane: ?[*]const u8, u_plane: ?[*]const u8, v_plane: ?[*]const u8, y_pitch: c_int, uv_pitch: c_int) bool;
@@ -213,7 +213,7 @@ extern fn SDL_SetDefaultTextureScaleMode(scale_mode: SDL_ScaleMode) void;
 extern fn SDL_GetRenderLogicalPresentationRect(renderer: ?*SDL_Renderer, rect: ?*SDL_FRect) bool;
 
 // Texture operations
-extern fn SDL_TextureSize(texture: ?*SDL_Texture, w: ?*f32, h: ?*f32) bool;
+extern fn SDL_GetTextureSize(texture: ?*SDL_Texture, w: ?*f32, h: ?*f32) bool;
 extern fn SDL_GetRenderVSync(renderer: ?*SDL_Renderer, vsync: ?*c_int) bool;
 extern fn SDL_SetRenderVSync(renderer: ?*SDL_Renderer, vsync: c_int) bool;
 
@@ -306,7 +306,7 @@ pub const renderGeometryRaw = SDL_RenderGeometryRaw;
 pub const renderReadPixels = SDL_RenderReadPixels;
 pub const renderFlush = SDL_RenderFlush;
 pub const flushRenderer = SDL_FlushRenderer;
-pub const textureSize = SDL_TextureSize;
+pub const textureSize = SDL_GetTextureSize;
 pub const getRenderVSync = SDL_GetRenderVSync;
 pub const setRenderVSync = SDL_SetRenderVSync;
 

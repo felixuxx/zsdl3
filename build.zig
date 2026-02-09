@@ -86,6 +86,7 @@ pub fn build(b: *std.Build) void {
         }),
     });
     exe.linkSystemLibrary("SDL3");
+    exe.linkSystemLibrary("SDL3_ttf");
 
     // Enhanced renderer visual test
     const enhanced_visual_test = b.addExecutable(.{
@@ -157,6 +158,31 @@ pub fn build(b: *std.Build) void {
     run_basic_2d_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| {
         run_basic_2d_cmd.addArgs(args);
+    }
+
+    // TTF example
+    const ttf_example = b.addExecutable(.{
+        .name = "ttf_example",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("examples/ttf_example.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "zsdl3", .module = mod },
+            },
+        }),
+    });
+    ttf_example.linkSystemLibrary("SDL3");
+    ttf_example.linkSystemLibrary("SDL3_ttf");
+    b.installArtifact(ttf_example);
+
+    // Run step for ttf_example
+    const run_ttf_example_step = b.step("run-ttf-example", "Run the TTF example");
+    const run_ttf_example_cmd = b.addRunArtifact(ttf_example);
+    run_ttf_example_step.dependOn(&run_ttf_example_cmd.step);
+    run_ttf_example_cmd.step.dependOn(b.getInstallStep());
+    if (b.args) |args| {
+        run_ttf_example_cmd.addArgs(args);
     }
 
     // This declares intent for the executable to be installed into the
