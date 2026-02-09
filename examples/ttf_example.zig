@@ -2,6 +2,7 @@
 // Demonstrates how to use SDL_ttf to render text
 
 const std = @import("std");
+
 const zsdl3 = @import("zsdl3");
 
 pub fn main() void {
@@ -41,6 +42,7 @@ pub fn main() void {
 
     // Try to open a font
     const font_paths = [_][:0]const u8{
+        "/usr/share/fonts/TTF/JetBrainsMonoNerdFontMono-Regular.ttf",
         "/usr/share/fonts/Adwaita/AdwaitaSans-Regular.ttf",
         "/usr/share/fonts/TTF/Vera.ttf",
         "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
@@ -51,7 +53,7 @@ pub fn main() void {
     };
 
     var font: ?*zsdl3.ttf.TTF_Font = null;
-    
+
     for (font_paths) |path| {
         font = zsdl3.ttf.openFont(path, 48.0);
         if (font != null) {
@@ -86,7 +88,7 @@ pub fn main() void {
         // Render text if font is available
         if (font) |f| {
             const white_color = zsdl3.SDL_Color{ .r = 255, .g = 255, .b = 255, .a = 255 };
-            
+
             // Render text to surface and then to texture
             // Pass 0 for length to use null-terminated string
             if (zsdl3.ttf.renderTextBlended(f, "Hello, SDL3 TTF!", 0, white_color)) |surf| {
