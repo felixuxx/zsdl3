@@ -43,6 +43,7 @@ pub fn build(b: *std.Build) void {
     });
 
     mod.linkSystemLibrary("SDL3", .{});
+    mod.linkSystemLibrary("SDL3_image", .{});
 
     // Here we define an executable. An executable needs to have a root module
     // which needs to expose a `main` function. While we could add a main function
@@ -158,6 +159,31 @@ pub fn build(b: *std.Build) void {
     run_gpu_test_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| {
         run_gpu_test_cmd.addArgs(args);
+    }
+
+    // Image Test example
+    const image_test = b.addExecutable(.{
+        .name = "image_test",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("examples/image_test.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "zsdl3", .module = mod },
+            },
+        }),
+    });
+    image_test.linkSystemLibrary("SDL3");
+    image_test.linkSystemLibrary("SDL3_image");
+    b.installArtifact(image_test);
+
+    // Run step for Image test example
+    const run_image_test_step = b.step("run-image-test", "Run the Image API test");
+    const run_image_test_cmd = b.addRunArtifact(image_test);
+    run_image_test_step.dependOn(&run_image_test_cmd.step);
+    run_image_test_cmd.step.dependOn(b.getInstallStep());
+    if (b.args) |args| {
+        run_image_test_cmd.addArgs(args);
     }
 
     // Basic 2D example
