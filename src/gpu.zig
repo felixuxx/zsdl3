@@ -180,17 +180,59 @@ pub const SDL_GPUTextureFormat = enum(c_int) {
     SDL_GPU_TEXTUREFORMAT_R32_INT,
     SDL_GPU_TEXTUREFORMAT_R32G32_INT,
     SDL_GPU_TEXTUREFORMAT_R32G32B32A32_INT,
-    SDL_GPU_TEXTUREFORMAT_R8G8B8A8_SRGB,
-    SDL_GPU_TEXTUREFORMAT_B8G8R8A8_SRGB,
-    SDL_GPU_TEXTUREFORMAT_BC1_RGBA_SRGB,
-    SDL_GPU_TEXTUREFORMAT_BC2_RGBA_SRGB,
-    SDL_GPU_TEXTUREFORMAT_BC3_RGBA_SRGB,
-    SDL_GPU_TEXTUREFORMAT_BC7_RGBA_SRGB,
+    SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_B8G8R8A8_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_BC1_RGBA_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_BC2_RGBA_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_BC3_RGBA_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_BC7_RGBA_UNORM_SRGB,
     SDL_GPU_TEXTUREFORMAT_D16_UNORM,
     SDL_GPU_TEXTUREFORMAT_D24_UNORM,
     SDL_GPU_TEXTUREFORMAT_D32_FLOAT,
     SDL_GPU_TEXTUREFORMAT_D24_UNORM_S8_UINT,
     SDL_GPU_TEXTUREFORMAT_D32_FLOAT_S8_UINT,
+    SDL_GPU_TEXTUREFORMAT_ASTC_4x4_UNORM,
+    SDL_GPU_TEXTUREFORMAT_ASTC_5x4_UNORM,
+    SDL_GPU_TEXTUREFORMAT_ASTC_5x5_UNORM,
+    SDL_GPU_TEXTUREFORMAT_ASTC_6x5_UNORM,
+    SDL_GPU_TEXTUREFORMAT_ASTC_6x6_UNORM,
+    SDL_GPU_TEXTUREFORMAT_ASTC_8x5_UNORM,
+    SDL_GPU_TEXTUREFORMAT_ASTC_8x6_UNORM,
+    SDL_GPU_TEXTUREFORMAT_ASTC_8x8_UNORM,
+    SDL_GPU_TEXTUREFORMAT_ASTC_10x5_UNORM,
+    SDL_GPU_TEXTUREFORMAT_ASTC_10x6_UNORM,
+    SDL_GPU_TEXTUREFORMAT_ASTC_10x8_UNORM,
+    SDL_GPU_TEXTUREFORMAT_ASTC_10x10_UNORM,
+    SDL_GPU_TEXTUREFORMAT_ASTC_12x10_UNORM,
+    SDL_GPU_TEXTUREFORMAT_ASTC_12x12_UNORM,
+    SDL_GPU_TEXTUREFORMAT_ASTC_4x4_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_ASTC_5x4_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_ASTC_5x5_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_ASTC_6x5_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_ASTC_6x6_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_ASTC_8x5_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_ASTC_8x6_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_ASTC_8x8_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_ASTC_10x5_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_ASTC_10x6_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_ASTC_10x8_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_ASTC_10x10_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_ASTC_12x10_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_ASTC_12x12_UNORM_SRGB,
+    SDL_GPU_TEXTUREFORMAT_ASTC_4x4_FLOAT,
+    SDL_GPU_TEXTUREFORMAT_ASTC_5x4_FLOAT,
+    SDL_GPU_TEXTUREFORMAT_ASTC_5x5_FLOAT,
+    SDL_GPU_TEXTUREFORMAT_ASTC_6x5_FLOAT,
+    SDL_GPU_TEXTUREFORMAT_ASTC_6x6_FLOAT,
+    SDL_GPU_TEXTUREFORMAT_ASTC_8x5_FLOAT,
+    SDL_GPU_TEXTUREFORMAT_ASTC_8x6_FLOAT,
+    SDL_GPU_TEXTUREFORMAT_ASTC_8x8_FLOAT,
+    SDL_GPU_TEXTUREFORMAT_ASTC_10x5_FLOAT,
+    SDL_GPU_TEXTUREFORMAT_ASTC_10x6_FLOAT,
+    SDL_GPU_TEXTUREFORMAT_ASTC_10x8_FLOAT,
+    SDL_GPU_TEXTUREFORMAT_ASTC_10x10_FLOAT,
+    SDL_GPU_TEXTUREFORMAT_ASTC_12x10_FLOAT,
+    SDL_GPU_TEXTUREFORMAT_ASTC_12x12_FLOAT,
 };
 
 pub const SDL_GPU_TEXTUREUSAGE_SAMPLER = 1 << 0;
@@ -286,7 +328,7 @@ pub const SDL_GPUTextureTransferInfo = extern struct {
     transfer_buffer: ?*SDL_GPUTransferBuffer,
     offset: Uint32,
     pixels_per_row: Uint32,
-    pixels_per_row_padding: Uint32,
+    rows_per_layer: Uint32,
 };
 
 pub const SDL_GPUTransferBufferLocation = extern struct {
@@ -333,21 +375,25 @@ pub const SDL_GPUColorTargetInfo = extern struct {
     clear_color: SDL_FColor,
     load_op: SDL_GPULoadOp,
     store_op: SDL_GPUStoreOp,
+    resolve_texture: ?*SDL_GPUTexture,
+    resolve_mip_level: Uint32,
+    resolve_layer: Uint32,
     cycle: bool,
-    cycle_resolve_texture: ?*SDL_GPUTexture,
-    padding: [3]Uint8,
+    cycle_resolve_texture: bool,
+    padding: [2]Uint8,
 };
 
 pub const SDL_GPUDepthStencilTargetInfo = extern struct {
     texture: ?*SDL_GPUTexture,
     clear_depth: f32,
     load_op: SDL_GPULoadOp,
-    store_op: SDL_GPUStoreOp,
     stencil_load_op: SDL_GPULoadOp,
+    store_op: SDL_GPUStoreOp,
     stencil_store_op: SDL_GPUStoreOp,
     cycle: bool,
     clear_stencil: Uint8,
-    padding: [3]Uint8,
+    mip_level: Uint8,
+    layer: Uint8,
 };
 
 pub const SDL_GPUViewport = extern struct {
@@ -377,6 +423,12 @@ pub const SDL_GPUIndexedIndirectDrawCommand = extern struct {
     first_index: Uint32,
     vertex_offset: Sint32,
     first_instance: Uint32,
+};
+
+pub const SDL_GPUIndirectDispatchCommand = extern struct {
+    group_count_x: Uint32,
+    group_count_y: Uint32,
+    group_count_z: Uint32,
 };
 
 // Additional structs
@@ -476,20 +528,19 @@ pub const SDL_GPUMultisampleState = extern struct {
     sample_count: SDL_GPUSampleCount,
     sample_mask: Uint32,
     enable_mask: bool,
-    padding: [3]Uint8,
+    enable_alpha_to_coverage: bool,
+    padding: [2]Uint8,
 };
 
 pub const SDL_GPUDepthStencilState = extern struct {
-    enable_depth_test: bool,
-    enable_depth_write: bool,
-    enable_stencil_test: bool,
     compare_op: SDL_GPUCompareOp,
     back_stencil_state: SDL_GPUStencilOpState,
     front_stencil_state: SDL_GPUStencilOpState,
-    depth_bounds_min: f32,
-    depth_bounds_max: f32,
-    enable_depth_bounds: bool,
+    compare_mask: Uint8,
     write_mask: Uint8,
+    enable_depth_test: bool,
+    enable_depth_write: bool,
+    enable_stencil_test: bool,
     padding: [3]Uint8,
 };
 
@@ -498,13 +549,10 @@ pub const SDL_GPUStencilOpState = extern struct {
     pass_op: SDL_GPUStencilOp,
     depth_fail_op: SDL_GPUStencilOp,
     compare_op: SDL_GPUCompareOp,
-    compare_mask: Uint8,
-    write_mask: Uint8,
-    reference: Uint8,
-    padding: Uint8,
 };
 
 pub const SDL_GPUStencilOp = enum(c_int) {
+    SDL_GPU_STENCILOP_INVALID,
     SDL_GPU_STENCILOP_KEEP,
     SDL_GPU_STENCILOP_ZERO,
     SDL_GPU_STENCILOP_REPLACE,
@@ -587,9 +635,19 @@ pub const SDL_GPUComputePipelineCreateInfo = extern struct {
     props: core.SDL_PropertiesID,
 };
 
+pub const SDL_GPUBlitRegion = extern struct {
+    texture: ?*SDL_GPUTexture,
+    mip_level: Uint32,
+    layer_or_depth_plane: Uint32,
+    x: Uint32,
+    y: Uint32,
+    w: Uint32,
+    h: Uint32,
+};
+
 pub const SDL_GPUBlitInfo = extern struct {
-    source: SDL_GPUTextureRegion,
-    destination: SDL_GPUTextureRegion,
+    source: SDL_GPUBlitRegion,
+    destination: SDL_GPUBlitRegion,
     load_op: SDL_GPULoadOp,
     clear_color: SDL_FColor,
     flip_mode: SDL_GPUFlipMode,
@@ -617,6 +675,21 @@ pub const SDL_GPUStorageBufferReadWriteBinding = extern struct {
     buffer: ?*SDL_GPUBuffer,
     cycle: bool,
     padding: [3]Uint8,
+};
+
+pub const SDL_GPUTextureSamplerBinding = extern struct {
+    texture: ?*SDL_GPUTexture,
+    sampler: ?*SDL_GPUSampler,
+};
+
+pub const SDL_GPUVulkanOptions = extern struct {
+    vulkan_api_version: Uint32,
+    feature_list: ?*anyopaque,
+    vulkan_10_physical_device_features: ?*anyopaque,
+    device_extension_count: Uint32,
+    device_extension_names: ?[*]?[*]const u8,
+    instance_extension_count: Uint32,
+    instance_extension_names: ?[*]?[*]const u8,
 };
 
 // Buffer functions
@@ -681,16 +754,16 @@ extern fn SDL_ReleaseGPUComputePipeline(device: ?*SDL_GPUDevice, compute_pipelin
 // Compute pass functions
 extern fn SDL_BeginGPUComputePass(cmdbuf: ?*SDL_GPUCommandBuffer, storage_texture_bindings: ?[*]const SDL_GPUStorageTextureReadWriteBinding, num_storage_texture_bindings: Uint32, storage_buffer_bindings: ?[*]const SDL_GPUStorageBufferReadWriteBinding, num_storage_buffer_bindings: Uint32) ?*SDL_GPUComputePass;
 extern fn SDL_BindGPUComputePipeline(compute_pass: ?*SDL_GPUComputePass, compute_pipeline: ?*SDL_GPUComputePipeline) void;
-extern fn SDL_BindGPUComputeStorageTextures(compute_pass: ?*SDL_GPUComputePass, first_slot: Uint32, storage_texture_bindings: ?[*]const SDL_GPUStorageTextureReadWriteBinding, num_bindings: Uint32) void;
-extern fn SDL_BindGPUComputeStorageBuffers(compute_pass: ?*SDL_GPUComputePass, first_slot: Uint32, storage_buffer_bindings: ?[*]const SDL_GPUStorageBufferReadWriteBinding, num_bindings: Uint32) void;
+extern fn SDL_BindGPUComputeStorageTextures(compute_pass: ?*SDL_GPUComputePass, first_slot: Uint32, storage_textures: ?[*]const ?*SDL_GPUTexture, num_bindings: Uint32) void;
+extern fn SDL_BindGPUComputeStorageBuffers(compute_pass: ?*SDL_GPUComputePass, first_slot: Uint32, storage_buffers: ?[*]const ?*SDL_GPUBuffer, num_bindings: Uint32) void;
 extern fn SDL_PushGPUComputeUniformData(cmdbuf: ?*SDL_GPUCommandBuffer, slot_index: Uint32, data: ?*const anyopaque, length: Uint32) void;
 extern fn SDL_DispatchGPUCompute(compute_pass: ?*SDL_GPUComputePass, groupcount_x: Uint32, groupcount_y: Uint32, groupcount_z: Uint32) void;
 extern fn SDL_DispatchGPUComputeIndirect(compute_pass: ?*SDL_GPUComputePass, buffer: ?*SDL_GPUBuffer, offset: Uint32) void;
 extern fn SDL_EndGPUComputePass(compute_pass: ?*SDL_GPUComputePass) void;
 
 // Additional rendering functions
-extern fn SDL_BindGPUVertexSamplers(render_pass: ?*SDL_GPURenderPass, first_slot: Uint32, samplers: ?[*]?*SDL_GPUSampler) void;
-extern fn SDL_BindGPUFragmentSamplers(render_pass: ?*SDL_GPURenderPass, first_slot: Uint32, samplers: ?[*]?*SDL_GPUSampler) void;
+extern fn SDL_BindGPUVertexSamplers(render_pass: ?*SDL_GPURenderPass, first_slot: Uint32, texture_sampler_bindings: ?[*]const SDL_GPUTextureSamplerBinding, num_bindings: Uint32) void;
+extern fn SDL_BindGPUFragmentSamplers(render_pass: ?*SDL_GPURenderPass, first_slot: Uint32, texture_sampler_bindings: ?[*]const SDL_GPUTextureSamplerBinding, num_bindings: Uint32) void;
 extern fn SDL_BindGPUVertexStorageTextures(render_pass: ?*SDL_GPURenderPass, first_slot: Uint32, storage_textures: ?[*]const ?*SDL_GPUTexture, num_bindings: Uint32) void;
 extern fn SDL_BindGPUFragmentStorageTextures(render_pass: ?*SDL_GPURenderPass, first_slot: Uint32, storage_textures: ?[*]const ?*SDL_GPUTexture, num_bindings: Uint32) void;
 extern fn SDL_PushGPUVertexUniformData(cmdbuf: ?*SDL_GPUCommandBuffer, slot_index: Uint32, data: ?*const anyopaque, length: Uint32) void;
@@ -709,6 +782,18 @@ extern fn SDL_GPUTextureSupportsFormat(device: ?*SDL_GPUDevice, format: SDL_GPUT
 extern fn SDL_GPUBufferSize(buffer: ?*SDL_GPUBuffer) Uint32;
 extern fn SDL_GPUTextureFormatTexelBlockSize(format: SDL_GPUTextureFormat) Uint32;
 extern fn SDL_GPUTextureSupportsSampleCount(device: ?*SDL_GPUDevice, format: SDL_GPUTextureFormat, sample_count: SDL_GPUSampleCount) bool;
+extern fn SDL_GetGPUDeviceProperties(device: ?*SDL_GPUDevice) core.SDL_PropertiesID;
+extern fn SDL_SetGPUSwapchainParameters(device: ?*SDL_GPUDevice, window: ?*video.SDL_Window, swapchain_composition: SDL_GPUSwapchainComposition, present_mode: SDL_GPUPresentMode) bool;
+extern fn SDL_WindowSupportsGPUSwapchainComposition(device: ?*SDL_GPUDevice, window: ?*video.SDL_Window, swapchain_composition: SDL_GPUSwapchainComposition) bool;
+extern fn SDL_WindowSupportsGPUPresentMode(device: ?*SDL_GPUDevice, window: ?*video.SDL_Window, present_mode: SDL_GPUPresentMode) bool;
+extern fn SDL_GetGPUSwapchainTextureFormat(device: ?*SDL_GPUDevice, window: ?*video.SDL_Window) SDL_GPUTextureFormat;
+extern fn SDL_WaitForGPUIdle(device: ?*SDL_GPUDevice) bool;
+extern fn SDL_SetGPUBlendConstants(render_pass: ?*SDL_GPURenderPass, blend_constants: SDL_FColor) void;
+extern fn SDL_SetGPUStencilReference(render_pass: ?*SDL_GPURenderPass, reference: Uint8) void;
+extern fn SDL_BindGPUComputeSamplers(compute_pass: ?*SDL_GPUComputePass, first_slot: Uint32, texture_sampler_bindings: ?[*]const SDL_GPUTextureSamplerBinding, num_bindings: Uint32) void;
+extern fn SDL_CalculateGPUTextureFormatSize(format: SDL_GPUTextureFormat, width: Uint32, height: Uint32, depth_or_layer_count: Uint32) Uint32;
+extern fn SDL_GetPixelFormatFromGPUTextureFormat(format: SDL_GPUTextureFormat) c_uint;
+extern fn SDL_GetGPUTextureFormatFromPixelFormat(format: c_uint) SDL_GPUTextureFormat;
 
 // video import
 // Import types
@@ -809,6 +894,18 @@ pub const gpuTextureSupportsFormat = SDL_GPUTextureSupportsFormat;
 pub const gpuBufferSize = SDL_GPUBufferSize;
 pub const gpuTextureFormatTexelBlockSize = SDL_GPUTextureFormatTexelBlockSize;
 pub const gpuTextureSupportsSampleCount = SDL_GPUTextureSupportsSampleCount;
+pub const getGPUDeviceProperties = SDL_GetGPUDeviceProperties;
+pub const setGPUSwapchainParameters = SDL_SetGPUSwapchainParameters;
+pub const windowSupportsGPUSwapchainComposition = SDL_WindowSupportsGPUSwapchainComposition;
+pub const windowSupportsGPUPresentMode = SDL_WindowSupportsGPUPresentMode;
+pub const getGPUSwapchainTextureFormat = SDL_GetGPUSwapchainTextureFormat;
+pub const waitForGPUIdle = SDL_WaitForGPUIdle;
+pub const setGPUBlendConstants = SDL_SetGPUBlendConstants;
+pub const setGPUStencilReference = SDL_SetGPUStencilReference;
+pub const bindGPUComputeSamplers = SDL_BindGPUComputeSamplers;
+pub const calculateGPUTextureFormatSize = SDL_CalculateGPUTextureFormatSize;
+pub const getPixelFormatFromGPUTextureFormat = SDL_GetPixelFormatFromGPUTextureFormat;
+pub const getGPUTextureFormatFromPixelFormat = SDL_GetGPUTextureFormatFromPixelFormat;
 
 // GPU driver functions
 pub const getNumGPUDrivers = SDL_GetNumGPUDrivers;
@@ -834,8 +931,12 @@ pub const SDL_PROP_GPU_DEVICE_CREATE_D3D12_ALLOW_FEWER_RESOURCE_SLOTS_BOOLEAN = 
 pub const SDL_PROP_GPU_DEVICE_CREATE_D3D12_SEMANTIC_NAME_STRING = "SDL.gpu.device.create.d3d12.semantic";
 pub const SDL_PROP_GPU_DEVICE_CREATE_VULKAN_REQUIRE_HARDWARE_ACCELERATION_BOOLEAN = "SDL.gpu.device.create.vulkan.requirehardwareacceleration";
 pub const SDL_PROP_GPU_DEVICE_CREATE_VULKAN_OPTIONS_POINTER = "SDL.gpu.device.create.vulkan.options";
+pub const SDL_PROP_GPU_DEVICE_CREATE_METAL_ALLOW_MACFAMILY1_BOOLEAN = "SDL.gpu.device.create.metal.allowmacfamily1";
+pub const SDL_PROP_GPU_DEVICE_CREATE_D3D12_AGILITY_SDK_VERSION_NUMBER = "SDL.gpu.device.create.d3d12.agility_sdk_version";
+pub const SDL_PROP_GPU_DEVICE_CREATE_D3D12_AGILITY_SDK_PATH_STRING = "SDL.gpu.device.create.d3d12.agility_sdk_path";
 
 // GPU device properties
+pub const SDL_PROP_GPU_DEVICE_NAME_STRING = "SDL.gpu.device.name";
 pub const SDL_PROP_GPU_DEVICE_DRIVER_NAME_STRING = "SDL.gpu.device.driver_name";
 pub const SDL_PROP_GPU_DEVICE_DRIVER_VERSION_STRING = "SDL.gpu.device.driver_version";
 pub const SDL_PROP_GPU_DEVICE_DRIVER_INFO_STRING = "SDL.gpu.device.driver_info";
@@ -854,3 +955,15 @@ pub const SDL_PROP_GPU_TEXTURE_CREATE_NAME_STRING = "SDL.gpu.texture.create.name
 
 // GPU buffer creation properties
 pub const SDL_PROP_GPU_BUFFER_CREATE_NAME_STRING = "SDL.gpu.buffer.create.name";
+
+// GPU transfer buffer creation properties
+pub const SDL_PROP_GPU_TRANSFERBUFFER_CREATE_NAME_STRING = "SDL.gpu.transferbuffer.create.name";
+
+// GPU compute pipeline creation properties
+pub const SDL_PROP_GPU_COMPUTEPIPELINE_CREATE_NAME_STRING = "SDL.gpu.computepipeline.create.name";
+
+// GPU graphics pipeline creation properties
+pub const SDL_PROP_GPU_GRAPHICSPIPELINE_CREATE_NAME_STRING = "SDL.gpu.graphicspipeline.create.name";
+
+// GPU sampler creation properties
+pub const SDL_PROP_GPU_SAMPLER_CREATE_NAME_STRING = "SDL.gpu.sampler.create.name";

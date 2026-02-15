@@ -136,6 +136,30 @@ pub fn build(b: *std.Build) void {
         run_cube_3d_cmd.addArgs(args);
     }
 
+    // GPU API Test example
+    const gpu_test = b.addExecutable(.{
+        .name = "gpu_test",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("examples/gpu_test.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "zsdl3", .module = mod },
+            },
+        }),
+    });
+    gpu_test.linkSystemLibrary("SDL3");
+    b.installArtifact(gpu_test);
+
+    // Run step for GPU test example
+    const run_gpu_test_step = b.step("run-gpu-test", "Run the GPU API test");
+    const run_gpu_test_cmd = b.addRunArtifact(gpu_test);
+    run_gpu_test_step.dependOn(&run_gpu_test_cmd.step);
+    run_gpu_test_cmd.step.dependOn(b.getInstallStep());
+    if (b.args) |args| {
+        run_gpu_test_cmd.addArgs(args);
+    }
+
     // Basic 2D example
     const basic_2d = b.addExecutable(.{
         .name = "basic_2d",
