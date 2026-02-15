@@ -571,11 +571,16 @@ pub const SDL_GPU_COLORCOMPONENT_B = 1 << 2;
 pub const SDL_GPU_COLORCOMPONENT_A = 1 << 3;
 
 pub const SDL_GPUComputePipelineCreateInfo = extern struct {
-    compute_shader: ?*SDL_GPUShader,
-    read_only_storage_texture_count: Uint32,
-    read_only_storage_buffer_count: Uint32,
-    read_write_storage_texture_count: Uint32,
-    read_write_storage_buffer_count: Uint32,
+    code_size: usize,
+    code: ?[*]const Uint8,
+    entrypoint: ?[*:0]const u8,
+    format: SDL_GPUShaderFormat,
+    num_samplers: Uint32,
+    num_readonly_storage_textures: Uint32,
+    num_readonly_storage_buffers: Uint32,
+    num_readwrite_storage_textures: Uint32,
+    num_readwrite_storage_buffers: Uint32,
+    num_uniform_buffers: Uint32,
     thread_count_x: Uint32,
     thread_count_y: Uint32,
     thread_count_z: Uint32,
