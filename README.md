@@ -7,6 +7,13 @@ High Quality Zig bindings for SDL3 without `@cImport`. Provides comprehensive,
 low-level access to SDL3's multimedia capabilities for game and application
 development. Designed for performance and ease of use in modern Zig projects.
 
+---
+
+This bindings project also includes SDL3_image and SDL3_ttf bindings for image
+and text rendering.
+
+---
+
 ## Features
 
 ### Core Subsystems
