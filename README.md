@@ -9,6 +9,7 @@ development. Designed for performance and ease of use in modern Zig projects.
 
 ---
 
+> **Note**
 This bindings project also includes SDL3_image and SDL3_ttf bindings for image
 and text rendering.
 
