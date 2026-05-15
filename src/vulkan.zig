@@ -8,11 +8,11 @@ const video = @import("video.zig");
 // Import types
 // Vulkan function pointer type for vkGetInstanceProcAddr
 // vkGetInstanceProcAddr signature: void* (VkInstance instance, const char* pName)
-pub const PFN_vkGetInstanceProcAddr = ?*const fn (?*anyopaque, ?[*:0]const u8) callconv(.C) ?*anyopaque;
+pub const PFN_vkGetInstanceProcAddr = ?*const fn (?*anyopaque, ?[*:0]const u8) callconv(.c) ?*anyopaque;
 
 // Vulkan functions
 extern fn SDL_Vulkan_LoadLibrary(path: ?[*:0]const u8) bool;
-extern fn SDL_Vulkan_GetVkGetInstanceProcAddr() ?PFN_vkGetInstanceProcAddr;
+extern fn SDL_Vulkan_GetVkGetInstanceProcAddr() PFN_vkGetInstanceProcAddr;
 extern fn SDL_Vulkan_UnloadLibrary() void;
 extern fn SDL_Vulkan_GetInstanceExtensions(count: ?*Uint32) ?[*]const [*:0]const u8;
 extern fn SDL_Vulkan_CreateSurface(window: ?*video.SDL_Window, instance: ?*anyopaque, allocator: ?*const anyopaque, surface: *?*anyopaque) bool;
