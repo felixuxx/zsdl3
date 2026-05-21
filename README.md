@@ -66,7 +66,7 @@ and text rendering.
 
 ### Prerequisites
 
-- **Zig 0.15.2+**: [Download here](https://ziglang.org/download/)
+- **Zig 0.16.0+**: [Download here](https://ziglang.org/download/)
 - **SDL3**: Install from your package manager or build from source
 
 #### Linux (Ubuntu/Debian)
@@ -91,7 +91,7 @@ sudo dnf install SDL3-devel
 #### macOS (Homebrew)
 
 ```bash
-brew install sdl3
+brew install sdl3 sdl3_ttf sdl3_image
 ```
 
 #### Windows

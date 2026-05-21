@@ -24,7 +24,10 @@ pub fn main() !void {
     const props = zsdl3.createProperties();
     defer zsdl3.destroyProperties(props);
 
-    // Try with SPIRV (Vulkan) which is supported on Intel
+    // Use Metal on macOS, otherwise fallback to SPIRV (Vulkan)
+    if(std.mem.eql(u8, std.mem.sliceTo(zsdl3.getPlatform().?, 0), "macOS")) {
+    	_ = zsdl3.setBooleanProperty(props, zsdl3.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_METALLIB_BOOLEAN, true);
+    }
     _ = zsdl3.setBooleanProperty(props, zsdl3.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_SPIRV_BOOLEAN, true);
     _ = zsdl3.setBooleanProperty(props, zsdl3.SDL_PROP_GPU_DEVICE_CREATE_DEBUGMODE_BOOLEAN, true);
 

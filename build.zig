@@ -23,8 +23,8 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    exe.linkSystemLibrary("SDL3");
-    exe.linkSystemLibrary("SDL3_ttf");
+    exe.root_module.linkSystemLibrary("SDL3", .{});
+    exe.root_module.linkSystemLibrary("SDL3_ttf", .{});
 
     // Enhanced renderer visual test
     const enhanced_visual_test = b.addExecutable(.{
@@ -38,7 +38,7 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    enhanced_visual_test.linkSystemLibrary("SDL3");
+    enhanced_visual_test.root_module.linkSystemLibrary("SDL3", .{});
     b.installArtifact(enhanced_visual_test);
 
     // Run step for enhanced renderer visual test
@@ -62,7 +62,7 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    cube_3d.linkSystemLibrary("SDL3");
+    cube_3d.root_module.linkSystemLibrary("SDL3", .{});
     b.installArtifact(cube_3d);
 
     // Run step for cube_3d example
@@ -86,7 +86,7 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    gpu_test.linkSystemLibrary("SDL3");
+    gpu_test.root_module.linkSystemLibrary("SDL3", .{});
     b.installArtifact(gpu_test);
 
     // Run step for GPU test example
@@ -110,8 +110,8 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    image_test.linkSystemLibrary("SDL3");
-    image_test.linkSystemLibrary("SDL3_image");
+    image_test.root_module.linkSystemLibrary("SDL3", .{});
+    image_test.root_module.linkSystemLibrary("SDL3_image", .{});
     b.installArtifact(image_test);
 
     // Run step for Image test example
@@ -135,7 +135,7 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    basic_2d.linkSystemLibrary("SDL3");
+    basic_2d.root_module.linkSystemLibrary("SDL3", .{});
     b.installArtifact(basic_2d);
 
     // Run step for basic_2d example
@@ -159,8 +159,8 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    ttf_example.linkSystemLibrary("SDL3");
-    ttf_example.linkSystemLibrary("SDL3_ttf");
+    ttf_example.root_module.linkSystemLibrary("SDL3", .{});
+    ttf_example.root_module.linkSystemLibrary("SDL3_ttf", .{});
     b.installArtifact(ttf_example);
 
     // Run step for ttf_example
@@ -184,8 +184,8 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    text_editor.linkSystemLibrary("SDL3");
-    text_editor.linkSystemLibrary("SDL3_ttf");
+    text_editor.root_module.linkSystemLibrary("SDL3", .{});
+    text_editor.root_module.linkSystemLibrary("SDL3_ttf", .{});
     b.installArtifact(text_editor);
 
     // Run step for text_editor
@@ -212,7 +212,7 @@ pub fn build(b: *std.Build) void {
     const mod_tests = b.addTest(.{
         .root_module = mod,
     });
-    mod_tests.linkSystemLibrary("SDL3");
+    mod_tests.root_module.linkSystemLibrary("SDL3", .{});
 
     // A run step that will run the test executable.
     const run_mod_tests = b.addRunArtifact(mod_tests);
@@ -220,7 +220,7 @@ pub fn build(b: *std.Build) void {
     const exe_tests = b.addTest(.{
         .root_module = exe.root_module,
     });
-    exe_tests.linkSystemLibrary("SDL3");
+    exe_tests.root_module.linkSystemLibrary("SDL3", .{});
 
     // A run step that will run the second test executable.
     const run_exe_tests = b.addRunArtifact(exe_tests);
