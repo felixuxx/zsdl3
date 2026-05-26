@@ -720,8 +720,8 @@ extern fn SDL_ReleaseGPUTransferBuffer(device: ?*SDL_GPUDevice, transfer_buffer:
 
 // Upload/Download functions
 extern fn SDL_BeginGPUCopyPass(cmdbuf: ?*SDL_GPUCommandBuffer) ?*SDL_GPUCopyPass;
-extern fn SDL_UploadToGPUTexture(cmdbuf: ?*SDL_GPUCommandBuffer, copy_pass: ?*SDL_GPUCopyPass, source: ?*const SDL_GPUTextureTransferInfo, destination: ?*const SDL_GPUTextureRegion, cycle: bool) bool;
-extern fn SDL_UploadToGPUBuffer(cmdbuf: ?*SDL_GPUCommandBuffer, copy_pass: ?*SDL_GPUCopyPass, source: ?*const SDL_GPUTransferBufferLocation, destination: ?*const SDL_GPUBufferRegion, cycle: bool) bool;
+extern fn SDL_UploadToGPUTexture(copy_pass: ?*SDL_GPUCopyPass, source: ?*const SDL_GPUTextureTransferInfo, destination: ?*const SDL_GPUTextureRegion, cycle: bool) void;
+extern fn SDL_UploadToGPUBuffer(copy_pass: ?*SDL_GPUCopyPass, source: ?*const SDL_GPUTransferBufferLocation, destination: ?*const SDL_GPUBufferRegion, cycle: bool) void;
 extern fn SDL_DownloadFromGPUTexture(copy_pass: ?*SDL_GPUCopyPass, source: ?*const SDL_GPUTextureRegion, destination: ?*const SDL_GPUTextureTransferInfo) void;
 extern fn SDL_DownloadFromGPUBuffer(copy_pass: ?*SDL_GPUCopyPass, source: ?*const SDL_GPUBufferRegion, destination: ?*const SDL_GPUTransferBufferLocation) void;
 extern fn SDL_CopyGPUTextureToTexture(copy_pass: ?*SDL_GPUCopyPass, source: ?*const SDL_GPUTextureLocation, destination: ?*const SDL_GPUTextureLocation, w: Uint32, h: Uint32, d: Uint32, cycle: bool) void;
