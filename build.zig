@@ -23,8 +23,8 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    exe.linkSystemLibrary("SDL3");
-    exe.linkSystemLibrary("SDL3_ttf");
+    exe.root_module.linkSystemLibrary("SDL3", .{});
+    exe.root_module.linkSystemLibrary("SDL3_ttf", .{});
 
     // Enhanced renderer visual test
     const enhanced_visual_test = b.addExecutable(.{
@@ -38,7 +38,7 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    enhanced_visual_test.linkSystemLibrary("SDL3");
+    enhanced_visual_test.root_module.linkSystemLibrary("SDL3", .{});
     b.installArtifact(enhanced_visual_test);
 
     // Run step for enhanced renderer visual test
@@ -62,7 +62,7 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    cube_3d.linkSystemLibrary("SDL3");
+    cube_3d.root_module.linkSystemLibrary("SDL3", .{});
     b.installArtifact(cube_3d);
 
     // Run step for cube_3d example
@@ -86,7 +86,7 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    gpu_test.linkSystemLibrary("SDL3");
+    gpu_test.root_module.linkSystemLibrary("SDL3", .{});
     b.installArtifact(gpu_test);
 
     // Run step for GPU test example
@@ -110,13 +110,14 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    image_test.linkSystemLibrary("SDL3");
-    image_test.linkSystemLibrary("SDL3_image");
+    image_test.root_module.linkSystemLibrary("SDL3", .{});
+    image_test.root_module.linkSystemLibrary("SDL3_image", .{});
     b.installArtifact(image_test);
 
     // Run step for Image test example
     const run_image_test_step = b.step("run-image-test", "Run the Image API test");
     const run_image_test_cmd = b.addRunArtifact(image_test);
+    run_image_test_cmd.setCwd(b.path("examples"));
     run_image_test_step.dependOn(&run_image_test_cmd.step);
     run_image_test_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| {
@@ -135,7 +136,7 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    basic_2d.linkSystemLibrary("SDL3");
+    basic_2d.root_module.linkSystemLibrary("SDL3", .{});
     b.installArtifact(basic_2d);
 
     // Run step for basic_2d example
@@ -159,13 +160,14 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    ttf_example.linkSystemLibrary("SDL3");
-    ttf_example.linkSystemLibrary("SDL3_ttf");
+    ttf_example.root_module.linkSystemLibrary("SDL3", .{});
+    ttf_example.root_module.linkSystemLibrary("SDL3_ttf", .{});
     b.installArtifact(ttf_example);
 
     // Run step for ttf_example
     const run_ttf_example_step = b.step("run-ttf-example", "Run the TTF example");
     const run_ttf_example_cmd = b.addRunArtifact(ttf_example);
+    run_ttf_example_cmd.setCwd(b.path("examples"));
     run_ttf_example_step.dependOn(&run_ttf_example_cmd.step);
     run_ttf_example_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| {
@@ -184,17 +186,111 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    text_editor.linkSystemLibrary("SDL3");
-    text_editor.linkSystemLibrary("SDL3_ttf");
+    text_editor.root_module.linkSystemLibrary("SDL3", .{});
+    text_editor.root_module.linkSystemLibrary("SDL3_ttf", .{});
     b.installArtifact(text_editor);
 
     // Run step for text_editor
     const run_text_editor_step = b.step("run-text-editor", "Run the text editor example");
     const run_text_editor_cmd = b.addRunArtifact(text_editor);
+    run_text_editor_cmd.setCwd(b.path("examples"));
     run_text_editor_step.dependOn(&run_text_editor_cmd.step);
     run_text_editor_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| {
         run_text_editor_cmd.addArgs(args);
+    }
+
+    // Audio example
+    const audio_example = b.addExecutable(.{
+        .name = "audio_example",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("examples/audio_example.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "zsdl3", .module = mod },
+            },
+        }),
+    });
+    audio_example.root_module.linkSystemLibrary("SDL3", .{});
+    b.installArtifact(audio_example);
+
+    const run_audio_example_step = b.step("run-audio-example", "Run the audio example");
+    const run_audio_example_cmd = b.addRunArtifact(audio_example);
+    run_audio_example_step.dependOn(&run_audio_example_cmd.step);
+    run_audio_example_cmd.step.dependOn(b.getInstallStep());
+    if (b.args) |args| {
+        run_audio_example_cmd.addArgs(args);
+    }
+
+    // Dialog + MessageBox example
+    const dialog_messagebox = b.addExecutable(.{
+        .name = "dialog_messagebox",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("examples/dialog_messagebox.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "zsdl3", .module = mod },
+            },
+        }),
+    });
+    dialog_messagebox.root_module.linkSystemLibrary("SDL3", .{});
+    b.installArtifact(dialog_messagebox);
+
+    const run_dialog_messagebox_step = b.step("run-dialog-messagebox", "Run the dialog/messagebox example");
+    const run_dialog_messagebox_cmd = b.addRunArtifact(dialog_messagebox);
+    run_dialog_messagebox_cmd.setCwd(b.path("examples"));
+    run_dialog_messagebox_step.dependOn(&run_dialog_messagebox_cmd.step);
+    run_dialog_messagebox_cmd.step.dependOn(b.getInstallStep());
+    if (b.args) |args| {
+        run_dialog_messagebox_cmd.addArgs(args);
+    }
+
+    // Process example
+    const process_example = b.addExecutable(.{
+        .name = "process_example",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("examples/process_example.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "zsdl3", .module = mod },
+            },
+        }),
+    });
+    process_example.root_module.linkSystemLibrary("SDL3", .{});
+    b.installArtifact(process_example);
+
+    const run_process_example_step = b.step("run-process-example", "Run the process example");
+    const run_process_example_cmd = b.addRunArtifact(process_example);
+    run_process_example_step.dependOn(&run_process_example_cmd.step);
+    run_process_example_cmd.step.dependOn(b.getInstallStep());
+    if (b.args) |args| {
+        run_process_example_cmd.addArgs(args);
+    }
+
+    // Clipboard example
+    const clipboard = b.addExecutable(.{
+        .name = "clipboard",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("examples/clipboard.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "zsdl3", .module = mod },
+            },
+        }),
+    });
+    clipboard.root_module.linkSystemLibrary("SDL3", .{});
+    b.installArtifact(clipboard);
+
+    const run_clipboard_step = b.step("run-clipboard", "Run the clipboard example");
+    const run_clipboard_cmd = b.addRunArtifact(clipboard);
+    run_clipboard_step.dependOn(&run_clipboard_cmd.step);
+    run_clipboard_cmd.step.dependOn(b.getInstallStep());
+    if (b.args) |args| {
+        run_clipboard_cmd.addArgs(args);
     }
 
     b.installArtifact(exe);
@@ -212,7 +308,7 @@ pub fn build(b: *std.Build) void {
     const mod_tests = b.addTest(.{
         .root_module = mod,
     });
-    mod_tests.linkSystemLibrary("SDL3");
+    mod_tests.root_module.linkSystemLibrary("SDL3", .{});
 
     // A run step that will run the test executable.
     const run_mod_tests = b.addRunArtifact(mod_tests);
@@ -220,7 +316,7 @@ pub fn build(b: *std.Build) void {
     const exe_tests = b.addTest(.{
         .root_module = exe.root_module,
     });
-    exe_tests.linkSystemLibrary("SDL3");
+    exe_tests.root_module.linkSystemLibrary("SDL3", .{});
 
     // A run step that will run the second test executable.
     const run_exe_tests = b.addRunArtifact(exe_tests);
