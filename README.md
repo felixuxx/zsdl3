@@ -5,7 +5,7 @@
 
 Thin, zero-overhead bindings for SDL3, SDL3_image, and SDL3_ttf — without `@cImport`.
 
-> **Need Zig 0.16+?** Use the [`zig-0.15.2`](https://github.com/felixuxx/zsdl3/tree/master) branch.
+> **Need Zig 0.16+?** Use the [`master`](https://github.com/felixuxx/zsdl3/tree/master) branch.
 
 ---
 
@@ -19,7 +19,7 @@ sudo apt install libsdl3-dev
 # Linux (Arch)
 sudo pacman -S sdl3
 # Linux (Fedora)
-sudo dnf install SDL3-devel
+sudo dnf install SDL3-devel SDL3_image SDL3_ttf
 # Windows — download from https://github.com/libsdl-org/SDL/releases
 ```
 
