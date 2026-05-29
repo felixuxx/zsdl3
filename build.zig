@@ -26,11 +26,11 @@ pub fn build(b: *std.Build) void {
     exe.root_module.linkSystemLibrary("SDL3", .{});
     exe.root_module.linkSystemLibrary("SDL3_ttf", .{});
 
-    // Enhanced renderer visual test
-    const enhanced_visual_test = b.addExecutable(.{
-        .name = "test_enhanced_renderer_visual",
+    // Renderer example
+    const renderer = b.addExecutable(.{
+        .name = "renderer",
         .root_module = b.createModule(.{
-            .root_source_file = b.path("examples/test_enhanced_renderer_visual.zig"),
+            .root_source_file = b.path("examples/renderer.zig"),
             .target = target,
             .optimize = optimize,
             .imports = &.{
@@ -38,16 +38,15 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    enhanced_visual_test.root_module.linkSystemLibrary("SDL3", .{});
-    b.installArtifact(enhanced_visual_test);
+    renderer.root_module.linkSystemLibrary("SDL3", .{});
+    b.installArtifact(renderer);
 
-    // Run step for enhanced renderer visual test
-    const run_enhanced_visual_test_step = b.step("run-test-enhanced-renderer-visual", "Run the enhanced renderer visual test");
-    const run_enhanced_visual_test_cmd = b.addRunArtifact(enhanced_visual_test);
-    run_enhanced_visual_test_step.dependOn(&run_enhanced_visual_test_cmd.step);
-    run_enhanced_visual_test_cmd.step.dependOn(b.getInstallStep());
+    const run_renderer_step = b.step("run-renderer", "Run the renderer example");
+    const run_renderer_cmd = b.addRunArtifact(renderer);
+    run_renderer_step.dependOn(&run_renderer_cmd.step);
+    run_renderer_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| {
-        run_enhanced_visual_test_cmd.addArgs(args);
+        run_renderer_cmd.addArgs(args);
     }
 
     // 3D Cube example
@@ -65,7 +64,6 @@ pub fn build(b: *std.Build) void {
     cube_3d.root_module.linkSystemLibrary("SDL3", .{});
     b.installArtifact(cube_3d);
 
-    // Run step for cube_3d example
     const run_cube_3d_step = b.step("run-cube-3d", "Run the 3D cube example");
     const run_cube_3d_cmd = b.addRunArtifact(cube_3d);
     run_cube_3d_step.dependOn(&run_cube_3d_cmd.step);
@@ -74,11 +72,11 @@ pub fn build(b: *std.Build) void {
         run_cube_3d_cmd.addArgs(args);
     }
 
-    // GPU API Test example
-    const gpu_test = b.addExecutable(.{
-        .name = "gpu_test",
+    // GPU example
+    const gpu = b.addExecutable(.{
+        .name = "gpu",
         .root_module = b.createModule(.{
-            .root_source_file = b.path("examples/gpu_test.zig"),
+            .root_source_file = b.path("examples/gpu.zig"),
             .target = target,
             .optimize = optimize,
             .imports = &.{
@@ -86,23 +84,22 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    gpu_test.root_module.linkSystemLibrary("SDL3", .{});
-    b.installArtifact(gpu_test);
+    gpu.root_module.linkSystemLibrary("SDL3", .{});
+    b.installArtifact(gpu);
 
-    // Run step for GPU test example
-    const run_gpu_test_step = b.step("run-gpu-test", "Run the GPU API test");
-    const run_gpu_test_cmd = b.addRunArtifact(gpu_test);
-    run_gpu_test_step.dependOn(&run_gpu_test_cmd.step);
-    run_gpu_test_cmd.step.dependOn(b.getInstallStep());
+    const run_gpu_step = b.step("run-gpu", "Run the GPU example");
+    const run_gpu_cmd = b.addRunArtifact(gpu);
+    run_gpu_step.dependOn(&run_gpu_cmd.step);
+    run_gpu_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| {
-        run_gpu_test_cmd.addArgs(args);
+        run_gpu_cmd.addArgs(args);
     }
 
-    // Image Test example
-    const image_test = b.addExecutable(.{
-        .name = "image_test",
+    // Image example
+    const image = b.addExecutable(.{
+        .name = "image",
         .root_module = b.createModule(.{
-            .root_source_file = b.path("examples/image_test.zig"),
+            .root_source_file = b.path("examples/image.zig"),
             .target = target,
             .optimize = optimize,
             .imports = &.{
@@ -110,18 +107,17 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    image_test.root_module.linkSystemLibrary("SDL3", .{});
-    image_test.root_module.linkSystemLibrary("SDL3_image", .{});
-    b.installArtifact(image_test);
+    image.root_module.linkSystemLibrary("SDL3", .{});
+    image.root_module.linkSystemLibrary("SDL3_image", .{});
+    b.installArtifact(image);
 
-    // Run step for Image test example
-    const run_image_test_step = b.step("run-image-test", "Run the Image API test");
-    const run_image_test_cmd = b.addRunArtifact(image_test);
-    run_image_test_cmd.setCwd(b.path("examples"));
-    run_image_test_step.dependOn(&run_image_test_cmd.step);
-    run_image_test_cmd.step.dependOn(b.getInstallStep());
+    const run_image_step = b.step("run-image", "Run the image example");
+    const run_image_cmd = b.addRunArtifact(image);
+    run_image_cmd.setCwd(b.path("examples"));
+    run_image_step.dependOn(&run_image_cmd.step);
+    run_image_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| {
-        run_image_test_cmd.addArgs(args);
+        run_image_cmd.addArgs(args);
     }
 
     // Basic 2D example
@@ -139,7 +135,6 @@ pub fn build(b: *std.Build) void {
     basic_2d.root_module.linkSystemLibrary("SDL3", .{});
     b.installArtifact(basic_2d);
 
-    // Run step for basic_2d example
     const run_basic_2d_step = b.step("run-basic-2d", "Run the basic 2D example");
     const run_basic_2d_cmd = b.addRunArtifact(basic_2d);
     run_basic_2d_step.dependOn(&run_basic_2d_cmd.step);
@@ -149,10 +144,10 @@ pub fn build(b: *std.Build) void {
     }
 
     // TTF example
-    const ttf_example = b.addExecutable(.{
-        .name = "ttf_example",
+    const ttf = b.addExecutable(.{
+        .name = "ttf",
         .root_module = b.createModule(.{
-            .root_source_file = b.path("examples/ttf_example.zig"),
+            .root_source_file = b.path("examples/ttf.zig"),
             .target = target,
             .optimize = optimize,
             .imports = &.{
@@ -160,18 +155,17 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    ttf_example.root_module.linkSystemLibrary("SDL3", .{});
-    ttf_example.root_module.linkSystemLibrary("SDL3_ttf", .{});
-    b.installArtifact(ttf_example);
+    ttf.root_module.linkSystemLibrary("SDL3", .{});
+    ttf.root_module.linkSystemLibrary("SDL3_ttf", .{});
+    b.installArtifact(ttf);
 
-    // Run step for ttf_example
-    const run_ttf_example_step = b.step("run-ttf-example", "Run the TTF example");
-    const run_ttf_example_cmd = b.addRunArtifact(ttf_example);
-    run_ttf_example_cmd.setCwd(b.path("examples"));
-    run_ttf_example_step.dependOn(&run_ttf_example_cmd.step);
-    run_ttf_example_cmd.step.dependOn(b.getInstallStep());
+    const run_ttf_step = b.step("run-ttf", "Run the TTF example");
+    const run_ttf_cmd = b.addRunArtifact(ttf);
+    run_ttf_cmd.setCwd(b.path("examples"));
+    run_ttf_step.dependOn(&run_ttf_cmd.step);
+    run_ttf_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| {
-        run_ttf_example_cmd.addArgs(args);
+        run_ttf_cmd.addArgs(args);
     }
 
     // Text editor example
@@ -190,7 +184,6 @@ pub fn build(b: *std.Build) void {
     text_editor.root_module.linkSystemLibrary("SDL3_ttf", .{});
     b.installArtifact(text_editor);
 
-    // Run step for text_editor
     const run_text_editor_step = b.step("run-text-editor", "Run the text editor example");
     const run_text_editor_cmd = b.addRunArtifact(text_editor);
     run_text_editor_cmd.setCwd(b.path("examples"));
@@ -201,10 +194,10 @@ pub fn build(b: *std.Build) void {
     }
 
     // Audio example
-    const audio_example = b.addExecutable(.{
-        .name = "audio_example",
+    const audio = b.addExecutable(.{
+        .name = "audio",
         .root_module = b.createModule(.{
-            .root_source_file = b.path("examples/audio_example.zig"),
+            .root_source_file = b.path("examples/audio.zig"),
             .target = target,
             .optimize = optimize,
             .imports = &.{
@@ -212,22 +205,22 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    audio_example.root_module.linkSystemLibrary("SDL3", .{});
-    b.installArtifact(audio_example);
+    audio.root_module.linkSystemLibrary("SDL3", .{});
+    b.installArtifact(audio);
 
-    const run_audio_example_step = b.step("run-audio-example", "Run the audio example");
-    const run_audio_example_cmd = b.addRunArtifact(audio_example);
-    run_audio_example_step.dependOn(&run_audio_example_cmd.step);
-    run_audio_example_cmd.step.dependOn(b.getInstallStep());
+    const run_audio_step = b.step("run-audio", "Run the audio example");
+    const run_audio_cmd = b.addRunArtifact(audio);
+    run_audio_step.dependOn(&run_audio_cmd.step);
+    run_audio_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| {
-        run_audio_example_cmd.addArgs(args);
+        run_audio_cmd.addArgs(args);
     }
 
-    // Dialog + MessageBox example
-    const dialog_messagebox = b.addExecutable(.{
-        .name = "dialog_messagebox",
+    // Dialog example
+    const dialog = b.addExecutable(.{
+        .name = "dialog",
         .root_module = b.createModule(.{
-            .root_source_file = b.path("examples/dialog_messagebox.zig"),
+            .root_source_file = b.path("examples/dialog.zig"),
             .target = target,
             .optimize = optimize,
             .imports = &.{
@@ -235,23 +228,23 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    dialog_messagebox.root_module.linkSystemLibrary("SDL3", .{});
-    b.installArtifact(dialog_messagebox);
+    dialog.root_module.linkSystemLibrary("SDL3", .{});
+    b.installArtifact(dialog);
 
-    const run_dialog_messagebox_step = b.step("run-dialog-messagebox", "Run the dialog/messagebox example");
-    const run_dialog_messagebox_cmd = b.addRunArtifact(dialog_messagebox);
-    run_dialog_messagebox_cmd.setCwd(b.path("examples"));
-    run_dialog_messagebox_step.dependOn(&run_dialog_messagebox_cmd.step);
-    run_dialog_messagebox_cmd.step.dependOn(b.getInstallStep());
+    const run_dialog_step = b.step("run-dialog", "Run the dialog example");
+    const run_dialog_cmd = b.addRunArtifact(dialog);
+    run_dialog_cmd.setCwd(b.path("examples"));
+    run_dialog_step.dependOn(&run_dialog_cmd.step);
+    run_dialog_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| {
-        run_dialog_messagebox_cmd.addArgs(args);
+        run_dialog_cmd.addArgs(args);
     }
 
     // Process example
-    const process_example = b.addExecutable(.{
-        .name = "process_example",
+    const process = b.addExecutable(.{
+        .name = "process",
         .root_module = b.createModule(.{
-            .root_source_file = b.path("examples/process_example.zig"),
+            .root_source_file = b.path("examples/process.zig"),
             .target = target,
             .optimize = optimize,
             .imports = &.{
@@ -259,15 +252,15 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    process_example.root_module.linkSystemLibrary("SDL3", .{});
-    b.installArtifact(process_example);
+    process.root_module.linkSystemLibrary("SDL3", .{});
+    b.installArtifact(process);
 
-    const run_process_example_step = b.step("run-process-example", "Run the process example");
-    const run_process_example_cmd = b.addRunArtifact(process_example);
-    run_process_example_step.dependOn(&run_process_example_cmd.step);
-    run_process_example_cmd.step.dependOn(b.getInstallStep());
+    const run_process_step = b.step("run-process", "Run the process example");
+    const run_process_cmd = b.addRunArtifact(process);
+    run_process_step.dependOn(&run_process_cmd.step);
+    run_process_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| {
-        run_process_example_cmd.addArgs(args);
+        run_process_cmd.addArgs(args);
     }
 
     // Clipboard example
@@ -310,7 +303,6 @@ pub fn build(b: *std.Build) void {
     });
     mod_tests.root_module.linkSystemLibrary("SDL3", .{});
 
-    // A run step that will run the test executable.
     const run_mod_tests = b.addRunArtifact(mod_tests);
 
     const exe_tests = b.addTest(.{
@@ -318,7 +310,6 @@ pub fn build(b: *std.Build) void {
     });
     exe_tests.root_module.linkSystemLibrary("SDL3", .{});
 
-    // A run step that will run the second test executable.
     const run_exe_tests = b.addRunArtifact(exe_tests);
 
     const test_step = b.step("test", "Run tests");
