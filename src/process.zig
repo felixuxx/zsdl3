@@ -1,7 +1,6 @@
 // SDL3 Process Bindings
 // External process spawning and management
 
-const core = @import("core.zig");
 const filesystem = @import("filesystem.zig");
 
 // Process handle

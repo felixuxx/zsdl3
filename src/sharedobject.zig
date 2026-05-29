@@ -1,8 +1,6 @@
 // SDL3 SharedObject Bindings
 // Dynamic library loading
 
-const core = @import("core.zig");
-
 // Shared object handle
 pub const SDL_SharedObject = opaque {};
 

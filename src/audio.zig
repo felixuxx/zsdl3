@@ -3,7 +3,6 @@
 
 const core = @import("core.zig");
 pub const SDL_AudioDeviceID = core.Uint32;
-const pixels = @import("pixels.zig");
 
 // Audio format (matches SDL_AudioFormat in SDL3)
 pub const SDL_AudioFormat = c_uint;

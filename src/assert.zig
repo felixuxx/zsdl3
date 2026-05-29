@@ -1,8 +1,6 @@
 // SDL3 Assert Bindings
 // Custom assertion handling
 
-const core = @import("core.zig");
-
 // Assert state
 pub const SDL_AssertState = enum(c_int) {
     SDL_ASSERTION_RETRY,

@@ -1,7 +1,6 @@
 // SDL3 Tray Bindings
 // System tray icons
 
-const core = @import("core.zig");
 const video = @import("video.zig");
 
 // Tray structs

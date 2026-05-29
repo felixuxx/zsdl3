@@ -2,7 +2,6 @@
 // Asynchronous file I/O
 
 const core = @import("core.zig");
-const filesystem = @import("filesystem.zig");
 
 // Import types
 pub const Uint64 = core.Uint64;

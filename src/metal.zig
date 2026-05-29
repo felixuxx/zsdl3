@@ -1,7 +1,6 @@
 // SDL3 Metal Bindings
 // Metal graphics interop for macOS/iOS
 
-const core = @import("core.zig");
 const video = @import("video.zig");
 
 // Metal view (opaque)

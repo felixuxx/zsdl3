@@ -1,8 +1,6 @@
 // SDL3 Clipboard Bindings
 // System clipboard
 
-const core = @import("core.zig");
-
 // Clipboard callback types
 pub const SDL_ClipboardDataCallback = ?*const fn (?*anyopaque, [*:0]const u8, ?*usize) callconv(.c) ?*const anyopaque;
 pub const SDL_ClipboardCleanupCallback = ?*const fn (?*anyopaque) callconv(.c) void;

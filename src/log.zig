@@ -1,8 +1,6 @@
 // SDL3 Log Bindings
 // Logging system
 
-const core = @import("core.zig");
-
 // Log priority
 pub const SDL_LogPriority = enum(c_int) {
     SDL_LOG_PRIORITY_VERBOSE = 1,

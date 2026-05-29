@@ -1,7 +1,6 @@
 // SDL3_image Bindings
 // Image loading library
 
-const core = @import("core.zig");
 const surface = @import("surface.zig");
 const render = @import("render.zig");
 
