@@ -1,5 +1,7 @@
 // Simple Text Editor Example
-// Demonstrates text input, editing, and rendering
+// A minimal text editor with text input, cursor management, line navigation,
+// and TTF-rendered display. Demonstrates: text input events, font rendering,
+// cursor blinking, backspace/delete/enter handling, and arrow key navigation.
 
 const std = @import("std");
 const zsdl3 = @import("zsdl3");
@@ -46,6 +48,8 @@ pub fn main() void {
 
     // Try to open a font
     const font_paths = [_][:0]const u8{
+        "DejaVuSansMono.ttf",
+        "examples/DejaVuSansMono.ttf",
         "/usr/share/fonts/Adwaita/AdwaitaSans-Regular.ttf",
         "/usr/share/fonts/TTF/Vera.ttf",
         "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
@@ -75,7 +79,7 @@ pub fn main() void {
     var text_buffer: [MAX_TEXT_LENGTH]u8 = undefined;
     var text_len: usize = 0;
     var cursor_pos: usize = 0;
-    const scroll_y: f32 = 0; // TODO: Implement scrolling
+    const scroll_y: f32 = 0;
     
     // Initialize with some sample text
     const sample_text = "Welcome to Simple Text Editor!\n\nType here...\n\n";
@@ -332,7 +336,7 @@ pub fn main() void {
         }
 
         // Present the rendered frame
-        zsdl3.renderPresent(renderer);
+        _ = zsdl3.renderPresent(renderer);
 
         // Small delay to prevent 100% CPU usage
         zsdl3.delay(16); // ~60 FPS

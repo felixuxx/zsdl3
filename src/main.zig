@@ -1,8 +1,13 @@
+// ZSDL3 Default Application
+// Comprehensive demo showing window creation, renderer, keyboard input,
+// FPS counter, and subsystem info (platform, RAM, sensors, touch devices).
+// Run with: zig build run
+
 const std = @import("std");
 
 const zsdl3 = @import("zsdl3");
 
-pub fn main() !void {
+pub fn main() void {
     // Initialize SDL with video and audio
     if (zsdl3.init(zsdl3.SDL_INIT_VIDEO | zsdl3.SDL_INIT_AUDIO)) {
         defer zsdl3.quit();
@@ -75,7 +80,7 @@ pub fn main() !void {
                     // No borders - clean rendering
 
                     // Present
-                    zsdl3.renderPresent(rend);
+                    _ = zsdl3.renderPresent(rend);
 
                     frame_count += 1;
 

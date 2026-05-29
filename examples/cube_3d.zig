@@ -1,51 +1,107 @@
+// 3D Cube Example
+// Renders a fully 3D rotating cube with perspective projection,
+// per-face lighting, and depth-sorted triangles.
+// Demonstrates: 3D math, projection, SDL_RenderGeometry for filled tris,
+// event loop, and real-time rotation.
+
 const std = @import("std");
 
 const zsdl3 = @import("zsdl3");
 
-// Simple 3D cube example using SDL3 GPU API
-// This demonstrates basic GPU device setup and rendering
-
-// Cube vertices (position + color)
-const CubeVertex = extern struct {
+const Vec3 = struct {
     x: f32,
     y: f32,
     z: f32,
-    r: f32,
-    g: f32,
-    b: f32,
-    a: f32,
 };
 
-const cube_vertices = [_]CubeVertex{
-    // Front face (red)
-    .{ .x = -0.5, .y = -0.5, .z = 0.5, .r = 1.0, .g = 0.0, .b = 0.0, .a = 1.0 },
-    .{ .x = 0.5, .y = -0.5, .z = 0.5, .r = 1.0, .g = 0.0, .b = 0.0, .a = 1.0 },
-    .{ .x = 0.5, .y = 0.5, .z = 0.5, .r = 1.0, .g = 0.0, .b = 0.0, .a = 1.0 },
-    .{ .x = -0.5, .y = 0.5, .z = 0.5, .r = 1.0, .g = 0.0, .b = 0.0, .a = 1.0 },
-    // Back face (green)
-    .{ .x = -0.5, .y = -0.5, .z = -0.5, .r = 0.0, .g = 1.0, .b = 0.0, .a = 1.0 },
-    .{ .x = 0.5, .y = -0.5, .z = -0.5, .r = 0.0, .g = 1.0, .b = 0.0, .a = 1.0 },
-    .{ .x = 0.5, .y = 0.5, .z = -0.5, .r = 0.0, .g = 1.0, .b = 0.0, .a = 1.0 },
-    .{ .x = -0.5, .y = 0.5, .z = -0.5, .r = 0.0, .g = 1.0, .b = 0.0, .a = 1.0 },
+const Tri = struct {
+    indices: [3]usize,
+    color: [4]f32,
 };
 
-const cube_indices = [_]u16{
-    // Front face
-    0, 1, 2, 2, 3, 0,
-    // Back face
-    4, 5, 6, 6, 7, 4,
-    // Left face
-    0, 3, 7, 7, 4, 0,
-    // Right face
-    1, 5, 6, 6, 2, 1,
-    // Top face
-    3, 2, 6, 6, 7, 3,
-    // Bottom face
-    0, 4, 5, 5, 1, 0,
+const cube_verts = [_]Vec3{
+    .{ .x = -1, .y = -1, .z = -1 }, // 0
+    .{ .x = 1, .y = -1, .z = -1 }, // 1
+    .{ .x = 1, .y = 1, .z = -1 }, // 2
+    .{ .x = -1, .y = 1, .z = -1 }, // 3
+    .{ .x = -1, .y = -1, .z = 1 }, // 4
+    .{ .x = 1, .y = -1, .z = 1 }, // 5
+    .{ .x = 1, .y = 1, .z = 1 }, // 6
+    .{ .x = -1, .y = 1, .z = 1 }, // 7
 };
 
-pub fn main() !void {
-    // Initialize SDL
+const face_colors = [_][4]f32{
+    .{ 1.0, 0.2, 0.2, 1.0 }, // front  - red
+    .{ 0.2, 1.0, 0.2, 1.0 }, // back   - green
+    .{ 0.2, 0.2, 1.0, 1.0 }, // left   - blue
+    .{ 1.0, 1.0, 0.2, 1.0 }, // right  - yellow
+    .{ 1.0, 0.2, 1.0, 1.0 }, // top    - magenta
+    .{ 0.2, 1.0, 1.0, 1.0 }, // bottom - cyan
+};
+
+const cube_tris = [_]Tri{
+    // Front face (z = 1)
+    .{ .indices = .{ 4, 5, 6 }, .color = face_colors[0] },
+    .{ .indices = .{ 4, 6, 7 }, .color = face_colors[0] },
+    // Back face (z = -1)
+    .{ .indices = .{ 1, 0, 3 }, .color = face_colors[1] },
+    .{ .indices = .{ 1, 3, 2 }, .color = face_colors[1] },
+    // Left face (x = -1)
+    .{ .indices = .{ 0, 4, 7 }, .color = face_colors[2] },
+    .{ .indices = .{ 0, 7, 3 }, .color = face_colors[2] },
+    // Right face (x = 1)
+    .{ .indices = .{ 5, 1, 2 }, .color = face_colors[3] },
+    .{ .indices = .{ 5, 2, 6 }, .color = face_colors[3] },
+    // Top face (y = 1)
+    .{ .indices = .{ 7, 6, 2 }, .color = face_colors[4] },
+    .{ .indices = .{ 7, 2, 3 }, .color = face_colors[4] },
+    // Bottom face (y = -1)
+    .{ .indices = .{ 0, 1, 5 }, .color = face_colors[5] },
+    .{ .indices = .{ 0, 5, 4 }, .color = face_colors[5] },
+};
+
+fn rotateX(v: Vec3, angle: f32) Vec3 {
+    const c = @cos(angle);
+    const s = @sin(angle);
+    return .{
+        .x = v.x,
+        .y = v.y * c - v.z * s,
+        .z = v.y * s + v.z * c,
+    };
+}
+
+fn rotateY(v: Vec3, angle: f32) Vec3 {
+    const c = @cos(angle);
+    const s = @sin(angle);
+    return .{
+        .x = v.x * c + v.z * s,
+        .y = v.y,
+        .z = -v.x * s + v.z * c,
+    };
+}
+
+fn project(v: Vec3, focal_length: f32, aspect: f32, center_x: f32, center_y: f32) struct { x: f32, y: f32, z: f32 } {
+    const z_clamped = if (v.z < 0.01) @as(f32, 0.01) else v.z;
+    const inv_z = 1.0 / z_clamped;
+    return .{
+        .x = v.x * focal_length * inv_z * aspect + center_x,
+        .y = -v.y * focal_length * inv_z + center_y,
+        .z = z_clamped,
+    };
+}
+
+fn computeNormal(a: Vec3, b: Vec3, c: Vec3) Vec3 {
+    const u = Vec3{ .x = b.x - a.x, .y = b.y - a.y, .z = b.z - a.z };
+    const v = Vec3{ .x = c.x - a.x, .y = c.y - a.y, .z = c.z - a.z };
+    const nx = u.y * v.z - u.z * v.y;
+    const ny = u.z * v.x - u.x * v.z;
+    const nz = u.x * v.y - u.y * v.x;
+    const len = @sqrt(nx * nx + ny * ny + nz * nz);
+    if (len == 0) return .{ .x = 0, .y = 0, .z = 0 };
+    return .{ .x = nx / len, .y = ny / len, .z = nz / len };
+}
+
+pub fn main() void {
     if (!zsdl3.init(zsdl3.SDL_INIT_VIDEO)) {
         const err = zsdl3.getError() orelse "Unknown error";
         std.log.err("Failed to initialize SDL: {s}", .{err});
@@ -53,8 +109,7 @@ pub fn main() !void {
     }
     defer zsdl3.quit();
 
-    // Create window
-    const window = zsdl3.createWindow("3D Cube Example", 800, 600, zsdl3.SDL_WINDOW_RESIZABLE);
+    const window = zsdl3.createWindow("3D Cube", 800, 600, zsdl3.SDL_WINDOW_RESIZABLE);
     if (window == null) {
         const err = zsdl3.getError() orelse "Unknown error";
         std.log.err("Failed to create window: {s}", .{err});
@@ -62,9 +117,6 @@ pub fn main() !void {
     }
     defer zsdl3.destroyWindow(window);
 
-    // Try to create GPU device
-    // Note: For a full GPU example, you'd need SPIR-V shaders
-    // This example uses the renderer API as a fallback to demonstrate the setup
     const renderer = zsdl3.createRenderer(window, null);
     if (renderer == null) {
         const err = zsdl3.getError() orelse "Unknown error";
@@ -73,14 +125,11 @@ pub fn main() !void {
     }
     defer zsdl3.destroyRenderer(renderer);
 
-    std.log.info("3D Cube Example - Press ESC to quit", .{});
-
-    var angle: f32 = 0.0;
+    var yaw: f32 = 0.0;
+    var pitch: f32 = 0.0;
     var running = true;
 
-    // Main loop
     while (running) {
-        // Handle events
         var event: zsdl3.SDL_Event = undefined;
         while (zsdl3.pollEvent(&event)) {
             switch (event.type) {
@@ -94,76 +143,91 @@ pub fn main() !void {
             }
         }
 
-        // Clear screen
-        _ = zsdl3.setRenderDrawColor(renderer, 30, 30, 30, 255);
+        _ = zsdl3.setRenderDrawColor(renderer, 15, 15, 20, 255);
         _ = zsdl3.renderClear(renderer);
 
-        // Get current render output size (adapts to window size changes)
         var output_w: c_int = 800;
         var output_h: c_int = 600;
         _ = zsdl3.getCurrentRenderOutputSize(renderer, &output_w, &output_h);
 
-        // Draw a simple representation of a cube using 2D primitives
-        // (This is a placeholder - full 3D would require GPU API with shaders)
-        angle += 0.02;
-        if (angle > 2.0 * std.math.pi) {
-            angle -= 2.0 * std.math.pi;
-        }
-
-        // Draw cube wireframe representation - adapt to window size
         const center_x: f32 = @as(f32, @floatFromInt(output_w)) / 2.0;
         const center_y: f32 = @as(f32, @floatFromInt(output_h)) / 2.0;
-        // Scale cube size based on smaller dimension, keeping it proportional
-        const min_dim = @min(@as(f32, @floatFromInt(output_w)), @as(f32, @floatFromInt(output_h)));
-        const size: f32 = min_dim * 0.2; // 20% of smaller dimension
+        const aspect = @as(f32, @floatFromInt(output_w)) / @as(f32, @floatFromInt(output_h));
+        const focal_length = @as(f32, @floatFromInt(@min(output_w, output_h)));
 
-        // Project 3D cube to 2D (simple isometric projection)
-        const cos_a = @cos(angle);
-        const sin_a = @sin(angle);
+        yaw += 0.008;
+        pitch += 0.005;
 
-        // Front face
-        const fx1 = center_x + (cube_vertices[0].x * cos_a - cube_vertices[0].z * sin_a) * size;
-        const fy1 = center_y + (cube_vertices[0].y + (cube_vertices[0].x * sin_a + cube_vertices[0].z * cos_a) * 0.5) * size;
-        const fx2 = center_x + (cube_vertices[1].x * cos_a - cube_vertices[1].z * sin_a) * size;
-        const fy2 = center_y + (cube_vertices[1].y + (cube_vertices[1].x * sin_a + cube_vertices[1].z * cos_a) * 0.5) * size;
-        const fx3 = center_x + (cube_vertices[2].x * cos_a - cube_vertices[2].z * sin_a) * size;
-        const fy3 = center_y + (cube_vertices[2].y + (cube_vertices[2].x * sin_a + cube_vertices[2].z * cos_a) * 0.5) * size;
-        const fx4 = center_x + (cube_vertices[3].x * cos_a - cube_vertices[3].z * sin_a) * size;
-        const fy4 = center_y + (cube_vertices[3].y + (cube_vertices[3].x * sin_a + cube_vertices[3].z * cos_a) * 0.5) * size;
+        const light_dir = Vec3{ .x = 0.5, .y = -0.7, .z = -0.5 };
+        const light_len = @sqrt(light_dir.x * light_dir.x + light_dir.y * light_dir.y + light_dir.z * light_dir.z);
+        const light = Vec3{ .x = light_dir.x / light_len, .y = light_dir.y / light_len, .z = light_dir.z / light_len };
 
-        // Back face
-        const bx1 = center_x + (cube_vertices[4].x * cos_a - cube_vertices[4].z * sin_a) * size;
-        const by1 = center_y + (cube_vertices[4].y + (cube_vertices[4].x * sin_a + cube_vertices[4].z * cos_a) * 0.5) * size;
-        const bx2 = center_x + (cube_vertices[5].x * cos_a - cube_vertices[5].z * sin_a) * size;
-        const by2 = center_y + (cube_vertices[5].y + (cube_vertices[5].x * sin_a + cube_vertices[5].z * cos_a) * 0.5) * size;
-        const bx3 = center_x + (cube_vertices[6].x * cos_a - cube_vertices[6].z * sin_a) * size;
-        const by3 = center_y + (cube_vertices[6].y + (cube_vertices[6].x * sin_a + cube_vertices[6].z * cos_a) * 0.5) * size;
-        const bx4 = center_x + (cube_vertices[7].x * cos_a - cube_vertices[7].z * sin_a) * size;
-        const by4 = center_y + (cube_vertices[7].y + (cube_vertices[7].x * sin_a + cube_vertices[7].z * cos_a) * 0.5) * size;
+        var transformed_verts: [8]Vec3 = undefined;
+        for (&cube_verts, 0..) |v, i| {
+            var tv = rotateY(v, yaw);
+            tv = rotateX(tv, pitch);
+            tv.z += 6.0;
+            transformed_verts[i] = tv;
+        }
 
-        // Set color for front face
-        _ = zsdl3.setRenderDrawColor(renderer, 255, 0, 0, 255);
-        _ = zsdl3.renderLine(renderer, fx1, fy1, fx2, fy2);
-        _ = zsdl3.renderLine(renderer, fx2, fy2, fx3, fy3);
-        _ = zsdl3.renderLine(renderer, fx3, fy3, fx4, fy4);
-        _ = zsdl3.renderLine(renderer, fx4, fy4, fx1, fy1);
+        const TriDepth = struct {
+            tri_idx: usize,
+            depth: f32,
+        };
 
-        // Set color for back face
-        _ = zsdl3.setRenderDrawColor(renderer, 0, 255, 0, 255);
-        _ = zsdl3.renderLine(renderer, bx1, by1, bx2, by2);
-        _ = zsdl3.renderLine(renderer, bx2, by2, bx3, by3);
-        _ = zsdl3.renderLine(renderer, bx3, by3, bx4, by4);
-        _ = zsdl3.renderLine(renderer, bx4, by4, bx1, by1);
+        var tri_depths: [cube_tris.len]TriDepth = undefined;
+        for (&cube_tris, 0..) |tri, i| {
+            const va = transformed_verts[tri.indices[0]];
+            const vb = transformed_verts[tri.indices[1]];
+            const vc = transformed_verts[tri.indices[2]];
+            const depth = (va.z + vb.z + vc.z) / 3.0;
+            tri_depths[i] = .{ .tri_idx = i, .depth = depth };
+        }
 
-        // Connect front and back
-        _ = zsdl3.setRenderDrawColor(renderer, 200, 200, 200, 255);
-        _ = zsdl3.renderLine(renderer, fx1, fy1, bx1, by1);
-        _ = zsdl3.renderLine(renderer, fx2, fy2, bx2, by2);
-        _ = zsdl3.renderLine(renderer, fx3, fy3, bx3, by3);
-        _ = zsdl3.renderLine(renderer, fx4, fy4, bx4, by4);
+        std.sort.block(TriDepth, &tri_depths, {}, struct {
+            fn lessThan(_: void, a: TriDepth, b: TriDepth) bool {
+                return a.depth > b.depth;
+            }
+        }.lessThan);
 
-        // Present
-        zsdl3.renderPresent(renderer);
+        var sdl_vertices: [cube_tris.len * 3]zsdl3.SDL_Vertex = undefined;
+        var indices: [cube_tris.len * 3]c_int = undefined;
+
+        var vert_count: usize = 0;
+        for (&tri_depths) |td| {
+            const tri = cube_tris[td.tri_idx];
+            const va = transformed_verts[tri.indices[0]];
+            const vb = transformed_verts[tri.indices[1]];
+            const vc = transformed_verts[tri.indices[2]];
+
+            const normal = computeNormal(va, vb, vc);
+            const dot = normal.x * light.x + normal.y * light.y + normal.z * light.z;
+            const intensity = @min(1.0, @max(0.15, dot * 0.7 + 0.3));
+
+            const pa = project(va, focal_length, aspect, center_x, center_y);
+            const pb = project(vb, focal_length, aspect, center_x, center_y);
+            const pc = project(vc, focal_length, aspect, center_x, center_y);
+
+            const color = tri.color;
+            for (&[_]struct { x: f32, y: f32 }{ .{ .x = pa.x, .y = pa.y }, .{ .x = pb.x, .y = pb.y }, .{ .x = pc.x, .y = pc.y } }) |p| {
+                sdl_vertices[vert_count] = .{
+                    .position = .{ .x = p.x, .y = p.y },
+                    .color = .{
+                        .r = color[0] * intensity,
+                        .g = color[1] * intensity,
+                        .b = color[2] * intensity,
+                        .a = 1.0,
+                    },
+                    .tex_coord = .{ .x = 0, .y = 0 },
+                };
+                indices[vert_count] = @intCast(vert_count);
+                vert_count += 1;
+            }
+        }
+
+        _ = zsdl3.renderGeometry(renderer, null, &sdl_vertices, @intCast(vert_count), &indices, @intCast(indices.len));
+
+        _ = zsdl3.renderPresent(renderer);
         zsdl3.delay(16);
     }
 }

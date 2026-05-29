@@ -1,5 +1,7 @@
 // TTF Font Rendering Example
-// Demonstrates how to use SDL_ttf to render text
+// Loads a TrueType font and renders text to the screen.
+// Demonstrates: TTF initialization, font loading from common system paths,
+// text rendering via renderTextBlended, surface-to-texture conversion.
 
 const std = @import("std");
 
@@ -42,6 +44,8 @@ pub fn main() void {
 
     // Try to open a font
     const font_paths = [_][:0]const u8{
+        "DejaVuSans.ttf",
+        "examples/DejaVuSans.ttf",
         "/usr/share/fonts/TTF/JetBrainsMonoNerdFontMono-Regular.ttf",
         "/usr/share/fonts/Adwaita/AdwaitaSans-Regular.ttf",
         "/usr/share/fonts/TTF/Vera.ttf",
@@ -121,7 +125,7 @@ pub fn main() void {
         }
 
         // Present the rendered frame
-        zsdl3.renderPresent(renderer);
+        _ = zsdl3.renderPresent(renderer);
 
         // Small delay to prevent 100% CPU usage
         zsdl3.delay(16); // ~60 FPS

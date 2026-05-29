@@ -1,5 +1,7 @@
 // Basic 2D Rendering Example
-// A minimal example showing how to create a window, renderer, and draw a simple shape
+// Minimal SDL3 setup: creates a window and renderer, draws a yellow rectangle
+// on a dark blue background. Demonstrates: init, window/renderer creation,
+// event loop, draw primitives, and frame pacing.
 
 const std = @import("std");
 
@@ -64,7 +66,7 @@ pub fn main() void {
         _ = zsdl3.renderFillRect(renderer, &rect);
 
         // Present the rendered frame
-        zsdl3.renderPresent(renderer);
+        _ = zsdl3.renderPresent(renderer);
 
         // Small delay to prevent 100% CPU usage
         zsdl3.delay(16); // ~60 FPS

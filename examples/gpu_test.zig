@@ -1,8 +1,13 @@
+// GPU API Test Example
+// Enumerates GPU drivers, creates a GPU device, and tests resource creation
+// (buffers, textures, samplers, transfer buffers, command buffers).
+// Demonstrates: GPU device setup, swapchain, and basic resource management.
+
 const std = @import("std");
 
 const zsdl3 = @import("zsdl3");
 
-pub fn main() !void {
+pub fn main() void {
     std.log.info("SDL3 GPU API Test", .{});
 
     if (!zsdl3.init(zsdl3.SDL_INIT_VIDEO)) {
@@ -24,7 +29,10 @@ pub fn main() !void {
     const props = zsdl3.createProperties();
     defer zsdl3.destroyProperties(props);
 
-    // Try with SPIRV (Vulkan) which is supported on Intel
+    // Use Metal on macOS, otherwise fallback to SPIRV (Vulkan)
+    if(std.mem.eql(u8, std.mem.sliceTo(zsdl3.getPlatform().?, 0), "macOS")) {
+    	_ = zsdl3.setBooleanProperty(props, zsdl3.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_METALLIB_BOOLEAN, true);
+    }
     _ = zsdl3.setBooleanProperty(props, zsdl3.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_SPIRV_BOOLEAN, true);
     _ = zsdl3.setBooleanProperty(props, zsdl3.SDL_PROP_GPU_DEVICE_CREATE_DEBUGMODE_BOOLEAN, true);
 
@@ -97,7 +105,7 @@ pub fn main() !void {
 
     const texture_create_info = zsdl3.SDL_GPUTextureCreateInfo{
         .type = zsdl3.SDL_GPU_TEXTURETYPE_2D,
-        .format = @enumFromInt(26),
+        .format = zsdl3.gpu.SDL_GPUTextureFormat.SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
         .usage = zsdl3.SDL_GPU_TEXTUREUSAGE_SAMPLER,
         .width = 256,
         .height = 256,

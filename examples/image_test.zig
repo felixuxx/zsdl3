@@ -1,8 +1,13 @@
+// Image Loading Example
+// Loads and displays a PNG image using SDL3_image.
+// Demonstrates: image loading via IMG_LoadTexture, centered rendering,
+// window-resize-aware display.
+
 const std = @import("std");
 
 const zsdl3 = @import("zsdl3");
 
-pub fn main() !void {
+pub fn main() void {
     std.log.info("SDL3 Image Test", .{});
 
     if (!zsdl3.init(zsdl3.SDL_INIT_VIDEO)) {
@@ -75,7 +80,7 @@ pub fn main() !void {
             _ = zsdl3.renderTexture(renderer, t, null, &dst);
         }
 
-        zsdl3.renderPresent(renderer);
+        _ = zsdl3.renderPresent(renderer);
         zsdl3.delay(16);
     }
 
