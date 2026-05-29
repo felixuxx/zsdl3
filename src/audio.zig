@@ -77,7 +77,21 @@ extern fn SDL_SetAudioStreamGain(stream: ?*SDL_AudioStream, gain: f32) bool;
 
 pub const SDL_IOStream = opaque {};
 extern fn SDL_LoadWAV_IO(src: ?*SDL_IOStream, closeio: bool, spec: ?*SDL_AudioSpec, audio_buf: ?*?*u8, audio_len: ?*core.Uint32) bool;
-extern fn SDL_LoadWAV(path: ?[*:0]const u8, spec: ?*SDL_AudioSpec, audio_buf: ?*?*u8, audio_len: ?*core.Uint32) bool;
+extern fn SDL_LoadWAV(path: [*:0]const u8, spec: ?*SDL_AudioSpec, audio_buf: ?*?*u8, audio_len: ?*core.Uint32) bool;
+
+// Additional audio functions
+extern fn SDL_GetAudioDeviceGain(devid: SDL_AudioDeviceID) f32;
+extern fn SDL_SetAudioDeviceGain(devid: SDL_AudioDeviceID, gain: f32) bool;
+extern fn SDL_GetAudioStreamFrequencyRatio(stream: ?*SDL_AudioStream) f32;
+extern fn SDL_SetAudioStreamFrequencyRatio(stream: ?*SDL_AudioStream, ratio: f32) bool;
+extern fn SDL_GetAudioStreamInputChannelMap(stream: ?*SDL_AudioStream, count: ?*c_int) ?[*]c_int;
+extern fn SDL_GetAudioStreamOutputChannelMap(stream: ?*SDL_AudioStream, count: ?*c_int) ?[*]c_int;
+extern fn SDL_SetAudioStreamInputChannelMap(stream: ?*SDL_AudioStream, chmap: ?[*]const c_int, count: c_int) bool;
+extern fn SDL_SetAudioStreamOutputChannelMap(stream: ?*SDL_AudioStream, chmap: ?[*]const c_int, count: c_int) bool;
+extern fn SDL_GetAudioStreamAvailable(stream: ?*SDL_AudioStream) c_int;
+extern fn SDL_PauseAudioStreamDevice(stream: ?*SDL_AudioStream) bool;
+extern fn SDL_ResumeAudioStreamDevice(stream: ?*SDL_AudioStream) bool;
+extern fn SDL_AudioStreamDevicePaused(stream: ?*SDL_AudioStream) bool;
 
 // Public API
 pub const openAudioDevice = SDL_OpenAudioDevice;
@@ -123,3 +137,15 @@ pub const getAudioStreamGain = SDL_GetAudioStreamGain;
 pub const setAudioStreamGain = SDL_SetAudioStreamGain;
 pub const loadWAV_IO = SDL_LoadWAV_IO;
 pub const loadWAV = SDL_LoadWAV;
+pub const getAudioDeviceGain = SDL_GetAudioDeviceGain;
+pub const setAudioDeviceGain = SDL_SetAudioDeviceGain;
+pub const getAudioStreamFrequencyRatio = SDL_GetAudioStreamFrequencyRatio;
+pub const setAudioStreamFrequencyRatio = SDL_SetAudioStreamFrequencyRatio;
+pub const getAudioStreamInputChannelMap = SDL_GetAudioStreamInputChannelMap;
+pub const getAudioStreamOutputChannelMap = SDL_GetAudioStreamOutputChannelMap;
+pub const setAudioStreamInputChannelMap = SDL_SetAudioStreamInputChannelMap;
+pub const setAudioStreamOutputChannelMap = SDL_SetAudioStreamOutputChannelMap;
+pub const getAudioStreamAvailable = SDL_GetAudioStreamAvailable;
+pub const pauseAudioStreamDevice = SDL_PauseAudioStreamDevice;
+pub const resumeAudioStreamDevice = SDL_ResumeAudioStreamDevice;
+pub const audioStreamDevicePaused = SDL_AudioStreamDevicePaused;

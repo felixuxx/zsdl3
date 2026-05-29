@@ -21,6 +21,7 @@ extern fn SDL_HasARMSIMD() bool;
 extern fn SDL_HasNEON() bool;
 extern fn SDL_HasLSX() bool;
 extern fn SDL_HasLASX() bool;
+extern fn SDL_GetSystemPageSize() c_int;
 
 // Public API
 pub const getNumLogicalCPUCores = SDL_GetNumLogicalCPUCores;
@@ -39,3 +40,4 @@ pub const hasARMSIMD = SDL_HasARMSIMD;
 pub const hasNEON = SDL_HasNEON;
 pub const hasLSX = SDL_HasLSX;
 pub const hasLASX = SDL_HasLASX;
+pub const getSystemPageSize = SDL_GetSystemPageSize;

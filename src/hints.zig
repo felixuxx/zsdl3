@@ -17,7 +17,7 @@ extern fn SDL_SetHintWithPriority(name: [*:0]const u8, value: [*:0]const u8, pri
 extern fn SDL_ResetHint(name: [*:0]const u8) bool;
 extern fn SDL_ResetHints() void;
 extern fn SDL_AddHintCallback(name: [*:0]const u8, callback: SDL_HintCallback, userdata: ?*anyopaque) bool;
-extern fn SDL_DelHintCallback(name: [*:0]const u8, callback: SDL_HintCallback, userdata: ?*anyopaque) void;
+extern fn SDL_RemoveHintCallback(name: [*:0]const u8, callback: SDL_HintCallback, userdata: ?*anyopaque) void;
 extern fn SDL_GetHintBoolean(name: [*:0]const u8, default_value: bool) bool;
 
 // Public API
@@ -27,5 +27,5 @@ pub const setHintWithPriority = SDL_SetHintWithPriority;
 pub const resetHint = SDL_ResetHint;
 pub const resetHints = SDL_ResetHints;
 pub const addHintCallback = SDL_AddHintCallback;
-pub const delHintCallback = SDL_DelHintCallback;
+pub const removeHintCallback = SDL_RemoveHintCallback;
 pub const getHintBoolean = SDL_GetHintBoolean;

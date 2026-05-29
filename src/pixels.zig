@@ -91,6 +91,26 @@ pub const SDL_FRect = extern struct {
     h: f32,
 };
 
+// Pixel format details
+pub const SDL_PixelFormatDetails = extern struct {
+    format: SDL_PixelFormat,
+    bits_per_pixel: Uint8,
+    bytes_per_pixel: Uint8,
+    padding: [2]Uint8,
+    Rmask: Uint32,
+    Gmask: Uint32,
+    Bmask: Uint32,
+    Amask: Uint32,
+    Rbits: Uint8,
+    Gbits: Uint8,
+    Bbits: Uint8,
+    Abits: Uint8,
+    Rshift: Uint8,
+    Gshift: Uint8,
+    Bshift: Uint8,
+    Ashift: Uint8,
+};
+
 // Pixel functions
 extern fn SDL_GetPixelFormatName(format: SDL_PixelFormat) ?[*:0]const u8;
 extern fn SDL_GetMasksForPixelFormat(format: SDL_PixelFormat, bpp: ?*c_int, Rmask: ?*Uint32, Gmask: ?*Uint32, Bmask: ?*Uint32, Amask: ?*Uint32) bool;
@@ -108,6 +128,24 @@ extern fn SDL_GetRGBA(pixel: Uint32, format: SDL_PixelFormat, palette: ?*SDL_Pal
 extern fn SDL_AllocPalette(ncolors: c_int) ?*SDL_Palette;
 extern fn SDL_SetPaletteColors(palette: ?*SDL_Palette, colors: ?[*]const SDL_Color, firstcolor: c_int, ncolors: c_int) bool;
 extern fn SDL_FreePalette(palette: ?*SDL_Palette) void;
+
+// Pixel format functions
+extern fn SDL_GetPixelFormatForMasks(bpp: c_int, Rmask: Uint32, Gmask: Uint32, Bmask: Uint32, Amask: Uint32) SDL_PixelFormat;
+extern fn SDL_GetPixelFormatDetails(format: SDL_PixelFormat) ?*const SDL_PixelFormatDetails;
+extern fn SDL_CreatePalette(ncolors: c_int) ?*SDL_Palette;
+extern fn SDL_DestroyPalette(palette: ?*SDL_Palette) void;
+
+// Rect functions
+extern fn SDL_HasRectIntersection(A: ?*const SDL_Rect, B: ?*const SDL_Rect) bool;
+extern fn SDL_GetRectIntersection(A: ?*const SDL_Rect, B: ?*const SDL_Rect, result: ?*SDL_Rect) bool;
+extern fn SDL_GetRectUnion(A: ?*const SDL_Rect, B: ?*const SDL_Rect, result: ?*SDL_Rect) bool;
+extern fn SDL_GetRectEnclosingPoints(points: ?[*]const SDL_Point, count: c_int, clip: ?*const SDL_Rect, result: ?*SDL_Rect) bool;
+extern fn SDL_GetRectAndLineIntersection(rect: ?*const SDL_Rect, X1: ?*c_int, Y1: ?*c_int, X2: ?*c_int, Y2: ?*c_int) bool;
+extern fn SDL_HasRectIntersectionFloat(A: ?*const SDL_FRect, B: ?*const SDL_FRect) bool;
+extern fn SDL_GetRectIntersectionFloat(A: ?*const SDL_FRect, B: ?*const SDL_FRect, result: ?*SDL_FRect) bool;
+extern fn SDL_GetRectUnionFloat(A: ?*const SDL_FRect, B: ?*const SDL_FRect, result: ?*SDL_FRect) bool;
+extern fn SDL_GetRectEnclosingPointsFloat(points: ?[*]const SDL_FPoint, count: c_int, clip: ?*const SDL_FRect, result: ?*SDL_FRect) bool;
+extern fn SDL_GetRectAndLineIntersectionFloat(rect: ?*const SDL_FRect, X1: ?*f32, Y1: ?*f32, X2: ?*f32, Y2: ?*f32) bool;
 
 // Rect functions (inline in C, implemented in Zig)
 pub fn SDL_PointInRect(p: ?*const SDL_Point, r: ?*const SDL_Rect) bool {
@@ -129,3 +167,17 @@ pub const getRGBA = SDL_GetRGBA;
 pub const allocPalette = SDL_AllocPalette;
 pub const setPaletteColors = SDL_SetPaletteColors;
 pub const freePalette = SDL_FreePalette;
+pub const getPixelFormatForMasks = SDL_GetPixelFormatForMasks;
+pub const getPixelFormatDetails = SDL_GetPixelFormatDetails;
+pub const createPalette = SDL_CreatePalette;
+pub const destroyPalette = SDL_DestroyPalette;
+pub const hasRectIntersection = SDL_HasRectIntersection;
+pub const getRectIntersection = SDL_GetRectIntersection;
+pub const getRectUnion = SDL_GetRectUnion;
+pub const getRectEnclosingPoints = SDL_GetRectEnclosingPoints;
+pub const getRectAndLineIntersection = SDL_GetRectAndLineIntersection;
+pub const hasRectIntersectionFloat = SDL_HasRectIntersectionFloat;
+pub const getRectIntersectionFloat = SDL_GetRectIntersectionFloat;
+pub const getRectUnionFloat = SDL_GetRectUnionFloat;
+pub const getRectEnclosingPointsFloat = SDL_GetRectEnclosingPointsFloat;
+pub const getRectAndLineIntersectionFloat = SDL_GetRectAndLineIntersectionFloat;

@@ -208,6 +208,12 @@ extern fn SDL_GetDefaultTextureScaleMode(renderer: ?*SDL_Renderer, scale_mode: ?
 extern fn SDL_SetDefaultTextureScaleMode(renderer: ?*SDL_Renderer, scale_mode: SDL_ScaleMode) bool;
 extern fn SDL_GetRenderLogicalPresentationRect(renderer: ?*SDL_Renderer, rect: ?*SDL_FRect) bool;
 
+// Additional render functions
+extern fn SDL_GetTextureProperties(texture: ?*SDL_Texture) core.SDL_PropertiesID;
+extern fn SDL_RenderViewportSet(renderer: ?*SDL_Renderer) bool;
+extern fn SDL_SetRenderColorScale(renderer: ?*SDL_Renderer, scale: f32) bool;
+extern fn SDL_GetRenderColorScale(renderer: ?*SDL_Renderer, scale: ?*f32) bool;
+
 // Texture operations
 extern fn SDL_GetTextureSize(texture: ?*SDL_Texture, w: ?*f32, h: ?*f32) bool;
 extern fn SDL_GetRenderVSync(renderer: ?*SDL_Renderer, vsync: ?*c_int) bool;
@@ -340,3 +346,7 @@ pub const renderTextureTiled = SDL_RenderTextureTiled;
 pub const getDefaultTextureScaleMode = SDL_GetDefaultTextureScaleMode;
 pub const setDefaultTextureScaleMode = SDL_SetDefaultTextureScaleMode;
 pub const getRenderLogicalPresentationRect = SDL_GetRenderLogicalPresentationRect;
+pub const getTextureProperties = SDL_GetTextureProperties;
+pub const renderViewportSet = SDL_RenderViewportSet;
+pub const setRenderColorScale = SDL_SetRenderColorScale;
+pub const getRenderColorScale = SDL_GetRenderColorScale;

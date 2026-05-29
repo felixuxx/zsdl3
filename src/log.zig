@@ -52,6 +52,8 @@ extern fn SDL_LogCritical(category: c_int, fmt: [*:0]const u8, ...) void;
 extern fn SDL_LogMessage(category: c_int, priority: SDL_LogPriority, fmt: [*:0]const u8, ...) void;
 extern fn SDL_GetDefaultLogOutputFunction() ?*const fn (?*anyopaque, c_int, SDL_LogPriority, [*:0]const u8) callconv(.c) void;
 extern fn SDL_SetLogOutputFunction(callback: ?*const fn (?*anyopaque, c_int, SDL_LogPriority, [*:0]const u8) callconv(.c) void, userdata: ?*anyopaque) void;
+extern fn SDL_GetLogOutputFunction(callback: ?*?*const fn (?*anyopaque, c_int, SDL_LogPriority, [*:0]const u8) callconv(.c) void, userdata: ?*?*anyopaque) void;
+extern fn SDL_SetLogPriorityPrefix(priority: SDL_LogPriority, prefix: [*:0]const u8) bool;
 
 // Public API
 pub const setLogPriorities = SDL_SetLogPriorities;
@@ -68,3 +70,5 @@ pub const logCritical = SDL_LogCritical;
 pub const logMessage = SDL_LogMessage;
 pub const getDefaultLogOutputFunction = SDL_GetDefaultLogOutputFunction;
 pub const setLogOutputFunction = SDL_SetLogOutputFunction;
+pub const getLogOutputFunction = SDL_GetLogOutputFunction;
+pub const setLogPriorityPrefix = SDL_SetLogPriorityPrefix;

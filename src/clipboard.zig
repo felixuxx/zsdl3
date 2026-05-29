@@ -16,6 +16,7 @@ extern fn SDL_SetClipboardData(callback: SDL_ClipboardDataCallback, cleanup: SDL
 extern fn SDL_GetClipboardData(mime_type: [*:0]const u8, size: ?*usize) ?*anyopaque;
 extern fn SDL_HasClipboardData(mime_type: [*:0]const u8) bool;
 extern fn SDL_GetClipboardMimeTypes(num_mime_types: ?*usize) ?[*]?[*:0]u8;
+extern fn SDL_ClearClipboardData() bool;
 
 // Public API
 pub const setClipboardText = SDL_SetClipboardText;
@@ -28,3 +29,4 @@ pub const setClipboardData = SDL_SetClipboardData;
 pub const getClipboardData = SDL_GetClipboardData;
 pub const hasClipboardData = SDL_HasClipboardData;
 pub const getClipboardMimeTypes = SDL_GetClipboardMimeTypes;
+pub const clearClipboardData = SDL_ClearClipboardData;

@@ -102,6 +102,20 @@ pub const getRGBA = pixels.getRGBA;
 pub const allocPalette = pixels.allocPalette;
 pub const setPaletteColors = pixels.setPaletteColors;
 pub const freePalette = pixels.freePalette;
+pub const getPixelFormatForMasks = pixels.getPixelFormatForMasks;
+pub const getPixelFormatDetails = pixels.getPixelFormatDetails;
+pub const createPalette = pixels.createPalette;
+pub const destroyPalette = pixels.destroyPalette;
+pub const hasRectIntersection = pixels.hasRectIntersection;
+pub const getRectIntersection = pixels.getRectIntersection;
+pub const getRectUnion = pixels.getRectUnion;
+pub const getRectEnclosingPoints = pixels.getRectEnclosingPoints;
+pub const getRectAndLineIntersection = pixels.getRectAndLineIntersection;
+pub const hasRectIntersectionFloat = pixels.hasRectIntersectionFloat;
+pub const getRectIntersectionFloat = pixels.getRectIntersectionFloat;
+pub const getRectUnionFloat = pixels.getRectUnionFloat;
+pub const getRectEnclosingPointsFloat = pixels.getRectEnclosingPointsFloat;
+pub const getRectAndLineIntersectionFloat = pixels.getRectAndLineIntersectionFloat;
 
 // Re-export video functions
 pub const getNumVideoDrivers = video.getNumVideoDrivers;
@@ -242,6 +256,18 @@ pub const blitSurface9Grid = surface.blitSurface9Grid;
 pub const mapSurfaceRGB = surface.mapSurfaceRGB;
 pub const mapSurfaceRGBA = surface.mapSurfaceRGBA;
 pub const readSurfacePixel = surface.readSurfacePixel;
+pub const loadSurface = surface.loadSurface;
+pub const loadSurface_IO = surface.loadSurface_IO;
+pub const loadPNG = surface.loadPNG;
+pub const loadPNG_IO = surface.loadPNG_IO;
+pub const savePNG = surface.savePNG;
+pub const savePNG_IO = surface.savePNG_IO;
+pub const rotateSurface = surface.rotateSurface;
+pub const convertPixels = surface.convertPixels;
+pub const stretchSurface = surface.stretchSurface;
+pub const readSurfacePixelFloat = surface.readSurfacePixelFloat;
+pub const writeSurfacePixel = surface.writeSurfacePixel;
+pub const writeSurfacePixelFloat = surface.writeSurfacePixelFloat;
 pub const softStretch = surface.softStretch;
 pub const softStretchLinear = surface.softStretchLinear;
 
@@ -533,6 +559,10 @@ pub const getDefaultTextureScaleMode = render.getDefaultTextureScaleMode;
 pub const setDefaultTextureScaleMode = render.setDefaultTextureScaleMode;
 pub const getRenderTextureAddressMode = render.getRenderTextureAddressMode;
 pub const setRenderTextureAddressMode = render.setRenderTextureAddressMode;
+pub const getTextureProperties = render.getTextureProperties;
+pub const renderViewportSet = render.renderViewportSet;
+pub const setRenderColorScale = render.setRenderColorScale;
+pub const getRenderColorScale = render.getRenderColorScale;
 
 // Renderer properties
 pub const getNumRenderDrivers = render.getNumRenderDrivers;
@@ -664,6 +694,18 @@ pub const getAudioStreamGain = audio.getAudioStreamGain;
 pub const setAudioStreamGain = audio.setAudioStreamGain;
 pub const loadWAV_IO = audio.loadWAV_IO;
 pub const loadWAV = audio.loadWAV;
+pub const getAudioDeviceGain = audio.getAudioDeviceGain;
+pub const setAudioDeviceGain = audio.setAudioDeviceGain;
+pub const getAudioStreamFrequencyRatio = audio.getAudioStreamFrequencyRatio;
+pub const setAudioStreamFrequencyRatio = audio.setAudioStreamFrequencyRatio;
+pub const getAudioStreamInputChannelMap = audio.getAudioStreamInputChannelMap;
+pub const getAudioStreamOutputChannelMap = audio.getAudioStreamOutputChannelMap;
+pub const setAudioStreamInputChannelMap = audio.setAudioStreamInputChannelMap;
+pub const setAudioStreamOutputChannelMap = audio.setAudioStreamOutputChannelMap;
+pub const getAudioStreamAvailable = audio.getAudioStreamAvailable;
+pub const pauseAudioStreamDevice = audio.pauseAudioStreamDevice;
+pub const resumeAudioStreamDevice = audio.resumeAudioStreamDevice;
+pub const audioStreamDevicePaused = audio.audioStreamDevicePaused;
 
 // Re-export time types and functions
 pub const SDL_TimerID = time.SDL_TimerID;
@@ -762,6 +804,7 @@ pub const getHint = hints.getHint;
 pub const setHintWithPriority = hints.setHintWithPriority;
 pub const resetHint = hints.resetHint;
 pub const addHintCallback = hints.addHintCallback;
+pub const removeHintCallback = hints.removeHintCallback;
 pub const delHintCallback = hints.delHintCallback;
 pub const getHintBoolean = hints.getHintBoolean;
 
@@ -787,6 +830,7 @@ pub const lockProperties = properties.lockProperties;
 pub const unlockProperties = properties.unlockProperties;
 pub const hasProperty = properties.hasProperty;
 pub const copyProperties = properties.copyProperties;
+pub const getGlobalProperties = properties.getGlobalProperties;
 
 // Re-export log types and functions
 pub const SDL_LogPriority = log.SDL_LogPriority;
@@ -820,6 +864,8 @@ pub const logError = log.logError;
 pub const logCritical = log.logCritical;
 pub const logMessage = log.logMessage;
 pub const setLogOutputFunction = log.setLogOutputFunction;
+pub const getLogOutputFunction = log.getLogOutputFunction;
+pub const setLogPriorityPrefix = log.setLogPriorityPrefix;
 
 // Re-export clipboard functions
 pub const setClipboardText = clipboard.setClipboardText;
@@ -828,6 +874,7 @@ pub const hasClipboardText = clipboard.hasClipboardText;
 pub const setPrimarySelectionText = clipboard.setPrimarySelectionText;
 pub const getPrimarySelectionText = clipboard.getPrimarySelectionText;
 pub const hasPrimarySelectionText = clipboard.hasPrimarySelectionText;
+pub const clearClipboardData = clipboard.clearClipboardData;
 
 // Re-export platform functions
 pub const getPlatform = platform.getPlatform;
@@ -1164,6 +1211,9 @@ pub const getProcessError = process.getProcessError;
 pub const waitProcess = process.waitProcess;
 pub const killProcess = process.killProcess;
 pub const destroyProcess = process.destroyProcess;
+pub const createProcessWithProperties = process.createProcessWithProperties;
+pub const getProcessProperties = process.getProcessProperties;
+pub const readProcess = process.readProcess;
 
 // Re-export metal types and functions
 pub const SDL_MetalView = metal.SDL_MetalView;
@@ -1252,6 +1302,7 @@ pub const hasAVX512F = cpuinfo.hasAVX512F;
 pub const hasNEON = cpuinfo.hasNEON;
 pub const hasLSX = cpuinfo.hasLSX;
 pub const hasLASX = cpuinfo.hasLASX;
+pub const getSystemPageSize = cpuinfo.getSystemPageSize;
 
 // Re-export dialog types and functions
 pub const SDL_DialogFileCallback = dialog.SDL_DialogFileCallback;
