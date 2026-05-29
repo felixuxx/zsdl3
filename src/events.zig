@@ -564,9 +564,9 @@ extern fn SDL_PollEvent(event: ?*SDL_Event) bool;
 extern fn SDL_WaitEvent(event: ?*SDL_Event) bool;
 extern fn SDL_WaitEventTimeout(event: ?*SDL_Event, timeoutMS: core.Sint32) bool;
 extern fn SDL_PushEvent(event: ?*const SDL_Event) bool;
-extern fn SDL_FilterEvents(callback: ?*const fn (?*anyopaque, ?*SDL_Event) callconv(.C) bool, userdata: ?*anyopaque) void;
-extern fn SDL_AddEventWatch(callback: ?*const fn (?*anyopaque, ?*SDL_Event) callconv(.C) void, userdata: ?*anyopaque) bool;
-extern fn SDL_RemoveEventWatch(callback: ?*const fn (?*anyopaque, ?*SDL_Event) callconv(.C) void, userdata: ?*anyopaque) void;
+extern fn SDL_FilterEvents(callback: ?*const fn (?*anyopaque, ?*SDL_Event) callconv(.c) bool, userdata: ?*anyopaque) void;
+extern fn SDL_AddEventWatch(callback: ?*const fn (?*anyopaque, ?*SDL_Event) callconv(.c) bool, userdata: ?*anyopaque) bool;
+extern fn SDL_RemoveEventWatch(callback: ?*const fn (?*anyopaque, ?*SDL_Event) callconv(.c) bool, userdata: ?*anyopaque) void;
 extern fn SDL_PeepEvents(events: ?[*]SDL_Event, numevents: c_int, action: SDL_EventAction, minType: SDL_EventType, maxType: SDL_EventType) c_int;
 extern fn SDL_HasEvent(type: SDL_EventType) bool;
 extern fn SDL_HasEvents(minType: SDL_EventType, maxType: SDL_EventType) bool;
@@ -577,21 +577,14 @@ extern fn SDL_EventEnabled(type: SDL_EventType) bool;
 extern fn SDL_RegisterEvents(numevents: c_int) SDL_EventType;
 
 // Event filter functions
-extern fn SDL_GetEventFilter(filter: ?*?*const fn (?*anyopaque, ?*SDL_Event) callconv(.C) bool, userdata: ?*?*anyopaque) bool;
-extern fn SDL_SetEventFilter(filter: ?*const fn (?*anyopaque, ?*SDL_Event) callconv(.C) bool, userdata: ?*anyopaque) void;
-
-// Event name function
-extern fn SDL_GetEventName(type: SDL_EventType) ?[*:0]const u8;
+extern fn SDL_GetEventFilter(filter: ?*?*const fn (?*anyopaque, ?*SDL_Event) callconv(.c) bool, userdata: ?*?*anyopaque) bool;
+extern fn SDL_SetEventFilter(filter: ?*const fn (?*anyopaque, ?*SDL_Event) callconv(.c) bool, userdata: ?*anyopaque) void;
 
 // Event description function
 extern fn SDL_GetEventDescription(event: ?*const SDL_Event, buf: [*]u8, buflen: c_int) c_int;
 
 // Window from event function
 extern fn SDL_GetWindowFromEvent(event: ?*const SDL_Event) ?*video.SDL_Window;
-
-// Touch functions
-extern fn SDL_GetNumTouchFingers(touchID: touch.SDL_TouchID) c_int;
-extern fn SDL_GetTouchFinger(touchID: touch.SDL_TouchID, index: c_int) ?*SDL_Finger;
 
 // === Public API ===
 // Basic event handling
@@ -617,13 +610,8 @@ pub const registerEvents = SDL_RegisterEvents;
 // Event utilities
 pub const getEventFilter = SDL_GetEventFilter;
 pub const setEventFilter = SDL_SetEventFilter;
-pub const getEventName = SDL_GetEventName;
 pub const getEventDescription = SDL_GetEventDescription;
 pub const getWindowFromEvent = SDL_GetWindowFromEvent;
-
-// Touch utilities
-pub const getNumTouchFingers = SDL_GetNumTouchFingers;
-pub const getTouchFinger = SDL_GetTouchFinger;
 
 // === Utility Functions ===
 /// Check if an event is a window event

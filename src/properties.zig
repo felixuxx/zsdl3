@@ -22,7 +22,7 @@ pub const SDL_PropertyType = enum(c_int) {
 // Properties functions
 extern fn SDL_CreateProperties() SDL_PropertiesID;
 extern fn SDL_DestroyProperties(props: SDL_PropertiesID) void;
-pub const SDL_CleanupPropertyCallback = ?*const fn (?*anyopaque, ?*anyopaque) callconv(.C) void;
+pub const SDL_CleanupPropertyCallback = ?*const fn (?*anyopaque, ?*anyopaque) callconv(.c) void;
 extern fn SDL_SetPointerProperty(props: SDL_PropertiesID, name: [*:0]const u8, value: ?*anyopaque) bool;
 extern fn SDL_SetPointerPropertyWithCleanup(props: SDL_PropertiesID, name: [*:0]const u8, value: ?*anyopaque, cleanup: SDL_CleanupPropertyCallback, userdata: ?*anyopaque) bool;
 extern fn SDL_SetStringProperty(props: SDL_PropertiesID, name: [*:0]const u8, value: ?[*:0]const u8) bool;
@@ -35,7 +35,7 @@ extern fn SDL_GetNumberProperty(props: SDL_PropertiesID, name: [*:0]const u8, de
 extern fn SDL_GetFloatProperty(props: SDL_PropertiesID, name: [*:0]const u8, default_value: f32) f32;
 extern fn SDL_GetBooleanProperty(props: SDL_PropertiesID, name: [*:0]const u8, default_value: bool) bool;
 extern fn SDL_GetPropertyType(props: SDL_PropertiesID, name: [*:0]const u8) SDL_PropertyType;
-pub const SDL_EnumeratePropertiesCallback = ?*const fn (?*anyopaque, SDL_PropertiesID, [*:0]const u8) callconv(.C) void;
+pub const SDL_EnumeratePropertiesCallback = ?*const fn (?*anyopaque, SDL_PropertiesID, [*:0]const u8) callconv(.c) void;
 extern fn SDL_ClearProperty(props: SDL_PropertiesID, name: [*:0]const u8) bool;
 extern fn SDL_EnumerateProperties(props: SDL_PropertiesID, callback: SDL_EnumeratePropertiesCallback, userdata: ?*anyopaque) bool;
 extern fn SDL_LockProperties(props: SDL_PropertiesID) bool;

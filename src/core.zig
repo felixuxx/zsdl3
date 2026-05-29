@@ -42,13 +42,13 @@ pub const SDL_AppResult = enum(c_int) {
 };
 
 // Function pointers for app callbacks
-pub const SDL_AppInit_func = ?*const fn (?*anyopaque, c_int, ?[*]?[*:0]u8) callconv(.C) SDL_AppResult;
-pub const SDL_AppIterate_func = ?*const fn (?*anyopaque) callconv(.C) SDL_AppResult;
-pub const SDL_AppEvent_func = ?*const fn (?*anyopaque, ?*SDL_Event) callconv(.C) SDL_AppResult;
-pub const SDL_AppQuit_func = ?*const fn (?*anyopaque, SDL_AppResult) callconv(.C) void;
+pub const SDL_AppInit_func = ?*const fn (?*anyopaque, c_int, ?[*]?[*:0]u8) callconv(.c) SDL_AppResult;
+pub const SDL_AppIterate_func = ?*const fn (?*anyopaque) callconv(.c) SDL_AppResult;
+pub const SDL_AppEvent_func = ?*const fn (?*anyopaque, ?*SDL_Event) callconv(.c) SDL_AppResult;
+pub const SDL_AppQuit_func = ?*const fn (?*anyopaque, SDL_AppResult) callconv(.c) void;
 
 // Main thread callback
-pub const SDL_MainThreadCallback = ?*const fn (?*anyopaque) callconv(.C) void;
+pub const SDL_MainThreadCallback = ?*const fn (?*anyopaque) callconv(.c) void;
 
 // Text input event structures (also defined in events.zig for re-export)
 // These are defined here so they can be used in the SDL_Event union

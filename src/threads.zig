@@ -30,10 +30,10 @@ pub const SDL_ThreadState = enum(c_int) {
     SDL_THREAD_COMPLETE,
 };
 
-pub const SDL_TLSDestructorCallback = ?*const fn (?*anyopaque) callconv(.C) void;
+pub const SDL_TLSDestructorCallback = ?*const fn (?*anyopaque) callconv(.c) void;
 
 // Thread functions
-extern fn SDL_CreateThread(func: ?*const fn (?*anyopaque) callconv(.C) c_int, name: ?[*:0]const u8, data: ?*anyopaque) ?*SDL_Thread;
+extern fn SDL_CreateThread(func: ?*const fn (?*anyopaque) callconv(.c) c_int, name: ?[*:0]const u8, data: ?*anyopaque) ?*SDL_Thread;
 extern fn SDL_CreateThreadWithProperties(props: core.SDL_PropertiesID) ?*SDL_Thread;
 extern fn SDL_WaitThread(thread: ?*SDL_Thread, status: ?*c_int) void;
 extern fn SDL_CreateMutex() ?*SDL_Mutex;

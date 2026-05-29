@@ -21,9 +21,9 @@ extern fn SDL_GetStorageFileSize(storage: ?*SDL_Storage, path: ?[*:0]const u8, l
 extern fn SDL_ReadStorageFile(storage: ?*SDL_Storage, path: ?[*:0]const u8, destination: ?*anyopaque, length: Uint64) bool;
 extern fn SDL_WriteStorageFile(storage: ?*SDL_Storage, path: ?[*:0]const u8, source: ?*const anyopaque, length: Uint64) bool;
 extern fn SDL_CreateStorageDirectory(storage: ?*SDL_Storage, path: ?[*:0]const u8) bool;
-extern fn SDL_EnumerateStorageDirectory(storage: ?*SDL_Storage, path: ?[*:0]const u8, callback: ?*const fn (?*anyopaque, ?[*:0]const u8, c_int) callconv(.C) void, userdata: ?*anyopaque) bool;
+extern fn SDL_EnumerateStorageDirectory(storage: ?*SDL_Storage, path: ?[*:0]const u8, callback: ?*const fn (?*anyopaque, ?[*:0]const u8, ?[*:0]const u8, SDL_EnumerationResult) callconv(.c) bool, userdata: ?*anyopaque) bool;
 extern fn SDL_RemoveStoragePath(storage: ?*SDL_Storage, path: ?[*:0]const u8) bool;
-extern fn SDL_GlobStorageDirectory(storage: ?*SDL_Storage, path: ?[*:0]const u8, pattern: ?[*:0]const u8, flags: c_int, count: ?*c_int) ?[*]?[*:0]u8;
+extern fn SDL_GlobStorageDirectory(storage: ?*SDL_Storage, path: ?[*:0]const u8, pattern: ?[*:0]const u8, flags: SDL_GlobFlags, count: ?*c_int) ?[*]?[*:0]u8;
 extern fn SDL_GetStoragePathInfo(storage: ?*SDL_Storage, path: ?[*:0]const u8, info: ?*SDL_PathInfo) bool;
 
 // Storage path info

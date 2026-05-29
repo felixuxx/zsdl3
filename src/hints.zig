@@ -8,7 +8,7 @@ pub const SDL_HintPriority = enum(c_int) {
     SDL_HINT_OVERRIDE,
 };
 
-pub const SDL_HintCallback = ?*const fn (?*anyopaque, [*:0]const u8, [*:0]const u8, [*:0]const u8) callconv(.C) void;
+pub const SDL_HintCallback = ?*const fn (?*anyopaque, [*:0]const u8, [*:0]const u8, [*:0]const u8) callconv(.c) void;
 
 // Hints functions
 extern fn SDL_SetHint(name: [*:0]const u8, value: [*:0]const u8) bool;

@@ -1,7 +1,6 @@
 // SDL3 Tray Bindings
 // System tray icons
 
-const core = @import("core.zig");
 const video = @import("video.zig");
 
 // Tray structs
@@ -15,22 +14,22 @@ extern fn SDL_SetTrayIcon(tray: ?*SDL_Tray, icon: ?*video.SDL_Surface) void;
 extern fn SDL_SetTrayTooltip(tray: ?*SDL_Tray, tooltip: ?[*:0]const u8) void;
 extern fn SDL_CreateTrayMenu(tray: ?*SDL_Tray) ?*SDL_TrayMenu;
 extern fn SDL_CreateTraySubmenu(entry: ?*SDL_TrayEntry) ?*SDL_TrayMenu;
-extern fn SDL_GetTrayMenu(menu: ?*SDL_TrayMenu) ?*SDL_TrayMenu;
+extern fn SDL_GetTrayMenu(tray: ?*SDL_Tray) ?*SDL_TrayMenu;
 extern fn SDL_GetTraySubmenu(entry: ?*SDL_TrayEntry) ?*SDL_TrayMenu;
-extern fn SDL_GetTrayEntries(menu: ?*SDL_TrayMenu, count: ?*c_int) ?[*]?*SDL_TrayEntry;
+extern fn SDL_GetTrayEntries(menu: ?*SDL_TrayMenu, count: ?*c_int) ?[*]?*const SDL_TrayEntry;
 extern fn SDL_RemoveTrayEntry(entry: ?*SDL_TrayEntry) void;
-extern fn SDL_InsertTrayEntryAt(menu: ?*SDL_TrayMenu, pos: c_int, label: ?[*:0]const u8, enabled: bool) ?*SDL_TrayEntry;
+extern fn SDL_InsertTrayEntryAt(menu: ?*SDL_TrayMenu, pos: c_int, label: ?[*:0]const u8, flags: c_uint) ?*SDL_TrayEntry;
 extern fn SDL_SetTrayEntryLabel(entry: ?*SDL_TrayEntry, label: ?[*:0]const u8) void;
 extern fn SDL_GetTrayEntryLabel(entry: ?*SDL_TrayEntry) ?[*:0]const u8;
 extern fn SDL_SetTrayEntryChecked(entry: ?*SDL_TrayEntry, checked: bool) void;
 extern fn SDL_GetTrayEntryChecked(entry: ?*SDL_TrayEntry) bool;
 extern fn SDL_SetTrayEntryEnabled(entry: ?*SDL_TrayEntry, enabled: bool) void;
 extern fn SDL_GetTrayEntryEnabled(entry: ?*SDL_TrayEntry) bool;
-extern fn SDL_SetTrayEntryCallback(entry: ?*SDL_TrayEntry, callback: ?*const fn (?*anyopaque, ?*SDL_TrayEntry) callconv(.C) void, userdata: ?*anyopaque) void;
+extern fn SDL_SetTrayEntryCallback(entry: ?*SDL_TrayEntry, callback: ?*const fn (?*anyopaque, ?*SDL_TrayEntry) callconv(.c) void, userdata: ?*anyopaque) void;
 extern fn SDL_ClickTrayEntry(entry: ?*SDL_TrayEntry) void;
 extern fn SDL_DestroyTray(tray: ?*SDL_Tray) void;
-extern fn SDL_GetTrayEntryParent(entry: ?*SDL_TrayEntry) ?*SDL_TrayEntry;
-extern fn SDL_GetTrayMenuParent(menu: ?*SDL_TrayMenu) ?*SDL_Tray;
+extern fn SDL_GetTrayEntryParent(entry: ?*SDL_TrayEntry) ?*SDL_TrayMenu;
+extern fn SDL_GetTrayMenuParentTray(menu: ?*SDL_TrayMenu) ?*SDL_Tray;
 extern fn SDL_GetTrayMenuParentEntry(menu: ?*SDL_TrayMenu) ?*SDL_TrayEntry;
 extern fn SDL_UpdateTrays() void;
 
@@ -55,6 +54,6 @@ pub const setTrayEntryCallback = SDL_SetTrayEntryCallback;
 pub const clickTrayEntry = SDL_ClickTrayEntry;
 pub const destroyTray = SDL_DestroyTray;
 pub const getTrayEntryParent = SDL_GetTrayEntryParent;
-pub const getTrayMenuParent = SDL_GetTrayMenuParent;
+pub const getTrayMenuParent = SDL_GetTrayMenuParentTray;
 pub const getTrayMenuParentEntry = SDL_GetTrayMenuParentEntry;
 pub const updateTrays = SDL_UpdateTrays;

@@ -227,11 +227,11 @@ extern fn SDL_GetRelativeMouseState(x: ?*f32, y: ?*f32) SDL_MouseButtonFlags;
 extern fn SDL_WarpMouseInWindow(window: ?*video.SDL_Window, x: f32, y: f32) void;
 extern fn SDL_WarpMouseGlobal(x: f32, y: f32) bool;
 extern fn SDL_CaptureMouse(enabled: bool) bool;
-extern fn SDL_GetMouseCapture() bool;
+
 extern fn SDL_SetWindowRelativeMouseMode(window: ?*video.SDL_Window, enabled: bool) bool;
 extern fn SDL_GetWindowRelativeMouseMode(window: ?*video.SDL_Window) bool;
-extern fn SDL_SetRelativeMouseTransform(callback: ?*const fn (?*anyopaque, core.Uint64, ?*video.SDL_Window, SDL_MouseID, ?*f32, ?*f32) callconv(.C) void, userdata: ?*anyopaque) bool;
-extern fn SDL_GetRelativeMouseTransform(callback: ?*?*const fn (?*anyopaque, core.Uint64, ?*video.SDL_Window, SDL_MouseID, ?*f32, ?*f32) callconv(.C) void, userdata: ?*?*anyopaque) bool;
+extern fn SDL_SetRelativeMouseTransform(callback: ?*const fn (?*anyopaque, core.Uint64, ?*video.SDL_Window, SDL_MouseID, ?*f32, ?*f32) callconv(.c) void, userdata: ?*anyopaque) bool;
+
 
 // Cursor functions
 pub const SDL_CursorFrameInfo = extern struct {

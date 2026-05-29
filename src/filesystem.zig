@@ -55,7 +55,7 @@ pub const SDL_EnumerationResult = enum(c_int) {
     SDL_ENUM_FAILURE,
 };
 
-pub const SDL_EnumerateDirectoryCallback = ?*const fn (?*anyopaque, [*:0]const u8, [*:0]const u8) callconv(.C) SDL_EnumerationResult;
+pub const SDL_EnumerateDirectoryCallback = ?*const fn (?*anyopaque, [*:0]const u8, [*:0]const u8) callconv(.c) SDL_EnumerationResult;
 
 // Async I/O
 pub const SDL_AsyncIO = opaque {};

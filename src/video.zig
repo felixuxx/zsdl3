@@ -252,7 +252,7 @@ pub const SDL_HitTestResult = enum(c_int) {
     SDL_HITTEST_RESIZE_LEFT,
 };
 
-pub const SDL_HitTestCallback = ?*const fn (?*anyopaque, ?*SDL_Window, ?*SDL_Point, ?*anyopaque) callconv(.C) SDL_HitTestResult;
+pub const SDL_HitTestCallback = ?*const fn (?*SDL_Window, ?*const SDL_Point, ?*anyopaque) callconv(.c) SDL_HitTestResult;
 
 // Public video API
 pub const getNumVideoDrivers = SDL_GetNumVideoDrivers;

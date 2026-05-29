@@ -7,8 +7,8 @@ pub const SDL_Time = core.Sint64;
 
 // Import types
 // Timer callback
-pub const SDL_TimerCallback = ?*const fn (Uint32, ?*anyopaque) callconv(.C) Uint32;
-pub const SDL_TimerID = c_int;
+pub const SDL_TimerCallback = ?*const fn (?*anyopaque, SDL_TimerID, Uint32) callconv(.c) Uint32;
+pub const SDL_TimerID = Uint32;
 
 // Time types
 // SDL_Time is Sint64

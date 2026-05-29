@@ -3,7 +3,6 @@
 
 const core = @import("core.zig");
 pub const SDL_AudioDeviceID = core.Uint32;
-const pixels = @import("pixels.zig");
 
 // Audio format (matches SDL_AudioFormat in SDL3)
 pub const SDL_AudioFormat = c_uint;
@@ -34,7 +33,7 @@ pub const SDL_AudioStream = opaque {};
 // Audio functions
 extern fn SDL_OpenAudioDevice(devid: SDL_AudioDeviceID, spec: ?*const SDL_AudioSpec) SDL_AudioDeviceID;
 extern fn SDL_CloseAudioDevice(dev: SDL_AudioDeviceID) void;
-extern fn SDL_PauseAudioDevice(dev: SDL_AudioDeviceID, pause_on: bool) bool;
+extern fn SDL_PauseAudioDevice(dev: SDL_AudioDeviceID) bool;
 extern fn SDL_GetAudioDeviceName(devid: SDL_AudioDeviceID) ?[*:0]const u8;
 extern fn SDL_GetNumAudioDrivers() c_int;
 extern fn SDL_GetAudioDriver(index: c_int) ?[*:0]const u8;
@@ -56,25 +55,21 @@ extern fn SDL_GetAudioStreamFormat(stream: ?*SDL_AudioStream, src_spec: ?*SDL_Au
 extern fn SDL_GetAudioStreamProperties(stream: ?*SDL_AudioStream) core.SDL_PropertiesID;
 extern fn SDL_GetAudioStreamQueued(stream: ?*SDL_AudioStream) c_int;
 extern fn SDL_LockAudioStream(stream: ?*SDL_AudioStream) bool;
-extern fn SDL_OpenAudioDeviceStream(device: SDL_AudioDeviceID, spec: ?*const SDL_AudioSpec, callback: ?*const fn (?*anyopaque, ?*SDL_AudioStream, c_int, c_int) callconv(.C) void, userdata: ?*anyopaque) ?*SDL_AudioStream;
+extern fn SDL_OpenAudioDeviceStream(device: SDL_AudioDeviceID, spec: ?*const SDL_AudioSpec, callback: ?*const fn (?*anyopaque, ?*SDL_AudioStream, c_int, c_int) callconv(.c) void, userdata: ?*anyopaque) ?*SDL_AudioStream;
 extern fn SDL_PutAudioStreamData(stream: ?*SDL_AudioStream, buf: ?*const anyopaque, len: c_int) bool;
 extern fn SDL_SetAudioStreamFormat(stream: ?*SDL_AudioStream, src_spec: ?*const SDL_AudioSpec, dst_spec: ?*const SDL_AudioSpec) bool;
-extern fn SDL_SetAudioStreamGetCallback(stream: ?*SDL_AudioStream, callback: ?*const fn (?*anyopaque, ?*SDL_AudioStream, c_int, c_int) callconv(.C) void, userdata: ?*anyopaque) bool;
-extern fn SDL_SetAudioStreamPutCallback(stream: ?*SDL_AudioStream, callback: ?*const fn (?*anyopaque, ?*SDL_AudioStream, c_int, c_int) callconv(.C) void, userdata: ?*anyopaque) bool;
-extern fn SDL_UnlockAudioStream(stream: ?*SDL_AudioStream) void;
+extern fn SDL_SetAudioStreamGetCallback(stream: ?*SDL_AudioStream, callback: ?*const fn (?*anyopaque, ?*SDL_AudioStream, c_int, c_int) callconv(.c) void, userdata: ?*anyopaque) bool;
+extern fn SDL_SetAudioStreamPutCallback(stream: ?*SDL_AudioStream, callback: ?*const fn (?*anyopaque, ?*SDL_AudioStream, c_int, c_int) callconv(.c) void, userdata: ?*anyopaque) bool;
+extern fn SDL_UnlockAudioStream(stream: ?*SDL_AudioStream) bool;
 extern fn SDL_FlushAudioStream(stream: ?*SDL_AudioStream) bool;
 extern fn SDL_BindAudioStream(device: SDL_AudioDeviceID, stream: ?*SDL_AudioStream) bool;
 extern fn SDL_BindAudioStreams(device: SDL_AudioDeviceID, streams: ?[*]?*SDL_AudioStream, num_streams: c_int) bool;
 extern fn SDL_UnbindAudioStream(stream: ?*SDL_AudioStream) void;
 extern fn SDL_UnbindAudioStreams(streams: ?[*]?*SDL_AudioStream, num_streams: c_int) void;
-extern fn SDL_ConvertAudioSamples(src_format: SDL_AudioFormat, src_channels: c_int, src_rate: c_int, src_data: ?*const anyopaque, src_len: c_int, dst_format: SDL_AudioFormat, dst_channels: c_int, dst_rate: c_int, dst_data: ?*anyopaque, dst_len: c_int) bool;
+extern fn SDL_ConvertAudioSamples(src_spec: ?*const SDL_AudioSpec, src_data: ?*const core.Uint8, src_len: c_int, dst_spec: ?*const SDL_AudioSpec, dst_data: ?*?*core.Uint8, dst_len: ?*c_int) bool;
 extern fn SDL_GetAudioFormatName(format: SDL_AudioFormat) ?[*:0]const u8;
 extern fn SDL_GetSilenceValueForFormat(format: SDL_AudioFormat) c_int;
 extern fn SDL_MixAudio(dst: ?[*]u8, src: ?[*]const u8, format: SDL_AudioFormat, len: core.Uint32, volume: f32) bool;
-extern fn SDL_QueueAudio(dev: SDL_AudioDeviceID, data: ?*const anyopaque, len: core.Uint32) bool;
-extern fn SDL_DequeueAudio(dev: SDL_AudioDeviceID, data: ?*anyopaque, len: core.Uint32) core.Uint32;
-extern fn SDL_GetQueuedAudioSize(dev: SDL_AudioDeviceID) core.Uint32;
-extern fn SDL_ClearQueuedAudio(dev: SDL_AudioDeviceID) void;
 
 // Additional SDL3 audio APIs
 extern fn SDL_GetAudioStreamGain(stream: ?*SDL_AudioStream) f32;
@@ -124,10 +119,6 @@ pub const convertAudioSamples = SDL_ConvertAudioSamples;
 pub const getAudioFormatName = SDL_GetAudioFormatName;
 pub const getSilenceValueForFormat = SDL_GetSilenceValueForFormat;
 pub const mixAudio = SDL_MixAudio;
-pub const queueAudio = SDL_QueueAudio;
-pub const dequeueAudio = SDL_DequeueAudio;
-pub const getQueuedAudioSize = SDL_GetQueuedAudioSize;
-pub const clearQueuedAudio = SDL_ClearQueuedAudio;
 pub const getAudioStreamGain = SDL_GetAudioStreamGain;
 pub const setAudioStreamGain = SDL_SetAudioStreamGain;
 pub const loadWAV_IO = SDL_LoadWAV_IO;
