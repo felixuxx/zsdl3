@@ -1,4 +1,4 @@
-# ZSDL3 — Pure Zig bindings for SDL3
+# ZSDL3 — Zig bindings for SDL3
 
 [![Zig](https://img.shields.io/badge/Zig-0.16.0+-orange.svg)](https://ziglang.org)
 [![SDL3](https://img.shields.io/badge/SDL-3.2.0+-blue.svg)](https://www.libsdl.org/)
@@ -23,7 +23,7 @@ sudo dnf install SDL3-devel SDL3_image SDL3_ttf
 # Windows — download from https://github.com/libsdl-org/SDL/releases
 ```
 
-Or build SDL3 from source (requires Zig 0.16.0+).
+Or build SDL3 from source.
 
 ## Depend on it
 
