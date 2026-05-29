@@ -6,6 +6,7 @@ pub const Uint32 = core.Uint32;
 const pixels = @import("pixels.zig");
 pub const SDL_PixelFormat = pixels.SDL_PixelFormat;
 pub const SDL_BlendMode = pixels.SDL_BlendMode;
+pub const SDL_Rect = pixels.SDL_Rect;
 pub const SDL_FRect = pixels.SDL_FRect;
 pub const SDL_FPoint = pixels.SDL_FPoint;
 const surface = @import("surface.zig");
@@ -35,7 +36,6 @@ pub const SDL_ScaleMode = enum(c_int) {
     SDL_SCALEMODE_INVALID = -1,
     SDL_SCALEMODE_NEAREST,
     SDL_SCALEMODE_LINEAR,
-    SDL_SCALEMODE_BEST,
     SDL_SCALEMODE_PIXELART, // Available since SDL 3.4.0
 };
 
@@ -97,7 +97,7 @@ extern fn SDL_CreateSoftwareRenderer(surface: ?*pixels.SDL_Surface) ?*SDL_Render
 extern fn SDL_CreateWindowAndRenderer(title: ?[*:0]const u8, width: c_int, height: c_int, window_flags: video.SDL_WindowFlags, window: ?*?*video.SDL_Window, renderer: ?*?*SDL_Renderer) bool;
 extern fn SDL_DestroyRenderer(renderer: ?*SDL_Renderer) void;
 extern fn SDL_RenderClear(renderer: ?*SDL_Renderer) bool;
-extern fn SDL_RenderPresent(renderer: ?*SDL_Renderer) void;
+extern fn SDL_RenderPresent(renderer: ?*SDL_Renderer) bool;
 extern fn SDL_SetRenderDrawColor(renderer: ?*SDL_Renderer, r: core.Uint8, g: core.Uint8, b: core.Uint8, a: core.Uint8) bool;
 extern fn SDL_RenderPoint(renderer: ?*SDL_Renderer, x: f32, y: f32) bool;
 extern fn SDL_RenderLine(renderer: ?*SDL_Renderer, x1: f32, y1: f32, x2: f32, y2: f32) bool;
@@ -114,9 +114,9 @@ extern fn SDL_GetRendererName(renderer: ?*SDL_Renderer) ?[*:0]const u8;
 extern fn SDL_GetRendererProperties(renderer: ?*SDL_Renderer) core.SDL_PropertiesID;
 extern fn SDL_GetRenderOutputSize(renderer: ?*SDL_Renderer, w: ?*c_int, h: ?*c_int) bool;
 extern fn SDL_GetCurrentRenderOutputSize(renderer: ?*SDL_Renderer, w: ?*c_int, h: ?*c_int) bool;
-extern fn SDL_GetRenderViewport(renderer: ?*SDL_Renderer, rect: ?*SDL_FRect) bool;
-extern fn SDL_SetRenderViewport(renderer: ?*SDL_Renderer, rect: ?*const SDL_FRect) bool;
-extern fn SDL_GetRenderSafeArea(renderer: ?*SDL_Renderer, rect: ?*SDL_FRect) bool;
+extern fn SDL_GetRenderViewport(renderer: ?*SDL_Renderer, rect: ?*SDL_Rect) bool;
+extern fn SDL_SetRenderViewport(renderer: ?*SDL_Renderer, rect: ?*const SDL_Rect) bool;
+extern fn SDL_GetRenderSafeArea(renderer: ?*SDL_Renderer, rect: ?*SDL_Rect) bool;
 extern fn SDL_GetRenderWindow(renderer: ?*SDL_Renderer) ?*video.SDL_Window;
 extern fn SDL_GetRendererFromTexture(texture: ?*SDL_Texture) ?*SDL_Renderer;
 
@@ -138,12 +138,11 @@ extern fn SDL_SetRenderDrawBlendMode(renderer: ?*SDL_Renderer, blendMode: SDL_Bl
 
 // Texture operations
 extern fn SDL_CreateTextureFromSurface(renderer: ?*SDL_Renderer, surface: ?*surface.SDL_Surface) ?*SDL_Texture;
-extern fn SDL_QueryTexture(texture: ?*SDL_Texture, format: ?*Uint32, access: ?*c_int, w: ?*c_int, h: ?*c_int) bool;
 extern fn SDL_LockTexture(texture: ?*SDL_Texture, rect: ?*const pixels.SDL_Rect, pixels: ?*?*anyopaque, pitch: ?*c_int) bool;
-extern fn SDL_LockTextureToSurface(texture: ?*SDL_Texture, rect: ?*const pixels.SDL_Rect) ?*surface.SDL_Surface;
+extern fn SDL_LockTextureToSurface(texture: ?*SDL_Texture, rect: ?*const pixels.SDL_Rect, surface: ?*?*surface.SDL_Surface) bool;
 extern fn SDL_UnlockTexture(texture: ?*SDL_Texture) void;
-extern fn SDL_UpdateNVTexture(texture: ?*SDL_Texture, rect: ?*const pixels.SDL_Rect, y_plane: ?[*]const u8, uv_plane: ?[*]const u8, pitch: c_int) bool;
-extern fn SDL_UpdateYUVTexture(texture: ?*SDL_Texture, rect: ?*const pixels.SDL_Rect, y_plane: ?[*]const u8, u_plane: ?[*]const u8, v_plane: ?[*]const u8, y_pitch: c_int, uv_pitch: c_int) bool;
+extern fn SDL_UpdateNVTexture(texture: ?*SDL_Texture, rect: ?*const pixels.SDL_Rect, y_plane: ?[*]const u8, y_pitch: c_int, uv_plane: ?[*]const u8, uv_pitch: c_int) bool;
+extern fn SDL_UpdateYUVTexture(texture: ?*SDL_Texture, rect: ?*const pixels.SDL_Rect, y_plane: ?[*]const u8, y_pitch: c_int, u_plane: ?[*]const u8, u_pitch: c_int, v_plane: ?[*]const u8, v_pitch: c_int) bool;
 extern fn SDL_SetTextureColorMod(texture: ?*SDL_Texture, r: core.Uint8, g: core.Uint8, b: core.Uint8) bool;
 extern fn SDL_GetTextureColorMod(texture: ?*SDL_Texture, r: ?*core.Uint8, g: ?*core.Uint8, b: ?*core.Uint8) bool;
 extern fn SDL_SetTextureAlphaMod(texture: ?*SDL_Texture, alpha: core.Uint8) bool;
@@ -156,22 +155,19 @@ extern fn SDL_GetTexturePalette(texture: ?*SDL_Texture) ?*pixels.SDL_Palette;
 extern fn SDL_SetTexturePalette(texture: ?*SDL_Texture, palette: ?*pixels.SDL_Palette) bool;
 
 // Clipping
-extern fn SDL_SetRenderClipRect(renderer: ?*SDL_Renderer, rect: ?*const SDL_FRect) bool;
-extern fn SDL_GetRenderClipRect(renderer: ?*SDL_Renderer, rect: ?*SDL_FRect) bool;
+extern fn SDL_SetRenderClipRect(renderer: ?*SDL_Renderer, rect: ?*const SDL_Rect) bool;
+extern fn SDL_GetRenderClipRect(renderer: ?*SDL_Renderer, rect: ?*SDL_Rect) bool;
 extern fn SDL_RenderClipEnabled(renderer: ?*SDL_Renderer) bool;
 
 // Logical presentation
-extern fn SDL_SetRenderLogicalPresentation(renderer: ?*SDL_Renderer, w: c_int, h: c_int, mode: SDL_RendererLogicalPresentation, scale_mode: SDL_ScaleMode) bool;
-extern fn SDL_GetRenderLogicalPresentation(renderer: ?*SDL_Renderer, w: ?*c_int, h: ?*c_int, mode: ?*SDL_RendererLogicalPresentation, scale_mode: ?*SDL_ScaleMode) bool;
-extern fn SDL_SetRenderLogicalSize(renderer: ?*SDL_Renderer, w: c_int, h: c_int) bool;
-extern fn SDL_GetRenderLogicalSize(renderer: ?*SDL_Renderer, w: ?*c_int, h: ?*c_int) bool;
+extern fn SDL_SetRenderLogicalPresentation(renderer: ?*SDL_Renderer, w: c_int, h: c_int, mode: SDL_RendererLogicalPresentation) bool;
+extern fn SDL_GetRenderLogicalPresentation(renderer: ?*SDL_Renderer, w: ?*c_int, h: ?*c_int, mode: ?*SDL_RendererLogicalPresentation) bool;
 
 // Debug
 extern fn SDL_RenderDebugText(renderer: ?*SDL_Renderer, x: f32, y: f32, str: ?[*:0]const u8) bool;
 extern fn SDL_RenderDebugTextFormat(renderer: ?*SDL_Renderer, x: f32, y: f32, fmt: ?[*:0]const u8, ...) bool;
-extern fn SDL_RenderGeometryRaw(renderer: ?*SDL_Renderer, texture: ?*SDL_Texture, xy: ?[*]const f32, xy_stride: c_int, color: ?[*]const SDL_FColor, color_stride: c_int, uv: ?[*]const f32, uv_stride: c_int, num_vertices: c_int, indices: ?[*]const c_int, num_indices: c_int, size_indices: c_int) bool;
+extern fn SDL_RenderGeometryRaw(renderer: ?*SDL_Renderer, texture: ?*SDL_Texture, xy: ?[*]const f32, xy_stride: c_int, color: ?[*]const SDL_FColor, color_stride: c_int, uv: ?[*]const f32, uv_stride: c_int, num_vertices: c_int, indices: ?*const anyopaque, num_indices: c_int, size_indices: c_int) bool;
 extern fn SDL_RenderReadPixels(renderer: ?*SDL_Renderer, rect: ?*const pixels.SDL_Rect) ?*pixels.SDL_Surface;
-extern fn SDL_RenderFlush(renderer: ?*SDL_Renderer) bool;
 extern fn SDL_FlushRenderer(renderer: ?*SDL_Renderer) bool;
 
 // Query functions
@@ -182,7 +178,7 @@ extern fn SDL_GetRenderer(window: ?*video.SDL_Window) ?*SDL_Renderer;
 // Coordinate system functions
 extern fn SDL_RenderCoordinatesFromWindow(renderer: ?*SDL_Renderer, window_x: f32, window_y: f32, render_x: ?*f32, render_y: ?*f32) bool;
 extern fn SDL_RenderCoordinatesToWindow(renderer: ?*SDL_Renderer, render_x: f32, render_y: f32, window_x: ?*f32, window_y: ?*f32) bool;
-extern fn SDL_ConvertEventToRenderCoordinates(renderer: ?*SDL_Renderer, event: ?*core.SDL_Event, render_x: ?*f32, render_y: ?*f32) bool;
+extern fn SDL_ConvertEventToRenderCoordinates(renderer: ?*SDL_Renderer, event: ?*core.SDL_Event) bool;
 
 // Scale and color functions
 extern fn SDL_SetRenderScale(renderer: ?*SDL_Renderer, scale_x: f32, scale_y: f32) bool;
@@ -197,8 +193,8 @@ extern fn SDL_SetTextureAlphaModFloat(texture: ?*SDL_Texture, alpha: f32) bool;
 extern fn SDL_GetTextureAlphaModFloat(texture: ?*SDL_Texture, alpha: ?*f32) bool;
 
 // Address modes
-extern fn SDL_SetRenderTextureAddressMode(renderer: ?*SDL_Renderer, address_mode: SDL_TextureAddressMode) bool;
-extern fn SDL_GetRenderTextureAddressMode(renderer: ?*SDL_Renderer, address_mode: ?*SDL_TextureAddressMode) bool;
+extern fn SDL_SetRenderTextureAddressMode(renderer: ?*SDL_Renderer, u_mode: SDL_TextureAddressMode, v_mode: SDL_TextureAddressMode) bool;
+extern fn SDL_GetRenderTextureAddressMode(renderer: ?*SDL_Renderer, u_mode: ?*SDL_TextureAddressMode, v_mode: ?*SDL_TextureAddressMode) bool;
 
 // Advanced texture rendering
 extern fn SDL_RenderTexture9Grid(renderer: ?*SDL_Renderer, texture: ?*SDL_Texture, srcrect: ?*const SDL_FRect, left_width: f32, right_width: f32, top_height: f32, bottom_height: f32, scale: f32, dstrect: ?*const SDL_FRect) bool;
@@ -208,8 +204,8 @@ extern fn SDL_RenderTextureRotated(renderer: ?*SDL_Renderer, texture: ?*SDL_Text
 extern fn SDL_RenderTextureTiled(renderer: ?*SDL_Renderer, texture: ?*SDL_Texture, srcrect: ?*const SDL_FRect, scale: f32, dstrect: ?*const SDL_FRect) bool;
 
 // Utility functions
-extern fn SDL_GetDefaultTextureScaleMode() SDL_ScaleMode;
-extern fn SDL_SetDefaultTextureScaleMode(scale_mode: SDL_ScaleMode) void;
+extern fn SDL_GetDefaultTextureScaleMode(renderer: ?*SDL_Renderer, scale_mode: ?*SDL_ScaleMode) bool;
+extern fn SDL_SetDefaultTextureScaleMode(renderer: ?*SDL_Renderer, scale_mode: SDL_ScaleMode) bool;
 extern fn SDL_GetRenderLogicalPresentationRect(renderer: ?*SDL_Renderer, rect: ?*SDL_FRect) bool;
 
 // Texture operations
@@ -270,7 +266,6 @@ pub const setRenderDrawBlendMode = SDL_SetRenderDrawBlendMode;
 
 // Texture operations
 pub const createTextureFromSurface = SDL_CreateTextureFromSurface;
-pub const queryTexture = SDL_QueryTexture;
 pub const lockTexture = SDL_LockTexture;
 pub const lockTextureToSurface = SDL_LockTextureToSurface;
 pub const unlockTexture = SDL_UnlockTexture;
@@ -296,15 +291,13 @@ pub const renderClipEnabled = SDL_RenderClipEnabled;
 // Logical presentation
 pub const setRenderLogicalPresentation = SDL_SetRenderLogicalPresentation;
 pub const getRenderLogicalPresentation = SDL_GetRenderLogicalPresentation;
-pub const setRenderLogicalSize = SDL_SetRenderLogicalSize;
-pub const getRenderLogicalSize = SDL_GetRenderLogicalSize;
 
 // Debug
 pub const renderDebugText = SDL_RenderDebugText;
 pub const renderDebugTextFormat = SDL_RenderDebugTextFormat;
 pub const renderGeometryRaw = SDL_RenderGeometryRaw;
 pub const renderReadPixels = SDL_RenderReadPixels;
-pub const renderFlush = SDL_RenderFlush;
+
 pub const flushRenderer = SDL_FlushRenderer;
 pub const textureSize = SDL_GetTextureSize;
 pub const getRenderVSync = SDL_GetRenderVSync;

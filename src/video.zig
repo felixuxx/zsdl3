@@ -132,7 +132,7 @@ extern fn SDL_GetWindowProperties(window: ?*SDL_Window) core.SDL_PropertiesID;
 extern fn SDL_GetWindowFlags(window: ?*SDL_Window) SDL_WindowFlags;
 extern fn SDL_SetWindowTitle(window: ?*SDL_Window, title: ?[*:0]const u8) bool;
 extern fn SDL_GetWindowTitle(window: ?*SDL_Window) ?[*:0]const u8;
-extern fn SDL_SetWindowIcon(window: ?*SDL_Window, icon: ?*SDL_Surface) void;
+extern fn SDL_SetWindowIcon(window: ?*SDL_Window, icon: ?*SDL_Surface) bool;
 extern fn SDL_SetWindowPosition(window: ?*SDL_Window, x: c_int, y: c_int) bool;
 extern fn SDL_GetWindowPosition(window: ?*SDL_Window, x: ?*c_int, y: ?*c_int) bool;
 extern fn SDL_SetWindowSize(window: ?*SDL_Window, w: c_int, h: c_int) bool;
@@ -153,35 +153,32 @@ extern fn SDL_MaximizeWindow(window: ?*SDL_Window) bool;
 extern fn SDL_MinimizeWindow(window: ?*SDL_Window) bool;
 extern fn SDL_RestoreWindow(window: ?*SDL_Window) bool;
 extern fn SDL_SetWindowFullscreen(window: ?*SDL_Window, fullscreen: bool) bool;
-extern fn SDL_HasWindowSurface(window: ?*SDL_Window) bool;
+extern fn SDL_WindowHasSurface(window: ?*SDL_Window) bool;
 extern fn SDL_GetWindowSurface(window: ?*SDL_Window) ?*SDL_Surface;
 extern fn SDL_UpdateWindowSurface(window: ?*SDL_Window) bool;
 extern fn SDL_UpdateWindowSurfaceRects(window: ?*SDL_Window, rects: ?[*]const SDL_Rect, numrects: c_int) bool;
 extern fn SDL_DestroyWindowSurface(window: ?*SDL_Window) bool;
-extern fn SDL_SetWindowGrab(window: ?*SDL_Window, grabbed: bool) bool;
 extern fn SDL_SetWindowKeyboardGrab(window: ?*SDL_Window, grabbed: bool) bool;
 extern fn SDL_SetWindowMouseGrab(window: ?*SDL_Window, grabbed: bool) bool;
-extern fn SDL_GetWindowGrab(window: ?*SDL_Window) bool;
 extern fn SDL_GetWindowKeyboardGrab(window: ?*SDL_Window) bool;
 extern fn SDL_GetWindowMouseGrab(window: ?*SDL_Window) bool;
-extern fn SDL_SetWindowMouseRect(window: ?*SDL_Window, rect: ?*const SDL_FRect) bool;
-extern fn SDL_GetWindowMouseRect(window: ?*SDL_Window) ?*const SDL_FRect;
+extern fn SDL_SetWindowMouseRect(window: ?*SDL_Window, rect: ?*const SDL_Rect) bool;
+extern fn SDL_GetWindowMouseRect(window: ?*SDL_Window) ?*const SDL_Rect;
 extern fn SDL_SetWindowOpacity(window: ?*SDL_Window, opacity: f32) bool;
 extern fn SDL_GetWindowOpacity(window: ?*SDL_Window) f32;
-extern fn SDL_SetWindowModalFor(window: ?*SDL_Window, parent_window: ?*SDL_Window) bool;
 extern fn SDL_SetWindowFocusable(window: ?*SDL_Window, focusable: bool) bool;
 extern fn SDL_ShowWindowSystemMenu(window: ?*SDL_Window, x: c_int, y: c_int) bool;
 extern fn SDL_SetWindowHitTest(window: ?*SDL_Window, callback: SDL_HitTestCallback, callback_data: ?*anyopaque) bool;
 extern fn SDL_SetWindowShape(window: ?*SDL_Window, shape: ?*SDL_Surface) bool;
+extern fn SDL_SetWindowModal(window: ?*SDL_Window, modal: bool) bool;
+extern fn SDL_SetWindowProgressState(window: ?*SDL_Window, state: SDL_ProgressState) bool;
+extern fn SDL_GetWindowProgressState(window: ?*SDL_Window) SDL_ProgressState;
+extern fn SDL_SetWindowProgressValue(window: ?*SDL_Window, value: f32) bool;
+extern fn SDL_GetWindowProgressValue(window: ?*SDL_Window) f32;
 extern fn SDL_FlashWindow(window: ?*SDL_Window, operation: SDL_FlashOperation) bool;
-extern fn SDL_SetWindowProgress(window: ?*SDL_Window, state: SDL_ProgressState, value: f64) bool;
-extern fn SDL_GetWindowProgress(window: ?*SDL_Window, state: ?*SDL_ProgressState, value: ?*f64) bool;
-extern fn SDL_SetWindowGammaRamp(window: ?*SDL_Window, red: ?[*]const u16, green: ?[*]const u16, blue: ?[*]const u16) bool;
-extern fn SDL_GetWindowGammaRamp(window: ?*SDL_Window, red: ?[*]u16, green: ?[*]u16, blue: ?[*]u16) bool;
 extern fn SDL_DisableScreenSaver() bool;
 extern fn SDL_EnableScreenSaver() bool;
-extern fn SDL_IsScreenSaverEnabled() bool;
-extern fn SDL_GetWindowWMInfo(window: ?*SDL_Window, info: ?*SDL_SysWMinfo, version: SDL_Version) bool;
+extern fn SDL_ScreenSaverEnabled() bool;
 
 // Import types from pixels
 pub const SDL_Point = pixels.SDL_Point;
@@ -196,48 +193,6 @@ pub const SDL_FRect = extern struct {
 };
 
 pub const SDL_Surface = opaque {};
-
-pub const SDL_Version = extern struct {
-    major: u8,
-    minor: u8,
-    patch: u8,
-};
-
-pub const SDL_SysWMinfo = extern struct {
-    version: SDL_Version,
-    subsystem: SDL_SysWMType,
-    info: extern union {
-        win: struct {
-            window: ?*anyopaque,
-            hdc: ?*anyopaque,
-            hinstance: ?*anyopaque,
-        },
-        x11: struct {
-            display: ?*anyopaque,
-            window: c_ulong,
-        },
-        // Add other platforms as needed
-        dummy: [64]u8, // Fallback
-    },
-};
-
-pub const SDL_SysWMType = enum(c_int) {
-    SDL_SYSWM_UNKNOWN,
-    SDL_SYSWM_WINDOWS,
-    SDL_SYSWM_X11,
-    SDL_SYSWM_DIRECTFB,
-    SDL_SYSWM_COCOA,
-    SDL_SYSWM_UIKIT,
-    SDL_SYSWM_WAYLAND,
-    SDL_SYSWM_MIR,
-    SDL_SYSWM_WINRT,
-    SDL_SYSWM_ANDROID,
-    SDL_SYSWM_VIVANTE,
-    SDL_SYSWM_OS2,
-    SDL_SYSWM_HAIKU,
-    SDL_SYSWM_KMSDRM,
-    SDL_SYSWM_RISCOS,
-};
 
 pub const SDL_HitTestResult = enum(c_int) {
     SDL_HITTEST_NORMAL,
@@ -311,32 +266,30 @@ pub const maximizeWindow = SDL_MaximizeWindow;
 pub const minimizeWindow = SDL_MinimizeWindow;
 pub const restoreWindow = SDL_RestoreWindow;
 pub const setWindowFullscreen = SDL_SetWindowFullscreen;
-pub const hasWindowSurface = SDL_HasWindowSurface;
+pub const hasWindowSurface = SDL_WindowHasSurface;
 pub const getWindowSurface = SDL_GetWindowSurface;
 pub const updateWindowSurface = SDL_UpdateWindowSurface;
 pub const updateWindowSurfaceRects = SDL_UpdateWindowSurfaceRects;
 pub const destroyWindowSurface = SDL_DestroyWindowSurface;
-pub const setWindowGrab = SDL_SetWindowGrab;
 pub const setWindowKeyboardGrab = SDL_SetWindowKeyboardGrab;
 pub const setWindowMouseGrab = SDL_SetWindowMouseGrab;
-pub const getWindowGrab = SDL_GetWindowGrab;
 pub const getWindowKeyboardGrab = SDL_GetWindowKeyboardGrab;
 pub const getWindowMouseGrab = SDL_GetWindowMouseGrab;
 pub const setWindowMouseRect = SDL_SetWindowMouseRect;
 pub const getWindowMouseRect = SDL_GetWindowMouseRect;
 pub const setWindowOpacity = SDL_SetWindowOpacity;
 pub const getWindowOpacity = SDL_GetWindowOpacity;
-pub const setWindowModalFor = SDL_SetWindowModalFor;
 pub const setWindowFocusable = SDL_SetWindowFocusable;
 pub const showWindowSystemMenu = SDL_ShowWindowSystemMenu;
 pub const setWindowHitTest = SDL_SetWindowHitTest;
 pub const setWindowShape = SDL_SetWindowShape;
+pub const setWindowModal = SDL_SetWindowModal;
+pub const setWindowProgressState = SDL_SetWindowProgressState;
+pub const getWindowProgressState = SDL_GetWindowProgressState;
+pub const setWindowProgressValue = SDL_SetWindowProgressValue;
+pub const getWindowProgressValue = SDL_GetWindowProgressValue;
 pub const flashWindow = SDL_FlashWindow;
-pub const setWindowProgress = SDL_SetWindowProgress;
-pub const getWindowProgress = SDL_GetWindowProgress;
-pub const setWindowGammaRamp = SDL_SetWindowGammaRamp;
-pub const getWindowGammaRamp = SDL_GetWindowGammaRamp;
 pub const disableScreenSaver = SDL_DisableScreenSaver;
 pub const enableScreenSaver = SDL_EnableScreenSaver;
-pub const isScreenSaverEnabled = SDL_IsScreenSaverEnabled;
-pub const getWindowWMInfo = SDL_GetWindowWMInfo;
+pub const isScreenSaverEnabled = SDL_ScreenSaverEnabled;
+

@@ -2,7 +2,6 @@
 // User/title storage
 
 const core = @import("core.zig");
-const filesystem = @import("filesystem.zig");
 
 // Import types
 pub const Uint64 = core.Uint64;
@@ -10,6 +9,14 @@ pub const SDL_Time = core.Sint64; // SDL_Time is Sint64 (nanoseconds since epoch
 
 // Storage structs
 pub const SDL_Storage = opaque {};
+
+pub const SDL_EnumerationResult = enum(c_int) {
+    SDL_ENUM_CONTINUE,
+    SDL_ENUM_SUCCESS,
+    SDL_ENUM_FAILURE,
+};
+
+pub const SDL_GlobFlags = c_uint;
 
 // Storage functions
 extern fn SDL_OpenTitleStorage(override: ?[*:0]const u8, props: core.SDL_PropertiesID) ?*SDL_Storage;
