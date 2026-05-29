@@ -19,7 +19,7 @@ sudo apt install libsdl3-dev
 # Linux (Arch)
 sudo pacman -S sdl3
 # Linux (Fedora)
-sudo dnf install SDL3-devel
+sudo dnf install SDL3-devel SDL3_image SDL3_ttf
 # Windows — download from https://github.com/libsdl-org/SDL/releases
 ```
 
