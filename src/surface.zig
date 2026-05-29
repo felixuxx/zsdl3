@@ -5,6 +5,7 @@ const core = @import("core.zig");
 pub const Uint8 = core.Uint8;
 pub const Uint32 = core.Uint32;
 const pixels = @import("pixels.zig");
+const render = @import("render.zig");
 pub const SDL_PixelFormat = pixels.SDL_PixelFormat;
 pub const SDL_Palette = pixels.SDL_Palette;
 pub const SDL_Rect = pixels.SDL_Rect;
@@ -21,21 +22,19 @@ pub const SDL_FlipMode = enum(c_int) {
     SDL_FLIP_HORIZONTAL_AND_VERTICAL = 3, // SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL
 };
 
+// Surface flags
+pub const SDL_SurfaceFlags = c_uint;
+
 // Surface struct
 pub const SDL_Surface = extern struct {
-    flags: Uint32,
-    format: ?*SDL_PixelFormatDetails,
+    flags: SDL_SurfaceFlags,
+    format: SDL_PixelFormat,
     w: c_int,
     h: c_int,
     pitch: c_int,
     pixels: ?*anyopaque,
     refcount: c_int,
-    locked: c_int,
-    lock_data: ?*anyopaque,
-    clip_rect: SDL_Rect,
-    map: ?*anyopaque,
-    ref: ?*anyopaque,
-    internal: ?*anyopaque,
+    reserved: ?*anyopaque,
 };
 
 // Placeholder for pixel format details
@@ -63,7 +62,7 @@ extern fn SDL_CreateSurface(width: c_int, height: c_int, format: SDL_PixelFormat
 extern fn SDL_CreateSurfaceFrom(width: c_int, height: c_int, format: SDL_PixelFormat, pixels: ?*anyopaque, pitch: c_int) ?*SDL_Surface;
 extern fn SDL_DestroySurface(surface: ?*SDL_Surface) void;
 extern fn SDL_GetSurfaceProperties(surface: ?*SDL_Surface) core.SDL_PropertiesID;
-extern fn SDL_SetSurfaceColorspace(surface: ?*SDL_Surface, colorspace: c_uint) bool;
+extern fn SDL_SetSurfaceColorspace(surface: ?*SDL_Surface, colorspace: render.SDL_Colorspace) bool;
 extern fn SDL_GetSurfaceColorspace(surface: ?*SDL_Surface) c_uint;
 extern fn SDL_CreateSurfacePalette(surface: ?*SDL_Surface) ?*SDL_Palette;
 extern fn SDL_SetSurfacePalette(surface: ?*SDL_Surface, palette: ?*SDL_Palette) bool;
@@ -95,8 +94,8 @@ extern fn SDL_FlipSurface(surface: ?*SDL_Surface, flip: SDL_FlipMode) bool;
 extern fn SDL_DuplicateSurface(surface: ?*SDL_Surface) ?*SDL_Surface;
 extern fn SDL_ScaleSurface(surface: ?*SDL_Surface, width: c_int, height: c_int, scaleMode: c_int) ?*SDL_Surface;
 extern fn SDL_ConvertSurface(surface: ?*SDL_Surface, format: SDL_PixelFormat) ?*SDL_Surface;
-extern fn SDL_ConvertSurfaceAndColorspace(surface: ?*SDL_Surface, format: SDL_PixelFormat, colorspace: c_uint, props: core.SDL_PropertiesID) ?*SDL_Surface;
-extern fn SDL_PremultiplyAlpha(surface: ?*SDL_Surface, linear: bool) bool;
+extern fn SDL_ConvertSurfaceAndColorspace(surface: ?*SDL_Surface, format: SDL_PixelFormat, palette: ?*SDL_Palette, colorspace: render.SDL_Colorspace, props: core.SDL_PropertiesID) ?*SDL_Surface;
+extern fn SDL_PremultiplySurfaceAlpha(surface: ?*SDL_Surface, linear: bool) bool;
 extern fn SDL_ClearSurface(surface: ?*SDL_Surface, r: f32, g: f32, b: f32, a: f32) bool;
 extern fn SDL_FillSurfaceRect(surface: ?*SDL_Surface, rect: ?*const SDL_Rect, color: Uint32) bool;
 extern fn SDL_FillSurfaceRects(surface: ?*SDL_Surface, rects: ?[*]const SDL_Rect, count: c_int, color: Uint32) bool;
@@ -110,8 +109,7 @@ extern fn SDL_BlitSurface9Grid(src: ?*SDL_Surface, srcrect: ?*const SDL_Rect, le
 extern fn SDL_MapSurfaceRGB(surface: ?*SDL_Surface, r: Uint8, g: Uint8, b: Uint8) Uint32;
 extern fn SDL_MapSurfaceRGBA(surface: ?*SDL_Surface, r: Uint8, g: Uint8, b: Uint8, a: Uint8) Uint32;
 extern fn SDL_ReadSurfacePixel(surface: ?*SDL_Surface, x: c_int, y: c_int, r: ?*Uint8, g: ?*Uint8, b: ?*Uint8, a: ?*Uint8) bool;
-extern fn SDL_SoftStretch(src: ?*SDL_Surface, srcrect: ?*const SDL_Rect, dst: ?*SDL_Surface, dstrect: ?*const SDL_Rect, scaleMode: c_int) bool;
-extern fn SDL_SoftStretchLinear(src: ?*SDL_Surface, srcrect: ?*const SDL_Rect, dst: ?*SDL_Surface, dstrect: ?*const SDL_Rect) bool;
+extern fn SDL_PremultiplyAlpha(width: c_int, height: c_int, src_format: SDL_PixelFormat, src: ?*const anyopaque, src_pitch: c_int, dst_format: SDL_PixelFormat, dst: ?*anyopaque, dst_pitch: c_int, linear: bool) bool;
 
 // Public API
 pub const createSurface = SDL_CreateSurface;
@@ -151,7 +149,7 @@ pub const duplicateSurface = SDL_DuplicateSurface;
 pub const scaleSurface = SDL_ScaleSurface;
 pub const convertSurface = SDL_ConvertSurface;
 pub const convertSurfaceAndColorspace = SDL_ConvertSurfaceAndColorspace;
-pub const premultiplyAlpha = SDL_PremultiplyAlpha;
+pub const premultiplySurfaceAlpha = SDL_PremultiplySurfaceAlpha;
 pub const clearSurface = SDL_ClearSurface;
 pub const fillSurfaceRect = SDL_FillSurfaceRect;
 pub const fillSurfaceRects = SDL_FillSurfaceRects;
@@ -165,5 +163,5 @@ pub const blitSurface9Grid = SDL_BlitSurface9Grid;
 pub const mapSurfaceRGB = SDL_MapSurfaceRGB;
 pub const mapSurfaceRGBA = SDL_MapSurfaceRGBA;
 pub const readSurfacePixel = SDL_ReadSurfacePixel;
-pub const softStretch = SDL_SoftStretch;
-pub const softStretchLinear = SDL_SoftStretchLinear;
+pub const premultiplyAlpha = SDL_PremultiplyAlpha;
+
