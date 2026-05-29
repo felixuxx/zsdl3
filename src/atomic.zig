@@ -1,8 +1,6 @@
 // SDL3 Atomic Bindings
 // Lock-free atomic operations
 
-const core = @import("core.zig");
-
 // Atomic types
 pub const SDL_SpinLock = c_int;
 pub const SDL_AtomicInt = extern struct {
