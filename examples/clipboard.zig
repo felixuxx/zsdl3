@@ -1,5 +1,5 @@
 // Clipboard & System Info Example
-// Demonstrates: clipboard get/set, system RAM, platform info, power status.
+// Demonstrates: clipboard get/set/clear, system RAM, page size, platform info, power status.
 
 const std = @import("std");
 const zsdl3 = @import("zsdl3");
@@ -15,6 +15,9 @@ pub fn main() void {
     std.log.info("=== System Info ===", .{});
     const ram = zsdl3.getSystemRAM();
     std.log.info("System RAM: {d} MB", .{ram});
+
+    const page_size = zsdl3.getSystemPageSize();
+    std.log.info("System page size: {d} bytes", .{page_size});
 
     const alignment = zsdl3.getSIMDAlignment();
     std.log.info("SIMD alignment: {d}", .{alignment});
@@ -43,6 +46,10 @@ pub fn main() void {
             std.log.info("Set clipboard to: {s}", .{text});
         }
     }
+
+    // Clear the clipboard
+    _ = zsdl3.clearClipboardData();
+    std.log.info("Clipboard cleared, has text: {}", .{zsdl3.hasClipboardText()});
 
     std.log.info("Clipboard test complete!", .{});
 }

@@ -1,7 +1,8 @@
 // Basic 2D Rendering Example
-// Minimal SDL3 setup: creates a window and renderer, draws a yellow rectangle
-// on a dark blue background. Demonstrates: init, window/renderer creation,
-// event loop, draw primitives, and frame pacing.
+// Minimal SDL3 setup: creates a window and renderer, draws rectangles
+// with color scaling and rect intersection tests.
+// Demonstrates: init, window/renderer creation, event loop, draw primitives,
+// render color scale, rect intersection geometry.
 
 const std = @import("std");
 
@@ -34,6 +35,18 @@ pub fn main() void {
     }
     defer zsdl3.destroyRenderer(renderer);
 
+    // Rect intersection test
+    const rect_a = zsdl3.SDL_FRect{ .x = 100, .y = 100, .w = 200, .h = 200 };
+    const rect_b = zsdl3.SDL_FRect{ .x = 200, .y = 200, .w = 200, .h = 200 };
+    const rect_c = zsdl3.SDL_FRect{ .x = 500, .y = 500, .w = 100, .h = 100 };
+    std.log.info("A intersects B: {}", .{zsdl3.hasRectIntersectionFloat(&rect_a, &rect_b)});
+    std.log.info("A intersects C: {}", .{zsdl3.hasRectIntersectionFloat(&rect_a, &rect_c)});
+
+    var intersection: zsdl3.SDL_FRect = undefined;
+    if (zsdl3.getRectIntersectionFloat(&rect_a, &rect_b, &intersection)) {
+        std.log.info("Intersection rect: x={d:.0} y={d:.0} w={d:.0} h={d:.0}", .{ intersection.x, intersection.y, intersection.w, intersection.h });
+    }
+
     // Main loop
     var running = true;
     while (running) {
@@ -55,15 +68,22 @@ pub fn main() void {
         _ = zsdl3.setRenderDrawColor(renderer, 30, 60, 90, 255);
         _ = zsdl3.renderClear(renderer);
 
-        // Draw a simple rectangle (yellow)
+        // Draw full brightness rectangle (yellow)
         _ = zsdl3.setRenderDrawColor(renderer, 255, 255, 0, 255);
-        const rect = zsdl3.SDL_FRect{
-            .x = 300,
-            .y = 200,
-            .w = 200,
-            .h = 200,
-        };
-        _ = zsdl3.renderFillRect(renderer, &rect);
+        _ = zsdl3.renderFillRect(renderer, &rect_a);
+
+        // Draw with color scale 0.5 (dimmer)
+        _ = zsdl3.setRenderColorScale(renderer, 0.5);
+        _ = zsdl3.setRenderDrawColor(renderer, 255, 255, 0, 255);
+        _ = zsdl3.renderFillRect(renderer, &rect_b);
+        var scale: f32 = 0;
+        _ = zsdl3.getRenderColorScale(renderer, &scale);
+        std.log.info("Color scale: {d:.2}", .{scale});
+        _ = zsdl3.setRenderColorScale(renderer, 1.0);
+
+        // Draw non-intersecting rect (cyan)
+        _ = zsdl3.setRenderDrawColor(renderer, 0, 255, 255, 255);
+        _ = zsdl3.renderFillRect(renderer, &rect_c);
 
         // Present the rendered frame
         _ = zsdl3.renderPresent(renderer);
