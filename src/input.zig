@@ -6,6 +6,7 @@ const dynamic = @import("dynamic.zig");
 pub const Uint8 = core.Uint8;
 pub const Uint16 = core.Uint16;
 pub const Uint32 = core.Uint32;
+pub const Uint64 = core.Uint64;
 pub const Sint16 = core.Sint16;
 pub const SDL_WindowID = core.SDL_WindowID;
 pub const SDL_JoystickID = core.SDL_JoystickID;
@@ -21,6 +22,7 @@ pub const SDL_GUID = guid.SDL_GUID;
 const sensor = @import("sensor.zig");
 pub const SDL_SensorType = sensor.SDL_SensorType;
 pub const SDL_Sensor = sensor.SDL_Sensor;
+const power = @import("power.zig");
 const surface = @import("surface.zig");
 const touch = @import("touch.zig");
 pub const SDL_TouchID = touch.SDL_TouchID;
@@ -152,6 +154,54 @@ pub const SDL_GamepadBinding = extern struct {
     },
 };
 
+// Johystick connection state
+pub const SDL_JoystickConnectionState = enum(c_int) {
+    SDL_JOYSTICK_CONNECTION_INVALID = -1,
+    SDL_JOYSTICK_CONNECTION_UNKNOWN,
+    SDL_JOYSTICK_CONNECTION_WIRED,
+    SDL_JOYSTICK_CONNECTION_WIRELESS,
+};
+
+// Virtual joystick types
+pub const SDL_VirtualJoystickTouchpadDesc = extern struct {
+    nfingers: Uint16,
+    padding: [3]Uint16,
+};
+
+pub const SDL_VirtualJoystickSensorDesc = extern struct {
+    sensor_type: SDL_SensorType,
+    rate: f32,
+};
+
+pub const SDL_VirtualJoystickDesc = extern struct {
+    version: Uint32,
+    type: Uint16,
+    padding: Uint16,
+    vendor_id: Uint16,
+    product_id: Uint16,
+    naxes: Uint16,
+    nbuttons: Uint16,
+    nballs: Uint16,
+    nhats: Uint16,
+    ntouchpads: Uint16,
+    nsensors: Uint16,
+    padding2: [2]Uint16,
+    button_mask: Uint32,
+    axis_mask: Uint32,
+    name: ?[*:0]const u8,
+    touchpads: ?*const SDL_VirtualJoystickTouchpadDesc,
+    sensors: ?*const SDL_VirtualJoystickSensorDesc,
+    userdata: ?*anyopaque,
+    update: ?*const fn (userdata: ?*anyopaque) callconv(.c) void,
+    setPlayerIndex: ?*const fn (userdata: ?*anyopaque, player_index: c_int) callconv(.c) void,
+    rumble: ?*const fn (userdata: ?*anyopaque, low_frequency_rumble: Uint16, high_frequency_rumble: Uint16) callconv(.c) bool,
+    rumbleTriggers: ?*const fn (userdata: ?*anyopaque, left_rumble: Uint16, right_rumble: Uint16) callconv(.c) bool,
+    setLED: ?*const fn (userdata: ?*anyopaque, red: Uint8, green: Uint8, blue: Uint8) callconv(.c) bool,
+    sendEffect: ?*const fn (userdata: ?*anyopaque, data: ?*const anyopaque, size: c_int) callconv(.c) bool,
+    setSensorsEnabled: ?*const fn (userdata: ?*anyopaque, enabled: bool) callconv(.c) bool,
+    cleanup: ?*const fn (userdata: ?*anyopaque) callconv(.c) void,
+};
+
 // Keyboard
 // Mouse
 pub const SDL_SystemCursor = enum(c_int) {
@@ -272,6 +322,44 @@ pub const PFN_SDL_RumbleJoystick = *const fn (joystick: ?*SDL_Joystick, low_freq
 pub const PFN_SDL_RumbleJoystickTriggers = *const fn (joystick: ?*SDL_Joystick, left_rumble: Uint16, right_rumble: Uint16, duration_ms: Uint32) callconv(.c) bool;
 pub const PFN_SDL_SetJoystickLED = *const fn (joystick: ?*SDL_Joystick, red: Uint8, green: Uint8, blue: Uint8) callconv(.c) bool;
 pub const PFN_SDL_SendJoystickEffect = *const fn (joystick: ?*SDL_Joystick, data: ?*anyopaque, size: c_int) callconv(.c) bool;
+pub const PFN_SDL_GetJoystickFromID = *const fn (instance_id: SDL_JoystickID) callconv(.c) ?*SDL_Joystick;
+pub const PFN_SDL_GetJoystickFromPlayerIndex = *const fn (player_index: c_int) callconv(.c) ?*SDL_Joystick;
+pub const PFN_SDL_GetJoystickID = *const fn (joystick: ?*SDL_Joystick) callconv(.c) SDL_JoystickID;
+pub const PFN_SDL_GetNumJoystickAxes = *const fn (joystick: ?*SDL_Joystick) callconv(.c) c_int;
+pub const PFN_SDL_GetNumJoystickBalls = *const fn (joystick: ?*SDL_Joystick) callconv(.c) c_int;
+pub const PFN_SDL_GetNumJoystickButtons = *const fn (joystick: ?*SDL_Joystick) callconv(.c) c_int;
+pub const PFN_SDL_GetNumJoystickHats = *const fn (joystick: ?*SDL_Joystick) callconv(.c) c_int;
+pub const PFN_SDL_GetJoystickAxisInitialState = *const fn (joystick: ?*SDL_Joystick, axis: c_int, state: ?*Sint16) callconv(.c) bool;
+pub const PFN_SDL_GetJoystickPlayerIndex = *const fn (joystick: ?*SDL_Joystick) callconv(.c) c_int;
+pub const PFN_SDL_SetJoystickPlayerIndex = *const fn (joystick: ?*SDL_Joystick, player_index: c_int) callconv(.c) bool;
+pub const PFN_SDL_GetJoystickConnectionState = *const fn (joystick: ?*SDL_Joystick) callconv(.c) SDL_JoystickConnectionState;
+pub const PFN_SDL_GetJoystickPowerInfo = *const fn (joystick: ?*SDL_Joystick, percent: ?*c_int) callconv(.c) power.SDL_PowerState;
+pub const PFN_SDL_JoystickConnected = *const fn (joystick: ?*SDL_Joystick) callconv(.c) bool;
+pub const PFN_SDL_JoystickEventsEnabled = *const fn () callconv(.c) bool;
+pub const PFN_SDL_SetJoystickEventsEnabled = *const fn (enabled: bool) callconv(.c) void;
+pub const PFN_SDL_GetJoystickProperties = *const fn (joystick: ?*SDL_Joystick) callconv(.c) core.SDL_PropertiesID;
+pub const PFN_SDL_HasJoystick = *const fn () callconv(.c) bool;
+pub const PFN_SDL_UpdateJoysticks = *const fn () callconv(.c) void;
+pub const PFN_SDL_LockJoysticks = *const fn () callconv(.c) void;
+pub const PFN_SDL_UnlockJoysticks = *const fn () callconv(.c) void;
+pub const PFN_SDL_GetJoystickGUIDForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) SDL_GUID;
+pub const PFN_SDL_GetJoystickGUIDInfo = *const fn (guid: SDL_GUID, vendor: ?*Uint16, product: ?*Uint16, version: ?*Uint16, crc16: ?*Uint16) callconv(.c) void;
+pub const PFN_SDL_GetJoystickNameForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetJoystickPathForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetJoystickPlayerIndexForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) c_int;
+pub const PFN_SDL_GetJoystickProductForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) Uint16;
+pub const PFN_SDL_GetJoystickProductVersionForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) Uint16;
+pub const PFN_SDL_GetJoystickVendorForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) Uint16;
+pub const PFN_SDL_GetJoystickTypeForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) SDL_JoystickType;
+pub const PFN_SDL_IsJoystickVirtual = *const fn (instance_id: SDL_JoystickID) callconv(.c) bool;
+pub const PFN_SDL_AttachVirtualJoystick = *const fn (desc: ?*const SDL_VirtualJoystickDesc) callconv(.c) SDL_JoystickID;
+pub const PFN_SDL_DetachVirtualJoystick = *const fn (instance_id: SDL_JoystickID) callconv(.c) bool;
+pub const PFN_SDL_SetJoystickVirtualAxis = *const fn (joystick: ?*SDL_Joystick, axis: c_int, value: Sint16) callconv(.c) bool;
+pub const PFN_SDL_SetJoystickVirtualBall = *const fn (joystick: ?*SDL_Joystick, ball: c_int, xrel: Sint16, yrel: Sint16) callconv(.c) bool;
+pub const PFN_SDL_SetJoystickVirtualButton = *const fn (joystick: ?*SDL_Joystick, button: c_int, down: bool) callconv(.c) bool;
+pub const PFN_SDL_SetJoystickVirtualHat = *const fn (joystick: ?*SDL_Joystick, hat: c_int, value: Uint8) callconv(.c) bool;
+pub const PFN_SDL_SetJoystickVirtualTouchpad = *const fn (joystick: ?*SDL_Joystick, touchpad: c_int, finger: c_int, down: bool, x: f32, y: f32, pressure: f32) callconv(.c) bool;
+pub const PFN_SDL_SendJoystickVirtualSensorData = *const fn (joystick: ?*SDL_Joystick, sensor_type: SDL_SensorType, sensor_timestamp: Uint64, data: ?[*]const f32, num_values: c_int) callconv(.c) bool;
 
 // Gamepad functions
 
@@ -337,7 +425,20 @@ pub const PFN_SDL_GetGamepadSensorData = *const fn (gamepad: ?*SDL_Gamepad, sens
 pub const PFN_SDL_SetGamepadSensorEnabled = *const fn (gamepad: ?*SDL_Gamepad, sensor: SDL_SensorType, enabled: bool) callconv(.c) bool;
 pub const PFN_SDL_GamepadSensorEnabled = *const fn (gamepad: ?*SDL_Gamepad, sensor: SDL_SensorType) callconv(.c) bool;
 pub const PFN_SDL_GetGamepadProperties = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) core.SDL_PropertiesID;
-
+pub const PFN_SDL_GamepadHasSensor = *const fn (gamepad: ?*SDL_Gamepad, sensor: SDL_SensorType) callconv(.c) bool;
+pub const PFN_SDL_GetGamepadAxisFromString = *const fn (str: ?[*:0]const u8) callconv(.c) SDL_GamepadAxis;
+pub const PFN_SDL_GetGamepadButtonFromString = *const fn (str: ?[*:0]const u8) callconv(.c) SDL_GamepadButton;
+pub const PFN_SDL_GetGamepadButtonLabelForType = *const fn (gamepad_type: SDL_GamepadType, button: SDL_GamepadButton) callconv(.c) SDL_GamepadButtonLabel;
+pub const PFN_SDL_GetGamepadConnectionState = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) SDL_JoystickConnectionState;
+pub const PFN_SDL_GetGamepadJoystick = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) ?*SDL_Joystick;
+pub const PFN_SDL_GetGamepadPowerInfo = *const fn (gamepad: ?*SDL_Gamepad, percent: ?*c_int) callconv(.c) power.SDL_PowerState;
+pub const PFN_SDL_GetGamepadSensorDataRate = *const fn (gamepad: ?*SDL_Gamepad, sensor: SDL_SensorType) callconv(.c) f32;
+pub const PFN_SDL_GetGamepadSteamHandle = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) Uint64;
+pub const PFN_SDL_GetGamepadStringForAxis = *const fn (axis: SDL_GamepadAxis) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetGamepadStringForButton = *const fn (button: SDL_GamepadButton) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetGamepadStringForType = *const fn (gamepad_type: SDL_GamepadType) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetGamepadTypeFromString = *const fn (str: ?[*:0]const u8) callconv(.c) SDL_GamepadType;
+pub const PFN_SDL_UpdateGamepads = *const fn () callconv(.c) void;
 
 //Touch functions
 pub const PFN_SDL_GetTouchDeviceType = *const fn (device_id: SDL_TouchID) callconv(.c) SDL_TouchDeviceType;
@@ -419,6 +520,44 @@ pub const InputFunctions = extern struct {
     rumbleJoystickTriggers: PFN_SDL_RumbleJoystickTriggers,
     setJoystickLED: PFN_SDL_SetJoystickLED,
     sendJoystickEffect: PFN_SDL_SendJoystickEffect,
+    getJoystickFromID: PFN_SDL_GetJoystickFromID,
+    getJoystickFromPlayerIndex: PFN_SDL_GetJoystickFromPlayerIndex,
+    getJoystickID: PFN_SDL_GetJoystickID,
+    getNumJoystickAxes: PFN_SDL_GetNumJoystickAxes,
+    getNumJoystickBalls: PFN_SDL_GetNumJoystickBalls,
+    getNumJoystickButtons: PFN_SDL_GetNumJoystickButtons,
+    getNumJoystickHats: PFN_SDL_GetNumJoystickHats,
+    getJoystickAxisInitialState: PFN_SDL_GetJoystickAxisInitialState,
+    getJoystickPlayerIndex: PFN_SDL_GetJoystickPlayerIndex,
+    setJoystickPlayerIndex: PFN_SDL_SetJoystickPlayerIndex,
+    getJoystickConnectionState: PFN_SDL_GetJoystickConnectionState,
+    getJoystickPowerInfo: PFN_SDL_GetJoystickPowerInfo,
+    joystickConnected: PFN_SDL_JoystickConnected,
+    joystickEventsEnabled: PFN_SDL_JoystickEventsEnabled,
+    setJoystickEventsEnabled: PFN_SDL_SetJoystickEventsEnabled,
+    getJoystickProperties: PFN_SDL_GetJoystickProperties,
+    hasJoystick: PFN_SDL_HasJoystick,
+    updateJoysticks: PFN_SDL_UpdateJoysticks,
+    lockJoysticks: PFN_SDL_LockJoysticks,
+    unlockJoysticks: PFN_SDL_UnlockJoysticks,
+    getJoystickGUIDForID: PFN_SDL_GetJoystickGUIDForID,
+    getJoystickGUIDInfo: PFN_SDL_GetJoystickGUIDInfo,
+    getJoystickNameForID: PFN_SDL_GetJoystickNameForID,
+    getJoystickPathForID: PFN_SDL_GetJoystickPathForID,
+    getJoystickPlayerIndexForID: PFN_SDL_GetJoystickPlayerIndexForID,
+    getJoystickProductForID: PFN_SDL_GetJoystickProductForID,
+    getJoystickProductVersionForID: PFN_SDL_GetJoystickProductVersionForID,
+    getJoystickVendorForID: PFN_SDL_GetJoystickVendorForID,
+    getJoystickTypeForID: PFN_SDL_GetJoystickTypeForID,
+    isJoystickVirtual: PFN_SDL_IsJoystickVirtual,
+    attachVirtualJoystick: PFN_SDL_AttachVirtualJoystick,
+    detachVirtualJoystick: PFN_SDL_DetachVirtualJoystick,
+    setJoystickVirtualAxis: PFN_SDL_SetJoystickVirtualAxis,
+    setJoystickVirtualBall: PFN_SDL_SetJoystickVirtualBall,
+    setJoystickVirtualButton: PFN_SDL_SetJoystickVirtualButton,
+    setJoystickVirtualHat: PFN_SDL_SetJoystickVirtualHat,
+    setJoystickVirtualTouchpad: PFN_SDL_SetJoystickVirtualTouchpad,
+    sendJoystickVirtualSensorData: PFN_SDL_SendJoystickVirtualSensorData,
     isGamepad: PFN_SDL_IsGamepad,
     openGamepad: PFN_SDL_OpenGamepad,
     closeGamepad: PFN_SDL_CloseGamepad,
@@ -479,6 +618,20 @@ pub const InputFunctions = extern struct {
     setGamepadSensorEnabled: PFN_SDL_SetGamepadSensorEnabled,
     gamepadSensorEnabled: PFN_SDL_GamepadSensorEnabled,
     getGamepadProperties: PFN_SDL_GetGamepadProperties,
+    gamepadHasSensor: PFN_SDL_GamepadHasSensor,
+    getGamepadAxisFromString: PFN_SDL_GetGamepadAxisFromString,
+    getGamepadButtonFromString: PFN_SDL_GetGamepadButtonFromString,
+    getGamepadButtonLabelForType: PFN_SDL_GetGamepadButtonLabelForType,
+    getGamepadConnectionState: PFN_SDL_GetGamepadConnectionState,
+    getGamepadJoystick: PFN_SDL_GetGamepadJoystick,
+    getGamepadPowerInfo: PFN_SDL_GetGamepadPowerInfo,
+    getGamepadSensorDataRate: PFN_SDL_GetGamepadSensorDataRate,
+    getGamepadSteamHandle: PFN_SDL_GetGamepadSteamHandle,
+    getGamepadStringForAxis: PFN_SDL_GetGamepadStringForAxis,
+    getGamepadStringForButton: PFN_SDL_GetGamepadStringForButton,
+    getGamepadStringForType: PFN_SDL_GetGamepadStringForType,
+    getGamepadTypeFromString: PFN_SDL_GetGamepadTypeFromString,
+    updateGamepads: PFN_SDL_UpdateGamepads,
     getTouchDeviceType: PFN_SDL_GetTouchDeviceType,
     getSensorFromID: PFN_SDL_GetSensorFromID,
     getSensorName: PFN_SDL_GetSensorName,
