@@ -8,6 +8,8 @@ const dynamic = @import("dynamic.zig");
 pub const Sint64 = core.Sint64;
 pub const Uint64 = core.Uint64;
 
+pub const wchar_t = if (@import("builtin").os.tag == .windows) u16 else u32;
+
 // Stdinc functions
 pub const PFN_SDL_memset = *const fn (dst: ?*anyopaque, c: c_int, len: usize) callconv(.c) ?*anyopaque;
 pub const PFN_SDL_memcpy = *const fn (dst: ?*anyopaque, src: ?*const anyopaque, len: usize) callconv(.c) ?*anyopaque;
@@ -79,28 +81,24 @@ pub const PFN_SDL_strnlen = *const fn (str: ?[*:0]const u8, maxlen: usize) callc
 pub const PFN_SDL_strnstr = *const fn (haystack: ?[*:0]const u8, needle: ?[*:0]const u8, maxlen: usize) callconv(.c) ?[*:0]u8;
 pub const PFN_SDL_strpbrk = *const fn (str: ?[*:0]const u8, accept: ?[*:0]const u8) callconv(.c) ?[*:0]u8;
 pub const PFN_SDL_strtok_r = *const fn (str: ?[*:0]u8, delim: ?[*:0]const u8, saveptr: ?*?[*:0]u8) callconv(.c) ?[*:0]u8;
-pub const PFN_SDL_snprintf = *const fn (dst: ?[*:0]u8, maxlen: usize, fmt: ?[*:0]const u8) callconv(.c) c_int;
 pub const PFN_SDL_vsnprintf = *const fn (dst: ?[*:0]u8, maxlen: usize, fmt: ?[*:0]const u8, ap: ?*anyopaque) callconv(.c) c_int;
-pub const PFN_SDL_asprintf = *const fn (dst: ?*?[*:0]u8, fmt: ?[*:0]const u8) callconv(.c) c_int;
 pub const PFN_SDL_vasprintf = *const fn (dst: ?*?[*:0]u8, fmt: ?[*:0]const u8, ap: ?*anyopaque) callconv(.c) c_int;
-pub const PFN_SDL_sscanf = *const fn (text: ?[*:0]const u8, fmt: ?[*:0]const u8) callconv(.c) c_int;
 pub const PFN_SDL_vsscanf = *const fn (text: ?[*:0]const u8, fmt: ?[*:0]const u8, ap: ?*anyopaque) callconv(.c) c_int;
-pub const PFN_SDL_swprintf = *const fn (dst: ?[*:0]u16, maxlen: usize, fmt: ?[*:0]const u16) callconv(.c) c_int;
-pub const PFN_SDL_vswprintf = *const fn (dst: ?[*:0]u16, maxlen: usize, fmt: ?[*:0]const u16, ap: ?*anyopaque) callconv(.c) c_int;
+pub const PFN_SDL_vswprintf = *const fn (dst: ?[*:0]wchar_t, maxlen: usize, fmt: ?[*:0]const wchar_t, ap: ?*anyopaque) callconv(.c) c_int;
 
 // Wide string functions
-pub const PFN_SDL_wcslen = *const fn (str: ?[*:0]const u16) callconv(.c) usize;
-pub const PFN_SDL_wcsdup = *const fn (str: ?[*:0]const u16) callconv(.c) ?[*:0]u16;
-pub const PFN_SDL_wcslcat = *const fn (dst: ?[*:0]u16, src: ?[*:0]const u16, maxlen: usize) callconv(.c) usize;
-pub const PFN_SDL_wcslcpy = *const fn (dst: ?[*:0]u16, src: ?[*:0]const u16, maxlen: usize) callconv(.c) usize;
-pub const PFN_SDL_wcscmp = *const fn (str1: ?[*:0]const u16, str2: ?[*:0]const u16) callconv(.c) c_int;
-pub const PFN_SDL_wcsncmp = *const fn (str1: ?[*:0]const u16, str2: ?[*:0]const u16, maxlen: usize) callconv(.c) c_int;
-pub const PFN_SDL_wcscasecmp = *const fn (str1: ?[*:0]const u16, str2: ?[*:0]const u16) callconv(.c) c_int;
-pub const PFN_SDL_wcsncasecmp = *const fn (str1: ?[*:0]const u16, str2: ?[*:0]const u16, maxlen: usize) callconv(.c) c_int;
-pub const PFN_SDL_wcsnlen = *const fn (str: ?[*:0]const u16, maxlen: usize) callconv(.c) usize;
-pub const PFN_SDL_wcsnstr = *const fn (haystack: ?[*:0]const u16, needle: ?[*:0]const u16, maxlen: usize) callconv(.c) ?[*:0]u16;
-pub const PFN_SDL_wcsstr = *const fn (haystack: ?[*:0]const u16, needle: ?[*:0]const u16) callconv(.c) ?[*:0]u16;
-pub const PFN_SDL_wcstol = *const fn (str: ?[*:0]const u16, endp: ?*?[*:0]u16, base: c_int) callconv(.c) c_long;
+pub const PFN_SDL_wcslen = *const fn (str: ?[*:0]const wchar_t) callconv(.c) usize;
+pub const PFN_SDL_wcsdup = *const fn (str: ?[*:0]const wchar_t) callconv(.c) ?[*:0]wchar_t;
+pub const PFN_SDL_wcslcat = *const fn (dst: ?[*:0]wchar_t, src: ?[*:0]const wchar_t, maxlen: usize) callconv(.c) usize;
+pub const PFN_SDL_wcslcpy = *const fn (dst: ?[*:0]wchar_t, src: ?[*:0]const wchar_t, maxlen: usize) callconv(.c) usize;
+pub const PFN_SDL_wcscmp = *const fn (str1: ?[*:0]const wchar_t, str2: ?[*:0]const wchar_t) callconv(.c) c_int;
+pub const PFN_SDL_wcsncmp = *const fn (str1: ?[*:0]const wchar_t, str2: ?[*:0]const wchar_t, maxlen: usize) callconv(.c) c_int;
+pub const PFN_SDL_wcscasecmp = *const fn (str1: ?[*:0]const wchar_t, str2: ?[*:0]const wchar_t) callconv(.c) c_int;
+pub const PFN_SDL_wcsncasecmp = *const fn (str1: ?[*:0]const wchar_t, str2: ?[*:0]const wchar_t, maxlen: usize) callconv(.c) c_int;
+pub const PFN_SDL_wcsnlen = *const fn (str: ?[*:0]const wchar_t, maxlen: usize) callconv(.c) usize;
+pub const PFN_SDL_wcsnstr = *const fn (haystack: ?[*:0]const wchar_t, needle: ?[*:0]const wchar_t, maxlen: usize) callconv(.c) ?[*:0]wchar_t;
+pub const PFN_SDL_wcsstr = *const fn (haystack: ?[*:0]const wchar_t, needle: ?[*:0]const wchar_t) callconv(.c) ?[*:0]wchar_t;
+pub const PFN_SDL_wcstol = *const fn (str: ?[*:0]const wchar_t, endp: ?*?[*:0]wchar_t, base: c_int) callconv(.c) c_long;
 
 // Math functions (double)
 pub const PFN_SDL_acos = *const fn (x: f64) callconv(.c) f64;
@@ -250,13 +248,9 @@ pub const StdincFunctions = struct {
     strnstr: ?PFN_SDL_strnstr,
     strpbrk: ?PFN_SDL_strpbrk,
     strtok_r: ?PFN_SDL_strtok_r,
-    snprintf: ?PFN_SDL_snprintf,
     vsnprintf: ?PFN_SDL_vsnprintf,
-    asprintf: ?PFN_SDL_asprintf,
     vasprintf: ?PFN_SDL_vasprintf,
-    sscanf: ?PFN_SDL_sscanf,
     vsscanf: ?PFN_SDL_vsscanf,
-    swprintf: ?PFN_SDL_swprintf,
     vswprintf: ?PFN_SDL_vswprintf,
     wcslen: ?PFN_SDL_wcslen,
     wcsdup: ?PFN_SDL_wcsdup,
@@ -406,13 +400,9 @@ pub const StdincFunctions = struct {
             .{ "strnstr", "SDL_strnstr" },
             .{ "strpbrk", "SDL_strpbrk" },
             .{ "strtok_r", "SDL_strtok_r" },
-            .{ "snprintf", "SDL_snprintf" },
             .{ "vsnprintf", "SDL_vsnprintf" },
-            .{ "asprintf", "SDL_asprintf" },
             .{ "vasprintf", "SDL_vasprintf" },
-            .{ "sscanf", "SDL_sscanf" },
             .{ "vsscanf", "SDL_vsscanf" },
-            .{ "swprintf", "SDL_swprintf" },
             .{ "vswprintf", "SDL_vswprintf" },
             .{ "wcslen", "SDL_wcslen" },
             .{ "wcsdup", "SDL_wcsdup" },
@@ -493,6 +483,6 @@ pub const StdincFunctions = struct {
             .{ "iconv_close", "SDL_iconv_close" },
             .{ "iconv", "SDL_iconv" },
             .{ "iconv_string", "SDL_iconv_string" },
-        }, &.{ "strtokr", "min", "max", "clamp", "malloc", "calloc", "realloc", "free", "aligned_alloc", "aligned_free", "memset4", "strcmp", "strncmp", "strcasecmp", "strncasecmp", "strndup", "strnlen", "strnstr", "strpbrk", "strtok_r", "snprintf", "vsnprintf", "asprintf", "vasprintf", "sscanf", "vsscanf", "swprintf", "vswprintf", "wcslen", "wcsdup", "wcslcat", "wcslcpy", "wcscmp", "wcsncmp", "wcscasecmp", "wcsncasecmp", "wcsnlen", "wcsnstr", "wcsstr", "wcstol", "acos", "asin", "atan", "atan2", "ceil", "copysign", "cos", "exp", "fabs", "floor", "fmod", "log", "log10", "lround", "modf", "pow", "round", "scalbn", "sin", "sqrt", "tan", "trunc", "acosf", "asinf", "atanf", "atan2f", "ceilf", "copysignf", "cosf", "expf", "fabsf", "floorf", "fmodf", "logf", "log10f", "lroundf", "modff", "powf", "roundf", "scalbnf", "sinf", "sqrtf", "tanf", "truncf", "isinf", "isinff", "isnan", "isnanf", "rand", "srand", "rand_r", "rand_bits", "rand_bits_r", "randf", "randf_r", "getenv", "getenv_unsafe", "setenv_unsafe", "unsetenv_unsafe", "qsort", "qsort_r", "bsearch", "bsearch_r", "iconv_open", "iconv_close", "iconv", "iconv_string" });
+        }, &.{ "strtokr", "min", "max", "clamp", "malloc", "calloc", "realloc", "free", "aligned_alloc", "aligned_free", "memset4", "strcmp", "strncmp", "strcasecmp", "strncasecmp", "strndup", "strnlen", "strnstr", "strpbrk", "strtok_r", "vsnprintf", "vasprintf", "vsscanf", "vswprintf", "wcslen", "wcsdup", "wcslcat", "wcslcpy", "wcscmp", "wcsncmp", "wcscasecmp", "wcsncasecmp", "wcsnlen", "wcsnstr", "wcsstr", "wcstol", "acos", "asin", "atan", "atan2", "ceil", "copysign", "cos", "exp", "fabs", "floor", "fmod", "log", "log10", "lround", "modf", "pow", "round", "scalbn", "sin", "sqrt", "tan", "trunc", "acosf", "asinf", "atanf", "atan2f", "ceilf", "copysignf", "cosf", "expf", "fabsf", "floorf", "fmodf", "logf", "log10f", "lroundf", "modff", "powf", "roundf", "scalbnf", "sinf", "sqrtf", "tanf", "truncf", "isinf", "isinff", "isnan", "isnanf", "rand", "srand", "rand_r", "rand_bits", "rand_bits_r", "randf", "randf_r", "getenv", "getenv_unsafe", "setenv_unsafe", "unsetenv_unsafe", "qsort", "qsort_r", "bsearch", "bsearch_r", "iconv_open", "iconv_close", "iconv", "iconv_string" });
     }
 };

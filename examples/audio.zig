@@ -13,8 +13,8 @@ pub fn main() !void {
 
     if (!sdl.core.init(zsdl3.SDL_INIT_AUDIO | zsdl3.SDL_INIT_EVENTS)) {
         const err = sdl.core.getError() orelse "Unknown error";
-        std.debug.print("Failed to initialize SDL audio: {s}\n", .{err});
-        return;
+        std.log.err("Failed to initialize SDL audio: {s}", .{err});
+        return error.SdlInitFailed;
     }
     defer sdl.core.quit();
 
@@ -52,13 +52,17 @@ pub fn main() !void {
     if (device == 0) {
         const err = sdl.core.getError() orelse "Unknown error";
         std.log.err("Failed to open audio device: {s}", .{err});
-        return;
+        return error.AudioDeviceOpenFailed;
     }
     defer sdl.audio.closeAudioDevice(device);
 
     var got_spec: zsdl3.SDL_AudioSpec = undefined;
     var sample_frames: c_int = 0;
-    _ = sdl.audio.getAudioDeviceFormat(device, &got_spec, &sample_frames);
+    if (!sdl.audio.getAudioDeviceFormat(device, &got_spec, &sample_frames)) {
+        const err = sdl.core.getError() orelse "Unknown error";
+        std.log.err("Failed to get audio device format: {s}", .{err});
+        return error.AudioDeviceFormatQueryFailed;
+    }
     std.log.info("Opened device: {}Hz {}ch format={}", .{ got_spec.freq, got_spec.channels, got_spec.format });
 
     // Gain control
@@ -74,7 +78,11 @@ pub fn main() !void {
     };
     defer sdl.audio.destroyAudioStream(stream);
 
-    _ = sdl.audio.bindAudioStream(device, stream);
+    if (!sdl.audio.bindAudioStream(device, stream)) {
+        const err = sdl.core.getError() orelse "Unknown error";
+        std.log.err("Failed to bind audio stream: {s}", .{err});
+        return error.AudioStreamBindFailed;
+    }
 
     // Frequency ratio (pitch/speed shift)
     _ = sdl.audio.setAudioStreamFrequencyRatio(stream, 1.0);
