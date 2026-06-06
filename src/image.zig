@@ -290,6 +290,7 @@ pub const ImageFunctions = struct {
             .{ "loadIO", "IMG_Load_IO" },
             .{ "loadTextureIO", "IMG_LoadTexture_IO" },
             .{ "loadTextureTypedIO", "IMG_LoadTextureTyped_IO" },
+            .{ "isANI", "IMG_isANI" },
             .{ "isAVIF", "IMG_isAVIF" },
             .{ "isICO", "IMG_isICO" },
             .{ "isCUR", "IMG_isCUR" },
