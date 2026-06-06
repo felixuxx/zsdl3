@@ -2,6 +2,7 @@
 // Force feedback
 
 const core = @import("core.zig");
+const dynamic = @import("dynamic.zig");
 const input = @import("input.zig");
 
 // Import types
@@ -111,67 +112,72 @@ pub const SDL_HapticDirection = extern struct {
 pub const SDL_HapticID = Uint32;
 
 // Haptic functions
-extern fn SDL_GetHaptics(count: ?*c_int) ?[*]SDL_HapticID;
-extern fn SDL_GetHapticName(haptic: ?*SDL_Haptic) ?[*:0]const u8;
-extern fn SDL_GetHapticNameForID(instance_id: SDL_HapticID) ?[*:0]const u8;
-extern fn SDL_OpenHaptic(instance_id: SDL_HapticID) ?*SDL_Haptic;
-extern fn SDL_GetHapticFromID(instance_id: SDL_HapticID) ?*SDL_Haptic;
-extern fn SDL_GetHapticID(haptic: ?*SDL_Haptic) SDL_HapticID;
-extern fn SDL_IsMouseHaptic() bool;
-extern fn SDL_OpenHapticFromMouse() ?*SDL_Haptic;
-extern fn SDL_IsJoystickHaptic(joystick: ?*input.SDL_Joystick) bool;
-extern fn SDL_OpenHapticFromJoystick(joystick: ?*input.SDL_Joystick) ?*SDL_Haptic;
-extern fn SDL_CloseHaptic(haptic: ?*SDL_Haptic) void;
-extern fn SDL_GetMaxHapticEffects(haptic: ?*SDL_Haptic) c_int;
-extern fn SDL_GetMaxHapticEffectsPlaying(haptic: ?*SDL_Haptic) c_int;
-extern fn SDL_GetHapticFeatures(haptic: ?*SDL_Haptic) c_uint;
-extern fn SDL_GetNumHapticAxes(haptic: ?*SDL_Haptic) c_int;
-extern fn SDL_HapticEffectSupported(haptic: ?*SDL_Haptic, effect: ?*SDL_HapticEffect) bool;
-extern fn SDL_CreateHapticEffect(haptic: ?*SDL_Haptic, effect: ?*const SDL_HapticEffect) c_int;
-extern fn SDL_UpdateHapticEffect(haptic: ?*SDL_Haptic, effect: c_int, data: ?*const SDL_HapticEffect) bool;
-extern fn SDL_RunHapticEffect(haptic: ?*SDL_Haptic, effect: c_int, iterations: Uint32) bool;
-extern fn SDL_StopHapticEffect(haptic: ?*SDL_Haptic, effect: c_int) bool;
-extern fn SDL_DestroyHapticEffect(haptic: ?*SDL_Haptic, effect: c_int) void;
-extern fn SDL_GetHapticEffectStatus(haptic: ?*SDL_Haptic, effect: c_int) bool;
-extern fn SDL_SetHapticGain(haptic: ?*SDL_Haptic, gain: c_int) bool;
-extern fn SDL_SetHapticAutocenter(haptic: ?*SDL_Haptic, autocenter: c_int) bool;
-extern fn SDL_PauseHaptic(haptic: ?*SDL_Haptic) bool;
-extern fn SDL_ResumeHaptic(haptic: ?*SDL_Haptic) bool;
-extern fn SDL_StopHapticEffects(haptic: ?*SDL_Haptic) bool;
-extern fn SDL_HapticRumbleSupported(haptic: ?*SDL_Haptic) bool;
-extern fn SDL_InitHapticRumble(haptic: ?*SDL_Haptic) bool;
-extern fn SDL_PlayHapticRumble(haptic: ?*SDL_Haptic, strength: f32, length: Uint32) bool;
-extern fn SDL_StopHapticRumble(haptic: ?*SDL_Haptic) bool;
+pub const PFN_SDL_GetHaptics = *const fn (count: ?*c_int) callconv(.c) ?[*]SDL_HapticID;
+pub const PFN_SDL_GetHapticName = *const fn (haptic: ?*SDL_Haptic) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetHapticNameForID = *const fn (instance_id: SDL_HapticID) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_OpenHaptic = *const fn (instance_id: SDL_HapticID) callconv(.c) ?*SDL_Haptic;
+pub const PFN_SDL_GetHapticFromID = *const fn (instance_id: SDL_HapticID) callconv(.c) ?*SDL_Haptic;
+pub const PFN_SDL_GetHapticID = *const fn (haptic: ?*SDL_Haptic) callconv(.c) SDL_HapticID;
+pub const PFN_SDL_IsMouseHaptic = *const fn () callconv(.c) bool;
+pub const PFN_SDL_OpenHapticFromMouse = *const fn () callconv(.c) ?*SDL_Haptic;
+pub const PFN_SDL_IsJoystickHaptic = *const fn (joystick: ?*input.SDL_Joystick) callconv(.c) bool;
+pub const PFN_SDL_OpenHapticFromJoystick = *const fn (joystick: ?*input.SDL_Joystick) callconv(.c) ?*SDL_Haptic;
+pub const PFN_SDL_CloseHaptic = *const fn (haptic: ?*SDL_Haptic) callconv(.c) void;
+pub const PFN_SDL_GetMaxHapticEffects = *const fn (haptic: ?*SDL_Haptic) callconv(.c) c_int;
+pub const PFN_SDL_GetMaxHapticEffectsPlaying = *const fn (haptic: ?*SDL_Haptic) callconv(.c) c_int;
+pub const PFN_SDL_GetHapticFeatures = *const fn (haptic: ?*SDL_Haptic) callconv(.c) c_uint;
+pub const PFN_SDL_GetNumHapticAxes = *const fn (haptic: ?*SDL_Haptic) callconv(.c) c_int;
+pub const PFN_SDL_HapticEffectSupported = *const fn (haptic: ?*SDL_Haptic, effect: ?*SDL_HapticEffect) callconv(.c) bool;
+pub const PFN_SDL_CreateHapticEffect = *const fn (haptic: ?*SDL_Haptic, effect: ?*const SDL_HapticEffect) callconv(.c) c_int;
+pub const PFN_SDL_UpdateHapticEffect = *const fn (haptic: ?*SDL_Haptic, effect: c_int, data: ?*const SDL_HapticEffect) callconv(.c) bool;
+pub const PFN_SDL_RunHapticEffect = *const fn (haptic: ?*SDL_Haptic, effect: c_int, iterations: Uint32) callconv(.c) bool;
+pub const PFN_SDL_StopHapticEffect = *const fn (haptic: ?*SDL_Haptic, effect: c_int) callconv(.c) bool;
+pub const PFN_SDL_DestroyHapticEffect = *const fn (haptic: ?*SDL_Haptic, effect: c_int) callconv(.c) void;
+pub const PFN_SDL_GetHapticEffectStatus = *const fn (haptic: ?*SDL_Haptic, effect: c_int) callconv(.c) bool;
+pub const PFN_SDL_SetHapticGain = *const fn (haptic: ?*SDL_Haptic, gain: c_int) callconv(.c) bool;
+pub const PFN_SDL_SetHapticAutocenter = *const fn (haptic: ?*SDL_Haptic, autocenter: c_int) callconv(.c) bool;
+pub const PFN_SDL_PauseHaptic = *const fn (haptic: ?*SDL_Haptic) callconv(.c) bool;
+pub const PFN_SDL_ResumeHaptic = *const fn (haptic: ?*SDL_Haptic) callconv(.c) bool;
+pub const PFN_SDL_StopHapticEffects = *const fn (haptic: ?*SDL_Haptic) callconv(.c) bool;
+pub const PFN_SDL_HapticRumbleSupported = *const fn (haptic: ?*SDL_Haptic) callconv(.c) bool;
+pub const PFN_SDL_InitHapticRumble = *const fn (haptic: ?*SDL_Haptic) callconv(.c) bool;
+pub const PFN_SDL_PlayHapticRumble = *const fn (haptic: ?*SDL_Haptic, strength: f32, length: Uint32) callconv(.c) bool;
+pub const PFN_SDL_StopHapticRumble = *const fn (haptic: ?*SDL_Haptic) callconv(.c) bool;
 
-// Public API
-pub const getHaptics = SDL_GetHaptics;
-pub const getHapticName = SDL_GetHapticName;
-pub const getHapticNameForID = SDL_GetHapticNameForID;
-pub const openHaptic = SDL_OpenHaptic;
-pub const getHapticFromID = SDL_GetHapticFromID;
-pub const getHapticID = SDL_GetHapticID;
-pub const isMouseHaptic = SDL_IsMouseHaptic;
-pub const openHapticFromMouse = SDL_OpenHapticFromMouse;
-pub const isJoystickHaptic = SDL_IsJoystickHaptic;
-pub const openHapticFromJoystick = SDL_OpenHapticFromJoystick;
-pub const closeHaptic = SDL_CloseHaptic;
-pub const getMaxHapticEffects = SDL_GetMaxHapticEffects;
-pub const getMaxHapticEffectsPlaying = SDL_GetMaxHapticEffectsPlaying;
-pub const getHapticFeatures = SDL_GetHapticFeatures;
-pub const getNumHapticAxes = SDL_GetNumHapticAxes;
-pub const hapticEffectSupported = SDL_HapticEffectSupported;
-pub const createHapticEffect = SDL_CreateHapticEffect;
-pub const updateHapticEffect = SDL_UpdateHapticEffect;
-pub const runHapticEffect = SDL_RunHapticEffect;
-pub const stopHapticEffect = SDL_StopHapticEffect;
-pub const destroyHapticEffect = SDL_DestroyHapticEffect;
-pub const getHapticEffectStatus = SDL_GetHapticEffectStatus;
-pub const setHapticGain = SDL_SetHapticGain;
-pub const setHapticAutocenter = SDL_SetHapticAutocenter;
-pub const pauseHaptic = SDL_PauseHaptic;
-pub const resumeHaptic = SDL_ResumeHaptic;
-pub const stopHapticEffects = SDL_StopHapticEffects;
-pub const hapticRumbleSupported = SDL_HapticRumbleSupported;
-pub const initHapticRumble = SDL_InitHapticRumble;
-pub const playHapticRumble = SDL_PlayHapticRumble;
-pub const stopHapticRumble = SDL_StopHapticRumble;
+pub const HapticFunctions = struct {
+    getHaptics: PFN_SDL_GetHaptics,
+    getHapticName: PFN_SDL_GetHapticName,
+    getHapticNameForID: PFN_SDL_GetHapticNameForID,
+    openHaptic: PFN_SDL_OpenHaptic,
+    getHapticFromID: PFN_SDL_GetHapticFromID,
+    getHapticID: PFN_SDL_GetHapticID,
+    isMouseHaptic: PFN_SDL_IsMouseHaptic,
+    openHapticFromMouse: PFN_SDL_OpenHapticFromMouse,
+    isJoystickHaptic: PFN_SDL_IsJoystickHaptic,
+    openHapticFromJoystick: PFN_SDL_OpenHapticFromJoystick,
+    closeHaptic: PFN_SDL_CloseHaptic,
+    getMaxHapticEffects: PFN_SDL_GetMaxHapticEffects,
+    getMaxHapticEffectsPlaying: PFN_SDL_GetMaxHapticEffectsPlaying,
+    getHapticFeatures: PFN_SDL_GetHapticFeatures,
+    getNumHapticAxes: PFN_SDL_GetNumHapticAxes,
+    hapticEffectSupported: PFN_SDL_HapticEffectSupported,
+    createHapticEffect: PFN_SDL_CreateHapticEffect,
+    updateHapticEffect: PFN_SDL_UpdateHapticEffect,
+    runHapticEffect: PFN_SDL_RunHapticEffect,
+    stopHapticEffect: PFN_SDL_StopHapticEffect,
+    destroyHapticEffect: PFN_SDL_DestroyHapticEffect,
+    getHapticEffectStatus: PFN_SDL_GetHapticEffectStatus,
+    setHapticGain: PFN_SDL_SetHapticGain,
+    setHapticAutocenter: PFN_SDL_SetHapticAutocenter,
+    pauseHaptic: PFN_SDL_PauseHaptic,
+    resumeHaptic: PFN_SDL_ResumeHaptic,
+    stopHapticEffects: PFN_SDL_StopHapticEffects,
+    hapticRumbleSupported: PFN_SDL_HapticRumbleSupported,
+    initHapticRumble: PFN_SDL_InitHapticRumble,
+    playHapticRumble: PFN_SDL_PlayHapticRumble,
+    stopHapticRumble: PFN_SDL_StopHapticRumble,
+
+    pub fn load(handle: dynamic.LibraryHandle) !HapticFunctions {
+        return dynamic.loadFunctions(HapticFunctions, handle, "SDL_", .{}, &.{});
+    }
+};

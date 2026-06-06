@@ -1,4 +1,5 @@
 const core = @import("core.zig");
+const dynamic = @import("dynamic.zig");
 pub const SDL_CameraID = core.Uint32;
 const pixels = @import("pixels.zig");
 const surface = @import("surface.zig");
@@ -26,35 +27,40 @@ pub const SDL_CameraPermissionState = enum(c_int) {
     SDL_CAMERA_PERMISSION_STATE_APPROVED,
 };
 
-extern fn SDL_GetNumCameraDrivers() c_int;
-extern fn SDL_GetCameraDriver(index: c_int) ?[*:0]const u8;
-extern fn SDL_GetCurrentCameraDriver() ?[*:0]const u8;
-extern fn SDL_GetCameras(count: ?*c_int) ?[*]SDL_CameraID;
-extern fn SDL_GetCameraSupportedFormats(instance_id: SDL_CameraID, count: ?*c_int) ?[*]?*SDL_CameraSpec;
-extern fn SDL_GetCameraName(instance_id: SDL_CameraID) ?[*:0]const u8;
-extern fn SDL_GetCameraPosition(instance_id: SDL_CameraID) SDL_CameraPosition;
-extern fn SDL_OpenCamera(instance_id: SDL_CameraID, spec: ?*const SDL_CameraSpec) ?*SDL_Camera;
-extern fn SDL_GetCameraPermissionState(camera: ?*SDL_Camera) SDL_CameraPermissionState;
-extern fn SDL_GetCameraID(camera: ?*SDL_Camera) SDL_CameraID;
-extern fn SDL_GetCameraProperties(camera: ?*SDL_Camera) core.SDL_PropertiesID;
-extern fn SDL_GetCameraFormat(camera: ?*SDL_Camera, spec: ?*SDL_CameraSpec) bool;
-extern fn SDL_AcquireCameraFrame(camera: ?*SDL_Camera, timestamp: ?*core.Uint64) ?*surface.SDL_Surface;
-extern fn SDL_ReleaseCameraFrame(camera: ?*SDL_Camera, frame: ?*surface.SDL_Surface) void;
-extern fn SDL_CloseCamera(camera: ?*SDL_Camera) void;
+pub const PFN_SDL_GetNumCameraDrivers = *const fn () callconv(.c) c_int;
+pub const PFN_SDL_GetCameraDriver = *const fn (index: c_int) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetCurrentCameraDriver = *const fn () callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetCameras = *const fn (count: ?*c_int) callconv(.c) ?[*]SDL_CameraID;
+pub const PFN_SDL_GetCameraSupportedFormats = *const fn (instance_id: SDL_CameraID, count: ?*c_int) callconv(.c) ?[*]?*SDL_CameraSpec;
+pub const PFN_SDL_GetCameraName = *const fn (instance_id: SDL_CameraID) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetCameraPosition = *const fn (instance_id: SDL_CameraID) callconv(.c) SDL_CameraPosition;
+pub const PFN_SDL_OpenCamera = *const fn (instance_id: SDL_CameraID, spec: ?*const SDL_CameraSpec) callconv(.c) ?*SDL_Camera;
+pub const PFN_SDL_GetCameraPermissionState = *const fn (camera: ?*SDL_Camera) callconv(.c) SDL_CameraPermissionState;
+pub const PFN_SDL_GetCameraID = *const fn (camera: ?*SDL_Camera) callconv(.c) SDL_CameraID;
+pub const PFN_SDL_GetCameraProperties = *const fn (camera: ?*SDL_Camera) callconv(.c) core.SDL_PropertiesID;
+pub const PFN_SDL_GetCameraFormat = *const fn (camera: ?*SDL_Camera, spec: ?*SDL_CameraSpec) callconv(.c) bool;
+pub const PFN_SDL_AcquireCameraFrame = *const fn (camera: ?*SDL_Camera, timestamp: ?*core.Uint64) callconv(.c) ?*surface.SDL_Surface;
+pub const PFN_SDL_ReleaseCameraFrame = *const fn (camera: ?*SDL_Camera, frame: ?*surface.SDL_Surface) callconv(.c) void;
+pub const PFN_SDL_CloseCamera = *const fn (camera: ?*SDL_Camera) callconv(.c) void;
 
-// Public API
-pub const getNumCameraDrivers = SDL_GetNumCameraDrivers;
-pub const getCameraDriver = SDL_GetCameraDriver;
-pub const getCurrentCameraDriver = SDL_GetCurrentCameraDriver;
-pub const getCameras = SDL_GetCameras;
-pub const getCameraSupportedFormats = SDL_GetCameraSupportedFormats;
-pub const getCameraName = SDL_GetCameraName;
-pub const getCameraPosition = SDL_GetCameraPosition;
-pub const openCamera = SDL_OpenCamera;
-pub const getCameraPermissionState = SDL_GetCameraPermissionState;
-pub const getCameraID = SDL_GetCameraID;
-pub const getCameraProperties = SDL_GetCameraProperties;
-pub const getCameraFormat = SDL_GetCameraFormat;
-pub const acquireCameraFrame = SDL_AcquireCameraFrame;
-pub const releaseCameraFrame = SDL_ReleaseCameraFrame;
-pub const closeCamera = SDL_CloseCamera;
+pub const CameraFunctions = struct {
+    getNumCameraDrivers: PFN_SDL_GetNumCameraDrivers,
+    getCameraDriver: PFN_SDL_GetCameraDriver,
+    getCurrentCameraDriver: PFN_SDL_GetCurrentCameraDriver,
+    getCameras: PFN_SDL_GetCameras,
+    getCameraSupportedFormats: PFN_SDL_GetCameraSupportedFormats,
+    getCameraName: PFN_SDL_GetCameraName,
+    getCameraPosition: PFN_SDL_GetCameraPosition,
+    openCamera: PFN_SDL_OpenCamera,
+    getCameraPermissionState: PFN_SDL_GetCameraPermissionState,
+    getCameraID: PFN_SDL_GetCameraID,
+    getCameraProperties: PFN_SDL_GetCameraProperties,
+    getCameraFormat: PFN_SDL_GetCameraFormat,
+    acquireCameraFrame: PFN_SDL_AcquireCameraFrame,
+    releaseCameraFrame: PFN_SDL_ReleaseCameraFrame,
+    closeCamera: PFN_SDL_CloseCamera,
+
+    pub fn load(handle: dynamic.LibraryHandle) !CameraFunctions {
+        return dynamic.loadFunctions(CameraFunctions, handle, "SDL_", .{}, &.{});
+    }
+};

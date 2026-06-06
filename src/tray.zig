@@ -1,6 +1,7 @@
 // SDL3 Tray Bindings
 // System tray icons
 
+const dynamic = @import("dynamic.zig");
 const video = @import("video.zig");
 
 // Tray structs
@@ -9,51 +10,58 @@ pub const SDL_TrayMenu = opaque {};
 pub const SDL_TrayEntry = opaque {};
 
 // Tray functions
-extern fn SDL_CreateTray(icon: ?*video.SDL_Surface, tooltip: ?[*:0]const u8) ?*SDL_Tray;
-extern fn SDL_SetTrayIcon(tray: ?*SDL_Tray, icon: ?*video.SDL_Surface) void;
-extern fn SDL_SetTrayTooltip(tray: ?*SDL_Tray, tooltip: ?[*:0]const u8) void;
-extern fn SDL_CreateTrayMenu(tray: ?*SDL_Tray) ?*SDL_TrayMenu;
-extern fn SDL_CreateTraySubmenu(entry: ?*SDL_TrayEntry) ?*SDL_TrayMenu;
-extern fn SDL_GetTrayMenu(tray: ?*SDL_Tray) ?*SDL_TrayMenu;
-extern fn SDL_GetTraySubmenu(entry: ?*SDL_TrayEntry) ?*SDL_TrayMenu;
-extern fn SDL_GetTrayEntries(menu: ?*SDL_TrayMenu, count: ?*c_int) ?[*]?*const SDL_TrayEntry;
-extern fn SDL_RemoveTrayEntry(entry: ?*SDL_TrayEntry) void;
-extern fn SDL_InsertTrayEntryAt(menu: ?*SDL_TrayMenu, pos: c_int, label: ?[*:0]const u8, flags: c_uint) ?*SDL_TrayEntry;
-extern fn SDL_SetTrayEntryLabel(entry: ?*SDL_TrayEntry, label: ?[*:0]const u8) void;
-extern fn SDL_GetTrayEntryLabel(entry: ?*SDL_TrayEntry) ?[*:0]const u8;
-extern fn SDL_SetTrayEntryChecked(entry: ?*SDL_TrayEntry, checked: bool) void;
-extern fn SDL_GetTrayEntryChecked(entry: ?*SDL_TrayEntry) bool;
-extern fn SDL_SetTrayEntryEnabled(entry: ?*SDL_TrayEntry, enabled: bool) void;
-extern fn SDL_GetTrayEntryEnabled(entry: ?*SDL_TrayEntry) bool;
-extern fn SDL_SetTrayEntryCallback(entry: ?*SDL_TrayEntry, callback: ?*const fn (?*anyopaque, ?*SDL_TrayEntry) callconv(.c) void, userdata: ?*anyopaque) void;
-extern fn SDL_ClickTrayEntry(entry: ?*SDL_TrayEntry) void;
-extern fn SDL_DestroyTray(tray: ?*SDL_Tray) void;
-extern fn SDL_GetTrayEntryParent(entry: ?*SDL_TrayEntry) ?*SDL_TrayMenu;
-extern fn SDL_GetTrayMenuParentTray(menu: ?*SDL_TrayMenu) ?*SDL_Tray;
-extern fn SDL_GetTrayMenuParentEntry(menu: ?*SDL_TrayMenu) ?*SDL_TrayEntry;
-extern fn SDL_UpdateTrays() void;
+pub const PFN_SDL_CreateTray = *const fn (icon: ?*video.SDL_Surface, tooltip: ?[*:0]const u8) callconv(.c) ?*SDL_Tray;
+pub const PFN_SDL_SetTrayIcon = *const fn (tray: ?*SDL_Tray, icon: ?*video.SDL_Surface) callconv(.c) void;
+pub const PFN_SDL_SetTrayTooltip = *const fn (tray: ?*SDL_Tray, tooltip: ?[*:0]const u8) callconv(.c) void;
+pub const PFN_SDL_CreateTrayMenu = *const fn (tray: ?*SDL_Tray) callconv(.c) ?*SDL_TrayMenu;
+pub const PFN_SDL_CreateTraySubmenu = *const fn (entry: ?*SDL_TrayEntry) callconv(.c) ?*SDL_TrayMenu;
+pub const PFN_SDL_GetTrayMenu = *const fn (tray: ?*SDL_Tray) callconv(.c) ?*SDL_TrayMenu;
+pub const PFN_SDL_GetTraySubmenu = *const fn (entry: ?*SDL_TrayEntry) callconv(.c) ?*SDL_TrayMenu;
+pub const PFN_SDL_GetTrayEntries = *const fn (menu: ?*SDL_TrayMenu, count: ?*c_int) callconv(.c) ?[*]?*const SDL_TrayEntry;
+pub const PFN_SDL_RemoveTrayEntry = *const fn (entry: ?*SDL_TrayEntry) callconv(.c) void;
+pub const PFN_SDL_InsertTrayEntryAt = *const fn (menu: ?*SDL_TrayMenu, pos: c_int, label: ?[*:0]const u8, flags: c_uint) callconv(.c) ?*SDL_TrayEntry;
+pub const PFN_SDL_SetTrayEntryLabel = *const fn (entry: ?*SDL_TrayEntry, label: ?[*:0]const u8) callconv(.c) void;
+pub const PFN_SDL_GetTrayEntryLabel = *const fn (entry: ?*SDL_TrayEntry) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_SetTrayEntryChecked = *const fn (entry: ?*SDL_TrayEntry, checked: bool) callconv(.c) void;
+pub const PFN_SDL_GetTrayEntryChecked = *const fn (entry: ?*SDL_TrayEntry) callconv(.c) bool;
+pub const PFN_SDL_SetTrayEntryEnabled = *const fn (entry: ?*SDL_TrayEntry, enabled: bool) callconv(.c) void;
+pub const PFN_SDL_GetTrayEntryEnabled = *const fn (entry: ?*SDL_TrayEntry) callconv(.c) bool;
+pub const PFN_SDL_SetTrayEntryCallback = *const fn (entry: ?*SDL_TrayEntry, callback: ?*const fn (?*anyopaque, ?*SDL_TrayEntry) callconv(.c) void, userdata: ?*anyopaque) callconv(.c) void;
+pub const PFN_SDL_ClickTrayEntry = *const fn (entry: ?*SDL_TrayEntry) callconv(.c) void;
+pub const PFN_SDL_DestroyTray = *const fn (tray: ?*SDL_Tray) callconv(.c) void;
+pub const PFN_SDL_GetTrayEntryParent = *const fn (entry: ?*SDL_TrayEntry) callconv(.c) ?*SDL_TrayMenu;
+pub const PFN_SDL_GetTrayMenuParentTray = *const fn (menu: ?*SDL_TrayMenu) callconv(.c) ?*SDL_Tray;
+pub const PFN_SDL_GetTrayMenuParentEntry = *const fn (menu: ?*SDL_TrayMenu) callconv(.c) ?*SDL_TrayEntry;
+pub const PFN_SDL_UpdateTrays = *const fn () callconv(.c) void;
 
-// Public API
-pub const createTray = SDL_CreateTray;
-pub const setTrayIcon = SDL_SetTrayIcon;
-pub const setTrayTooltip = SDL_SetTrayTooltip;
-pub const createTrayMenu = SDL_CreateTrayMenu;
-pub const createTraySubmenu = SDL_CreateTraySubmenu;
-pub const getTrayMenu = SDL_GetTrayMenu;
-pub const getTraySubmenu = SDL_GetTraySubmenu;
-pub const getTrayEntries = SDL_GetTrayEntries;
-pub const removeTrayEntry = SDL_RemoveTrayEntry;
-pub const insertTrayEntryAt = SDL_InsertTrayEntryAt;
-pub const setTrayEntryLabel = SDL_SetTrayEntryLabel;
-pub const getTrayEntryLabel = SDL_GetTrayEntryLabel;
-pub const setTrayEntryChecked = SDL_SetTrayEntryChecked;
-pub const getTrayEntryChecked = SDL_GetTrayEntryChecked;
-pub const setTrayEntryEnabled = SDL_SetTrayEntryEnabled;
-pub const getTrayEntryEnabled = SDL_GetTrayEntryEnabled;
-pub const setTrayEntryCallback = SDL_SetTrayEntryCallback;
-pub const clickTrayEntry = SDL_ClickTrayEntry;
-pub const destroyTray = SDL_DestroyTray;
-pub const getTrayEntryParent = SDL_GetTrayEntryParent;
-pub const getTrayMenuParent = SDL_GetTrayMenuParentTray;
-pub const getTrayMenuParentEntry = SDL_GetTrayMenuParentEntry;
-pub const updateTrays = SDL_UpdateTrays;
+pub const TrayFunctions = struct {
+    createTray: PFN_SDL_CreateTray,
+    setTrayIcon: PFN_SDL_SetTrayIcon,
+    setTrayTooltip: PFN_SDL_SetTrayTooltip,
+    createTrayMenu: PFN_SDL_CreateTrayMenu,
+    createTraySubmenu: PFN_SDL_CreateTraySubmenu,
+    getTrayMenu: PFN_SDL_GetTrayMenu,
+    getTraySubmenu: PFN_SDL_GetTraySubmenu,
+    getTrayEntries: PFN_SDL_GetTrayEntries,
+    removeTrayEntry: PFN_SDL_RemoveTrayEntry,
+    insertTrayEntryAt: PFN_SDL_InsertTrayEntryAt,
+    setTrayEntryLabel: PFN_SDL_SetTrayEntryLabel,
+    getTrayEntryLabel: PFN_SDL_GetTrayEntryLabel,
+    setTrayEntryChecked: PFN_SDL_SetTrayEntryChecked,
+    getTrayEntryChecked: PFN_SDL_GetTrayEntryChecked,
+    setTrayEntryEnabled: PFN_SDL_SetTrayEntryEnabled,
+    getTrayEntryEnabled: PFN_SDL_GetTrayEntryEnabled,
+    setTrayEntryCallback: PFN_SDL_SetTrayEntryCallback,
+    clickTrayEntry: PFN_SDL_ClickTrayEntry,
+    destroyTray: PFN_SDL_DestroyTray,
+    getTrayEntryParent: PFN_SDL_GetTrayEntryParent,
+    getTrayMenuParent: PFN_SDL_GetTrayMenuParentTray,
+    getTrayMenuParentEntry: PFN_SDL_GetTrayMenuParentEntry,
+    updateTrays: PFN_SDL_UpdateTrays,
+
+    pub fn load(handle: dynamic.LibraryHandle) !TrayFunctions {
+        return dynamic.loadFunctions(TrayFunctions, handle, "SDL_", .{
+            .{ "getTrayMenuParent", "SDL_GetTrayMenuParentTray" },
+        }, &.{});
+    }
+};

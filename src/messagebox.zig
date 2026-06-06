@@ -2,6 +2,7 @@
 // System message boxes
 
 const core = @import("core.zig");
+const dynamic = @import("dynamic.zig");
 const video = @import("video.zig");
 
 // Import types
@@ -41,9 +42,14 @@ pub const SDL_MessageBoxData = extern struct {
 };
 
 // Messagebox functions
-extern fn SDL_ShowMessageBox(data: ?*const SDL_MessageBoxData, buttonid: ?*c_int) bool;
-extern fn SDL_ShowSimpleMessageBox(flags: SDL_MessageBoxFlags, title: ?[*:0]const u8, message: ?[*:0]const u8, window: ?*video.SDL_Window) bool;
+pub const PFN_SDL_ShowMessageBox = *const fn (data: ?*const SDL_MessageBoxData, buttonid: ?*c_int) callconv(.c) bool;
+pub const PFN_SDL_ShowSimpleMessageBox = *const fn (flags: SDL_MessageBoxFlags, title: ?[*:0]const u8, message: ?[*:0]const u8, window: ?*video.SDL_Window) callconv(.c) bool;
 
-// Public API
-pub const showMessageBox = SDL_ShowMessageBox;
-pub const showSimpleMessageBox = SDL_ShowSimpleMessageBox;
+pub const MessageBoxFunctions = struct {
+    showMessageBox: PFN_SDL_ShowMessageBox,
+    showSimpleMessageBox: PFN_SDL_ShowSimpleMessageBox,
+
+    pub fn load(handle: dynamic.LibraryHandle) !MessageBoxFunctions {
+        return dynamic.loadFunctions(MessageBoxFunctions, handle, "SDL_", .{}, &.{});
+    }
+};

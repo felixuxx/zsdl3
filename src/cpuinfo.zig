@@ -1,43 +1,50 @@
 // SDL3 CPUInfo Bindings
 // CPU feature detection
 
+const dynamic = @import("dynamic.zig");
+
 // CPU cacheline size constant
 pub const SDL_CACHELINE_SIZE: c_int = 128;
 
 // CPU functions
-extern fn SDL_GetNumLogicalCPUCores() c_int;
-extern fn SDL_GetCPUCacheLineSize() c_int;
-extern fn SDL_HasAltiVec() bool;
-extern fn SDL_HasMMX() bool;
-extern fn SDL_HasSSE() bool;
-extern fn SDL_HasSSE2() bool;
-extern fn SDL_HasSSE3() bool;
-extern fn SDL_HasSSE41() bool;
-extern fn SDL_HasSSE42() bool;
-extern fn SDL_HasAVX() bool;
-extern fn SDL_HasAVX2() bool;
-extern fn SDL_HasAVX512F() bool;
-extern fn SDL_HasARMSIMD() bool;
-extern fn SDL_HasNEON() bool;
-extern fn SDL_HasLSX() bool;
-extern fn SDL_HasLASX() bool;
-extern fn SDL_GetSystemPageSize() c_int;
+pub const PFN_SDL_GetNumLogicalCPUCores = *const fn () callconv(.c) c_int;
+pub const PFN_SDL_GetCPUCacheLineSize = *const fn () callconv(.c) c_int;
+pub const PFN_SDL_HasAltiVec = *const fn () callconv(.c) bool;
+pub const PFN_SDL_HasMMX = *const fn () callconv(.c) bool;
+pub const PFN_SDL_HasSSE = *const fn () callconv(.c) bool;
+pub const PFN_SDL_HasSSE2 = *const fn () callconv(.c) bool;
+pub const PFN_SDL_HasSSE3 = *const fn () callconv(.c) bool;
+pub const PFN_SDL_HasSSE41 = *const fn () callconv(.c) bool;
+pub const PFN_SDL_HasSSE42 = *const fn () callconv(.c) bool;
+pub const PFN_SDL_HasAVX = *const fn () callconv(.c) bool;
+pub const PFN_SDL_HasAVX2 = *const fn () callconv(.c) bool;
+pub const PFN_SDL_HasAVX512F = *const fn () callconv(.c) bool;
+pub const PFN_SDL_HasARMSIMD = *const fn () callconv(.c) bool;
+pub const PFN_SDL_HasNEON = *const fn () callconv(.c) bool;
+pub const PFN_SDL_HasLSX = *const fn () callconv(.c) bool;
+pub const PFN_SDL_HasLASX = *const fn () callconv(.c) bool;
+pub const PFN_SDL_GetSystemPageSize = *const fn () callconv(.c) c_int;
 
-// Public API
-pub const getNumLogicalCPUCores = SDL_GetNumLogicalCPUCores;
-pub const getCPUCacheLineSize = SDL_GetCPUCacheLineSize;
-pub const hasAltiVec = SDL_HasAltiVec;
-pub const hasMMX = SDL_HasMMX;
-pub const hasSSE = SDL_HasSSE;
-pub const hasSSE2 = SDL_HasSSE2;
-pub const hasSSE3 = SDL_HasSSE3;
-pub const hasSSE41 = SDL_HasSSE41;
-pub const hasSSE42 = SDL_HasSSE42;
-pub const hasAVX = SDL_HasAVX;
-pub const hasAVX2 = SDL_HasAVX2;
-pub const hasAVX512F = SDL_HasAVX512F;
-pub const hasARMSIMD = SDL_HasARMSIMD;
-pub const hasNEON = SDL_HasNEON;
-pub const hasLSX = SDL_HasLSX;
-pub const hasLASX = SDL_HasLASX;
-pub const getSystemPageSize = SDL_GetSystemPageSize;
+pub const CpuInfoFunctions = struct {
+    getNumLogicalCPUCores: PFN_SDL_GetNumLogicalCPUCores,
+    getCPUCacheLineSize: PFN_SDL_GetCPUCacheLineSize,
+    hasAltiVec: PFN_SDL_HasAltiVec,
+    hasMMX: PFN_SDL_HasMMX,
+    hasSSE: PFN_SDL_HasSSE,
+    hasSSE2: PFN_SDL_HasSSE2,
+    hasSSE3: PFN_SDL_HasSSE3,
+    hasSSE41: PFN_SDL_HasSSE41,
+    hasSSE42: PFN_SDL_HasSSE42,
+    hasAVX: PFN_SDL_HasAVX,
+    hasAVX2: PFN_SDL_HasAVX2,
+    hasAVX512F: PFN_SDL_HasAVX512F,
+    hasARMSIMD: PFN_SDL_HasARMSIMD,
+    hasNEON: PFN_SDL_HasNEON,
+    hasLSX: PFN_SDL_HasLSX,
+    hasLASX: PFN_SDL_HasLASX,
+    getSystemPageSize: PFN_SDL_GetSystemPageSize,
+
+    pub fn load(handle: dynamic.LibraryHandle) !CpuInfoFunctions {
+        return dynamic.loadFunctions(CpuInfoFunctions, handle, "SDL_", .{}, &.{});
+    }
+};

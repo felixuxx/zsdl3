@@ -1,32 +1,39 @@
 // SDL3 Clipboard Bindings
 // System clipboard
 
+const dynamic = @import("dynamic.zig");
+
 // Clipboard callback types
 pub const SDL_ClipboardDataCallback = ?*const fn (?*anyopaque, [*:0]const u8, ?*usize) callconv(.c) ?*const anyopaque;
 pub const SDL_ClipboardCleanupCallback = ?*const fn (?*anyopaque) callconv(.c) void;
 
 // Clipboard functions
-extern fn SDL_SetClipboardText(text: [*:0]const u8) bool;
-extern fn SDL_GetClipboardText() ?[*:0]const u8;
-extern fn SDL_HasClipboardText() bool;
-extern fn SDL_SetPrimarySelectionText(text: [*:0]const u8) bool;
-extern fn SDL_GetPrimarySelectionText() ?[*:0]const u8;
-extern fn SDL_HasPrimarySelectionText() bool;
-extern fn SDL_SetClipboardData(callback: SDL_ClipboardDataCallback, cleanup: SDL_ClipboardCleanupCallback, userdata: ?*anyopaque, mime_types: ?[*]?[*:0]const u8, num_mime_types: usize) bool;
-extern fn SDL_GetClipboardData(mime_type: [*:0]const u8, size: ?*usize) ?*anyopaque;
-extern fn SDL_HasClipboardData(mime_type: [*:0]const u8) bool;
-extern fn SDL_GetClipboardMimeTypes(num_mime_types: ?*usize) ?[*]?[*:0]u8;
-extern fn SDL_ClearClipboardData() bool;
+pub const PFN_SDL_SetClipboardText = *const fn (text: [*:0]const u8) callconv(.c) bool;
+pub const PFN_SDL_GetClipboardText = *const fn () callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_HasClipboardText = *const fn () callconv(.c) bool;
+pub const PFN_SDL_SetPrimarySelectionText = *const fn (text: [*:0]const u8) callconv(.c) bool;
+pub const PFN_SDL_GetPrimarySelectionText = *const fn () callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_HasPrimarySelectionText = *const fn () callconv(.c) bool;
+pub const PFN_SDL_SetClipboardData = *const fn (callback: SDL_ClipboardDataCallback, cleanup: SDL_ClipboardCleanupCallback, userdata: ?*anyopaque, mime_types: ?[*]?[*:0]const u8, num_mime_types: usize) callconv(.c) bool;
+pub const PFN_SDL_GetClipboardData = *const fn (mime_type: [*:0]const u8, size: ?*usize) callconv(.c) ?*anyopaque;
+pub const PFN_SDL_HasClipboardData = *const fn (mime_type: [*:0]const u8) callconv(.c) bool;
+pub const PFN_SDL_GetClipboardMimeTypes = *const fn (num_mime_types: ?*usize) callconv(.c) ?[*]?[*:0]u8;
+pub const PFN_SDL_ClearClipboardData = *const fn () callconv(.c) bool;
 
-// Public API
-pub const setClipboardText = SDL_SetClipboardText;
-pub const getClipboardText = SDL_GetClipboardText;
-pub const hasClipboardText = SDL_HasClipboardText;
-pub const setPrimarySelectionText = SDL_SetPrimarySelectionText;
-pub const getPrimarySelectionText = SDL_GetPrimarySelectionText;
-pub const hasPrimarySelectionText = SDL_HasPrimarySelectionText;
-pub const setClipboardData = SDL_SetClipboardData;
-pub const getClipboardData = SDL_GetClipboardData;
-pub const hasClipboardData = SDL_HasClipboardData;
-pub const getClipboardMimeTypes = SDL_GetClipboardMimeTypes;
-pub const clearClipboardData = SDL_ClearClipboardData;
+pub const ClipboardFunctions = struct {
+    setClipboardText: PFN_SDL_SetClipboardText,
+    getClipboardText: PFN_SDL_GetClipboardText,
+    hasClipboardText: PFN_SDL_HasClipboardText,
+    setPrimarySelectionText: PFN_SDL_SetPrimarySelectionText,
+    getPrimarySelectionText: PFN_SDL_GetPrimarySelectionText,
+    hasPrimarySelectionText: PFN_SDL_HasPrimarySelectionText,
+    setClipboardData: PFN_SDL_SetClipboardData,
+    getClipboardData: PFN_SDL_GetClipboardData,
+    hasClipboardData: PFN_SDL_HasClipboardData,
+    getClipboardMimeTypes: PFN_SDL_GetClipboardMimeTypes,
+    clearClipboardData: PFN_SDL_ClearClipboardData,
+
+    pub fn load(handle: dynamic.LibraryHandle) !ClipboardFunctions {
+        return dynamic.loadFunctions(ClipboardFunctions, handle, "SDL_", .{}, &.{});
+    }
+};

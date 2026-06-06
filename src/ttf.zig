@@ -6,6 +6,7 @@ const pixels = @import("pixels.zig");
 const surface = @import("surface.zig");
 const render = @import("render.zig");
 const properties = @import("properties.zig");
+const dynamic = @import("dynamic.zig");
 
 // Import types
 pub const Uint32 = core.Uint32;
@@ -76,177 +77,202 @@ pub const TTF_PROP_FONT_OUTLINE_LINE_JOIN_NUMBER = "SDL_ttf.font.outline.line_jo
 pub const TTF_PROP_FONT_OUTLINE_MITER_LIMIT_NUMBER = "SDL_ttf.font.outline.miter_limit";
 
 // Version functions
-extern fn TTF_Version() c_int;
-extern fn TTF_GetFreeTypeVersion(major: ?*c_int, minor: ?*c_int, patch: ?*c_int) void;
-extern fn TTF_GetHarfBuzzVersion(major: ?*c_int, minor: ?*c_int, patch: ?*c_int) void;
+pub const PFN_TTF_Version = *const fn () callconv(.c) c_int;
+pub const PFN_TTF_GetFreeTypeVersion = *const fn (major: ?*c_int, minor: ?*c_int, patch: ?*c_int) callconv(.c) void;
+pub const PFN_TTF_GetHarfBuzzVersion = *const fn (major: ?*c_int, minor: ?*c_int, patch: ?*c_int) callconv(.c) void;
 
 // Initialization
-extern fn TTF_Init() bool;
-extern fn TTF_Quit() void;
+pub const PFN_TTF_Init = *const fn () callconv(.c) bool;
+pub const PFN_TTF_Quit = *const fn () callconv(.c) void;
 
 // Font creation
-extern fn TTF_OpenFont(file: [*:0]const u8, ptsize: f32) ?*TTF_Font;
-extern fn TTF_OpenFontIO(src: ?*SDL_IOStream, closeio: bool, ptsize: f32) ?*TTF_Font;
-extern fn TTF_OpenFontWithProperties(props: SDL_PropertiesID) ?*TTF_Font;
-extern fn TTF_CopyFont(existing_font: ?*TTF_Font) ?*TTF_Font;
-extern fn TTF_CloseFont(font: ?*TTF_Font) void;
+pub const PFN_TTF_OpenFont = *const fn (file: [*:0]const u8, ptsize: f32) callconv(.c) ?*TTF_Font;
+pub const PFN_TTF_OpenFontIO = *const fn (src: ?*SDL_IOStream, closeio: bool, ptsize: f32) callconv(.c) ?*TTF_Font;
+pub const PFN_TTF_OpenFontWithProperties = *const fn (props: SDL_PropertiesID) callconv(.c) ?*TTF_Font;
+pub const PFN_TTF_CopyFont = *const fn (existing_font: ?*TTF_Font) callconv(.c) ?*TTF_Font;
+pub const PFN_TTF_CloseFont = *const fn (font: ?*TTF_Font) callconv(.c) void;
 
 // Font properties
-extern fn TTF_GetFontProperties(font: ?*TTF_Font) SDL_PropertiesID;
-extern fn TTF_GetFontGeneration(font: ?*TTF_Font) Uint32;
+pub const PFN_TTF_GetFontProperties = *const fn (font: ?*TTF_Font) callconv(.c) SDL_PropertiesID;
+pub const PFN_TTF_GetFontGeneration = *const fn (font: ?*TTF_Font) callconv(.c) Uint32;
 
 // Fallback fonts
-extern fn TTF_AddFallbackFont(font: ?*TTF_Font, fallback: ?*TTF_Font) bool;
-extern fn TTF_RemoveFallbackFont(font: ?*TTF_Font, fallback: ?*TTF_Font) void;
-extern fn TTF_ClearFallbackFonts(font: ?*TTF_Font) void;
+pub const PFN_TTF_AddFallbackFont = *const fn (font: ?*TTF_Font, fallback: ?*TTF_Font) callconv(.c) bool;
+pub const PFN_TTF_RemoveFallbackFont = *const fn (font: ?*TTF_Font, fallback: ?*TTF_Font) callconv(.c) void;
+pub const PFN_TTF_ClearFallbackFonts = *const fn (font: ?*TTF_Font) callconv(.c) void;
 
 // Font size
-extern fn TTF_SetFontSize(font: ?*TTF_Font, ptsize: f32) bool;
-extern fn TTF_SetFontSizeDPI(font: ?*TTF_Font, ptsize: f32, hdpi: c_int, vdpi: c_int) bool;
-extern fn TTF_GetFontSize(font: ?*TTF_Font) f32;
-extern fn TTF_GetFontDPI(font: ?*TTF_Font, hdpi: ?*c_int, vdpi: ?*c_int) bool;
+pub const PFN_TTF_SetFontSize = *const fn (font: ?*TTF_Font, ptsize: f32) callconv(.c) bool;
+pub const PFN_TTF_SetFontSizeDPI = *const fn (font: ?*TTF_Font, ptsize: f32, hdpi: c_int, vdpi: c_int) callconv(.c) bool;
+pub const PFN_TTF_GetFontSize = *const fn (font: ?*TTF_Font) callconv(.c) f32;
+pub const PFN_TTF_GetFontDPI = *const fn (font: ?*TTF_Font, hdpi: ?*c_int, vdpi: ?*c_int) callconv(.c) bool;
 
 // Font style
-extern fn TTF_SetFontStyle(font: ?*TTF_Font, style: TTF_FontStyleFlags) void;
-extern fn TTF_GetFontStyle(font: ?*const TTF_Font) TTF_FontStyleFlags;
+pub const PFN_TTF_SetFontStyle = *const fn (font: ?*TTF_Font, style: TTF_FontStyleFlags) callconv(.c) void;
+pub const PFN_TTF_GetFontStyle = *const fn (font: ?*const TTF_Font) callconv(.c) TTF_FontStyleFlags;
 
 // Font outline
-extern fn TTF_SetFontOutline(font: ?*TTF_Font, outline: c_int) bool;
-extern fn TTF_GetFontOutline(font: ?*const TTF_Font) c_int;
+pub const PFN_TTF_SetFontOutline = *const fn (font: ?*TTF_Font, outline: c_int) callconv(.c) bool;
+pub const PFN_TTF_GetFontOutline = *const fn (font: ?*const TTF_Font) callconv(.c) c_int;
 
 // Font hinting
-extern fn TTF_SetFontHinting(font: ?*TTF_Font, hinting: TTF_HintingFlags) void;
-extern fn TTF_GetFontHinting(font: ?*const TTF_Font) TTF_HintingFlags;
-extern fn TTF_GetNumFontFaces(font: ?*const TTF_Font) c_int;
+pub const PFN_TTF_SetFontHinting = *const fn (font: ?*TTF_Font, hinting: TTF_HintingFlags) callconv(.c) void;
+pub const PFN_TTF_GetFontHinting = *const fn (font: ?*const TTF_Font) callconv(.c) TTF_HintingFlags;
+pub const PFN_TTF_GetNumFontFaces = *const fn (font: ?*const TTF_Font) callconv(.c) c_int;
 
 // Font SDF
-extern fn TTF_SetFontSDF(font: ?*TTF_Font, enabled: bool) bool;
-extern fn TTF_GetFontSDF(font: ?*const TTF_Font) bool;
+pub const PFN_TTF_SetFontSDF = *const fn (font: ?*TTF_Font, enabled: bool) callconv(.c) bool;
+pub const PFN_TTF_GetFontSDF = *const fn (font: ?*const TTF_Font) callconv(.c) bool;
 
 // Font weight
-extern fn TTF_GetFontWeight(font: ?*const TTF_Font) c_int;
+pub const PFN_TTF_GetFontWeight = *const fn (font: ?*const TTF_Font) callconv(.c) c_int;
 
 // Font wrap alignment
-extern fn TTF_SetFontWrapAlignment(font: ?*TTF_Font, alignment: TTF_HorizontalAlignment) void;
-extern fn TTF_GetFontWrapAlignment(font: ?*const TTF_Font) TTF_HorizontalAlignment;
+pub const PFN_TTF_SetFontWrapAlignment = *const fn (font: ?*TTF_Font, alignment: TTF_HorizontalAlignment) callconv(.c) void;
+pub const PFN_TTF_GetFontWrapAlignment = *const fn (font: ?*const TTF_Font) callconv(.c) TTF_HorizontalAlignment;
 
 // Font metrics
-extern fn TTF_GetFontHeight(font: ?*const TTF_Font) c_int;
-extern fn TTF_GetFontAscent(font: ?*const TTF_Font) c_int;
-extern fn TTF_GetFontDescent(font: ?*const TTF_Font) c_int;
-extern fn TTF_SetFontLineSkip(font: ?*TTF_Font, lineskip: c_int) void;
-extern fn TTF_GetFontLineSkip(font: ?*const TTF_Font) c_int;
+pub const PFN_TTF_GetFontHeight = *const fn (font: ?*const TTF_Font) callconv(.c) c_int;
+pub const PFN_TTF_GetFontAscent = *const fn (font: ?*const TTF_Font) callconv(.c) c_int;
+pub const PFN_TTF_GetFontDescent = *const fn (font: ?*const TTF_Font) callconv(.c) c_int;
+pub const PFN_TTF_SetFontLineSkip = *const fn (font: ?*TTF_Font, lineskip: c_int) callconv(.c) void;
+pub const PFN_TTF_GetFontLineSkip = *const fn (font: ?*const TTF_Font) callconv(.c) c_int;
 
 // Font kerning
-extern fn TTF_SetFontKerning(font: ?*TTF_Font, enabled: bool) void;
-extern fn TTF_GetFontKerning(font: ?*const TTF_Font) bool;
+pub const PFN_TTF_SetFontKerning = *const fn (font: ?*TTF_Font, enabled: bool) callconv(.c) void;
+pub const PFN_TTF_GetFontKerning = *const fn (font: ?*const TTF_Font) callconv(.c) bool;
 
 // Font queries
-extern fn TTF_FontIsFixedWidth(font: ?*const TTF_Font) bool;
-extern fn TTF_FontIsScalable(font: ?*const TTF_Font) bool;
-extern fn TTF_GetFontFamilyName(font: ?*const TTF_Font) ?[*:0]const u8;
-extern fn TTF_GetFontStyleName(font: ?*const TTF_Font) ?[*:0]const u8;
+pub const PFN_TTF_FontIsFixedWidth = *const fn (font: ?*const TTF_Font) callconv(.c) bool;
+pub const PFN_TTF_FontIsScalable = *const fn (font: ?*const TTF_Font) callconv(.c) bool;
+pub const PFN_TTF_GetFontFamilyName = *const fn (font: ?*const TTF_Font) callconv(.c) ?[*:0]const u8;
+pub const PFN_TTF_GetFontStyleName = *const fn (font: ?*const TTF_Font) callconv(.c) ?[*:0]const u8;
 
 // Glyph metrics
-extern fn TTF_GetGlyphMetrics(font: ?*const TTF_Font, ch: core.Uint32, minx: ?*c_int, maxx: ?*c_int, miny: ?*c_int, maxy: ?*c_int, advance: ?*c_int) bool;
-extern fn TTF_GetGlyphAdvance(font: ?*const TTF_Font, ch: core.Uint32) c_int;
+pub const PFN_TTF_GetGlyphMetrics = *const fn (font: ?*const TTF_Font, ch: core.Uint32, minx: ?*c_int, maxx: ?*c_int, miny: ?*c_int, maxy: ?*c_int, advance: ?*c_int) callconv(.c) bool;
+pub const PFN_TTF_GetGlyphAdvance = *const fn (font: ?*const TTF_Font, ch: core.Uint32) callconv(.c) c_int;
 
 // Text size
-extern fn TTF_GetStringSize(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, w: ?*c_int, h: ?*c_int) bool;
-extern fn TTF_GetStringSizeWrapped(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, wrap_width: c_int, w: ?*c_int, h: ?*c_int) bool;
+pub const PFN_TTF_GetStringSize = *const fn (font: ?*const TTF_Font, text: [*:0]const u8, length: usize, w: ?*c_int, h: ?*c_int) callconv(.c) bool;
+pub const PFN_TTF_GetStringSizeWrapped = *const fn (font: ?*const TTF_Font, text: [*:0]const u8, length: usize, wrap_width: c_int, w: ?*c_int, h: ?*c_int) callconv(.c) bool;
 
 // Text rendering (Solid)
-extern fn TTF_RenderText_Solid(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color) ?*SDL_Surface;
-extern fn TTF_RenderUTF8_Solid(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color) ?*SDL_Surface;
-extern fn TTF_RenderUNICODE_Solid(font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_Color) ?*SDL_Surface;
+pub const PFN_TTF_RenderText_Solid = *const fn (font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderUTF8_Solid = *const fn (font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderUNICODE_Solid = *const fn (font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_Color) callconv(.c) ?*SDL_Surface;
 
 // Text rendering (Shaded)
-extern fn TTF_RenderText_Shaded(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color, bg: SDL_Color) ?*SDL_Surface;
-extern fn TTF_RenderUTF8_Shaded(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color, bg: SDL_Color) ?*SDL_Surface;
-extern fn TTF_RenderUNICODE_Shaded(font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_Color, bg: SDL_Color) ?*SDL_Surface;
+pub const PFN_TTF_RenderText_Shaded = *const fn (font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color, bg: SDL_Color) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderUTF8_Shaded = *const fn (font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color, bg: SDL_Color) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderUNICODE_Shaded = *const fn (font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_Color, bg: SDL_Color) callconv(.c) ?*SDL_Surface;
 
 // Text rendering (Blended)
-extern fn TTF_RenderText_Blended(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color) ?*SDL_Surface;
-extern fn TTF_RenderUTF8_Blended(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color) ?*SDL_Surface;
-extern fn TTF_RenderUNICODE_Blended(font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_Color) ?*SDL_Surface;
+pub const PFN_TTF_RenderText_Blended = *const fn (font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderUTF8_Blended = *const fn (font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderUNICODE_Blended = *const fn (font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_Color) callconv(.c) ?*SDL_Surface;
 
 // Text rendering (Blended with wrap)
-extern fn TTF_RenderText_Blended_Wrapped(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color, wrapLength: c_int) ?*SDL_Surface;
-extern fn TTF_RenderUTF8_Blended_Wrapped(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color, wrapLength: c_int) ?*SDL_Surface;
-extern fn TTF_RenderUNICODE_Blended_Wrapped(font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_Color, wrapLength: c_int) ?*SDL_Surface;
+pub const PFN_TTF_RenderText_Blended_Wrapped = *const fn (font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color, wrapLength: c_int) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderUTF8_Blended_Wrapped = *const fn (font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color, wrapLength: c_int) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderUNICODE_Blended_Wrapped = *const fn (font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_Color, wrapLength: c_int) callconv(.c) ?*SDL_Surface;
 
 // Text rendering (Blended with float color)
-extern fn TTF_RenderText_Blended_Float(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_FColor) ?*SDL_Surface;
-extern fn TTF_RenderUTF8_Blended_Float(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_FColor) ?*SDL_Surface;
-extern fn TTF_RenderUNICODE_Blended_Float(font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_FColor) ?*SDL_Surface;
+pub const PFN_TTF_RenderText_Blended_Float = *const fn (font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_FColor) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderUTF8_Blended_Float = *const fn (font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_FColor) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderUNICODE_Blended_Float = *const fn (font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_FColor) callconv(.c) ?*SDL_Surface;
 
 // Text rendering (Blended with float color and wrap)
-extern fn TTF_RenderText_Blended_Float_Wrapped(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_FColor, wrapLength: c_int) ?*SDL_Surface;
-extern fn TTF_RenderUTF8_Blended_Float_Wrapped(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_FColor, wrapLength: c_int) ?*SDL_Surface;
-extern fn TTF_RenderUNICODE_Blended_Float_Wrapped(font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_FColor, wrapLength: c_int) ?*SDL_Surface;
+pub const PFN_TTF_RenderText_Blended_Float_Wrapped = *const fn (font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_FColor, wrapLength: c_int) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderUTF8_Blended_Float_Wrapped = *const fn (font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_FColor, wrapLength: c_int) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderUNICODE_Blended_Float_Wrapped = *const fn (font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_FColor, wrapLength: c_int) callconv(.c) ?*SDL_Surface;
 
-// Public API
-pub const version = TTF_Version;
-pub const getFreeTypeVersion = TTF_GetFreeTypeVersion;
-pub const getHarfBuzzVersion = TTF_GetHarfBuzzVersion;
-pub const init = TTF_Init;
-pub const quit = TTF_Quit;
-pub const openFont = TTF_OpenFont;
-pub const openFontIO = TTF_OpenFontIO;
-pub const openFontWithProperties = TTF_OpenFontWithProperties;
-pub const copyFont = TTF_CopyFont;
-pub const closeFont = TTF_CloseFont;
-pub const getFontProperties = TTF_GetFontProperties;
-pub const getFontGeneration = TTF_GetFontGeneration;
-pub const addFallbackFont = TTF_AddFallbackFont;
-pub const removeFallbackFont = TTF_RemoveFallbackFont;
-pub const clearFallbackFonts = TTF_ClearFallbackFonts;
-pub const setFontSize = TTF_SetFontSize;
-pub const setFontSizeDPI = TTF_SetFontSizeDPI;
-pub const getFontSize = TTF_GetFontSize;
-pub const getFontDPI = TTF_GetFontDPI;
-pub const setFontStyle = TTF_SetFontStyle;
-pub const getFontStyle = TTF_GetFontStyle;
-pub const setFontOutline = TTF_SetFontOutline;
-pub const getFontOutline = TTF_GetFontOutline;
-pub const setFontHinting = TTF_SetFontHinting;
-pub const getFontHinting = TTF_GetFontHinting;
-pub const getNumFontFaces = TTF_GetNumFontFaces;
-pub const setFontSDF = TTF_SetFontSDF;
-pub const getFontSDF = TTF_GetFontSDF;
-pub const getFontWeight = TTF_GetFontWeight;
-pub const setFontWrapAlignment = TTF_SetFontWrapAlignment;
-pub const getFontWrapAlignment = TTF_GetFontWrapAlignment;
-pub const getFontHeight = TTF_GetFontHeight;
-pub const getFontAscent = TTF_GetFontAscent;
-pub const getFontDescent = TTF_GetFontDescent;
-pub const setFontLineSkip = TTF_SetFontLineSkip;
-pub const getFontLineSkip = TTF_GetFontLineSkip;
-pub const setFontKerning = TTF_SetFontKerning;
-pub const getFontKerning = TTF_GetFontKerning;
-pub const fontIsFixedWidth = TTF_FontIsFixedWidth;
-pub const fontIsScalable = TTF_FontIsScalable;
-pub const getFontFamilyName = TTF_GetFontFamilyName;
-pub const getFontStyleName = TTF_GetFontStyleName;
-pub const getGlyphMetrics = TTF_GetGlyphMetrics;
-pub const getGlyphAdvance = TTF_GetGlyphAdvance;
-pub const getStringSize = TTF_GetStringSize;
-pub const getStringSizeWrapped = TTF_GetStringSizeWrapped;
-pub const renderTextSolid = TTF_RenderText_Solid;
-pub const renderUTF8Solid = TTF_RenderUTF8_Solid;
-pub const renderUNICODESolid = TTF_RenderUNICODE_Solid;
-pub const renderTextShaded = TTF_RenderText_Shaded;
-pub const renderUTF8Shaded = TTF_RenderUTF8_Shaded;
-pub const renderUNICODEShaded = TTF_RenderUNICODE_Shaded;
-pub const renderTextBlended = TTF_RenderText_Blended;
-pub const renderUTF8Blended = TTF_RenderUTF8_Blended;
-pub const renderUNICODEBlended = TTF_RenderUNICODE_Blended;
-pub const renderTextBlendedWrapped = TTF_RenderText_Blended_Wrapped;
-pub const renderUTF8BlendedWrapped = TTF_RenderUTF8_Blended_Wrapped;
-pub const renderUNICODEBlendedWrapped = TTF_RenderUNICODE_Blended_Wrapped;
-pub const renderTextBlendedFloat = TTF_RenderText_Blended_Float;
-pub const renderUTF8BlendedFloat = TTF_RenderUTF8_Blended_Float;
-pub const renderUNICODEBlendedFloat = TTF_RenderUNICODE_Blended_Float;
-pub const renderTextBlendedFloatWrapped = TTF_RenderText_Blended_Float_Wrapped;
-pub const renderUTF8BlendedFloatWrapped = TTF_RenderUTF8_Blended_Float_Wrapped;
-pub const renderUNICODEBlendedFloatWrapped = TTF_RenderUNICODE_Blended_Float_Wrapped;
+// Dispatch struct
+pub const TTFFunctions = struct {
+    version: PFN_TTF_Version,
+    getFreeTypeVersion: PFN_TTF_GetFreeTypeVersion,
+    getHarfBuzzVersion: PFN_TTF_GetHarfBuzzVersion,
+    init: PFN_TTF_Init,
+    quit: PFN_TTF_Quit,
+    openFont: PFN_TTF_OpenFont,
+    openFontIO: PFN_TTF_OpenFontIO,
+    openFontWithProperties: PFN_TTF_OpenFontWithProperties,
+    copyFont: PFN_TTF_CopyFont,
+    closeFont: PFN_TTF_CloseFont,
+    getFontProperties: PFN_TTF_GetFontProperties,
+    getFontGeneration: PFN_TTF_GetFontGeneration,
+    addFallbackFont: PFN_TTF_AddFallbackFont,
+    removeFallbackFont: PFN_TTF_RemoveFallbackFont,
+    clearFallbackFonts: PFN_TTF_ClearFallbackFonts,
+    setFontSize: PFN_TTF_SetFontSize,
+    setFontSizeDPI: PFN_TTF_SetFontSizeDPI,
+    getFontSize: PFN_TTF_GetFontSize,
+    getFontDPI: PFN_TTF_GetFontDPI,
+    setFontStyle: PFN_TTF_SetFontStyle,
+    getFontStyle: PFN_TTF_GetFontStyle,
+    setFontOutline: PFN_TTF_SetFontOutline,
+    getFontOutline: PFN_TTF_GetFontOutline,
+    setFontHinting: PFN_TTF_SetFontHinting,
+    getFontHinting: PFN_TTF_GetFontHinting,
+    getNumFontFaces: PFN_TTF_GetNumFontFaces,
+    setFontSDF: PFN_TTF_SetFontSDF,
+    getFontSDF: PFN_TTF_GetFontSDF,
+    getFontWeight: PFN_TTF_GetFontWeight,
+    setFontWrapAlignment: PFN_TTF_SetFontWrapAlignment,
+    getFontWrapAlignment: PFN_TTF_GetFontWrapAlignment,
+    getFontHeight: PFN_TTF_GetFontHeight,
+    getFontAscent: PFN_TTF_GetFontAscent,
+    getFontDescent: PFN_TTF_GetFontDescent,
+    setFontLineSkip: PFN_TTF_SetFontLineSkip,
+    getFontLineSkip: PFN_TTF_GetFontLineSkip,
+    setFontKerning: PFN_TTF_SetFontKerning,
+    getFontKerning: PFN_TTF_GetFontKerning,
+    fontIsFixedWidth: PFN_TTF_FontIsFixedWidth,
+    fontIsScalable: PFN_TTF_FontIsScalable,
+    getFontFamilyName: PFN_TTF_GetFontFamilyName,
+    getFontStyleName: PFN_TTF_GetFontStyleName,
+    getGlyphMetrics: PFN_TTF_GetGlyphMetrics,
+    getGlyphAdvance: PFN_TTF_GetGlyphAdvance,
+    getStringSize: PFN_TTF_GetStringSize,
+    getStringSizeWrapped: PFN_TTF_GetStringSizeWrapped,
+    renderTextSolid: PFN_TTF_RenderText_Solid,
+    renderUTF8Solid: PFN_TTF_RenderUTF8_Solid,
+    renderUNICODESolid: PFN_TTF_RenderUNICODE_Solid,
+    renderTextShaded: PFN_TTF_RenderText_Shaded,
+    renderUTF8Shaded: PFN_TTF_RenderUTF8_Shaded,
+    renderUNICODEShaded: PFN_TTF_RenderUNICODE_Shaded,
+    renderTextBlended: PFN_TTF_RenderText_Blended,
+    renderUTF8Blended: PFN_TTF_RenderUTF8_Blended,
+    renderUNICODEBlended: PFN_TTF_RenderUNICODE_Blended,
+    renderTextBlendedWrapped: PFN_TTF_RenderText_Blended_Wrapped,
+    renderUTF8BlendedWrapped: PFN_TTF_RenderUTF8_Blended_Wrapped,
+    renderUNICODEBlendedWrapped: PFN_TTF_RenderUNICODE_Blended_Wrapped,
+    renderTextBlendedFloat: PFN_TTF_RenderText_Blended_Float,
+    renderUTF8BlendedFloat: PFN_TTF_RenderUTF8_Blended_Float,
+    renderUNICODEBlendedFloat: PFN_TTF_RenderUNICODE_Blended_Float,
+    renderTextBlendedFloatWrapped: PFN_TTF_RenderText_Blended_Float_Wrapped,
+    renderUTF8BlendedFloatWrapped: PFN_TTF_RenderUTF8_Blended_Float_Wrapped,
+    renderUNICODEBlendedFloatWrapped: PFN_TTF_RenderUNICODE_Blended_Float_Wrapped,
+
+    pub fn load(handle: dynamic.LibraryHandle) !TTFFunctions {
+        return dynamic.loadFunctions(TTFFunctions, handle, "TTF_", .{
+            .{ "renderTextSolid", "TTF_RenderText_Solid" },
+            .{ "renderUTF8Solid", "TTF_RenderUTF8_Solid" },
+            .{ "renderUNICODESolid", "TTF_RenderUNICODE_Solid" },
+            .{ "renderTextShaded", "TTF_RenderText_Shaded" },
+            .{ "renderUTF8Shaded", "TTF_RenderUTF8_Shaded" },
+            .{ "renderUNICODEShaded", "TTF_RenderUNICODE_Shaded" },
+            .{ "renderTextBlended", "TTF_RenderText_Blended" },
+            .{ "renderUTF8Blended", "TTF_RenderUTF8_Blended" },
+            .{ "renderUNICODEBlended", "TTF_RenderUNICODE_Blended" },
+            .{ "renderTextBlendedWrapped", "TTF_RenderText_Blended_Wrapped" },
+            .{ "renderUTF8BlendedWrapped", "TTF_RenderUTF8_Blended_Wrapped" },
+            .{ "renderUNICODEBlendedWrapped", "TTF_RenderUNICODE_Blended_Wrapped" },
+            .{ "renderTextBlendedFloat", "TTF_RenderText_Blended_Float" },
+            .{ "renderUTF8BlendedFloat", "TTF_RenderUTF8_Blended_Float" },
+            .{ "renderUNICODEBlendedFloat", "TTF_RenderUNICODE_Blended_Float" },
+            .{ "renderTextBlendedFloatWrapped", "TTF_RenderText_Blended_Float_Wrapped" },
+            .{ "renderUTF8BlendedFloatWrapped", "TTF_RenderUTF8_Blended_Float_Wrapped" },
+            .{ "renderUNICODEBlendedFloatWrapped", "TTF_RenderUNICODE_Blended_Float_Wrapped" },
+        }, &.{});
+    }
+};

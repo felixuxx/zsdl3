@@ -2,14 +2,20 @@
 // Bit manipulation utilities
 
 const core = @import("core.zig");
+const dynamic = @import("dynamic.zig");
 
 // Import types
 pub const Uint32 = core.Uint32;
 
 // Bits functions
-extern fn SDL_MostSignificantBitIndex32(x: Uint32) c_int;
-extern fn SDL_HasExactlyOneBitSet32(x: Uint32) bool;
+pub const PFN_SDL_MostSignificantBitIndex32 = *const fn (x: Uint32) callconv(.c) c_int;
+pub const PFN_SDL_HasExactlyOneBitSet32 = *const fn (x: Uint32) callconv(.c) bool;
 
-// Public API
-pub const mostSignificantBitIndex32 = SDL_MostSignificantBitIndex32;
-pub const hasExactlyOneBitSet32 = SDL_HasExactlyOneBitSet32;
+pub const BitsFunctions = struct {
+    mostSignificantBitIndex32: PFN_SDL_MostSignificantBitIndex32,
+    hasExactlyOneBitSet32: PFN_SDL_HasExactlyOneBitSet32,
+
+    pub fn load(handle: dynamic.LibraryHandle) !BitsFunctions {
+        return dynamic.loadFunctions(BitsFunctions, handle, "SDL_", .{}, &.{ "mostSignificantBitIndex32", "hasExactlyOneBitSet32" });
+    }
+};

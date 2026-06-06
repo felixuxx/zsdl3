@@ -1,6 +1,8 @@
 // SDL3 Assert Bindings
 // Custom assertion handling
 
+const dynamic = @import("dynamic.zig");
+
 // Assert state
 pub const SDL_AssertState = enum(c_int) {
     SDL_ASSERTION_RETRY,
@@ -22,21 +24,26 @@ pub const SDL_AssertData = extern struct {
 };
 
 // Assert functions
-extern fn SDL_SetAssertionHandler(handler: ?*const fn (?*const SDL_AssertData, ?*anyopaque) callconv(.c) SDL_AssertState, userdata: ?*anyopaque) void;
-extern fn SDL_GetDefaultAssertionHandler() ?*const fn (?*const SDL_AssertData, ?*anyopaque) callconv(.c) SDL_AssertState;
-extern fn SDL_GetAssertionHandler(userdata: ?*?*anyopaque) ?*const fn (?*const SDL_AssertData, ?*anyopaque) callconv(.c) SDL_AssertState;
-extern fn SDL_GetAssertionReport() ?*const SDL_AssertData;
-extern fn SDL_ResetAssertionReport() void;
-extern fn SDL_TriggerBreakpoint() void;
-extern fn SDL_SetAssertionRetry(state: bool) void;
-extern fn SDL_GetAssertionRetry() bool;
+pub const PFN_SDL_SetAssertionHandler = *const fn (handler: ?*const fn (?*const SDL_AssertData, ?*anyopaque) callconv(.c) SDL_AssertState, userdata: ?*anyopaque) callconv(.c) void;
+pub const PFN_SDL_GetDefaultAssertionHandler = *const fn () callconv(.c) ?*const fn (?*const SDL_AssertData, ?*anyopaque) callconv(.c) SDL_AssertState;
+pub const PFN_SDL_GetAssertionHandler = *const fn (userdata: ?*?*anyopaque) callconv(.c) ?*const fn (?*const SDL_AssertData, ?*anyopaque) callconv(.c) SDL_AssertState;
+pub const PFN_SDL_GetAssertionReport = *const fn () callconv(.c) ?*const SDL_AssertData;
+pub const PFN_SDL_ResetAssertionReport = *const fn () callconv(.c) void;
+pub const PFN_SDL_TriggerBreakpoint = *const fn () callconv(.c) void;
+pub const PFN_SDL_SetAssertionRetry = *const fn (state: bool) callconv(.c) void;
+pub const PFN_SDL_GetAssertionRetry = *const fn () callconv(.c) bool;
 
-// Public API
-pub const setAssertionHandler = SDL_SetAssertionHandler;
-pub const getDefaultAssertionHandler = SDL_GetDefaultAssertionHandler;
-pub const getAssertionHandler = SDL_GetAssertionHandler;
-pub const getAssertionReport = SDL_GetAssertionReport;
-pub const resetAssertionReport = SDL_ResetAssertionReport;
-pub const triggerBreakpoint = SDL_TriggerBreakpoint;
-pub const setAssertionRetry = SDL_SetAssertionRetry;
-pub const getAssertionRetry = SDL_GetAssertionRetry;
+pub const AssertFunctions = struct {
+    setAssertionHandler: PFN_SDL_SetAssertionHandler,
+    getDefaultAssertionHandler: PFN_SDL_GetDefaultAssertionHandler,
+    getAssertionHandler: PFN_SDL_GetAssertionHandler,
+    getAssertionReport: PFN_SDL_GetAssertionReport,
+    resetAssertionReport: PFN_SDL_ResetAssertionReport,
+    triggerBreakpoint: PFN_SDL_TriggerBreakpoint,
+    setAssertionRetry: PFN_SDL_SetAssertionRetry,
+    getAssertionRetry: PFN_SDL_GetAssertionRetry,
+
+    pub fn load(handle: dynamic.LibraryHandle) !AssertFunctions {
+        return dynamic.loadFunctions(AssertFunctions, handle, "SDL_", .{}, &.{ "triggerBreakpoint", "setAssertionRetry", "getAssertionRetry" });
+    }
+};

@@ -21,6 +21,7 @@ pub const SDL_TouchID = touch.SDL_TouchID;
 pub const SDL_Finger = touch.SDL_Finger;
 pub const SDL_FingerID = touch.SDL_FingerID;
 const video = @import("video.zig");
+const dynamic = @import("dynamic.zig");
 
 // Import types
 // === Complete SDL3 Event Type Constants ===
@@ -559,59 +560,32 @@ pub const SDL_EventAction = enum(c_int) {
 };
 
 // === Event Functions ===
-extern fn SDL_PumpEvents() void;
-extern fn SDL_PollEvent(event: ?*SDL_Event) bool;
-extern fn SDL_WaitEvent(event: ?*SDL_Event) bool;
-extern fn SDL_WaitEventTimeout(event: ?*SDL_Event, timeoutMS: core.Sint32) bool;
-extern fn SDL_PushEvent(event: ?*const SDL_Event) bool;
-extern fn SDL_FilterEvents(callback: ?*const fn (?*anyopaque, ?*SDL_Event) callconv(.c) bool, userdata: ?*anyopaque) void;
-extern fn SDL_AddEventWatch(callback: ?*const fn (?*anyopaque, ?*SDL_Event) callconv(.c) bool, userdata: ?*anyopaque) bool;
-extern fn SDL_RemoveEventWatch(callback: ?*const fn (?*anyopaque, ?*SDL_Event) callconv(.c) bool, userdata: ?*anyopaque) void;
-extern fn SDL_PeepEvents(events: ?[*]SDL_Event, numevents: c_int, action: SDL_EventAction, minType: SDL_EventType, maxType: SDL_EventType) c_int;
-extern fn SDL_HasEvent(type: SDL_EventType) bool;
-extern fn SDL_HasEvents(minType: SDL_EventType, maxType: SDL_EventType) bool;
-extern fn SDL_FlushEvent(type: SDL_EventType) void;
-extern fn SDL_FlushEvents(minType: SDL_EventType, maxType: SDL_EventType) void;
-extern fn SDL_SetEventEnabled(type: SDL_EventType, enabled: bool) void;
-extern fn SDL_EventEnabled(type: SDL_EventType) bool;
-extern fn SDL_RegisterEvents(numevents: c_int) SDL_EventType;
+pub const PFN_SDL_PumpEvents = *const fn () callconv(.c) void;
+pub const PFN_SDL_PollEvent = *const fn (event: ?*SDL_Event) callconv(.c) bool;
+pub const PFN_SDL_WaitEvent = *const fn (event: ?*SDL_Event) callconv(.c) bool;
+pub const PFN_SDL_WaitEventTimeout = *const fn (event: ?*SDL_Event, timeoutMS: core.Sint32) callconv(.c) bool;
+pub const PFN_SDL_PushEvent = *const fn (event: ?*const SDL_Event) callconv(.c) bool;
+pub const PFN_SDL_FilterEvents = *const fn (callback: ?*const fn (?*anyopaque, ?*SDL_Event) callconv(.c) bool, userdata: ?*anyopaque) callconv(.c) void;
+pub const PFN_SDL_AddEventWatch = *const fn (callback: ?*const fn (?*anyopaque, ?*SDL_Event) callconv(.c) bool, userdata: ?*anyopaque) callconv(.c) bool;
+pub const PFN_SDL_RemoveEventWatch = *const fn (callback: ?*const fn (?*anyopaque, ?*SDL_Event) callconv(.c) bool, userdata: ?*anyopaque) callconv(.c) void;
+pub const PFN_SDL_PeepEvents = *const fn (events: ?[*]SDL_Event, numevents: c_int, action: SDL_EventAction, minType: SDL_EventType, maxType: SDL_EventType) callconv(.c) c_int;
+pub const PFN_SDL_HasEvent = *const fn (type: SDL_EventType) callconv(.c) bool;
+pub const PFN_SDL_HasEvents = *const fn (minType: SDL_EventType, maxType: SDL_EventType) callconv(.c) bool;
+pub const PFN_SDL_FlushEvent = *const fn (type: SDL_EventType) callconv(.c) void;
+pub const PFN_SDL_FlushEvents = *const fn (minType: SDL_EventType, maxType: SDL_EventType) callconv(.c) void;
+pub const PFN_SDL_SetEventEnabled = *const fn (type: SDL_EventType, enabled: bool) callconv(.c) void;
+pub const PFN_SDL_EventEnabled = *const fn (type: SDL_EventType) callconv(.c) bool;
+pub const PFN_SDL_RegisterEvents = *const fn (numevents: c_int) callconv(.c) SDL_EventType;
 
 // Event filter functions
-extern fn SDL_GetEventFilter(filter: ?*?*const fn (?*anyopaque, ?*SDL_Event) callconv(.c) bool, userdata: ?*?*anyopaque) bool;
-extern fn SDL_SetEventFilter(filter: ?*const fn (?*anyopaque, ?*SDL_Event) callconv(.c) bool, userdata: ?*anyopaque) void;
+pub const PFN_SDL_GetEventFilter = *const fn (filter: ?*?*const fn (?*anyopaque, ?*SDL_Event) callconv(.c) bool, userdata: ?*?*anyopaque) callconv(.c) bool;
+pub const PFN_SDL_SetEventFilter = *const fn (filter: ?*const fn (?*anyopaque, ?*SDL_Event) callconv(.c) bool, userdata: ?*anyopaque) callconv(.c) void;
 
 // Event description function
-extern fn SDL_GetEventDescription(event: ?*const SDL_Event, buf: [*]u8, buflen: c_int) c_int;
+pub const PFN_SDL_GetEventDescription = *const fn (event: ?*const SDL_Event, buf: [*]u8, buflen: c_int) callconv(.c) c_int;
 
 // Window from event function
-extern fn SDL_GetWindowFromEvent(event: ?*const SDL_Event) ?*video.SDL_Window;
-
-// === Public API ===
-// Basic event handling
-pub const pumpEvents = SDL_PumpEvents;
-pub const pollEvent = SDL_PollEvent;
-pub const waitEvent = SDL_WaitEvent;
-pub const waitEventTimeout = SDL_WaitEventTimeout;
-pub const pushEvent = SDL_PushEvent;
-
-// Event filtering and watching
-pub const filterEvents = SDL_FilterEvents;
-pub const addEventWatch = SDL_AddEventWatch;
-pub const removeEventWatch = SDL_RemoveEventWatch;
-pub const peepEvents = SDL_PeepEvents;
-pub const hasEvent = SDL_HasEvent;
-pub const hasEvents = SDL_HasEvents;
-pub const flushEvent = SDL_FlushEvent;
-pub const flushEvents = SDL_FlushEvents;
-pub const setEventEnabled = SDL_SetEventEnabled;
-pub const eventEnabled = SDL_EventEnabled;
-pub const registerEvents = SDL_RegisterEvents;
-
-// Event utilities
-pub const getEventFilter = SDL_GetEventFilter;
-pub const setEventFilter = SDL_SetEventFilter;
-pub const getEventDescription = SDL_GetEventDescription;
-pub const getWindowFromEvent = SDL_GetWindowFromEvent;
+pub const PFN_SDL_GetWindowFromEvent = *const fn (event: ?*const SDL_Event) callconv(.c) ?*video.SDL_Window;
 
 // === Utility Functions ===
 /// Check if an event is a window event
@@ -683,3 +657,30 @@ pub fn isRenderEvent(eventType: SDL_EventType) bool {
 pub fn isUserEvent(eventType: SDL_EventType) bool {
     return eventType >= SDL_EVENT_USER;
 }
+
+pub const EventFunctions = struct {
+    pumpEvents: PFN_SDL_PumpEvents,
+    pollEvent: PFN_SDL_PollEvent,
+    waitEvent: PFN_SDL_WaitEvent,
+    waitEventTimeout: PFN_SDL_WaitEventTimeout,
+    pushEvent: PFN_SDL_PushEvent,
+    filterEvents: PFN_SDL_FilterEvents,
+    addEventWatch: PFN_SDL_AddEventWatch,
+    removeEventWatch: PFN_SDL_RemoveEventWatch,
+    peepEvents: PFN_SDL_PeepEvents,
+    hasEvent: PFN_SDL_HasEvent,
+    hasEvents: PFN_SDL_HasEvents,
+    flushEvent: PFN_SDL_FlushEvent,
+    flushEvents: PFN_SDL_FlushEvents,
+    setEventEnabled: PFN_SDL_SetEventEnabled,
+    eventEnabled: PFN_SDL_EventEnabled,
+    registerEvents: PFN_SDL_RegisterEvents,
+    getEventFilter: PFN_SDL_GetEventFilter,
+    setEventFilter: PFN_SDL_SetEventFilter,
+    getEventDescription: PFN_SDL_GetEventDescription,
+    getWindowFromEvent: PFN_SDL_GetWindowFromEvent,
+
+    pub fn load(handle: dynamic.LibraryHandle) !EventFunctions {
+        return dynamic.loadFunctions(EventFunctions, handle, "SDL_", .{}, &.{});
+    }
+};

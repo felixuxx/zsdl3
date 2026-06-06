@@ -2,6 +2,7 @@
 // Touchscreen input
 
 const core = @import("core.zig");
+const dynamic = @import("dynamic.zig");
 
 // Import types
 pub const Uint64 = core.Uint64;
@@ -13,10 +14,10 @@ pub const SDL_TouchID = Uint64;
 pub const SDL_FingerID = Uint64;
 
 // Touch functions
-extern fn SDL_GetTouchDevices(count: ?*c_int) ?[*]SDL_TouchID;
-extern fn SDL_GetTouchDeviceName(touchID: SDL_TouchID) ?[*:0]const u8;
-extern fn SDL_GetTouchDeviceType(touchID: SDL_TouchID) SDL_TouchDeviceType;
-extern fn SDL_GetTouchFingers(touchID: SDL_TouchID, count: ?*c_int) ?[*]?*SDL_Finger;
+pub const PFN_SDL_GetTouchDevices = *const fn (count: ?*c_int) callconv(.c) ?[*]SDL_TouchID;
+pub const PFN_SDL_GetTouchDeviceName = *const fn (touchID: SDL_TouchID) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetTouchDeviceType = *const fn (touchID: SDL_TouchID) callconv(.c) SDL_TouchDeviceType;
+pub const PFN_SDL_GetTouchFingers = *const fn (touchID: SDL_TouchID, count: ?*c_int) callconv(.c) ?[*]?*SDL_Finger;
 
 // Touch device type
 pub const SDL_TouchDeviceType = enum(c_int) {
@@ -34,8 +35,13 @@ pub const SDL_Finger = extern struct {
     pressure: f32,
 };
 
-// Public API
-pub const getTouchDevices = SDL_GetTouchDevices;
-pub const getTouchDeviceName = SDL_GetTouchDeviceName;
-pub const getTouchDeviceType = SDL_GetTouchDeviceType;
-pub const getTouchFingers = SDL_GetTouchFingers;
+pub const TouchFunctions = struct {
+    getTouchDevices: PFN_SDL_GetTouchDevices,
+    getTouchDeviceName: PFN_SDL_GetTouchDeviceName,
+    getTouchDeviceType: PFN_SDL_GetTouchDeviceType,
+    getTouchFingers: PFN_SDL_GetTouchFingers,
+
+    pub fn load(handle: dynamic.LibraryHandle) !TouchFunctions {
+        return dynamic.loadFunctions(TouchFunctions, handle, "SDL_", .{}, &.{});
+    }
+};

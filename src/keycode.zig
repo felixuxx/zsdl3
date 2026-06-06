@@ -2,6 +2,7 @@
 // Complete key mappings and constants
 
 const core = @import("core.zig");
+const dynamic = @import("dynamic.zig");
 
 // Keycode and scancode types
 pub const SDL_Keycode = core.SDL_Keycode;
@@ -582,24 +583,15 @@ pub const KMOD_ALT = KMOD_LALT | KMOD_RALT;
 pub const KMOD_GUI = KMOD_LGUI | KMOD_RGUI;
 
 // === External SDL Functions ===
-extern fn SDL_GetKeyFromName(name: [*:0]const u8) SDL_Keycode;
-extern fn SDL_GetKeyName(key: SDL_Keycode) ?[*:0]const u8;
-extern fn SDL_GetScancodeFromName(name: [*:0]const u8) SDL_Scancode;
-extern fn SDL_GetScancodeName(scancode: SDL_Scancode) ?[*:0]const u8;
-extern fn SDL_SetScancodeName(scancode: SDL_Scancode, name: [*:0]const u8) bool;
+pub const PFN_SDL_GetKeyFromName = *const fn (name: [*:0]const u8) callconv(.c) SDL_Keycode;
+pub const PFN_SDL_GetKeyName = *const fn (key: SDL_Keycode) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetScancodeFromName = *const fn (name: [*:0]const u8) callconv(.c) SDL_Scancode;
+pub const PFN_SDL_GetScancodeName = *const fn (scancode: SDL_Scancode) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_SetScancodeName = *const fn (scancode: SDL_Scancode, name: [*:0]const u8) callconv(.c) bool;
 
 // Additional useful functions
-extern fn SDL_GetKeyFromScancode(scancode: SDL_Scancode) SDL_Keycode;
-extern fn SDL_GetScancodeFromKey(key: SDL_Keycode) SDL_Scancode;
-
-// === Public API ===
-pub const getKeyFromName = SDL_GetKeyFromName;
-pub const getKeyName = SDL_GetKeyName;
-pub const getScancodeFromName = SDL_GetScancodeFromName;
-pub const getScancodeName = SDL_GetScancodeName;
-pub const setScancodeName = SDL_SetScancodeName;
-pub const getKeyFromScancode = SDL_GetKeyFromScancode;
-pub const getScancodeFromKey = SDL_GetScancodeFromKey;
+pub const PFN_SDL_GetKeyFromScancode = *const fn (scancode: SDL_Scancode) callconv(.c) SDL_Keycode;
+pub const PFN_SDL_GetScancodeFromKey = *const fn (key: SDL_Keycode) callconv(.c) SDL_Scancode;
 
 // === Utility Functions ===
 /// Check if a keycode is printable (character)
@@ -619,3 +611,17 @@ pub fn keycodeToScancode(keycode: SDL_Keycode) ?SDL_Scancode {
     }
     return null;
 }
+
+pub const KeycodeFunctions = struct {
+    getKeyFromName: PFN_SDL_GetKeyFromName,
+    getKeyName: PFN_SDL_GetKeyName,
+    getScancodeFromName: PFN_SDL_GetScancodeFromName,
+    getScancodeName: PFN_SDL_GetScancodeName,
+    setScancodeName: PFN_SDL_SetScancodeName,
+    getKeyFromScancode: PFN_SDL_GetKeyFromScancode,
+    getScancodeFromKey: PFN_SDL_GetScancodeFromKey,
+
+    pub fn load(handle: dynamic.LibraryHandle) !KeycodeFunctions {
+        return dynamic.loadFunctions(KeycodeFunctions, handle, "SDL_", .{}, &.{});
+    }
+};

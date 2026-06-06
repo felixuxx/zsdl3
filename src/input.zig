@@ -2,6 +2,7 @@
 // Keyboard, mouse, joystick, gamepad, touch, pen, sensors, HIDAPI
 
 const core = @import("core.zig");
+const dynamic = @import("dynamic.zig");
 pub const Uint8 = core.Uint8;
 pub const Uint16 = core.Uint16;
 pub const Uint32 = core.Uint32;
@@ -190,47 +191,47 @@ pub const SDL_Joystick = opaque {};
 pub const SDL_Gamepad = opaque {};
 
 // Keyboard functions
-extern fn SDL_HasKeyboard() bool;
-extern fn SDL_GetKeyboards(count: ?*c_int) ?[*]SDL_KeyboardID;
-extern fn SDL_GetKeyboardNameForID(instance_id: SDL_KeyboardID) ?[*:0]const u8;
-extern fn SDL_GetKeyboardFocus() ?*video.SDL_Window;
-extern fn SDL_GetKeyboardState(numkeys: ?*c_int) ?[*]const bool;
-extern fn SDL_ResetKeyboard() void;
-extern fn SDL_GetModState() SDL_Keymod;
-extern fn SDL_SetModState(modstate: SDL_Keymod) void;
-extern fn SDL_GetKeyFromScancode(scancode: SDL_Scancode, modstate: SDL_Keymod, key_event: bool) SDL_Keycode;
-extern fn SDL_GetScancodeFromKey(key: SDL_Keycode, modstate: ?*SDL_Keymod) SDL_Scancode;
-extern fn SDL_SetScancodeName(scancode: SDL_Scancode, name: [*:0]const u8) bool;
-extern fn SDL_GetScancodeName(scancode: SDL_Scancode) ?[*:0]const u8;
-extern fn SDL_GetScancodeFromName(name: [*:0]const u8) SDL_Scancode;
-extern fn SDL_GetKeyName(key: SDL_Keycode) ?[*:0]const u8;
-extern fn SDL_GetKeyFromName(name: [*:0]const u8) SDL_Keycode;
-extern fn SDL_StartTextInput(window: ?*video.SDL_Window) bool;
-extern fn SDL_StartTextInputWithProperties(window: ?*video.SDL_Window, props: core.SDL_PropertiesID) bool;
-extern fn SDL_StopTextInput(window: ?*video.SDL_Window) bool;
-extern fn SDL_TextInputActive(window: ?*video.SDL_Window) bool;
-extern fn SDL_ClearComposition(window: ?*video.SDL_Window) bool;
+pub const PFN_SDL_HasKeyboard = *const fn () callconv(.c) bool;
+pub const PFN_SDL_GetKeyboards = *const fn (count: ?*c_int) callconv(.c) ?[*]SDL_KeyboardID;
+pub const PFN_SDL_GetKeyboardNameForID = *const fn (instance_id: SDL_KeyboardID) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetKeyboardFocus = *const fn () callconv(.c) ?*video.SDL_Window;
+pub const PFN_SDL_GetKeyboardState = *const fn (numkeys: ?*c_int) callconv(.c) ?[*]const bool;
+pub const PFN_SDL_ResetKeyboard = *const fn () callconv(.c) void;
+pub const PFN_SDL_GetModState = *const fn () callconv(.c) SDL_Keymod;
+pub const PFN_SDL_SetModState = *const fn (modstate: SDL_Keymod) callconv(.c) void;
+pub const PFN_SDL_GetKeyFromScancode = *const fn (scancode: SDL_Scancode, modstate: SDL_Keymod, key_event: bool) callconv(.c) SDL_Keycode;
+pub const PFN_SDL_GetScancodeFromKey = *const fn (key: SDL_Keycode, modstate: ?*SDL_Keymod) callconv(.c) SDL_Scancode;
+pub const PFN_SDL_SetScancodeName = *const fn (scancode: SDL_Scancode, name: [*:0]const u8) callconv(.c) bool;
+pub const PFN_SDL_GetScancodeName = *const fn (scancode: SDL_Scancode) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetScancodeFromName = *const fn (name: [*:0]const u8) callconv(.c) SDL_Scancode;
+pub const PFN_SDL_GetKeyName = *const fn (key: SDL_Keycode) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetKeyFromName = *const fn (name: [*:0]const u8) callconv(.c) SDL_Keycode;
+pub const PFN_SDL_StartTextInput = *const fn (window: ?*video.SDL_Window) callconv(.c) bool;
+pub const PFN_SDL_StartTextInputWithProperties = *const fn (window: ?*video.SDL_Window, props: core.SDL_PropertiesID) callconv(.c) bool;
+pub const PFN_SDL_StopTextInput = *const fn (window: ?*video.SDL_Window) callconv(.c) bool;
+pub const PFN_SDL_TextInputActive = *const fn (window: ?*video.SDL_Window) callconv(.c) bool;
+pub const PFN_SDL_ClearComposition = *const fn (window: ?*video.SDL_Window) callconv(.c) bool;
 const pixels = @import("pixels.zig");
-extern fn SDL_SetTextInputArea(window: ?*video.SDL_Window, rect: ?*const pixels.SDL_Rect, cursor: c_int) bool;
-extern fn SDL_GetTextInputArea(window: ?*video.SDL_Window, rect: ?*pixels.SDL_Rect, cursor: ?*c_int) bool;
-extern fn SDL_HasScreenKeyboardSupport() bool;
-extern fn SDL_ScreenKeyboardShown(window: ?*video.SDL_Window) bool;
+pub const PFN_SDL_SetTextInputArea = *const fn (window: ?*video.SDL_Window, rect: ?*const pixels.SDL_Rect, cursor: c_int) callconv(.c) bool;
+pub const PFN_SDL_GetTextInputArea = *const fn (window: ?*video.SDL_Window, rect: ?*pixels.SDL_Rect, cursor: ?*c_int) callconv(.c) bool;
+pub const PFN_SDL_HasScreenKeyboardSupport = *const fn () callconv(.c) bool;
+pub const PFN_SDL_ScreenKeyboardShown = *const fn (window: ?*video.SDL_Window) callconv(.c) bool;
 
 // Mouse functions
-extern fn SDL_HasMouse() bool;
-extern fn SDL_GetMice(count: ?*c_int) ?[*]SDL_MouseID;
-extern fn SDL_GetMouseNameForID(instance_id: SDL_MouseID) ?[*:0]const u8;
-extern fn SDL_GetMouseFocus() ?*video.SDL_Window;
-extern fn SDL_GetMouseState(x: ?*f32, y: ?*f32) SDL_MouseButtonFlags;
-extern fn SDL_GetGlobalMouseState(x: ?*f32, y: ?*f32) SDL_MouseButtonFlags;
-extern fn SDL_GetRelativeMouseState(x: ?*f32, y: ?*f32) SDL_MouseButtonFlags;
-extern fn SDL_WarpMouseInWindow(window: ?*video.SDL_Window, x: f32, y: f32) void;
-extern fn SDL_WarpMouseGlobal(x: f32, y: f32) bool;
-extern fn SDL_CaptureMouse(enabled: bool) bool;
+pub const PFN_SDL_HasMouse = *const fn () callconv(.c) bool;
+pub const PFN_SDL_GetMice = *const fn (count: ?*c_int) callconv(.c) ?[*]SDL_MouseID;
+pub const PFN_SDL_GetMouseNameForID = *const fn (instance_id: SDL_MouseID) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetMouseFocus = *const fn () callconv(.c) ?*video.SDL_Window;
+pub const PFN_SDL_GetMouseState = *const fn (x: ?*f32, y: ?*f32) callconv(.c) SDL_MouseButtonFlags;
+pub const PFN_SDL_GetGlobalMouseState = *const fn (x: ?*f32, y: ?*f32) callconv(.c) SDL_MouseButtonFlags;
+pub const PFN_SDL_GetRelativeMouseState = *const fn (x: ?*f32, y: ?*f32) callconv(.c) SDL_MouseButtonFlags;
+pub const PFN_SDL_WarpMouseInWindow = *const fn (window: ?*video.SDL_Window, x: f32, y: f32) callconv(.c) void;
+pub const PFN_SDL_WarpMouseGlobal = *const fn (x: f32, y: f32) callconv(.c) bool;
+pub const PFN_SDL_CaptureMouse = *const fn (enabled: bool) callconv(.c) bool;
 
-extern fn SDL_SetWindowRelativeMouseMode(window: ?*video.SDL_Window, enabled: bool) bool;
-extern fn SDL_GetWindowRelativeMouseMode(window: ?*video.SDL_Window) bool;
-extern fn SDL_SetRelativeMouseTransform(callback: ?*const fn (?*anyopaque, core.Uint64, ?*video.SDL_Window, SDL_MouseID, ?*f32, ?*f32) callconv(.c) void, userdata: ?*anyopaque) bool;
+pub const PFN_SDL_SetWindowRelativeMouseMode = *const fn (window: ?*video.SDL_Window, enabled: bool) callconv(.c) bool;
+pub const PFN_SDL_GetWindowRelativeMouseMode = *const fn (window: ?*video.SDL_Window) callconv(.c) bool;
+pub const PFN_SDL_SetRelativeMouseTransform = *const fn (callback: ?*const fn (?*anyopaque, core.Uint64, ?*video.SDL_Window, SDL_MouseID, ?*f32, ?*f32) callconv(.c) void, userdata: ?*anyopaque) callconv(.c) bool;
 
 
 // Cursor functions
@@ -238,250 +239,254 @@ pub const SDL_CursorFrameInfo = extern struct {
     surface: ?*surface.SDL_Surface,
     duration: Uint32,
 };
-extern fn SDL_CreateCursor(data: ?[*]const Uint8, mask: ?[*]const Uint8, w: c_int, h: c_int, hot_x: c_int, hot_y: c_int) ?*SDL_Cursor;
-extern fn SDL_CreateColorCursor(surface: ?*surface.SDL_Surface, hot_x: c_int, hot_y: c_int) ?*SDL_Cursor;
-extern fn SDL_CreateAnimatedCursor(frames: ?[*]SDL_CursorFrameInfo, frame_count: c_int, hot_x: c_int, hot_y: c_int) ?*SDL_Cursor;
-extern fn SDL_CreateSystemCursor(id: SDL_SystemCursor) ?*SDL_Cursor;
-extern fn SDL_SetCursor(cursor: ?*SDL_Cursor) bool;
-extern fn SDL_GetCursor() ?*SDL_Cursor;
-extern fn SDL_GetDefaultCursor() ?*SDL_Cursor;
-extern fn SDL_DestroyCursor(cursor: ?*SDL_Cursor) void;
-extern fn SDL_ShowCursor() bool;
-extern fn SDL_HideCursor() bool;
-extern fn SDL_CursorVisible() bool;
+pub const PFN_SDL_CreateCursor = *const fn (data: ?[*]const Uint8, mask: ?[*]const Uint8, w: c_int, h: c_int, hot_x: c_int, hot_y: c_int) callconv(.c) ?*SDL_Cursor;
+pub const PFN_SDL_CreateColorCursor = *const fn (surface: ?*surface.SDL_Surface, hot_x: c_int, hot_y: c_int) callconv(.c) ?*SDL_Cursor;
+pub const PFN_SDL_CreateAnimatedCursor = *const fn (frames: ?[*]SDL_CursorFrameInfo, frame_count: c_int, hot_x: c_int, hot_y: c_int) callconv(.c) ?*SDL_Cursor;
+pub const PFN_SDL_CreateSystemCursor = *const fn (id: SDL_SystemCursor) callconv(.c) ?*SDL_Cursor;
+pub const PFN_SDL_SetCursor = *const fn (cursor: ?*SDL_Cursor) callconv(.c) bool;
+pub const PFN_SDL_GetCursor = *const fn () callconv(.c) ?*SDL_Cursor;
+pub const PFN_SDL_GetDefaultCursor = *const fn () callconv(.c) ?*SDL_Cursor;
+pub const PFN_SDL_DestroyCursor = *const fn (cursor: ?*SDL_Cursor) callconv(.c) void;
+pub const PFN_SDL_ShowCursor = *const fn () callconv(.c) bool;
+pub const PFN_SDL_HideCursor = *const fn () callconv(.c) bool;
+pub const PFN_SDL_CursorVisible = *const fn () callconv(.c) bool;
 
 // Joystick functions
-extern fn SDL_GetJoysticks(count: ?*c_int) ?[*]SDL_JoystickID;
-extern fn SDL_OpenJoystick(instance_id: c_int) ?*SDL_Joystick;
-extern fn SDL_CloseJoystick(joystick: ?*SDL_Joystick) void;
-extern fn SDL_GetJoystickName(joystick: ?*SDL_Joystick) ?[*:0]const u8;
-extern fn SDL_GetJoystickPath(joystick: ?*SDL_Joystick) ?[*:0]const u8;
-extern fn SDL_GetJoystickType(joystick: ?*SDL_Joystick) SDL_JoystickType;
-extern fn SDL_GetJoystickGUID(joystick: ?*SDL_Joystick) SDL_GUID;
-extern fn SDL_GetJoystickVendor(joystick: ?*SDL_Joystick) Uint16;
-extern fn SDL_GetJoystickProduct(joystick: ?*SDL_Joystick) Uint16;
-extern fn SDL_GetJoystickProductVersion(joystick: ?*SDL_Joystick) Uint16;
-extern fn SDL_GetJoystickFirmwareVersion(joystick: ?*SDL_Joystick) Uint16;
-extern fn SDL_GetJoystickSerial(joystick: ?*SDL_Joystick) ?[*:0]const u8;
-extern fn SDL_GetJoystickAxis(joystick: ?*SDL_Joystick, axis: c_int) Sint16;
-extern fn SDL_GetJoystickHat(joystick: ?*SDL_Joystick, hat: c_int) Uint8;
-extern fn SDL_GetJoystickBall(joystick: ?*SDL_Joystick, ball: c_int, dx: ?*c_int, dy: ?*c_int) bool;
-extern fn SDL_GetJoystickButton(joystick: ?*SDL_Joystick, button: c_int) bool;
-extern fn SDL_RumbleJoystick(joystick: ?*SDL_Joystick, low_frequency_rumble: Uint16, high_frequency_rumble: Uint16, duration_ms: Uint32) bool;
-extern fn SDL_RumbleJoystickTriggers(joystick: ?*SDL_Joystick, left_rumble: Uint16, right_rumble: Uint16, duration_ms: Uint32) bool;
-extern fn SDL_SetJoystickLED(joystick: ?*SDL_Joystick, red: Uint8, green: Uint8, blue: Uint8) bool;
-extern fn SDL_SendJoystickEffect(joystick: ?*SDL_Joystick, data: ?*anyopaque, size: c_int) bool;
+pub const PFN_SDL_GetJoysticks = *const fn (count: ?*c_int) callconv(.c) ?[*]SDL_JoystickID;
+pub const PFN_SDL_OpenJoystick = *const fn (instance_id: c_int) callconv(.c) ?*SDL_Joystick;
+pub const PFN_SDL_CloseJoystick = *const fn (joystick: ?*SDL_Joystick) callconv(.c) void;
+pub const PFN_SDL_GetJoystickName = *const fn (joystick: ?*SDL_Joystick) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetJoystickPath = *const fn (joystick: ?*SDL_Joystick) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetJoystickType = *const fn (joystick: ?*SDL_Joystick) callconv(.c) SDL_JoystickType;
+pub const PFN_SDL_GetJoystickGUID = *const fn (joystick: ?*SDL_Joystick) callconv(.c) SDL_GUID;
+pub const PFN_SDL_GetJoystickVendor = *const fn (joystick: ?*SDL_Joystick) callconv(.c) Uint16;
+pub const PFN_SDL_GetJoystickProduct = *const fn (joystick: ?*SDL_Joystick) callconv(.c) Uint16;
+pub const PFN_SDL_GetJoystickProductVersion = *const fn (joystick: ?*SDL_Joystick) callconv(.c) Uint16;
+pub const PFN_SDL_GetJoystickFirmwareVersion = *const fn (joystick: ?*SDL_Joystick) callconv(.c) Uint16;
+pub const PFN_SDL_GetJoystickSerial = *const fn (joystick: ?*SDL_Joystick) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetJoystickAxis = *const fn (joystick: ?*SDL_Joystick, axis: c_int) callconv(.c) Sint16;
+pub const PFN_SDL_GetJoystickHat = *const fn (joystick: ?*SDL_Joystick, hat: c_int) callconv(.c) Uint8;
+pub const PFN_SDL_GetJoystickBall = *const fn (joystick: ?*SDL_Joystick, ball: c_int, dx: ?*c_int, dy: ?*c_int) callconv(.c) bool;
+pub const PFN_SDL_GetJoystickButton = *const fn (joystick: ?*SDL_Joystick, button: c_int) callconv(.c) bool;
+pub const PFN_SDL_RumbleJoystick = *const fn (joystick: ?*SDL_Joystick, low_frequency_rumble: Uint16, high_frequency_rumble: Uint16, duration_ms: Uint32) callconv(.c) bool;
+pub const PFN_SDL_RumbleJoystickTriggers = *const fn (joystick: ?*SDL_Joystick, left_rumble: Uint16, right_rumble: Uint16, duration_ms: Uint32) callconv(.c) bool;
+pub const PFN_SDL_SetJoystickLED = *const fn (joystick: ?*SDL_Joystick, red: Uint8, green: Uint8, blue: Uint8) callconv(.c) bool;
+pub const PFN_SDL_SendJoystickEffect = *const fn (joystick: ?*SDL_Joystick, data: ?*anyopaque, size: c_int) callconv(.c) bool;
 
 // Gamepad functions
 
-extern fn SDL_IsGamepad(instance_id: c_int) bool;
-extern fn SDL_OpenGamepad(instance_id: c_int) ?*SDL_Gamepad;
-extern fn SDL_CloseGamepad(gamepad: ?*SDL_Gamepad) void;
-extern fn SDL_GetGamepadName(gamepad: ?*SDL_Gamepad) ?[*:0]const u8;
-extern fn SDL_GetGamepadPath(gamepad: ?*SDL_Gamepad) ?[*:0]const u8;
-extern fn SDL_GetGamepadType(gamepad: ?*SDL_Gamepad) SDL_GamepadType;
+pub const PFN_SDL_IsGamepad = *const fn (instance_id: c_int) callconv(.c) bool;
+pub const PFN_SDL_OpenGamepad = *const fn (instance_id: c_int) callconv(.c) ?*SDL_Gamepad;
+pub const PFN_SDL_CloseGamepad = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) void;
+pub const PFN_SDL_GetGamepadName = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetGamepadPath = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetGamepadType = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) SDL_GamepadType;
 
-extern fn SDL_GetGamepadVendor(gamepad: ?*SDL_Gamepad) Uint16;
-extern fn SDL_GetGamepadProduct(gamepad: ?*SDL_Gamepad) Uint16;
-extern fn SDL_GetGamepadProductVersion(gamepad: ?*SDL_Gamepad) Uint16;
-extern fn SDL_GetGamepadFirmwareVersion(gamepad: ?*SDL_Gamepad) Uint16;
-extern fn SDL_GetGamepadSerial(gamepad: ?*SDL_Gamepad) ?[*:0]const u8;
-extern fn SDL_GamepadHasAxis(gamepad: ?*SDL_Gamepad, axis: SDL_GamepadAxis) bool;
-extern fn SDL_GetGamepadAxis(gamepad: ?*SDL_Gamepad, axis: SDL_GamepadAxis) Sint16;
-extern fn SDL_GamepadHasButton(gamepad: ?*SDL_Gamepad, button: SDL_GamepadButton) bool;
-extern fn SDL_GetGamepadButton(gamepad: ?*SDL_Gamepad, button: SDL_GamepadButton) bool;
-extern fn SDL_GetGamepadButtonLabel(gamepad: ?*SDL_Gamepad, button: SDL_GamepadButton) SDL_GamepadButtonLabel;
-extern fn SDL_SetGamepadEventsEnabled(enabled: bool) void;
-extern fn SDL_GamepadEventsEnabled() bool;
-extern fn SDL_GetGamepadBindings(gamepad: ?*SDL_Gamepad, count: ?*c_int) ?[*]?*SDL_GamepadBinding;
-extern fn SDL_ReloadGamepadMappings() bool;
-extern fn SDL_GetGamepadMapping(gamepad: ?*SDL_Gamepad) ?[*:0]const u8;
-extern fn SDL_AddGamepadMapping(mapping: ?[*:0]const u8) c_int;
+pub const PFN_SDL_GetGamepadVendor = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) Uint16;
+pub const PFN_SDL_GetGamepadProduct = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) Uint16;
+pub const PFN_SDL_GetGamepadProductVersion = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) Uint16;
+pub const PFN_SDL_GetGamepadFirmwareVersion = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) Uint16;
+pub const PFN_SDL_GetGamepadSerial = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GamepadHasAxis = *const fn (gamepad: ?*SDL_Gamepad, axis: SDL_GamepadAxis) callconv(.c) bool;
+pub const PFN_SDL_GetGamepadAxis = *const fn (gamepad: ?*SDL_Gamepad, axis: SDL_GamepadAxis) callconv(.c) Sint16;
+pub const PFN_SDL_GamepadHasButton = *const fn (gamepad: ?*SDL_Gamepad, button: SDL_GamepadButton) callconv(.c) bool;
+pub const PFN_SDL_GetGamepadButton = *const fn (gamepad: ?*SDL_Gamepad, button: SDL_GamepadButton) callconv(.c) bool;
+pub const PFN_SDL_GetGamepadButtonLabel = *const fn (gamepad: ?*SDL_Gamepad, button: SDL_GamepadButton) callconv(.c) SDL_GamepadButtonLabel;
+pub const PFN_SDL_SetGamepadEventsEnabled = *const fn (enabled: bool) callconv(.c) void;
+pub const PFN_SDL_GamepadEventsEnabled = *const fn () callconv(.c) bool;
+pub const PFN_SDL_GetGamepadBindings = *const fn (gamepad: ?*SDL_Gamepad, count: ?*c_int) callconv(.c) ?[*]?*SDL_GamepadBinding;
+pub const PFN_SDL_ReloadGamepadMappings = *const fn () callconv(.c) bool;
+pub const PFN_SDL_GetGamepadMapping = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_AddGamepadMapping = *const fn (mapping: ?[*:0]const u8) callconv(.c) c_int;
 const filesystem = @import("filesystem.zig");
-extern fn SDL_AddGamepadMappingsFromFile(file: [*:0]const u8) c_int;
-extern fn SDL_AddGamepadMappingsFromIO(src: ?*filesystem.SDL_IOStream, closeio: bool) c_int;
-extern fn SDL_GetGamepadMappings(count: ?*c_int) ?[*]?[*:0]u8;
-extern fn SDL_GetGamepadMappingForGUID(guid: SDL_GUID) ?[*:0]const u8;
-extern fn SDL_GetGamepadMappingForID(instance_id: SDL_JoystickID) ?[*:0]const u8;
-extern fn SDL_SetGamepadMapping(instance_id: SDL_JoystickID, mapping: ?[*:0]const u8) bool;
-extern fn SDL_GetGamepadPlayerIndexForID(instance_id: SDL_JoystickID) c_int;
-extern fn SDL_GetRealGamepadTypeForID(instance_id: SDL_JoystickID) SDL_GamepadType;
-extern fn SDL_GetRealGamepadType(gamepad: ?*SDL_Gamepad) SDL_GamepadType;
-extern fn SDL_GetNumGamepadTouchpads(gamepad: ?*SDL_Gamepad) c_int;
-extern fn SDL_GetGamepadTouchpadFinger(gamepad: ?*SDL_Gamepad, touchpad: c_int, finger: c_int, down: ?*bool, x: ?*f32, y: ?*f32, pressure: ?*f32) bool;
-extern fn SDL_GetGamepadAppleSFSymbolsNameForAxis(gamepad: ?*SDL_Gamepad, axis: SDL_GamepadAxis) ?[*:0]const u8;
-extern fn SDL_GetGamepadAppleSFSymbolsNameForButton(gamepad: ?*SDL_Gamepad, button: SDL_GamepadButton) ?[*:0]const u8;
-extern fn SDL_HasGamepad() bool;
-extern fn SDL_GetGamepads(count: ?*c_int) ?[*]SDL_JoystickID;
-extern fn SDL_GetGamepadNameForID(instance_id: SDL_JoystickID) ?[*:0]const u8;
-extern fn SDL_GetGamepadPathForID(instance_id: SDL_JoystickID) ?[*:0]const u8;
-extern fn SDL_GetGamepadTypeForID(instance_id: SDL_JoystickID) SDL_GamepadType;
-extern fn SDL_GetGamepadGUIDForID(instance_id: SDL_JoystickID) SDL_GUID;
-extern fn SDL_GetGamepadVendorForID(instance_id: SDL_JoystickID) Uint16;
-extern fn SDL_GetGamepadProductForID(instance_id: SDL_JoystickID) Uint16;
-extern fn SDL_GetGamepadProductVersionForID(instance_id: SDL_JoystickID) Uint16;
-extern fn SDL_GetGamepadFirmwareVersionForID(instance_id: SDL_JoystickID) Uint16;
-extern fn SDL_GetGamepadSerialForID(instance_id: SDL_JoystickID) ?[*:0]const u8;
-extern fn SDL_GamepadConnected(gamepad: ?*SDL_Gamepad) bool;
-extern fn SDL_GetGamepadID(gamepad: ?*SDL_Gamepad) SDL_JoystickID;
-extern fn SDL_GetGamepadFromID(instance_id: SDL_JoystickID) ?*SDL_Gamepad;
-extern fn SDL_GetGamepadFromPlayerIndex(player_index: c_int) ?*SDL_Gamepad;
-extern fn SDL_GetGamepadPlayerIndex(gamepad: ?*SDL_Gamepad) c_int;
-extern fn SDL_SetGamepadPlayerIndex(gamepad: ?*SDL_Gamepad, player_index: c_int) bool;
-extern fn SDL_RumbleGamepad(gamepad: ?*SDL_Gamepad, low_frequency_rumble: Uint16, high_frequency_rumble: Uint16, duration_ms: Uint32) bool;
-extern fn SDL_RumbleGamepadTriggers(gamepad: ?*SDL_Gamepad, left_rumble: Uint16, right_rumble: Uint16, duration_ms: Uint32) bool;
-extern fn SDL_SetGamepadLED(gamepad: ?*SDL_Gamepad, red: Uint8, green: Uint8, blue: Uint8) bool;
-extern fn SDL_SendGamepadEffect(gamepad: ?*SDL_Gamepad, data: ?*anyopaque, size: c_int) bool;
-extern fn SDL_GetGamepadSensorData(gamepad: ?*SDL_Gamepad, sensor: SDL_SensorType, data: ?[*]f32, num_values: c_int) bool;
-extern fn SDL_SetGamepadSensorEnabled(gamepad: ?*SDL_Gamepad, sensor: SDL_SensorType, enabled: bool) bool;
-extern fn SDL_GamepadSensorEnabled(gamepad: ?*SDL_Gamepad, sensor: SDL_SensorType) bool;
-extern fn SDL_GetGamepadProperties(gamepad: ?*SDL_Gamepad) core.SDL_PropertiesID;
+pub const PFN_SDL_AddGamepadMappingsFromFile = *const fn (file: [*:0]const u8) callconv(.c) c_int;
+pub const PFN_SDL_AddGamepadMappingsFromIO = *const fn (src: ?*filesystem.SDL_IOStream, closeio: bool) callconv(.c) c_int;
+pub const PFN_SDL_GetGamepadMappings = *const fn (count: ?*c_int) callconv(.c) ?[*]?[*:0]u8;
+pub const PFN_SDL_GetGamepadMappingForGUID = *const fn (guid: SDL_GUID) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetGamepadMappingForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_SetGamepadMapping = *const fn (instance_id: SDL_JoystickID, mapping: ?[*:0]const u8) callconv(.c) bool;
+pub const PFN_SDL_GetGamepadPlayerIndexForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) c_int;
+pub const PFN_SDL_GetRealGamepadTypeForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) SDL_GamepadType;
+pub const PFN_SDL_GetRealGamepadType = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) SDL_GamepadType;
+pub const PFN_SDL_GetNumGamepadTouchpads = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) c_int;
+pub const PFN_SDL_GetGamepadTouchpadFinger = *const fn (gamepad: ?*SDL_Gamepad, touchpad: c_int, finger: c_int, down: ?*bool, x: ?*f32, y: ?*f32, pressure: ?*f32) callconv(.c) bool;
+pub const PFN_SDL_GetGamepadAppleSFSymbolsNameForAxis = *const fn (gamepad: ?*SDL_Gamepad, axis: SDL_GamepadAxis) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetGamepadAppleSFSymbolsNameForButton = *const fn (gamepad: ?*SDL_Gamepad, button: SDL_GamepadButton) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_HasGamepad = *const fn () callconv(.c) bool;
+pub const PFN_SDL_GetGamepads = *const fn (count: ?*c_int) callconv(.c) ?[*]SDL_JoystickID;
+pub const PFN_SDL_GetGamepadNameForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetGamepadPathForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetGamepadTypeForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) SDL_GamepadType;
+pub const PFN_SDL_GetGamepadGUIDForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) SDL_GUID;
+pub const PFN_SDL_GetGamepadVendorForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) Uint16;
+pub const PFN_SDL_GetGamepadProductForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) Uint16;
+pub const PFN_SDL_GetGamepadProductVersionForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) Uint16;
+pub const PFN_SDL_GetGamepadFirmwareVersionForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) Uint16;
+pub const PFN_SDL_GetGamepadSerialForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GamepadConnected = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) bool;
+pub const PFN_SDL_GetGamepadID = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) SDL_JoystickID;
+pub const PFN_SDL_GetGamepadFromID = *const fn (instance_id: SDL_JoystickID) callconv(.c) ?*SDL_Gamepad;
+pub const PFN_SDL_GetGamepadFromPlayerIndex = *const fn (player_index: c_int) callconv(.c) ?*SDL_Gamepad;
+pub const PFN_SDL_GetGamepadPlayerIndex = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) c_int;
+pub const PFN_SDL_SetGamepadPlayerIndex = *const fn (gamepad: ?*SDL_Gamepad, player_index: c_int) callconv(.c) bool;
+pub const PFN_SDL_RumbleGamepad = *const fn (gamepad: ?*SDL_Gamepad, low_frequency_rumble: Uint16, high_frequency_rumble: Uint16, duration_ms: Uint32) callconv(.c) bool;
+pub const PFN_SDL_RumbleGamepadTriggers = *const fn (gamepad: ?*SDL_Gamepad, left_rumble: Uint16, right_rumble: Uint16, duration_ms: Uint32) callconv(.c) bool;
+pub const PFN_SDL_SetGamepadLED = *const fn (gamepad: ?*SDL_Gamepad, red: Uint8, green: Uint8, blue: Uint8) callconv(.c) bool;
+pub const PFN_SDL_SendGamepadEffect = *const fn (gamepad: ?*SDL_Gamepad, data: ?*anyopaque, size: c_int) callconv(.c) bool;
+pub const PFN_SDL_GetGamepadSensorData = *const fn (gamepad: ?*SDL_Gamepad, sensor: SDL_SensorType, data: ?[*]f32, num_values: c_int) callconv(.c) bool;
+pub const PFN_SDL_SetGamepadSensorEnabled = *const fn (gamepad: ?*SDL_Gamepad, sensor: SDL_SensorType, enabled: bool) callconv(.c) bool;
+pub const PFN_SDL_GamepadSensorEnabled = *const fn (gamepad: ?*SDL_Gamepad, sensor: SDL_SensorType) callconv(.c) bool;
+pub const PFN_SDL_GetGamepadProperties = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) core.SDL_PropertiesID;
 
 
 //Touch functions
-extern fn SDL_GetTouchDeviceType(device_id: SDL_TouchID) SDL_TouchDeviceType;
+pub const PFN_SDL_GetTouchDeviceType = *const fn (device_id: SDL_TouchID) callconv(.c) SDL_TouchDeviceType;
 
 
 //Sensor functions
-extern fn SDL_GetSensorFromID(instance_id: SDL_SensorID) ?*SDL_Sensor;
-extern fn SDL_GetSensorName(sensor: ?*SDL_Sensor) ?[*:0]const u8;
-extern fn SDL_GetSensorType(sensor: ?*SDL_Sensor) SDL_SensorType;
-extern fn SDL_GetSensorNonPortableType(sensor: ?*SDL_Sensor) c_int;
-extern fn SDL_GetSensorInstanceID(sensor: ?*SDL_Sensor) SDL_SensorID;
+pub const PFN_SDL_GetSensorFromID = *const fn (instance_id: SDL_SensorID) callconv(.c) ?*SDL_Sensor;
+pub const PFN_SDL_GetSensorName = *const fn (sensor: ?*SDL_Sensor) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetSensorType = *const fn (sensor: ?*SDL_Sensor) callconv(.c) SDL_SensorType;
+pub const PFN_SDL_GetSensorNonPortableType = *const fn (sensor: ?*SDL_Sensor) callconv(.c) c_int;
+pub const PFN_SDL_GetSensorInstanceID = *const fn (sensor: ?*SDL_Sensor) callconv(.c) SDL_SensorID;
 
-// Public API
-pub const hasKeyboard = SDL_HasKeyboard;
-pub const getKeyboards = SDL_GetKeyboards;
-pub const getKeyboardNameForID = SDL_GetKeyboardNameForID;
-pub const getKeyboardFocus = SDL_GetKeyboardFocus;
-pub const resetKeyboard = SDL_ResetKeyboard;
-pub const getKeyboardState = SDL_GetKeyboardState;
-pub const getModState = SDL_GetModState;
-pub const setModState = SDL_SetModState;
-pub const getKeyFromScancode = SDL_GetKeyFromScancode;
-pub const getScancodeFromKey = SDL_GetScancodeFromKey;
-pub const setScancodeName = SDL_SetScancodeName;
-pub const getScancodeName = SDL_GetScancodeName;
-pub const getScancodeFromName = SDL_GetScancodeFromName;
-pub const getKeyName = SDL_GetKeyName;
-pub const getKeyFromName = SDL_GetKeyFromName;
-pub const startTextInput = SDL_StartTextInput;
-pub const startTextInputWithProperties = SDL_StartTextInputWithProperties;
-pub const stopTextInput = SDL_StopTextInput;
-pub const textInputActive = SDL_TextInputActive;
-pub const clearComposition = SDL_ClearComposition;
-pub const setTextInputArea = SDL_SetTextInputArea;
-pub const getTextInputArea = SDL_GetTextInputArea;
-pub const hasScreenKeyboardSupport = SDL_HasScreenKeyboardSupport;
-pub const screenKeyboardShown = SDL_ScreenKeyboardShown;
-pub const hasMouse = SDL_HasMouse;
-pub const getMice = SDL_GetMice;
-pub const getMouseNameForID = SDL_GetMouseNameForID;
-pub const getMouseFocus = SDL_GetMouseFocus;
-pub const getMouseState = SDL_GetMouseState;
-pub const getGlobalMouseState = SDL_GetGlobalMouseState;
-pub const getRelativeMouseState = SDL_GetRelativeMouseState;
-pub const warpMouseInWindow = SDL_WarpMouseInWindow;
-pub const warpMouseGlobal = SDL_WarpMouseGlobal;
-pub const captureMouse = SDL_CaptureMouse;
+pub const InputFunctions = extern struct {
+    hasKeyboard: PFN_SDL_HasKeyboard,
+    getKeyboards: PFN_SDL_GetKeyboards,
+    getKeyboardNameForID: PFN_SDL_GetKeyboardNameForID,
+    getKeyboardFocus: PFN_SDL_GetKeyboardFocus,
+    getKeyboardState: PFN_SDL_GetKeyboardState,
+    resetKeyboard: PFN_SDL_ResetKeyboard,
+    getModState: PFN_SDL_GetModState,
+    setModState: PFN_SDL_SetModState,
+    getKeyFromScancode: PFN_SDL_GetKeyFromScancode,
+    getScancodeFromKey: PFN_SDL_GetScancodeFromKey,
+    setScancodeName: PFN_SDL_SetScancodeName,
+    getScancodeName: PFN_SDL_GetScancodeName,
+    getScancodeFromName: PFN_SDL_GetScancodeFromName,
+    getKeyName: PFN_SDL_GetKeyName,
+    getKeyFromName: PFN_SDL_GetKeyFromName,
+    startTextInput: PFN_SDL_StartTextInput,
+    startTextInputWithProperties: PFN_SDL_StartTextInputWithProperties,
+    stopTextInput: PFN_SDL_StopTextInput,
+    textInputActive: PFN_SDL_TextInputActive,
+    clearComposition: PFN_SDL_ClearComposition,
+    setTextInputArea: PFN_SDL_SetTextInputArea,
+    getTextInputArea: PFN_SDL_GetTextInputArea,
+    hasScreenKeyboardSupport: PFN_SDL_HasScreenKeyboardSupport,
+    screenKeyboardShown: PFN_SDL_ScreenKeyboardShown,
+    hasMouse: PFN_SDL_HasMouse,
+    getMice: PFN_SDL_GetMice,
+    getMouseNameForID: PFN_SDL_GetMouseNameForID,
+    getMouseFocus: PFN_SDL_GetMouseFocus,
+    getMouseState: PFN_SDL_GetMouseState,
+    getGlobalMouseState: PFN_SDL_GetGlobalMouseState,
+    getRelativeMouseState: PFN_SDL_GetRelativeMouseState,
+    warpMouseInWindow: PFN_SDL_WarpMouseInWindow,
+    warpMouseGlobal: PFN_SDL_WarpMouseGlobal,
+    captureMouse: PFN_SDL_CaptureMouse,
+    setWindowRelativeMouseMode: PFN_SDL_SetWindowRelativeMouseMode,
+    getWindowRelativeMouseMode: PFN_SDL_GetWindowRelativeMouseMode,
+    setRelativeMouseTransform: PFN_SDL_SetRelativeMouseTransform,
+    createCursor: PFN_SDL_CreateCursor,
+    createColorCursor: PFN_SDL_CreateColorCursor,
+    createAnimatedCursor: PFN_SDL_CreateAnimatedCursor,
+    createSystemCursor: PFN_SDL_CreateSystemCursor,
+    setCursor: PFN_SDL_SetCursor,
+    getCursor: PFN_SDL_GetCursor,
+    getDefaultCursor: PFN_SDL_GetDefaultCursor,
+    destroyCursor: PFN_SDL_DestroyCursor,
+    showCursor: PFN_SDL_ShowCursor,
+    hideCursor: PFN_SDL_HideCursor,
+    cursorVisible: PFN_SDL_CursorVisible,
+    getJoysticks: PFN_SDL_GetJoysticks,
+    openJoystick: PFN_SDL_OpenJoystick,
+    closeJoystick: PFN_SDL_CloseJoystick,
+    getJoystickName: PFN_SDL_GetJoystickName,
+    getJoystickPath: PFN_SDL_GetJoystickPath,
+    getJoystickType: PFN_SDL_GetJoystickType,
+    getJoystickGUID: PFN_SDL_GetJoystickGUID,
+    getJoystickVendor: PFN_SDL_GetJoystickVendor,
+    getJoystickProduct: PFN_SDL_GetJoystickProduct,
+    getJoystickProductVersion: PFN_SDL_GetJoystickProductVersion,
+    getJoystickFirmwareVersion: PFN_SDL_GetJoystickFirmwareVersion,
+    getJoystickSerial: PFN_SDL_GetJoystickSerial,
+    getJoystickAxis: PFN_SDL_GetJoystickAxis,
+    getJoystickHat: PFN_SDL_GetJoystickHat,
+    getJoystickBall: PFN_SDL_GetJoystickBall,
+    getJoystickButton: PFN_SDL_GetJoystickButton,
+    rumbleJoystick: PFN_SDL_RumbleJoystick,
+    rumbleJoystickTriggers: PFN_SDL_RumbleJoystickTriggers,
+    setJoystickLED: PFN_SDL_SetJoystickLED,
+    sendJoystickEffect: PFN_SDL_SendJoystickEffect,
+    isGamepad: PFN_SDL_IsGamepad,
+    openGamepad: PFN_SDL_OpenGamepad,
+    closeGamepad: PFN_SDL_CloseGamepad,
+    getGamepadName: PFN_SDL_GetGamepadName,
+    getGamepadPath: PFN_SDL_GetGamepadPath,
+    getGamepadType: PFN_SDL_GetGamepadType,
+    getGamepadVendor: PFN_SDL_GetGamepadVendor,
+    getGamepadProduct: PFN_SDL_GetGamepadProduct,
+    getGamepadProductVersion: PFN_SDL_GetGamepadProductVersion,
+    getGamepadFirmwareVersion: PFN_SDL_GetGamepadFirmwareVersion,
+    getGamepadSerial: PFN_SDL_GetGamepadSerial,
+    gamepadHasAxis: PFN_SDL_GamepadHasAxis,
+    getGamepadAxis: PFN_SDL_GetGamepadAxis,
+    gamepadHasButton: PFN_SDL_GamepadHasButton,
+    getGamepadButton: PFN_SDL_GetGamepadButton,
+    getGamepadButtonLabel: PFN_SDL_GetGamepadButtonLabel,
+    setGamepadEventsEnabled: PFN_SDL_SetGamepadEventsEnabled,
+    gamepadEventsEnabled: PFN_SDL_GamepadEventsEnabled,
+    getGamepadBindings: PFN_SDL_GetGamepadBindings,
+    reloadGamepadMappings: PFN_SDL_ReloadGamepadMappings,
+    getGamepadMapping: PFN_SDL_GetGamepadMapping,
+    addGamepadMapping: PFN_SDL_AddGamepadMapping,
+    addGamepadMappingsFromFile: PFN_SDL_AddGamepadMappingsFromFile,
+    addGamepadMappingsFromIO: PFN_SDL_AddGamepadMappingsFromIO,
+    getGamepadMappings: PFN_SDL_GetGamepadMappings,
+    getGamepadMappingForGUID: PFN_SDL_GetGamepadMappingForGUID,
+    getGamepadMappingForID: PFN_SDL_GetGamepadMappingForID,
+    setGamepadMapping: PFN_SDL_SetGamepadMapping,
+    getGamepadPlayerIndexForID: PFN_SDL_GetGamepadPlayerIndexForID,
+    getRealGamepadTypeForID: PFN_SDL_GetRealGamepadTypeForID,
+    getRealGamepadType: PFN_SDL_GetRealGamepadType,
+    getNumGamepadTouchpads: PFN_SDL_GetNumGamepadTouchpads,
+    getGamepadTouchpadFinger: PFN_SDL_GetGamepadTouchpadFinger,
+    getGamepadAppleSFSymbolsNameForAxis: PFN_SDL_GetGamepadAppleSFSymbolsNameForAxis,
+    getGamepadAppleSFSymbolsNameForButton: PFN_SDL_GetGamepadAppleSFSymbolsNameForButton,
+    hasGamepad: PFN_SDL_HasGamepad,
+    getGamepads: PFN_SDL_GetGamepads,
+    getGamepadNameForID: PFN_SDL_GetGamepadNameForID,
+    getGamepadPathForID: PFN_SDL_GetGamepadPathForID,
+    getGamepadTypeForID: PFN_SDL_GetGamepadTypeForID,
+    getGamepadGUIDForID: PFN_SDL_GetGamepadGUIDForID,
+    getGamepadVendorForID: PFN_SDL_GetGamepadVendorForID,
+    getGamepadProductForID: PFN_SDL_GetGamepadProductForID,
+    getGamepadProductVersionForID: PFN_SDL_GetGamepadProductVersionForID,
+    getGamepadFirmwareVersionForID: PFN_SDL_GetGamepadFirmwareVersionForID,
+    getGamepadSerialForID: PFN_SDL_GetGamepadSerialForID,
+    gamepadConnected: PFN_SDL_GamepadConnected,
+    getGamepadID: PFN_SDL_GetGamepadID,
+    getGamepadFromID: PFN_SDL_GetGamepadFromID,
+    getGamepadFromPlayerIndex: PFN_SDL_GetGamepadFromPlayerIndex,
+    getGamepadPlayerIndex: PFN_SDL_GetGamepadPlayerIndex,
+    setGamepadPlayerIndex: PFN_SDL_SetGamepadPlayerIndex,
+    rumbleGamepad: PFN_SDL_RumbleGamepad,
+    rumbleGamepadTriggers: PFN_SDL_RumbleGamepadTriggers,
+    setGamepadLED: PFN_SDL_SetGamepadLED,
+    sendGamepadEffect: PFN_SDL_SendGamepadEffect,
+    getGamepadSensorData: PFN_SDL_GetGamepadSensorData,
+    setGamepadSensorEnabled: PFN_SDL_SetGamepadSensorEnabled,
+    gamepadSensorEnabled: PFN_SDL_GamepadSensorEnabled,
+    getGamepadProperties: PFN_SDL_GetGamepadProperties,
+    getTouchDeviceType: PFN_SDL_GetTouchDeviceType,
+    getSensorFromID: PFN_SDL_GetSensorFromID,
+    getSensorName: PFN_SDL_GetSensorName,
+    getSensorType: PFN_SDL_GetSensorType,
+    getSensorNonPortableType: PFN_SDL_GetSensorNonPortableType,
+    getSensorInstanceID: PFN_SDL_GetSensorInstanceID,
 
-pub const setWindowRelativeMouseMode = SDL_SetWindowRelativeMouseMode;
-pub const getWindowRelativeMouseMode = SDL_GetWindowRelativeMouseMode;
-pub const setRelativeMouseTransform = SDL_SetRelativeMouseTransform;
-
-pub const createCursor = SDL_CreateCursor;
-pub const createColorCursor = SDL_CreateColorCursor;
-pub const createAnimatedCursor = SDL_CreateAnimatedCursor;
-pub const createSystemCursor = SDL_CreateSystemCursor;
-pub const setCursor = SDL_SetCursor;
-pub const getCursor = SDL_GetCursor;
-pub const getDefaultCursor = SDL_GetDefaultCursor;
-pub const destroyCursor = SDL_DestroyCursor;
-pub const showCursor = SDL_ShowCursor;
-pub const hideCursor = SDL_HideCursor;
-pub const cursorVisible = SDL_CursorVisible;
-
-pub const getJoysticks = SDL_GetJoysticks;
-pub const openJoystick = SDL_OpenJoystick;
-pub const closeJoystick = SDL_CloseJoystick;
-pub const getJoystickName = SDL_GetJoystickName;
-pub const getJoystickPath = SDL_GetJoystickPath;
-pub const getJoystickType = SDL_GetJoystickType;
-pub const getJoystickGUID = SDL_GetJoystickGUID;
-pub const getJoystickVendor = SDL_GetJoystickVendor;
-pub const getJoystickProduct = SDL_GetJoystickProduct;
-pub const getJoystickProductVersion = SDL_GetJoystickProductVersion;
-pub const getJoystickFirmwareVersion = SDL_GetJoystickFirmwareVersion;
-pub const getJoystickSerial = SDL_GetJoystickSerial;
-pub const getJoystickAxis = SDL_GetJoystickAxis;
-pub const getJoystickHat = SDL_GetJoystickHat;
-pub const getJoystickBall = SDL_GetJoystickBall;
-pub const getJoystickButton = SDL_GetJoystickButton;
-pub const rumbleJoystick = SDL_RumbleJoystick;
-pub const rumbleJoystickTriggers = SDL_RumbleJoystickTriggers;
-pub const setJoystickLED = SDL_SetJoystickLED;
-pub const sendJoystickEffect = SDL_SendJoystickEffect;
-
-
-pub const isGamepad = SDL_IsGamepad;
-pub const openGamepad = SDL_OpenGamepad;
-pub const closeGamepad = SDL_CloseGamepad;
-pub const getGamepadName = SDL_GetGamepadName;
-pub const getGamepadPath = SDL_GetGamepadPath;
-pub const getGamepadType = SDL_GetGamepadType;
-
-pub const getGamepadVendor = SDL_GetGamepadVendor;
-pub const getGamepadProduct = SDL_GetGamepadProduct;
-pub const getGamepadProductVersion = SDL_GetGamepadProductVersion;
-pub const getGamepadFirmwareVersion = SDL_GetGamepadFirmwareVersion;
-pub const getGamepadSerial = SDL_GetGamepadSerial;
-pub const gamepadHasAxis = SDL_GamepadHasAxis;
-pub const getGamepadAxis = SDL_GetGamepadAxis;
-pub const gamepadHasButton = SDL_GamepadHasButton;
-pub const getGamepadButton = SDL_GetGamepadButton;
-pub const getGamepadButtonLabel = SDL_GetGamepadButtonLabel;
-pub const setGamepadEventsEnabled = SDL_SetGamepadEventsEnabled;
-pub const gamepadEventsEnabled = SDL_GamepadEventsEnabled;
-pub const getGamepadBindings = SDL_GetGamepadBindings;
-pub const reloadGamepadMappings = SDL_ReloadGamepadMappings;
-pub const getGamepadMapping = SDL_GetGamepadMapping;
-pub const addGamepadMapping = SDL_AddGamepadMapping;
-pub const addGamepadMappingsFromFile = SDL_AddGamepadMappingsFromFile;
-pub const addGamepadMappingsFromIO = SDL_AddGamepadMappingsFromIO;
-pub const getGamepadMappings = SDL_GetGamepadMappings;
-pub const getGamepadMappingForGUID = SDL_GetGamepadMappingForGUID;
-pub const getGamepadMappingForID = SDL_GetGamepadMappingForID;
-pub const setGamepadMapping = SDL_SetGamepadMapping;
-pub const getGamepadPlayerIndexForID = SDL_GetGamepadPlayerIndexForID;
-pub const getRealGamepadTypeForID = SDL_GetRealGamepadTypeForID;
-pub const getRealGamepadType = SDL_GetRealGamepadType;
-pub const getNumGamepadTouchpads = SDL_GetNumGamepadTouchpads;
-pub const getGamepadTouchpadFinger = SDL_GetGamepadTouchpadFinger;
-pub const getGamepadAppleSFSymbolsNameForAxis = SDL_GetGamepadAppleSFSymbolsNameForAxis;
-pub const getGamepadAppleSFSymbolsNameForButton = SDL_GetGamepadAppleSFSymbolsNameForButton;
-pub const hasGamepad = SDL_HasGamepad;
-pub const getGamepads = SDL_GetGamepads;
-pub const getGamepadNameForID = SDL_GetGamepadNameForID;
-pub const getGamepadPathForID = SDL_GetGamepadPathForID;
-pub const getGamepadTypeForID = SDL_GetGamepadTypeForID;
-pub const getGamepadGUIDForID = SDL_GetGamepadGUIDForID;
-pub const getGamepadVendorForID = SDL_GetGamepadVendorForID;
-pub const getGamepadProductForID = SDL_GetGamepadProductForID;
-pub const getGamepadProductVersionForID = SDL_GetGamepadProductVersionForID;
-pub const getGamepadFirmwareVersionForID = SDL_GetGamepadFirmwareVersionForID;
-pub const getGamepadSerialForID = SDL_GetGamepadSerialForID;
-pub const gamepadConnected = SDL_GamepadConnected;
-pub const getGamepadID = SDL_GetGamepadID;
-pub const getGamepadFromID = SDL_GetGamepadFromID;
-pub const getGamepadFromPlayerIndex = SDL_GetGamepadFromPlayerIndex;
-pub const getGamepadPlayerIndex = SDL_GetGamepadPlayerIndex;
-pub const setGamepadPlayerIndex = SDL_SetGamepadPlayerIndex;
-pub const rumbleGamepad = SDL_RumbleGamepad;
-pub const rumbleGamepadTriggers = SDL_RumbleGamepadTriggers;
-pub const setGamepadLED = SDL_SetGamepadLED;
-pub const sendGamepadEffect = SDL_SendGamepadEffect;
-pub const getGamepadSensorData = SDL_GetGamepadSensorData;
-pub const setGamepadSensorEnabled = SDL_SetGamepadSensorEnabled;
-pub const gamepadSensorEnabled = SDL_GamepadSensorEnabled;
-pub const getGamepadProperties = SDL_GetGamepadProperties;
-
+    pub fn load(handle: dynamic.LibraryHandle) !InputFunctions {
+        return dynamic.loadFunctions(InputFunctions, handle, "SDL_", .{}, &.{ "getGamepadFirmwareVersionForID", "getGamepadSerialForID", "getSensorInstanceID" });
+    }
+};

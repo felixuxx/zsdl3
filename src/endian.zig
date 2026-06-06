@@ -1,6 +1,8 @@
 // SDL3 Endian Bindings
 // Byte order conversion
 
+const dynamic = @import("dynamic.zig");
+
 // Endian macros (implemented as functions)
 pub inline fn SDL_Swap16(x: u16) u16 {
     return @byteSwap(x);
@@ -56,3 +58,9 @@ pub inline fn SDL_SwapFloatBE(x: f32) f32 {
 pub const SDL_BYTEORDER = if (@import("builtin").target.cpu.arch.endian() == .little) 1234 else 4321;
 pub const SDL_LIL_ENDIAN = 1234;
 pub const SDL_BIG_ENDIAN = 4321;
+
+pub const EndianFunctions = struct {
+    pub fn load(handle: dynamic.LibraryHandle) !EndianFunctions {
+        return dynamic.loadFunctions(EndianFunctions, handle, "SDL_", .{}, &.{});
+    }
+};

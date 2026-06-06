@@ -2,6 +2,7 @@
 // Stylus/pen input
 
 const core = @import("core.zig");
+const dynamic = @import("dynamic.zig");
 
 // Import types
 pub const Uint32 = core.Uint32;
@@ -22,21 +23,26 @@ pub const SDL_PenAxis = enum(c_int) {
 };
 
 // Pen functions
-extern fn SDL_GetPens(count: ?*c_int) ?[*]core.SDL_PenID;
-extern fn SDL_GetPenName(pen: ?*SDL_Pen) ?[*:0]const u8;
-extern fn SDL_GetPenCapabilities(pen: ?*SDL_Pen, capabilities: ?*Uint32) bool;
-extern fn SDL_GetPenStatus(pen: ?*SDL_Pen, axes: ?[*]f32) bool;
-extern fn SDL_PenConnected(pen: ?*SDL_Pen) bool;
-extern fn SDL_GetPenFromID(id: core.SDL_PenID) ?*SDL_Pen;
-extern fn SDL_GetPenID(pen: ?*SDL_Pen) core.SDL_PenID;
-extern fn SDL_PenAxisSupported(pen: ?*SDL_Pen, axis: SDL_PenAxis) bool;
+pub const PFN_SDL_GetPens = *const fn (count: ?*c_int) callconv(.c) ?[*]core.SDL_PenID;
+pub const PFN_SDL_GetPenName = *const fn (pen: ?*SDL_Pen) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetPenCapabilities = *const fn (pen: ?*SDL_Pen, capabilities: ?*Uint32) callconv(.c) bool;
+pub const PFN_SDL_GetPenStatus = *const fn (pen: ?*SDL_Pen, axes: ?[*]f32) callconv(.c) bool;
+pub const PFN_SDL_PenConnected = *const fn (pen: ?*SDL_Pen) callconv(.c) bool;
+pub const PFN_SDL_GetPenFromID = *const fn (id: core.SDL_PenID) callconv(.c) ?*SDL_Pen;
+pub const PFN_SDL_GetPenID = *const fn (pen: ?*SDL_Pen) callconv(.c) core.SDL_PenID;
+pub const PFN_SDL_PenAxisSupported = *const fn (pen: ?*SDL_Pen, axis: SDL_PenAxis) callconv(.c) bool;
 
-// Public API
-pub const getPens = SDL_GetPens;
-pub const getPenName = SDL_GetPenName;
-pub const getPenCapabilities = SDL_GetPenCapabilities;
-pub const getPenStatus = SDL_GetPenStatus;
-pub const penConnected = SDL_PenConnected;
-pub const getPenFromID = SDL_GetPenFromID;
-pub const getPenID = SDL_GetPenID;
-pub const penAxisSupported = SDL_PenAxisSupported;
+pub const PenFunctions = struct {
+    getPens: PFN_SDL_GetPens,
+    getPenName: PFN_SDL_GetPenName,
+    getPenCapabilities: PFN_SDL_GetPenCapabilities,
+    getPenStatus: PFN_SDL_GetPenStatus,
+    penConnected: PFN_SDL_PenConnected,
+    getPenFromID: PFN_SDL_GetPenFromID,
+    getPenID: PFN_SDL_GetPenID,
+    penAxisSupported: PFN_SDL_PenAxisSupported,
+
+    pub fn load(handle: dynamic.LibraryHandle) !PenFunctions {
+        return dynamic.loadFunctions(PenFunctions, handle, "SDL_", .{}, &.{ "getPens", "getPenName", "getPenCapabilities", "getPenStatus", "penConnected", "getPenFromID", "getPenID", "penAxisSupported" });
+    }
+};

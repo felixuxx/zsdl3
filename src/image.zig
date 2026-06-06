@@ -1,6 +1,7 @@
 // SDL3_image Bindings
 // Image loading library
 
+const dynamic = @import("dynamic.zig");
 const surface = @import("surface.zig");
 const render = @import("render.zig");
 
@@ -25,139 +26,194 @@ pub const IMG_Animation = extern struct {
 };
 
 // Version function
-extern fn IMG_Version() c_int;
+pub const PFN_IMG_Version = *const fn () callconv(.c) c_int;
 
 // Loading functions - surface
-extern fn IMG_LoadTyped_IO(src: ?*SDL_IOStream, closeio: bool, type: ?[*:0]const u8) ?*SDL_Surface;
-extern fn IMG_Load(file: ?[*:0]const u8) ?*SDL_Surface;
-extern fn IMG_Load_IO(src: ?*SDL_IOStream, closeio: bool) ?*SDL_Surface;
+pub const PFN_IMG_LoadTyped_IO = *const fn (src: ?*SDL_IOStream, closeio: bool, type: ?[*:0]const u8) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_Load = *const fn (file: ?[*:0]const u8) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_Load_IO = *const fn (src: ?*SDL_IOStream, closeio: bool) callconv(.c) ?*SDL_Surface;
 
 // Loading functions - texture
-extern fn IMG_LoadTexture(renderer: ?*SDL_Renderer, file: ?[*:0]const u8) ?*SDL_Texture;
-extern fn IMG_LoadTexture_IO(renderer: ?*SDL_Renderer, src: ?*SDL_IOStream, closeio: bool) ?*SDL_Texture;
-extern fn IMG_LoadTextureTyped_IO(renderer: ?*SDL_Renderer, src: ?*SDL_IOStream, closeio: bool, type: ?[*:0]const u8) ?*SDL_Texture;
+pub const PFN_IMG_LoadTexture = *const fn (renderer: ?*SDL_Renderer, file: ?[*:0]const u8) callconv(.c) ?*SDL_Texture;
+pub const PFN_IMG_LoadTexture_IO = *const fn (renderer: ?*SDL_Renderer, src: ?*SDL_IOStream, closeio: bool) callconv(.c) ?*SDL_Texture;
+pub const PFN_IMG_LoadTextureTyped_IO = *const fn (renderer: ?*SDL_Renderer, src: ?*SDL_IOStream, closeio: bool, type: ?[*:0]const u8) callconv(.c) ?*SDL_Texture;
 
 // Image detection functions
-extern fn IMG_isAVIF(src: ?*SDL_IOStream) bool;
-extern fn IMG_isICO(src: ?*SDL_IOStream) bool;
-extern fn IMG_isCUR(src: ?*SDL_IOStream) bool;
-extern fn IMG_isBMP(src: ?*SDL_IOStream) bool;
-extern fn IMG_isGIF(src: ?*SDL_IOStream) bool;
-extern fn IMG_isJPG(src: ?*SDL_IOStream) bool;
-extern fn IMG_isJXL(src: ?*SDL_IOStream) bool;
-extern fn IMG_isLBM(src: ?*SDL_IOStream) bool;
-extern fn IMG_isPCX(src: ?*SDL_IOStream) bool;
-extern fn IMG_isPNG(src: ?*SDL_IOStream) bool;
-extern fn IMG_isPNM(src: ?*SDL_IOStream) bool;
-extern fn IMG_isSVG(src: ?*SDL_IOStream) bool;
-extern fn IMG_isQOI(src: ?*SDL_IOStream) bool;
-extern fn IMG_isTIF(src: ?*SDL_IOStream) bool;
-extern fn IMG_isXCF(src: ?*SDL_IOStream) bool;
-extern fn IMG_isXPM(src: ?*SDL_IOStream) bool;
-extern fn IMG_isXV(src: ?*SDL_IOStream) bool;
-extern fn IMG_isWEBP(src: ?*SDL_IOStream) bool;
+pub const PFN_IMG_isAVIF = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
+pub const PFN_IMG_isICO = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
+pub const PFN_IMG_isCUR = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
+pub const PFN_IMG_isBMP = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
+pub const PFN_IMG_isGIF = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
+pub const PFN_IMG_isJPG = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
+pub const PFN_IMG_isJXL = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
+pub const PFN_IMG_isLBM = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
+pub const PFN_IMG_isPCX = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
+pub const PFN_IMG_isPNG = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
+pub const PFN_IMG_isPNM = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
+pub const PFN_IMG_isSVG = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
+pub const PFN_IMG_isQOI = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
+pub const PFN_IMG_isTIF = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
+pub const PFN_IMG_isXCF = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
+pub const PFN_IMG_isXPM = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
+pub const PFN_IMG_isXV = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
+pub const PFN_IMG_isWEBP = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
 
 // Individual format loaders
-extern fn IMG_LoadAVIF_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
-extern fn IMG_LoadICO_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
-extern fn IMG_LoadCUR_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
-extern fn IMG_LoadBMP_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
-extern fn IMG_LoadGIF_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
-extern fn IMG_LoadJPG_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
-extern fn IMG_LoadJXL_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
-extern fn IMG_LoadLBM_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
-extern fn IMG_LoadPCX_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
-extern fn IMG_LoadPNG_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
-extern fn IMG_LoadPNM_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
-extern fn IMG_LoadSVG_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
-extern fn IMG_LoadQOI_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
-extern fn IMG_LoadTGA_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
-extern fn IMG_LoadTIF_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
-extern fn IMG_LoadXCF_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
-extern fn IMG_LoadXPM_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
-extern fn IMG_LoadXV_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
-extern fn IMG_LoadWEBP_IO(src: ?*SDL_IOStream) ?*SDL_Surface;
+pub const PFN_IMG_LoadAVIF_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_LoadICO_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_LoadCUR_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_LoadBMP_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_LoadGIF_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_LoadJPG_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_LoadJXL_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_LoadLBM_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_LoadPCX_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_LoadPNG_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_LoadPNM_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_LoadSVG_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_LoadQOI_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_LoadTGA_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_LoadTIF_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_LoadXCF_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_LoadXPM_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_LoadXV_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_LoadWEBP_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*SDL_Surface;
 
 // SVG loading
-extern fn IMG_LoadSizedSVG_IO(src: ?*SDL_IOStream, width: c_int, height: c_int) ?*SDL_Surface;
+pub const PFN_IMG_LoadSizedSVG_IO = *const fn (src: ?*SDL_IOStream, width: c_int, height: c_int) callconv(.c) ?*SDL_Surface;
 
 // XPM from array
-extern fn IMG_ReadXPMFromArray(xpm: ?[*]?[*:0]u8) ?*SDL_Surface;
-extern fn IMG_ReadXPMFromArrayToRGB888(xpm: ?[*]?[*:0]u8) ?*SDL_Surface;
+pub const PFN_IMG_ReadXPMFromArray = *const fn (xpm: ?[*]?[*:0]u8) callconv(.c) ?*SDL_Surface;
+pub const PFN_IMG_ReadXPMFromArrayToRGB888 = *const fn (xpm: ?[*]?[*:0]u8) callconv(.c) ?*SDL_Surface;
 
 // Save functions
-extern fn IMG_SaveAVIF(surface: ?*SDL_Surface, file: ?[*:0]const u8, quality: c_int) bool;
-extern fn IMG_SaveAVIF_IO(surface: ?*SDL_Surface, dst: ?*SDL_IOStream, closeio: bool, quality: c_int) bool;
-extern fn IMG_SavePNG(surface: ?*SDL_Surface, file: ?[*:0]const u8) bool;
-extern fn IMG_SavePNG_IO(surface: ?*SDL_Surface, dst: ?*SDL_IOStream, closeio: bool) bool;
-extern fn IMG_SaveJPG(surface: ?*SDL_Surface, file: ?[*:0]const u8, quality: c_int) bool;
-extern fn IMG_SaveJPG_IO(surface: ?*SDL_Surface, dst: ?*SDL_IOStream, closeio: bool, quality: c_int) bool;
+pub const PFN_IMG_SaveAVIF = *const fn (surface: ?*SDL_Surface, file: ?[*:0]const u8, quality: c_int) callconv(.c) bool;
+pub const PFN_IMG_SaveAVIF_IO = *const fn (surface: ?*SDL_Surface, dst: ?*SDL_IOStream, closeio: bool, quality: c_int) callconv(.c) bool;
+pub const PFN_IMG_SavePNG = *const fn (surface: ?*SDL_Surface, file: ?[*:0]const u8) callconv(.c) bool;
+pub const PFN_IMG_SavePNG_IO = *const fn (surface: ?*SDL_Surface, dst: ?*SDL_IOStream, closeio: bool) callconv(.c) bool;
+pub const PFN_IMG_SaveJPG = *const fn (surface: ?*SDL_Surface, file: ?[*:0]const u8, quality: c_int) callconv(.c) bool;
+pub const PFN_IMG_SaveJPG_IO = *const fn (surface: ?*SDL_Surface, dst: ?*SDL_IOStream, closeio: bool, quality: c_int) callconv(.c) bool;
 
 // Animation functions
-extern fn IMG_LoadAnimation(file: ?[*:0]const u8) ?*IMG_Animation;
-extern fn IMG_LoadAnimation_IO(src: ?*SDL_IOStream, closeio: bool) ?*IMG_Animation;
-extern fn IMG_LoadAnimationTyped_IO(src: ?*SDL_IOStream, closeio: bool, type: ?[*:0]const u8) ?*IMG_Animation;
-extern fn IMG_FreeAnimation(anim: ?*IMG_Animation) void;
-extern fn IMG_LoadGIFAnimation_IO(src: ?*SDL_IOStream) ?*IMG_Animation;
-extern fn IMG_LoadWEBPAnimation_IO(src: ?*SDL_IOStream) ?*IMG_Animation;
+pub const PFN_IMG_LoadAnimation = *const fn (file: ?[*:0]const u8) callconv(.c) ?*IMG_Animation;
+pub const PFN_IMG_LoadAnimation_IO = *const fn (src: ?*SDL_IOStream, closeio: bool) callconv(.c) ?*IMG_Animation;
+pub const PFN_IMG_LoadAnimationTyped_IO = *const fn (src: ?*SDL_IOStream, closeio: bool, type: ?[*:0]const u8) callconv(.c) ?*IMG_Animation;
+pub const PFN_IMG_FreeAnimation = *const fn (anim: ?*IMG_Animation) callconv(.c) void;
+pub const PFN_IMG_LoadGIFAnimation_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*IMG_Animation;
+pub const PFN_IMG_LoadWEBPAnimation_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*IMG_Animation;
 
-// Public API
-pub const version = IMG_Version;
-pub const loadTypedIO = IMG_LoadTyped_IO;
-pub const load = IMG_Load;
-pub const loadIO = IMG_Load_IO;
-pub const loadTexture = IMG_LoadTexture;
-pub const loadTextureIO = IMG_LoadTexture_IO;
-pub const loadTextureTypedIO = IMG_LoadTextureTyped_IO;
-pub const isAVIF = IMG_isAVIF;
-pub const isICO = IMG_isICO;
-pub const isCUR = IMG_isCUR;
-pub const isBMP = IMG_isBMP;
-pub const isGIF = IMG_isGIF;
-pub const isJPG = IMG_isJPG;
-pub const isJXL = IMG_isJXL;
-pub const isLBM = IMG_isLBM;
-pub const isPCX = IMG_isPCX;
-pub const isPNG = IMG_isPNG;
-pub const isPNM = IMG_isPNM;
-pub const isSVG = IMG_isSVG;
-pub const isQOI = IMG_isQOI;
-pub const isTIF = IMG_isTIF;
-pub const isXCF = IMG_isXCF;
-pub const isXPM = IMG_isXPM;
-pub const isXV = IMG_isXV;
-pub const isWEBP = IMG_isWEBP;
-pub const loadAVIFIO = IMG_LoadAVIF_IO;
-pub const loadICOIO = IMG_LoadICO_IO;
-pub const loadCURIO = IMG_LoadCUR_IO;
-pub const loadBMPIO = IMG_LoadBMP_IO;
-pub const loadGIFIO = IMG_LoadGIF_IO;
-pub const loadJPGIO = IMG_LoadJPG_IO;
-pub const loadJXLIO = IMG_LoadJXL_IO;
-pub const loadLBMIO = IMG_LoadLBM_IO;
-pub const loadPCXIO = IMG_LoadPCX_IO;
-pub const loadPNGIO = IMG_LoadPNG_IO;
-pub const loadPNMIO = IMG_LoadPNM_IO;
-pub const loadSVGIO = IMG_LoadSVG_IO;
-pub const loadQOIIO = IMG_LoadQOI_IO;
-pub const loadTGAIO = IMG_LoadTGA_IO;
-pub const loadTIFIO = IMG_LoadTIF_IO;
-pub const loadXCFIOW = IMG_LoadXCF_IO;
-pub const loadXPMIO = IMG_LoadXPM_IO;
-pub const loadXVIO = IMG_LoadXV_IO;
-pub const loadWEBPIO = IMG_LoadWEBP_IO;
-pub const loadSizedSVGIO = IMG_LoadSizedSVG_IO;
-pub const readXPMFromArray = IMG_ReadXPMFromArray;
-pub const readXPMFromArrayToRGB888 = IMG_ReadXPMFromArrayToRGB888;
-pub const saveAVIF = IMG_SaveAVIF;
-pub const saveAVIFIO = IMG_SaveAVIF_IO;
-pub const savePNG = IMG_SavePNG;
-pub const savePNGIO = IMG_SavePNG_IO;
-pub const saveJPG = IMG_SaveJPG;
-pub const saveJPGIO = IMG_SaveJPG_IO;
-pub const loadAnimation = IMG_LoadAnimation;
-pub const loadAnimationIO = IMG_LoadAnimation_IO;
-pub const loadAnimationTypedIO = IMG_LoadAnimationTyped_IO;
-pub const freeAnimation = IMG_FreeAnimation;
-pub const loadGIFAnimationIO = IMG_LoadGIFAnimation_IO;
-pub const loadWEBPAnimationIO = IMG_LoadWEBPAnimation_IO;
+pub const ImageFunctions = struct {
+    version: PFN_IMG_Version,
+    loadTypedIO: PFN_IMG_LoadTyped_IO,
+    load: PFN_IMG_Load,
+    loadIO: PFN_IMG_Load_IO,
+    loadTexture: PFN_IMG_LoadTexture,
+    loadTextureIO: PFN_IMG_LoadTexture_IO,
+    loadTextureTypedIO: PFN_IMG_LoadTextureTyped_IO,
+    isAVIF: PFN_IMG_isAVIF,
+    isICO: PFN_IMG_isICO,
+    isCUR: PFN_IMG_isCUR,
+    isBMP: PFN_IMG_isBMP,
+    isGIF: PFN_IMG_isGIF,
+    isJPG: PFN_IMG_isJPG,
+    isJXL: PFN_IMG_isJXL,
+    isLBM: PFN_IMG_isLBM,
+    isPCX: PFN_IMG_isPCX,
+    isPNG: PFN_IMG_isPNG,
+    isPNM: PFN_IMG_isPNM,
+    isSVG: PFN_IMG_isSVG,
+    isQOI: PFN_IMG_isQOI,
+    isTIF: PFN_IMG_isTIF,
+    isXCF: PFN_IMG_isXCF,
+    isXPM: PFN_IMG_isXPM,
+    isXV: PFN_IMG_isXV,
+    isWEBP: PFN_IMG_isWEBP,
+    loadAVIFIO: PFN_IMG_LoadAVIF_IO,
+    loadICOIO: PFN_IMG_LoadICO_IO,
+    loadCURIO: PFN_IMG_LoadCUR_IO,
+    loadBMPIO: PFN_IMG_LoadBMP_IO,
+    loadGIFIO: PFN_IMG_LoadGIF_IO,
+    loadJPGIO: PFN_IMG_LoadJPG_IO,
+    loadJXLIO: PFN_IMG_LoadJXL_IO,
+    loadLBMIO: PFN_IMG_LoadLBM_IO,
+    loadPCXIO: PFN_IMG_LoadPCX_IO,
+    loadPNGIO: PFN_IMG_LoadPNG_IO,
+    loadPNMIO: PFN_IMG_LoadPNM_IO,
+    loadSVGIO: PFN_IMG_LoadSVG_IO,
+    loadQOIIO: PFN_IMG_LoadQOI_IO,
+    loadTGAIO: PFN_IMG_LoadTGA_IO,
+    loadTIFIO: PFN_IMG_LoadTIF_IO,
+    loadXCFIOW: PFN_IMG_LoadXCF_IO,
+    loadXPMIO: PFN_IMG_LoadXPM_IO,
+    loadXVIO: PFN_IMG_LoadXV_IO,
+    loadWEBPIO: PFN_IMG_LoadWEBP_IO,
+    loadSizedSVGIO: PFN_IMG_LoadSizedSVG_IO,
+    readXPMFromArray: PFN_IMG_ReadXPMFromArray,
+    readXPMFromArrayToRGB888: PFN_IMG_ReadXPMFromArrayToRGB888,
+    saveAVIF: PFN_IMG_SaveAVIF,
+    saveAVIFIO: PFN_IMG_SaveAVIF_IO,
+    savePNG: PFN_IMG_SavePNG,
+    savePNGIO: PFN_IMG_SavePNG_IO,
+    saveJPG: PFN_IMG_SaveJPG,
+    saveJPGIO: PFN_IMG_SaveJPG_IO,
+    loadAnimation: PFN_IMG_LoadAnimation,
+    loadAnimationIO: PFN_IMG_LoadAnimation_IO,
+    loadAnimationTypedIO: PFN_IMG_LoadAnimationTyped_IO,
+    freeAnimation: PFN_IMG_FreeAnimation,
+    loadGIFAnimationIO: PFN_IMG_LoadGIFAnimation_IO,
+    loadWEBPAnimationIO: PFN_IMG_LoadWEBPAnimation_IO,
+
+    pub fn loadFunctions(handle: dynamic.LibraryHandle) !ImageFunctions {
+        return dynamic.loadFunctions(ImageFunctions, handle, "IMG_", .{
+            .{ "loadTypedIO", "IMG_LoadTyped_IO" },
+            .{ "loadIO", "IMG_Load_IO" },
+            .{ "loadTextureIO", "IMG_LoadTexture_IO" },
+            .{ "loadTextureTypedIO", "IMG_LoadTextureTyped_IO" },
+            .{ "isAVIF", "IMG_isAVIF" },
+            .{ "isICO", "IMG_isICO" },
+            .{ "isCUR", "IMG_isCUR" },
+            .{ "isBMP", "IMG_isBMP" },
+            .{ "isGIF", "IMG_isGIF" },
+            .{ "isJPG", "IMG_isJPG" },
+            .{ "isJXL", "IMG_isJXL" },
+            .{ "isLBM", "IMG_isLBM" },
+            .{ "isPCX", "IMG_isPCX" },
+            .{ "isPNG", "IMG_isPNG" },
+            .{ "isPNM", "IMG_isPNM" },
+            .{ "isSVG", "IMG_isSVG" },
+            .{ "isQOI", "IMG_isQOI" },
+            .{ "isTIF", "IMG_isTIF" },
+            .{ "isXCF", "IMG_isXCF" },
+            .{ "isXPM", "IMG_isXPM" },
+            .{ "isXV", "IMG_isXV" },
+            .{ "isWEBP", "IMG_isWEBP" },
+            .{ "loadAVIFIO", "IMG_LoadAVIF_IO" },
+            .{ "loadICOIO", "IMG_LoadICO_IO" },
+            .{ "loadCURIO", "IMG_LoadCUR_IO" },
+            .{ "loadBMPIO", "IMG_LoadBMP_IO" },
+            .{ "loadGIFIO", "IMG_LoadGIF_IO" },
+            .{ "loadJPGIO", "IMG_LoadJPG_IO" },
+            .{ "loadJXLIO", "IMG_LoadJXL_IO" },
+            .{ "loadLBMIO", "IMG_LoadLBM_IO" },
+            .{ "loadPCXIO", "IMG_LoadPCX_IO" },
+            .{ "loadPNGIO", "IMG_LoadPNG_IO" },
+            .{ "loadPNMIO", "IMG_LoadPNM_IO" },
+            .{ "loadSVGIO", "IMG_LoadSVG_IO" },
+            .{ "loadQOIIO", "IMG_LoadQOI_IO" },
+            .{ "loadTGAIO", "IMG_LoadTGA_IO" },
+            .{ "loadTIFIO", "IMG_LoadTIF_IO" },
+            .{ "loadXCFIOW", "IMG_LoadXCF_IO" },
+            .{ "loadXPMIO", "IMG_LoadXPM_IO" },
+            .{ "loadXVIO", "IMG_LoadXV_IO" },
+            .{ "loadWEBPIO", "IMG_LoadWEBP_IO" },
+            .{ "loadSizedSVGIO", "IMG_LoadSizedSVG_IO" },
+            .{ "saveAVIFIO", "IMG_SaveAVIF_IO" },
+            .{ "savePNGIO", "IMG_SavePNG_IO" },
+            .{ "saveJPGIO", "IMG_SaveJPG_IO" },
+            .{ "loadAnimationIO", "IMG_LoadAnimation_IO" },
+            .{ "loadAnimationTypedIO", "IMG_LoadAnimationTyped_IO" },
+            .{ "loadGIFAnimationIO", "IMG_LoadGIFAnimation_IO" },
+            .{ "loadWEBPAnimationIO", "IMG_LoadWEBPAnimation_IO" },
+        }, &.{});
+    }
+};

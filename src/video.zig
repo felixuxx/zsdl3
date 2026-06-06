@@ -3,6 +3,7 @@
 
 const core = @import("core.zig");
 const pixels = @import("pixels.zig");
+const dynamic = @import("dynamic.zig");
 
 // Import basic types
 pub const Uint32 = core.Uint32;
@@ -62,6 +63,7 @@ pub const SDL_ProgressState = enum(c_int) {
 
 // Opaque structs
 pub const SDL_Window = opaque {};
+pub const SDL_Cursor = opaque {};
 pub const SDL_GLContext = opaque {};
 pub const SDL_EGLDisplay = ?*anyopaque;
 pub const SDL_EGLConfig = ?*anyopaque;
@@ -96,89 +98,89 @@ pub const SDL_SystemTheme = enum(c_int) {
     SDL_SYSTEM_THEME_DARK,
 };
 
-// Video extern functions
-extern fn SDL_GetNumVideoDrivers() c_int;
-extern fn SDL_GetVideoDriver(index: c_int) ?[*:0]const u8;
-extern fn SDL_GetCurrentVideoDriver() ?[*:0]const u8;
-extern fn SDL_GetSystemTheme() SDL_SystemTheme;
-extern fn SDL_GetDisplays(count: ?*c_int) ?[*]SDL_DisplayID;
-extern fn SDL_GetPrimaryDisplay() SDL_DisplayID;
-extern fn SDL_GetDisplayProperties(displayID: SDL_DisplayID) core.SDL_PropertiesID;
-extern fn SDL_GetDisplayName(displayID: SDL_DisplayID) ?[*:0]const u8;
-extern fn SDL_GetDisplayBounds(displayID: SDL_DisplayID, rect: ?*SDL_Rect) bool;
-extern fn SDL_GetDisplayUsableBounds(displayID: SDL_DisplayID, rect: ?*SDL_Rect) bool;
-extern fn SDL_GetNaturalDisplayOrientation(displayID: SDL_DisplayID) SDL_DisplayOrientation;
-extern fn SDL_GetCurrentDisplayOrientation(displayID: SDL_DisplayID) SDL_DisplayOrientation;
-extern fn SDL_GetDisplayContentScale(displayID: SDL_DisplayID) f32;
-extern fn SDL_GetDesktopDisplayMode(displayID: SDL_DisplayID) ?*const SDL_DisplayMode;
-extern fn SDL_GetCurrentDisplayMode(displayID: SDL_DisplayID) ?*const SDL_DisplayMode;
-extern fn SDL_GetFullscreenDisplayModes(displayID: SDL_DisplayID, count: ?*c_int) ?[*]?*SDL_DisplayMode;
-extern fn SDL_GetClosestFullscreenDisplayMode(displayID: SDL_DisplayID, w: c_int, h: c_int, refresh_rate: f32, include_high_density_modes: bool, closest: ?*SDL_DisplayMode) bool;
-extern fn SDL_GetDisplayForPoint(point: ?*const SDL_Point) SDL_DisplayID;
-extern fn SDL_GetDisplayForRect(rect: ?*const SDL_Rect) SDL_DisplayID;
-extern fn SDL_GetDisplayForWindow(window: ?*SDL_Window) SDL_DisplayID;
-extern fn SDL_GetWindowPixelDensity(window: ?*SDL_Window) f32;
-extern fn SDL_GetWindowDisplayScale(window: ?*SDL_Window) f32;
-extern fn SDL_SetWindowFullscreenMode(window: ?*SDL_Window, mode: ?*const SDL_DisplayMode) bool;
-extern fn SDL_GetWindowFullscreenMode(window: ?*SDL_Window) ?*const SDL_DisplayMode;
-extern fn SDL_GetWindowPixelFormat(window: ?*SDL_Window) c_uint;
-extern fn SDL_GetWindows(count: ?*c_int) ?[*]?*SDL_Window;
-extern fn SDL_CreateWindow(title: ?[*:0]const u8, w: c_int, h: c_int, flags: SDL_WindowFlags) ?*SDL_Window;
-extern fn SDL_DestroyWindow(window: ?*SDL_Window) void;
-extern fn SDL_GetWindowID(window: ?*SDL_Window) SDL_WindowID;
-extern fn SDL_GetWindowFromID(id: SDL_WindowID) ?*SDL_Window;
-extern fn SDL_GetWindowParent(window: ?*SDL_Window) ?*SDL_Window;
-extern fn SDL_GetWindowProperties(window: ?*SDL_Window) core.SDL_PropertiesID;
-extern fn SDL_GetWindowFlags(window: ?*SDL_Window) SDL_WindowFlags;
-extern fn SDL_SetWindowTitle(window: ?*SDL_Window, title: ?[*:0]const u8) bool;
-extern fn SDL_GetWindowTitle(window: ?*SDL_Window) ?[*:0]const u8;
-extern fn SDL_SetWindowIcon(window: ?*SDL_Window, icon: ?*SDL_Surface) bool;
-extern fn SDL_SetWindowPosition(window: ?*SDL_Window, x: c_int, y: c_int) bool;
-extern fn SDL_GetWindowPosition(window: ?*SDL_Window, x: ?*c_int, y: ?*c_int) bool;
-extern fn SDL_SetWindowSize(window: ?*SDL_Window, w: c_int, h: c_int) bool;
-extern fn SDL_GetWindowSize(window: ?*SDL_Window, w: ?*c_int, h: ?*c_int) bool;
-extern fn SDL_GetWindowBordersSize(window: ?*SDL_Window, top: ?*c_int, left: ?*c_int, bottom: ?*c_int, right: ?*c_int) bool;
-extern fn SDL_GetWindowSizeInPixels(window: ?*SDL_Window, w: ?*c_int, h: ?*c_int) bool;
-extern fn SDL_SetWindowMinimumSize(window: ?*SDL_Window, min_w: c_int, min_h: c_int) bool;
-extern fn SDL_GetWindowMinimumSize(window: ?*SDL_Window, w: ?*c_int, h: ?*c_int) bool;
-extern fn SDL_SetWindowMaximumSize(window: ?*SDL_Window, max_w: c_int, max_h: c_int) bool;
-extern fn SDL_GetWindowMaximumSize(window: ?*SDL_Window, w: ?*c_int, h: ?*c_int) bool;
-extern fn SDL_SetWindowBordered(window: ?*SDL_Window, bordered: bool) bool;
-extern fn SDL_SetWindowResizable(window: ?*SDL_Window, resizable: bool) bool;
-extern fn SDL_SetWindowAlwaysOnTop(window: ?*SDL_Window, on_top: bool) bool;
-extern fn SDL_ShowWindow(window: ?*SDL_Window) bool;
-extern fn SDL_HideWindow(window: ?*SDL_Window) bool;
-extern fn SDL_RaiseWindow(window: ?*SDL_Window) bool;
-extern fn SDL_MaximizeWindow(window: ?*SDL_Window) bool;
-extern fn SDL_MinimizeWindow(window: ?*SDL_Window) bool;
-extern fn SDL_RestoreWindow(window: ?*SDL_Window) bool;
-extern fn SDL_SetWindowFullscreen(window: ?*SDL_Window, fullscreen: bool) bool;
-extern fn SDL_WindowHasSurface(window: ?*SDL_Window) bool;
-extern fn SDL_GetWindowSurface(window: ?*SDL_Window) ?*SDL_Surface;
-extern fn SDL_UpdateWindowSurface(window: ?*SDL_Window) bool;
-extern fn SDL_UpdateWindowSurfaceRects(window: ?*SDL_Window, rects: ?[*]const SDL_Rect, numrects: c_int) bool;
-extern fn SDL_DestroyWindowSurface(window: ?*SDL_Window) bool;
-extern fn SDL_SetWindowKeyboardGrab(window: ?*SDL_Window, grabbed: bool) bool;
-extern fn SDL_SetWindowMouseGrab(window: ?*SDL_Window, grabbed: bool) bool;
-extern fn SDL_GetWindowKeyboardGrab(window: ?*SDL_Window) bool;
-extern fn SDL_GetWindowMouseGrab(window: ?*SDL_Window) bool;
-extern fn SDL_SetWindowMouseRect(window: ?*SDL_Window, rect: ?*const SDL_Rect) bool;
-extern fn SDL_GetWindowMouseRect(window: ?*SDL_Window) ?*const SDL_Rect;
-extern fn SDL_SetWindowOpacity(window: ?*SDL_Window, opacity: f32) bool;
-extern fn SDL_GetWindowOpacity(window: ?*SDL_Window) f32;
-extern fn SDL_SetWindowFocusable(window: ?*SDL_Window, focusable: bool) bool;
-extern fn SDL_ShowWindowSystemMenu(window: ?*SDL_Window, x: c_int, y: c_int) bool;
-extern fn SDL_SetWindowHitTest(window: ?*SDL_Window, callback: SDL_HitTestCallback, callback_data: ?*anyopaque) bool;
-extern fn SDL_SetWindowShape(window: ?*SDL_Window, shape: ?*SDL_Surface) bool;
-extern fn SDL_SetWindowModal(window: ?*SDL_Window, modal: bool) bool;
-extern fn SDL_SetWindowProgressState(window: ?*SDL_Window, state: SDL_ProgressState) bool;
-extern fn SDL_GetWindowProgressState(window: ?*SDL_Window) SDL_ProgressState;
-extern fn SDL_SetWindowProgressValue(window: ?*SDL_Window, value: f32) bool;
-extern fn SDL_GetWindowProgressValue(window: ?*SDL_Window) f32;
-extern fn SDL_FlashWindow(window: ?*SDL_Window, operation: SDL_FlashOperation) bool;
-extern fn SDL_DisableScreenSaver() bool;
-extern fn SDL_EnableScreenSaver() bool;
-extern fn SDL_ScreenSaverEnabled() bool;
+// Video function pointer types
+pub const PFN_SDL_GetNumVideoDrivers = *const fn () callconv(.c) c_int;
+pub const PFN_SDL_GetVideoDriver = *const fn (index: c_int) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetCurrentVideoDriver = *const fn () callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetSystemTheme = *const fn () callconv(.c) SDL_SystemTheme;
+pub const PFN_SDL_GetDisplays = *const fn (count: ?*c_int) callconv(.c) ?[*]SDL_DisplayID;
+pub const PFN_SDL_GetPrimaryDisplay = *const fn () callconv(.c) SDL_DisplayID;
+pub const PFN_SDL_GetDisplayProperties = *const fn (displayID: SDL_DisplayID) callconv(.c) core.SDL_PropertiesID;
+pub const PFN_SDL_GetDisplayName = *const fn (displayID: SDL_DisplayID) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetDisplayBounds = *const fn (displayID: SDL_DisplayID, rect: ?*SDL_Rect) callconv(.c) bool;
+pub const PFN_SDL_GetDisplayUsableBounds = *const fn (displayID: SDL_DisplayID, rect: ?*SDL_Rect) callconv(.c) bool;
+pub const PFN_SDL_GetNaturalDisplayOrientation = *const fn (displayID: SDL_DisplayID) callconv(.c) SDL_DisplayOrientation;
+pub const PFN_SDL_GetCurrentDisplayOrientation = *const fn (displayID: SDL_DisplayID) callconv(.c) SDL_DisplayOrientation;
+pub const PFN_SDL_GetDisplayContentScale = *const fn (displayID: SDL_DisplayID) callconv(.c) f32;
+pub const PFN_SDL_GetDesktopDisplayMode = *const fn (displayID: SDL_DisplayID) callconv(.c) ?*const SDL_DisplayMode;
+pub const PFN_SDL_GetCurrentDisplayMode = *const fn (displayID: SDL_DisplayID) callconv(.c) ?*const SDL_DisplayMode;
+pub const PFN_SDL_GetFullscreenDisplayModes = *const fn (displayID: SDL_DisplayID, count: ?*c_int) callconv(.c) ?[*]?*SDL_DisplayMode;
+pub const PFN_SDL_GetClosestFullscreenDisplayMode = *const fn (displayID: SDL_DisplayID, w: c_int, h: c_int, refresh_rate: f32, include_high_density_modes: bool, closest: ?*SDL_DisplayMode) callconv(.c) bool;
+pub const PFN_SDL_GetDisplayForPoint = *const fn (point: ?*const SDL_Point) callconv(.c) SDL_DisplayID;
+pub const PFN_SDL_GetDisplayForRect = *const fn (rect: ?*const SDL_Rect) callconv(.c) SDL_DisplayID;
+pub const PFN_SDL_GetDisplayForWindow = *const fn (window: ?*SDL_Window) callconv(.c) SDL_DisplayID;
+pub const PFN_SDL_GetWindowPixelDensity = *const fn (window: ?*SDL_Window) callconv(.c) f32;
+pub const PFN_SDL_GetWindowDisplayScale = *const fn (window: ?*SDL_Window) callconv(.c) f32;
+pub const PFN_SDL_SetWindowFullscreenMode = *const fn (window: ?*SDL_Window, mode: ?*const SDL_DisplayMode) callconv(.c) bool;
+pub const PFN_SDL_GetWindowFullscreenMode = *const fn (window: ?*SDL_Window) callconv(.c) ?*const SDL_DisplayMode;
+pub const PFN_SDL_GetWindowPixelFormat = *const fn (window: ?*SDL_Window) callconv(.c) c_uint;
+pub const PFN_SDL_GetWindows = *const fn (count: ?*c_int) callconv(.c) ?[*]?*SDL_Window;
+pub const PFN_SDL_CreateWindow = *const fn (title: ?[*:0]const u8, w: c_int, h: c_int, flags: SDL_WindowFlags) callconv(.c) ?*SDL_Window;
+pub const PFN_SDL_DestroyWindow = *const fn (window: ?*SDL_Window) callconv(.c) void;
+pub const PFN_SDL_GetWindowID = *const fn (window: ?*SDL_Window) callconv(.c) SDL_WindowID;
+pub const PFN_SDL_GetWindowFromID = *const fn (id: SDL_WindowID) callconv(.c) ?*SDL_Window;
+pub const PFN_SDL_GetWindowParent = *const fn (window: ?*SDL_Window) callconv(.c) ?*SDL_Window;
+pub const PFN_SDL_GetWindowProperties = *const fn (window: ?*SDL_Window) callconv(.c) core.SDL_PropertiesID;
+pub const PFN_SDL_GetWindowFlags = *const fn (window: ?*SDL_Window) callconv(.c) SDL_WindowFlags;
+pub const PFN_SDL_SetWindowTitle = *const fn (window: ?*SDL_Window, title: ?[*:0]const u8) callconv(.c) bool;
+pub const PFN_SDL_GetWindowTitle = *const fn (window: ?*SDL_Window) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_SetWindowIcon = *const fn (window: ?*SDL_Window, icon: ?*SDL_Surface) callconv(.c) bool;
+pub const PFN_SDL_SetWindowPosition = *const fn (window: ?*SDL_Window, x: c_int, y: c_int) callconv(.c) bool;
+pub const PFN_SDL_GetWindowPosition = *const fn (window: ?*SDL_Window, x: ?*c_int, y: ?*c_int) callconv(.c) bool;
+pub const PFN_SDL_SetWindowSize = *const fn (window: ?*SDL_Window, w: c_int, h: c_int) callconv(.c) bool;
+pub const PFN_SDL_GetWindowSize = *const fn (window: ?*SDL_Window, w: ?*c_int, h: ?*c_int) callconv(.c) bool;
+pub const PFN_SDL_GetWindowBordersSize = *const fn (window: ?*SDL_Window, top: ?*c_int, left: ?*c_int, bottom: ?*c_int, right: ?*c_int) callconv(.c) bool;
+pub const PFN_SDL_GetWindowSizeInPixels = *const fn (window: ?*SDL_Window, w: ?*c_int, h: ?*c_int) callconv(.c) bool;
+pub const PFN_SDL_SetWindowMinimumSize = *const fn (window: ?*SDL_Window, min_w: c_int, min_h: c_int) callconv(.c) bool;
+pub const PFN_SDL_GetWindowMinimumSize = *const fn (window: ?*SDL_Window, w: ?*c_int, h: ?*c_int) callconv(.c) bool;
+pub const PFN_SDL_SetWindowMaximumSize = *const fn (window: ?*SDL_Window, max_w: c_int, max_h: c_int) callconv(.c) bool;
+pub const PFN_SDL_GetWindowMaximumSize = *const fn (window: ?*SDL_Window, w: ?*c_int, h: ?*c_int) callconv(.c) bool;
+pub const PFN_SDL_SetWindowBordered = *const fn (window: ?*SDL_Window, bordered: bool) callconv(.c) bool;
+pub const PFN_SDL_SetWindowResizable = *const fn (window: ?*SDL_Window, resizable: bool) callconv(.c) bool;
+pub const PFN_SDL_SetWindowAlwaysOnTop = *const fn (window: ?*SDL_Window, on_top: bool) callconv(.c) bool;
+pub const PFN_SDL_ShowWindow = *const fn (window: ?*SDL_Window) callconv(.c) bool;
+pub const PFN_SDL_HideWindow = *const fn (window: ?*SDL_Window) callconv(.c) bool;
+pub const PFN_SDL_RaiseWindow = *const fn (window: ?*SDL_Window) callconv(.c) bool;
+pub const PFN_SDL_MaximizeWindow = *const fn (window: ?*SDL_Window) callconv(.c) bool;
+pub const PFN_SDL_MinimizeWindow = *const fn (window: ?*SDL_Window) callconv(.c) bool;
+pub const PFN_SDL_RestoreWindow = *const fn (window: ?*SDL_Window) callconv(.c) bool;
+pub const PFN_SDL_SetWindowFullscreen = *const fn (window: ?*SDL_Window, fullscreen: bool) callconv(.c) bool;
+pub const PFN_SDL_WindowHasSurface = *const fn (window: ?*SDL_Window) callconv(.c) bool;
+pub const PFN_SDL_GetWindowSurface = *const fn (window: ?*SDL_Window) callconv(.c) ?*SDL_Surface;
+pub const PFN_SDL_UpdateWindowSurface = *const fn (window: ?*SDL_Window) callconv(.c) bool;
+pub const PFN_SDL_UpdateWindowSurfaceRects = *const fn (window: ?*SDL_Window, rects: ?[*]const SDL_Rect, numrects: c_int) callconv(.c) bool;
+pub const PFN_SDL_DestroyWindowSurface = *const fn (window: ?*SDL_Window) callconv(.c) bool;
+pub const PFN_SDL_SetWindowKeyboardGrab = *const fn (window: ?*SDL_Window, grabbed: bool) callconv(.c) bool;
+pub const PFN_SDL_SetWindowMouseGrab = *const fn (window: ?*SDL_Window, grabbed: bool) callconv(.c) bool;
+pub const PFN_SDL_GetWindowKeyboardGrab = *const fn (window: ?*SDL_Window) callconv(.c) bool;
+pub const PFN_SDL_GetWindowMouseGrab = *const fn (window: ?*SDL_Window) callconv(.c) bool;
+pub const PFN_SDL_SetWindowMouseRect = *const fn (window: ?*SDL_Window, rect: ?*const SDL_Rect) callconv(.c) bool;
+pub const PFN_SDL_GetWindowMouseRect = *const fn (window: ?*SDL_Window) callconv(.c) ?*const SDL_Rect;
+pub const PFN_SDL_SetWindowOpacity = *const fn (window: ?*SDL_Window, opacity: f32) callconv(.c) bool;
+pub const PFN_SDL_GetWindowOpacity = *const fn (window: ?*SDL_Window) callconv(.c) f32;
+pub const PFN_SDL_SetWindowFocusable = *const fn (window: ?*SDL_Window, focusable: bool) callconv(.c) bool;
+pub const PFN_SDL_ShowWindowSystemMenu = *const fn (window: ?*SDL_Window, x: c_int, y: c_int) callconv(.c) bool;
+pub const PFN_SDL_SetWindowHitTest = *const fn (window: ?*SDL_Window, callback: SDL_HitTestCallback, callback_data: ?*anyopaque) callconv(.c) bool;
+pub const PFN_SDL_SetWindowShape = *const fn (window: ?*SDL_Window, shape: ?*SDL_Surface) callconv(.c) bool;
+pub const PFN_SDL_SetWindowModal = *const fn (window: ?*SDL_Window, modal: bool) callconv(.c) bool;
+pub const PFN_SDL_SetWindowProgressState = *const fn (window: ?*SDL_Window, state: SDL_ProgressState) callconv(.c) bool;
+pub const PFN_SDL_GetWindowProgressState = *const fn (window: ?*SDL_Window) callconv(.c) SDL_ProgressState;
+pub const PFN_SDL_SetWindowProgressValue = *const fn (window: ?*SDL_Window, value: f32) callconv(.c) bool;
+pub const PFN_SDL_GetWindowProgressValue = *const fn (window: ?*SDL_Window) callconv(.c) f32;
+pub const PFN_SDL_FlashWindow = *const fn (window: ?*SDL_Window, operation: SDL_FlashOperation) callconv(.c) bool;
+pub const PFN_SDL_DisableScreenSaver = *const fn () callconv(.c) bool;
+pub const PFN_SDL_EnableScreenSaver = *const fn () callconv(.c) bool;
+pub const PFN_SDL_ScreenSaverEnabled = *const fn () callconv(.c) bool;
 
 // Import types from pixels
 pub const SDL_Point = pixels.SDL_Point;
@@ -209,87 +211,94 @@ pub const SDL_HitTestResult = enum(c_int) {
 
 pub const SDL_HitTestCallback = ?*const fn (?*SDL_Window, ?*const SDL_Point, ?*anyopaque) callconv(.c) SDL_HitTestResult;
 
-// Public video API
-pub const getNumVideoDrivers = SDL_GetNumVideoDrivers;
-pub const getVideoDriver = SDL_GetVideoDriver;
-pub const getCurrentVideoDriver = SDL_GetCurrentVideoDriver;
-pub const getSystemTheme = SDL_GetSystemTheme;
-pub const getDisplays = SDL_GetDisplays;
-pub const getPrimaryDisplay = SDL_GetPrimaryDisplay;
-pub const getDisplayProperties = SDL_GetDisplayProperties;
-pub const getDisplayName = SDL_GetDisplayName;
-pub const getDisplayBounds = SDL_GetDisplayBounds;
-pub const getDisplayUsableBounds = SDL_GetDisplayUsableBounds;
-pub const getNaturalDisplayOrientation = SDL_GetNaturalDisplayOrientation;
-pub const getCurrentDisplayOrientation = SDL_GetCurrentDisplayOrientation;
-pub const getDisplayContentScale = SDL_GetDisplayContentScale;
-pub const getDesktopDisplayMode = SDL_GetDesktopDisplayMode;
-pub const getCurrentDisplayMode = SDL_GetCurrentDisplayMode;
-pub const getFullscreenDisplayModes = SDL_GetFullscreenDisplayModes;
-pub const getClosestFullscreenDisplayMode = SDL_GetClosestFullscreenDisplayMode;
-pub const getDisplayForPoint = SDL_GetDisplayForPoint;
-pub const getDisplayForRect = SDL_GetDisplayForRect;
-pub const getDisplayForWindow = SDL_GetDisplayForWindow;
-pub const getWindowPixelDensity = SDL_GetWindowPixelDensity;
-pub const getWindowDisplayScale = SDL_GetWindowDisplayScale;
-pub const setWindowFullscreenMode = SDL_SetWindowFullscreenMode;
-pub const getWindowFullscreenMode = SDL_GetWindowFullscreenMode;
-pub const getWindowPixelFormat = SDL_GetWindowPixelFormat;
-pub const getWindows = SDL_GetWindows;
-pub const createWindow = SDL_CreateWindow;
-pub const destroyWindow = SDL_DestroyWindow;
-pub const getWindowID = SDL_GetWindowID;
-pub const getWindowFromID = SDL_GetWindowFromID;
-pub const getWindowParent = SDL_GetWindowParent;
-pub const getWindowProperties = SDL_GetWindowProperties;
-pub const getWindowFlags = SDL_GetWindowFlags;
-pub const setWindowTitle = SDL_SetWindowTitle;
-pub const getWindowTitle = SDL_GetWindowTitle;
-pub const setWindowIcon = SDL_SetWindowIcon;
-pub const setWindowPosition = SDL_SetWindowPosition;
-pub const getWindowPosition = SDL_GetWindowPosition;
-pub const setWindowSize = SDL_SetWindowSize;
-pub const getWindowSize = SDL_GetWindowSize;
-pub const getWindowBordersSize = SDL_GetWindowBordersSize;
-pub const getWindowSizeInPixels = SDL_GetWindowSizeInPixels;
-pub const setWindowMinimumSize = SDL_SetWindowMinimumSize;
-pub const getWindowMinimumSize = SDL_GetWindowMinimumSize;
-pub const setWindowMaximumSize = SDL_SetWindowMaximumSize;
-pub const getWindowMaximumSize = SDL_GetWindowMaximumSize;
-pub const setWindowBordered = SDL_SetWindowBordered;
-pub const setWindowResizable = SDL_SetWindowResizable;
-pub const setWindowAlwaysOnTop = SDL_SetWindowAlwaysOnTop;
-pub const showWindow = SDL_ShowWindow;
-pub const hideWindow = SDL_HideWindow;
-pub const raiseWindow = SDL_RaiseWindow;
-pub const maximizeWindow = SDL_MaximizeWindow;
-pub const minimizeWindow = SDL_MinimizeWindow;
-pub const restoreWindow = SDL_RestoreWindow;
-pub const setWindowFullscreen = SDL_SetWindowFullscreen;
-pub const hasWindowSurface = SDL_WindowHasSurface;
-pub const getWindowSurface = SDL_GetWindowSurface;
-pub const updateWindowSurface = SDL_UpdateWindowSurface;
-pub const updateWindowSurfaceRects = SDL_UpdateWindowSurfaceRects;
-pub const destroyWindowSurface = SDL_DestroyWindowSurface;
-pub const setWindowKeyboardGrab = SDL_SetWindowKeyboardGrab;
-pub const setWindowMouseGrab = SDL_SetWindowMouseGrab;
-pub const getWindowKeyboardGrab = SDL_GetWindowKeyboardGrab;
-pub const getWindowMouseGrab = SDL_GetWindowMouseGrab;
-pub const setWindowMouseRect = SDL_SetWindowMouseRect;
-pub const getWindowMouseRect = SDL_GetWindowMouseRect;
-pub const setWindowOpacity = SDL_SetWindowOpacity;
-pub const getWindowOpacity = SDL_GetWindowOpacity;
-pub const setWindowFocusable = SDL_SetWindowFocusable;
-pub const showWindowSystemMenu = SDL_ShowWindowSystemMenu;
-pub const setWindowHitTest = SDL_SetWindowHitTest;
-pub const setWindowShape = SDL_SetWindowShape;
-pub const setWindowModal = SDL_SetWindowModal;
-pub const setWindowProgressState = SDL_SetWindowProgressState;
-pub const getWindowProgressState = SDL_GetWindowProgressState;
-pub const setWindowProgressValue = SDL_SetWindowProgressValue;
-pub const getWindowProgressValue = SDL_GetWindowProgressValue;
-pub const flashWindow = SDL_FlashWindow;
-pub const disableScreenSaver = SDL_DisableScreenSaver;
-pub const enableScreenSaver = SDL_EnableScreenSaver;
-pub const isScreenSaverEnabled = SDL_ScreenSaverEnabled;
+pub const VideoFunctions = struct {
+    getNumVideoDrivers: PFN_SDL_GetNumVideoDrivers,
+    getVideoDriver: PFN_SDL_GetVideoDriver,
+    getCurrentVideoDriver: PFN_SDL_GetCurrentVideoDriver,
+    getSystemTheme: PFN_SDL_GetSystemTheme,
+    getDisplays: PFN_SDL_GetDisplays,
+    getPrimaryDisplay: PFN_SDL_GetPrimaryDisplay,
+    getDisplayProperties: PFN_SDL_GetDisplayProperties,
+    getDisplayName: PFN_SDL_GetDisplayName,
+    getDisplayBounds: PFN_SDL_GetDisplayBounds,
+    getDisplayUsableBounds: PFN_SDL_GetDisplayUsableBounds,
+    getNaturalDisplayOrientation: PFN_SDL_GetNaturalDisplayOrientation,
+    getCurrentDisplayOrientation: PFN_SDL_GetCurrentDisplayOrientation,
+    getDisplayContentScale: PFN_SDL_GetDisplayContentScale,
+    getDesktopDisplayMode: PFN_SDL_GetDesktopDisplayMode,
+    getCurrentDisplayMode: PFN_SDL_GetCurrentDisplayMode,
+    getFullscreenDisplayModes: PFN_SDL_GetFullscreenDisplayModes,
+    getClosestFullscreenDisplayMode: PFN_SDL_GetClosestFullscreenDisplayMode,
+    getDisplayForPoint: PFN_SDL_GetDisplayForPoint,
+    getDisplayForRect: PFN_SDL_GetDisplayForRect,
+    getDisplayForWindow: PFN_SDL_GetDisplayForWindow,
+    getWindowPixelDensity: PFN_SDL_GetWindowPixelDensity,
+    getWindowDisplayScale: PFN_SDL_GetWindowDisplayScale,
+    setWindowFullscreenMode: PFN_SDL_SetWindowFullscreenMode,
+    getWindowFullscreenMode: PFN_SDL_GetWindowFullscreenMode,
+    getWindowPixelFormat: PFN_SDL_GetWindowPixelFormat,
+    getWindows: PFN_SDL_GetWindows,
+    createWindow: PFN_SDL_CreateWindow,
+    destroyWindow: PFN_SDL_DestroyWindow,
+    getWindowID: PFN_SDL_GetWindowID,
+    getWindowFromID: PFN_SDL_GetWindowFromID,
+    getWindowParent: PFN_SDL_GetWindowParent,
+    getWindowProperties: PFN_SDL_GetWindowProperties,
+    getWindowFlags: PFN_SDL_GetWindowFlags,
+    setWindowTitle: PFN_SDL_SetWindowTitle,
+    getWindowTitle: PFN_SDL_GetWindowTitle,
+    setWindowIcon: PFN_SDL_SetWindowIcon,
+    setWindowPosition: PFN_SDL_SetWindowPosition,
+    getWindowPosition: PFN_SDL_GetWindowPosition,
+    setWindowSize: PFN_SDL_SetWindowSize,
+    getWindowSize: PFN_SDL_GetWindowSize,
+    getWindowBordersSize: PFN_SDL_GetWindowBordersSize,
+    getWindowSizeInPixels: PFN_SDL_GetWindowSizeInPixels,
+    setWindowMinimumSize: PFN_SDL_SetWindowMinimumSize,
+    getWindowMinimumSize: PFN_SDL_GetWindowMinimumSize,
+    setWindowMaximumSize: PFN_SDL_SetWindowMaximumSize,
+    getWindowMaximumSize: PFN_SDL_GetWindowMaximumSize,
+    setWindowBordered: PFN_SDL_SetWindowBordered,
+    setWindowResizable: PFN_SDL_SetWindowResizable,
+    setWindowAlwaysOnTop: PFN_SDL_SetWindowAlwaysOnTop,
+    showWindow: PFN_SDL_ShowWindow,
+    hideWindow: PFN_SDL_HideWindow,
+    raiseWindow: PFN_SDL_RaiseWindow,
+    maximizeWindow: PFN_SDL_MaximizeWindow,
+    minimizeWindow: PFN_SDL_MinimizeWindow,
+    restoreWindow: PFN_SDL_RestoreWindow,
+    setWindowFullscreen: PFN_SDL_SetWindowFullscreen,
+    hasWindowSurface: PFN_SDL_WindowHasSurface,
+    getWindowSurface: PFN_SDL_GetWindowSurface,
+    updateWindowSurface: PFN_SDL_UpdateWindowSurface,
+    updateWindowSurfaceRects: PFN_SDL_UpdateWindowSurfaceRects,
+    destroyWindowSurface: PFN_SDL_DestroyWindowSurface,
+    setWindowKeyboardGrab: PFN_SDL_SetWindowKeyboardGrab,
+    setWindowMouseGrab: PFN_SDL_SetWindowMouseGrab,
+    getWindowKeyboardGrab: PFN_SDL_GetWindowKeyboardGrab,
+    getWindowMouseGrab: PFN_SDL_GetWindowMouseGrab,
+    setWindowMouseRect: PFN_SDL_SetWindowMouseRect,
+    getWindowMouseRect: PFN_SDL_GetWindowMouseRect,
+    setWindowOpacity: PFN_SDL_SetWindowOpacity,
+    getWindowOpacity: PFN_SDL_GetWindowOpacity,
+    setWindowFocusable: PFN_SDL_SetWindowFocusable,
+    showWindowSystemMenu: PFN_SDL_ShowWindowSystemMenu,
+    setWindowHitTest: PFN_SDL_SetWindowHitTest,
+    setWindowShape: PFN_SDL_SetWindowShape,
+    setWindowModal: PFN_SDL_SetWindowModal,
+    setWindowProgressState: PFN_SDL_SetWindowProgressState,
+    getWindowProgressState: PFN_SDL_GetWindowProgressState,
+    setWindowProgressValue: PFN_SDL_SetWindowProgressValue,
+    getWindowProgressValue: PFN_SDL_GetWindowProgressValue,
+    flashWindow: PFN_SDL_FlashWindow,
+    disableScreenSaver: PFN_SDL_DisableScreenSaver,
+    enableScreenSaver: PFN_SDL_EnableScreenSaver,
+    isScreenSaverEnabled: PFN_SDL_ScreenSaverEnabled,
 
+    pub fn load(handle: dynamic.LibraryHandle) !VideoFunctions {
+        return dynamic.loadFunctions(VideoFunctions, handle, "SDL_", .{
+            .{ "hasWindowSurface", "SDL_WindowHasSurface" },
+            .{ "isScreenSaverEnabled", "SDL_ScreenSaverEnabled" },
+        }, &.{});
+    }
+};

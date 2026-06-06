@@ -1,8 +1,10 @@
 // SDL3 Locale Bindings
 // Locale preferences
 
+const dynamic = @import("dynamic.zig");
+
 // Locale functions
-extern fn SDL_GetPreferredLocales(count: ?*c_int) ?[*]?*SDL_Locale;
+pub const PFN_SDL_GetPreferredLocales = *const fn (count: ?*c_int) callconv(.c) ?[*]?*SDL_Locale;
 
 // Locale struct
 pub const SDL_Locale = extern struct {
@@ -10,5 +12,10 @@ pub const SDL_Locale = extern struct {
     country: ?[*:0]const u8,
 };
 
-// Public API
-pub const getPreferredLocales = SDL_GetPreferredLocales;
+pub const LocaleFunctions = struct {
+    getPreferredLocales: PFN_SDL_GetPreferredLocales,
+
+    pub fn load(handle: dynamic.LibraryHandle) !LocaleFunctions {
+        return dynamic.loadFunctions(LocaleFunctions, handle, "SDL_", .{}, &.{});
+    }
+};

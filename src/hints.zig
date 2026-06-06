@@ -1,6 +1,8 @@
 // SDL3 Hints Bindings
 // Runtime configuration
 
+const dynamic = @import("dynamic.zig");
+
 // Priority enum
 pub const SDL_HintPriority = enum(c_int) {
     SDL_HINT_DEFAULT,
@@ -11,21 +13,26 @@ pub const SDL_HintPriority = enum(c_int) {
 pub const SDL_HintCallback = ?*const fn (?*anyopaque, [*:0]const u8, [*:0]const u8, [*:0]const u8) callconv(.c) void;
 
 // Hints functions
-extern fn SDL_SetHint(name: [*:0]const u8, value: [*:0]const u8) bool;
-extern fn SDL_GetHint(name: [*:0]const u8) ?[*:0]const u8;
-extern fn SDL_SetHintWithPriority(name: [*:0]const u8, value: [*:0]const u8, priority: SDL_HintPriority) bool;
-extern fn SDL_ResetHint(name: [*:0]const u8) bool;
-extern fn SDL_ResetHints() void;
-extern fn SDL_AddHintCallback(name: [*:0]const u8, callback: SDL_HintCallback, userdata: ?*anyopaque) bool;
-extern fn SDL_RemoveHintCallback(name: [*:0]const u8, callback: SDL_HintCallback, userdata: ?*anyopaque) void;
-extern fn SDL_GetHintBoolean(name: [*:0]const u8, default_value: bool) bool;
+pub const PFN_SDL_SetHint = *const fn (name: [*:0]const u8, value: [*:0]const u8) callconv(.c) bool;
+pub const PFN_SDL_GetHint = *const fn (name: [*:0]const u8) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_SetHintWithPriority = *const fn (name: [*:0]const u8, value: [*:0]const u8, priority: SDL_HintPriority) callconv(.c) bool;
+pub const PFN_SDL_ResetHint = *const fn (name: [*:0]const u8) callconv(.c) bool;
+pub const PFN_SDL_ResetHints = *const fn () callconv(.c) void;
+pub const PFN_SDL_AddHintCallback = *const fn (name: [*:0]const u8, callback: SDL_HintCallback, userdata: ?*anyopaque) callconv(.c) bool;
+pub const PFN_SDL_RemoveHintCallback = *const fn (name: [*:0]const u8, callback: SDL_HintCallback, userdata: ?*anyopaque) callconv(.c) void;
+pub const PFN_SDL_GetHintBoolean = *const fn (name: [*:0]const u8, default_value: bool) callconv(.c) bool;
 
-// Public API
-pub const setHint = SDL_SetHint;
-pub const getHint = SDL_GetHint;
-pub const setHintWithPriority = SDL_SetHintWithPriority;
-pub const resetHint = SDL_ResetHint;
-pub const resetHints = SDL_ResetHints;
-pub const addHintCallback = SDL_AddHintCallback;
-pub const removeHintCallback = SDL_RemoveHintCallback;
-pub const getHintBoolean = SDL_GetHintBoolean;
+pub const HintFunctions = struct {
+    setHint: PFN_SDL_SetHint,
+    getHint: PFN_SDL_GetHint,
+    setHintWithPriority: PFN_SDL_SetHintWithPriority,
+    resetHint: PFN_SDL_ResetHint,
+    resetHints: PFN_SDL_ResetHints,
+    addHintCallback: PFN_SDL_AddHintCallback,
+    removeHintCallback: PFN_SDL_RemoveHintCallback,
+    getHintBoolean: PFN_SDL_GetHintBoolean,
+
+    pub fn load(handle: dynamic.LibraryHandle) !HintFunctions {
+        return dynamic.loadFunctions(HintFunctions, handle, "SDL_", .{}, &.{});
+    }
+};

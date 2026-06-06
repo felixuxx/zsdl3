@@ -2,6 +2,8 @@
 // Timers, delays, timing functions
 
 const core = @import("core.zig");
+const dynamic = @import("dynamic.zig");
+
 pub const Uint32 = core.Uint32;
 pub const SDL_Time = core.Sint64;
 
@@ -37,37 +39,42 @@ pub const SDL_TimeFormat = enum(c_int) {
 };
 
 // Time functions
-extern fn SDL_GetTicks() core.Uint64;
-extern fn SDL_GetTicksNS() core.Uint64;
-extern fn SDL_Delay(ms: core.Uint32) void;
-extern fn SDL_AddTimer(interval: Uint32, callback: SDL_TimerCallback, param: ?*anyopaque) SDL_TimerID;
-extern fn SDL_RemoveTimer(id: SDL_TimerID) bool;
-extern fn SDL_GetPerformanceCounter() core.Uint64;
-extern fn SDL_GetPerformanceFrequency() core.Uint64;
-extern fn SDL_GetCurrentTime(ticks: ?*core.SDL_Time) bool;
-extern fn SDL_TimeToDateTime(ticks: core.SDL_Time, dt: ?*SDL_DateTime, localTime: bool) bool;
-extern fn SDL_DateTimeToTime(dt: ?*const SDL_DateTime, ticks: ?*core.SDL_Time) bool;
-extern fn SDL_GetDateTimeLocalePreferences(dateFormat: ?*SDL_DateFormat, timeFormat: ?*SDL_TimeFormat) bool;
-extern fn SDL_TimeToWindows(ticks: core.SDL_Time, dwLowDateTime: ?*core.Uint32, dwHighDateTime: ?*core.Uint32) void;
-extern fn SDL_TimeFromWindows(dwLowDateTime: core.Uint32, dwHighDateTime: core.Uint32) core.SDL_Time;
-extern fn SDL_GetDaysInMonth(year: c_int, month: c_int) c_int;
-extern fn SDL_GetDayOfYear(year: c_int, month: c_int, day: c_int) c_int;
-extern fn SDL_GetDayOfWeek(year: c_int, month: c_int, day: c_int) c_int;
+pub const PFN_SDL_GetTicks = *const fn () callconv(.c) core.Uint64;
+pub const PFN_SDL_GetTicksNS = *const fn () callconv(.c) core.Uint64;
+pub const PFN_SDL_Delay = *const fn (ms: core.Uint32) callconv(.c) void;
+pub const PFN_SDL_AddTimer = *const fn (interval: Uint32, callback: SDL_TimerCallback, param: ?*anyopaque) callconv(.c) SDL_TimerID;
+pub const PFN_SDL_RemoveTimer = *const fn (id: SDL_TimerID) callconv(.c) bool;
+pub const PFN_SDL_GetPerformanceCounter = *const fn () callconv(.c) core.Uint64;
+pub const PFN_SDL_GetPerformanceFrequency = *const fn () callconv(.c) core.Uint64;
+pub const PFN_SDL_GetCurrentTime = *const fn (ticks: ?*SDL_Time) callconv(.c) bool;
+pub const PFN_SDL_TimeToDateTime = *const fn (ticks: SDL_Time, dt: ?*SDL_DateTime, localTime: bool) callconv(.c) bool;
+pub const PFN_SDL_DateTimeToTime = *const fn (dt: ?*const SDL_DateTime, ticks: ?*SDL_Time) callconv(.c) bool;
+pub const PFN_SDL_GetDateTimeLocalePreferences = *const fn (dateFormat: ?*SDL_DateFormat, timeFormat: ?*SDL_TimeFormat) callconv(.c) bool;
+pub const PFN_SDL_TimeToWindows = *const fn (ticks: SDL_Time, dwLowDateTime: ?*core.Uint32, dwHighDateTime: ?*core.Uint32) callconv(.c) void;
+pub const PFN_SDL_TimeFromWindows = *const fn (dwLowDateTime: core.Uint32, dwHighDateTime: core.Uint32) callconv(.c) SDL_Time;
+pub const PFN_SDL_GetDaysInMonth = *const fn (year: c_int, month: c_int) callconv(.c) c_int;
+pub const PFN_SDL_GetDayOfYear = *const fn (year: c_int, month: c_int, day: c_int) callconv(.c) c_int;
+pub const PFN_SDL_GetDayOfWeek = *const fn (year: c_int, month: c_int, day: c_int) callconv(.c) c_int;
 
-// Public API
-pub const getTicks = SDL_GetTicks;
-pub const getTicksNS = SDL_GetTicksNS;
-pub const delay = SDL_Delay;
-pub const addTimer = SDL_AddTimer;
-pub const removeTimer = SDL_RemoveTimer;
-pub const getPerformanceCounter = SDL_GetPerformanceCounter;
-pub const getPerformanceFrequency = SDL_GetPerformanceFrequency;
-pub const getCurrentTime = SDL_GetCurrentTime;
-pub const timeToDateTime = SDL_TimeToDateTime;
-pub const dateTimeToTime = SDL_DateTimeToTime;
-pub const getDateTimeLocalePreferences = SDL_GetDateTimeLocalePreferences;
-pub const timeToWindows = SDL_TimeToWindows;
-pub const timeFromWindows = SDL_TimeFromWindows;
-pub const getDaysInMonth = SDL_GetDaysInMonth;
-pub const getDayOfYear = SDL_GetDayOfYear;
-pub const getDayOfWeek = SDL_GetDayOfWeek;
+pub const TimeFunctions = struct {
+    getTicks: PFN_SDL_GetTicks,
+    getTicksNS: PFN_SDL_GetTicksNS,
+    delay: PFN_SDL_Delay,
+    addTimer: PFN_SDL_AddTimer,
+    removeTimer: PFN_SDL_RemoveTimer,
+    getPerformanceCounter: PFN_SDL_GetPerformanceCounter,
+    getPerformanceFrequency: PFN_SDL_GetPerformanceFrequency,
+    getCurrentTime: PFN_SDL_GetCurrentTime,
+    timeToDateTime: PFN_SDL_TimeToDateTime,
+    dateTimeToTime: PFN_SDL_DateTimeToTime,
+    getDateTimeLocalePreferences: PFN_SDL_GetDateTimeLocalePreferences,
+    timeToWindows: PFN_SDL_TimeToWindows,
+    timeFromWindows: PFN_SDL_TimeFromWindows,
+    getDaysInMonth: PFN_SDL_GetDaysInMonth,
+    getDayOfYear: PFN_SDL_GetDayOfYear,
+    getDayOfWeek: PFN_SDL_GetDayOfWeek,
+
+    pub fn load(handle: dynamic.LibraryHandle) !TimeFunctions {
+        return dynamic.loadFunctions(TimeFunctions, handle, "SDL_", .{}, &.{});
+    }
+};

@@ -3,6 +3,7 @@
 
 const filesystem = @import("filesystem.zig");
 const core = @import("core.zig");
+const dynamic = @import("dynamic.zig");
 
 // Process handle
 pub const SDL_Process = opaque {};
@@ -16,23 +17,28 @@ pub const SDL_ProcessIO = enum(c_int) {
 };
 
 // Process functions
-extern fn SDL_CreateProcess(args: ?[*]const ?[*:0]const u8, pipe_stdio: bool) ?*SDL_Process;
-extern fn SDL_GetProcessInput(process: ?*SDL_Process) ?*filesystem.SDL_IOStream;
-extern fn SDL_GetProcessOutput(process: ?*SDL_Process) ?*filesystem.SDL_IOStream;
-extern fn SDL_WaitProcess(process: ?*SDL_Process, block: bool, exitcode: ?*c_int) bool;
-extern fn SDL_KillProcess(process: ?*SDL_Process, force: bool) bool;
-extern fn SDL_DestroyProcess(process: ?*SDL_Process) void;
-extern fn SDL_CreateProcessWithProperties(props: core.SDL_PropertiesID) ?*SDL_Process;
-extern fn SDL_GetProcessProperties(process: ?*SDL_Process) core.SDL_PropertiesID;
-extern fn SDL_ReadProcess(process: ?*SDL_Process, datasize: ?*usize, exitcode: ?*c_int) ?*anyopaque;
+pub const PFN_SDL_CreateProcess = *const fn (args: ?[*]const ?[*:0]const u8, pipe_stdio: bool) callconv(.c) ?*SDL_Process;
+pub const PFN_SDL_GetProcessInput = *const fn (process: ?*SDL_Process) callconv(.c) ?*filesystem.SDL_IOStream;
+pub const PFN_SDL_GetProcessOutput = *const fn (process: ?*SDL_Process) callconv(.c) ?*filesystem.SDL_IOStream;
+pub const PFN_SDL_WaitProcess = *const fn (process: ?*SDL_Process, block: bool, exitcode: ?*c_int) callconv(.c) bool;
+pub const PFN_SDL_KillProcess = *const fn (process: ?*SDL_Process, force: bool) callconv(.c) bool;
+pub const PFN_SDL_DestroyProcess = *const fn (process: ?*SDL_Process) callconv(.c) void;
+pub const PFN_SDL_CreateProcessWithProperties = *const fn (props: core.SDL_PropertiesID) callconv(.c) ?*SDL_Process;
+pub const PFN_SDL_GetProcessProperties = *const fn (process: ?*SDL_Process) callconv(.c) core.SDL_PropertiesID;
+pub const PFN_SDL_ReadProcess = *const fn (process: ?*SDL_Process, datasize: ?*usize, exitcode: ?*c_int) callconv(.c) ?*anyopaque;
 
-// Public API
-pub const createProcess = SDL_CreateProcess;
-pub const getProcessInput = SDL_GetProcessInput;
-pub const getProcessOutput = SDL_GetProcessOutput;
-pub const waitProcess = SDL_WaitProcess;
-pub const killProcess = SDL_KillProcess;
-pub const destroyProcess = SDL_DestroyProcess;
-pub const createProcessWithProperties = SDL_CreateProcessWithProperties;
-pub const getProcessProperties = SDL_GetProcessProperties;
-pub const readProcess = SDL_ReadProcess;
+pub const ProcessFunctions = struct {
+    createProcess: PFN_SDL_CreateProcess,
+    getProcessInput: PFN_SDL_GetProcessInput,
+    getProcessOutput: PFN_SDL_GetProcessOutput,
+    waitProcess: PFN_SDL_WaitProcess,
+    killProcess: PFN_SDL_KillProcess,
+    destroyProcess: PFN_SDL_DestroyProcess,
+    createProcessWithProperties: PFN_SDL_CreateProcessWithProperties,
+    getProcessProperties: PFN_SDL_GetProcessProperties,
+    readProcess: PFN_SDL_ReadProcess,
+
+    pub fn load(handle: dynamic.LibraryHandle) !ProcessFunctions {
+        return dynamic.loadFunctions(ProcessFunctions, handle, "SDL_", .{}, &.{});
+    }
+};

@@ -2,6 +2,7 @@
 // File and message dialogs
 
 const core = @import("core.zig");
+const dynamic = @import("dynamic.zig");
 const video = @import("video.zig");
 
 // Dialog callbacks
@@ -15,10 +16,10 @@ pub const SDL_FileDialogType = enum(c_int) {
 };
 
 // Dialog functions
-extern fn SDL_ShowOpenFileDialog(callback: SDL_DialogFileCallback, userdata: ?*anyopaque, window: ?*video.SDL_Window, filters: ?[*]const SDL_DialogFileFilter, nfilters: c_int, default_location: ?[*:0]const u8, allow_many: bool) void;
-extern fn SDL_ShowSaveFileDialog(callback: SDL_DialogFileCallback, userdata: ?*anyopaque, window: ?*video.SDL_Window, filters: ?[*]const SDL_DialogFileFilter, nfilters: c_int, default_location: ?[*:0]const u8) void;
-extern fn SDL_ShowOpenFolderDialog(callback: SDL_DialogFileCallback, userdata: ?*anyopaque, window: ?*video.SDL_Window, default_location: ?[*:0]const u8, allow_many: bool) void;
-extern fn SDL_ShowFileDialogWithProperties(dialog_type: SDL_FileDialogType, callback: SDL_DialogFileCallback, userdata: ?*anyopaque, props: core.SDL_PropertiesID) void;
+pub const PFN_SDL_ShowOpenFileDialog = *const fn (callback: SDL_DialogFileCallback, userdata: ?*anyopaque, window: ?*video.SDL_Window, filters: ?[*]const SDL_DialogFileFilter, nfilters: c_int, default_location: ?[*:0]const u8, allow_many: bool) callconv(.c) void;
+pub const PFN_SDL_ShowSaveFileDialog = *const fn (callback: SDL_DialogFileCallback, userdata: ?*anyopaque, window: ?*video.SDL_Window, filters: ?[*]const SDL_DialogFileFilter, nfilters: c_int, default_location: ?[*:0]const u8) callconv(.c) void;
+pub const PFN_SDL_ShowOpenFolderDialog = *const fn (callback: SDL_DialogFileCallback, userdata: ?*anyopaque, window: ?*video.SDL_Window, default_location: ?[*:0]const u8, allow_many: bool) callconv(.c) void;
+pub const PFN_SDL_ShowFileDialogWithProperties = *const fn (dialog_type: SDL_FileDialogType, callback: SDL_DialogFileCallback, userdata: ?*anyopaque, props: core.SDL_PropertiesID) callconv(.c) void;
 
 // Dialog file filter
 pub const SDL_DialogFileFilter = extern struct {
@@ -26,8 +27,13 @@ pub const SDL_DialogFileFilter = extern struct {
     pattern: ?[*:0]const u8,
 };
 
-// Public API
-pub const showOpenFileDialog = SDL_ShowOpenFileDialog;
-pub const showSaveFileDialog = SDL_ShowSaveFileDialog;
-pub const showOpenFolderDialog = SDL_ShowOpenFolderDialog;
-pub const showFileDialogWithProperties = SDL_ShowFileDialogWithProperties;
+pub const DialogFunctions = struct {
+    showOpenFileDialog: PFN_SDL_ShowOpenFileDialog,
+    showSaveFileDialog: PFN_SDL_ShowSaveFileDialog,
+    showOpenFolderDialog: PFN_SDL_ShowOpenFolderDialog,
+    showFileDialogWithProperties: PFN_SDL_ShowFileDialogWithProperties,
+
+    pub fn load(handle: dynamic.LibraryHandle) !DialogFunctions {
+        return dynamic.loadFunctions(DialogFunctions, handle, "SDL_", .{}, &.{});
+    }
+};

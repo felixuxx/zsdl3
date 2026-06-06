@@ -2,6 +2,7 @@
 // Asynchronous file I/O
 
 const core = @import("core.zig");
+const dynamic = @import("dynamic.zig");
 
 // Import types
 pub const Uint64 = core.Uint64;
@@ -41,23 +42,28 @@ pub const SDL_AsyncIOOutcome = extern struct {
 };
 
 // AsyncIO functions
-extern fn SDL_AsyncIOFromFile(file: ?[*:0]const u8, mode: ?[*:0]const u8) ?*SDL_AsyncIO;
-extern fn SDL_GetAsyncIOSize(asyncio: ?*SDL_AsyncIO) Sint64;
-extern fn SDL_ReadAsyncIO(asyncio: ?*SDL_AsyncIO, ptr: ?*anyopaque, offset: Uint64, size: Uint64, queue: ?*SDL_AsyncIOQueue, userdata: ?*anyopaque) bool;
-extern fn SDL_WriteAsyncIO(asyncio: ?*SDL_AsyncIO, ptr: ?*const anyopaque, offset: Uint64, size: Uint64, queue: ?*SDL_AsyncIOQueue, userdata: ?*anyopaque) bool;
-extern fn SDL_CloseAsyncIO(asyncio: ?*SDL_AsyncIO, flush: bool, queue: ?*SDL_AsyncIOQueue, userdata: ?*anyopaque) bool;
-extern fn SDL_CreateAsyncIOQueue() ?*SDL_AsyncIOQueue;
-extern fn SDL_DestroyAsyncIOQueue(queue: ?*SDL_AsyncIOQueue) void;
-extern fn SDL_GetAsyncIOResult(queue: ?*SDL_AsyncIOQueue, outcome: ?*SDL_AsyncIOOutcome) bool;
-extern fn SDL_WaitAsyncIOResult(queue: ?*SDL_AsyncIOQueue, outcome: ?*SDL_AsyncIOOutcome, timeoutMS: Sint32) bool;
+pub const PFN_SDL_AsyncIOFromFile = *const fn (file: ?[*:0]const u8, mode: ?[*:0]const u8) callconv(.c) ?*SDL_AsyncIO;
+pub const PFN_SDL_GetAsyncIOSize = *const fn (asyncio: ?*SDL_AsyncIO) callconv(.c) Sint64;
+pub const PFN_SDL_ReadAsyncIO = *const fn (asyncio: ?*SDL_AsyncIO, ptr: ?*anyopaque, offset: Uint64, size: Uint64, queue: ?*SDL_AsyncIOQueue, userdata: ?*anyopaque) callconv(.c) bool;
+pub const PFN_SDL_WriteAsyncIO = *const fn (asyncio: ?*SDL_AsyncIO, ptr: ?*const anyopaque, offset: Uint64, size: Uint64, queue: ?*SDL_AsyncIOQueue, userdata: ?*anyopaque) callconv(.c) bool;
+pub const PFN_SDL_CloseAsyncIO = *const fn (asyncio: ?*SDL_AsyncIO, flush: bool, queue: ?*SDL_AsyncIOQueue, userdata: ?*anyopaque) callconv(.c) bool;
+pub const PFN_SDL_CreateAsyncIOQueue = *const fn () callconv(.c) ?*SDL_AsyncIOQueue;
+pub const PFN_SDL_DestroyAsyncIOQueue = *const fn (queue: ?*SDL_AsyncIOQueue) callconv(.c) void;
+pub const PFN_SDL_GetAsyncIOResult = *const fn (queue: ?*SDL_AsyncIOQueue, outcome: ?*SDL_AsyncIOOutcome) callconv(.c) bool;
+pub const PFN_SDL_WaitAsyncIOResult = *const fn (queue: ?*SDL_AsyncIOQueue, outcome: ?*SDL_AsyncIOOutcome, timeoutMS: Sint32) callconv(.c) bool;
 
-// Public API
-pub const asyncIOFromFile = SDL_AsyncIOFromFile;
-pub const getAsyncIOSize = SDL_GetAsyncIOSize;
-pub const readAsyncIO = SDL_ReadAsyncIO;
-pub const writeAsyncIO = SDL_WriteAsyncIO;
-pub const closeAsyncIO = SDL_CloseAsyncIO;
-pub const createAsyncIOQueue = SDL_CreateAsyncIOQueue;
-pub const destroyAsyncIOQueue = SDL_DestroyAsyncIOQueue;
-pub const getAsyncIOResult = SDL_GetAsyncIOResult;
-pub const waitAsyncIOResult = SDL_WaitAsyncIOResult;
+pub const AsyncIOFunctions = struct {
+    asyncIOFromFile: PFN_SDL_AsyncIOFromFile,
+    getAsyncIOSize: PFN_SDL_GetAsyncIOSize,
+    readAsyncIO: PFN_SDL_ReadAsyncIO,
+    writeAsyncIO: PFN_SDL_WriteAsyncIO,
+    closeAsyncIO: PFN_SDL_CloseAsyncIO,
+    createAsyncIOQueue: PFN_SDL_CreateAsyncIOQueue,
+    destroyAsyncIOQueue: PFN_SDL_DestroyAsyncIOQueue,
+    getAsyncIOResult: PFN_SDL_GetAsyncIOResult,
+    waitAsyncIOResult: PFN_SDL_WaitAsyncIOResult,
+
+    pub fn load(handle: dynamic.LibraryHandle) !AsyncIOFunctions {
+        return dynamic.loadFunctions(AsyncIOFunctions, handle, "SDL_", .{}, &.{});
+    }
+};
