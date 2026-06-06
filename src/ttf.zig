@@ -7,14 +7,21 @@ const surface = @import("surface.zig");
 const render = @import("render.zig");
 const properties = @import("properties.zig");
 const dynamic = @import("dynamic.zig");
+const gpu = @import("gpu.zig");
 
 // Import types
 pub const Uint32 = core.Uint32;
+pub const Uint64 = core.Uint64;
 pub const SDL_PropertiesID = properties.SDL_PropertiesID;
 pub const SDL_Surface = surface.SDL_Surface;
 pub const SDL_IOStream = surface.SDL_IOStream;
 pub const SDL_Color = pixels.SDL_Color;
 pub const SDL_FColor = render.SDL_FColor;
+pub const SDL_Rect = pixels.SDL_Rect;
+pub const SDL_FPoint = pixels.SDL_FPoint;
+pub const SDL_GPUTexture = gpu.SDL_GPUTexture;
+pub const SDL_GPUDevice = gpu.SDL_GPUDevice;
+pub const SDL_Renderer = render.SDL_Renderer;
 
 // Version constants
 pub const SDL_TTF_MAJOR_VERSION = 3;
@@ -75,6 +82,59 @@ pub const TTF_PROP_FONT_CREATE_EXISTING_FONT_POINTER = "SDL_ttf.font.create.exis
 pub const TTF_PROP_FONT_OUTLINE_LINE_CAP_NUMBER = "SDL_ttf.font.outline.line_cap";
 pub const TTF_PROP_FONT_OUTLINE_LINE_JOIN_NUMBER = "SDL_ttf.font.outline.line_join";
 pub const TTF_PROP_FONT_OUTLINE_MITER_LIMIT_NUMBER = "SDL_ttf.font.outline.miter_limit";
+
+// Text engine types
+pub const TTF_Direction = enum(c_int) {
+    TTF_DIRECTION_INVALID = 0,
+    TTF_DIRECTION_LTR = 4,
+    TTF_DIRECTION_RTL,
+    TTF_DIRECTION_TTB,
+    TTF_DIRECTION_BTT,
+};
+
+pub const TTF_ImageType = enum(c_int) {
+    TTF_IMAGE_INVALID,
+    TTF_IMAGE_ALPHA,
+    TTF_IMAGE_COLOR,
+    TTF_IMAGE_SDF,
+};
+
+pub const TTF_GPUTextEngineWinding = enum(c_int) {
+    TTF_GPU_TEXTENGINE_WINDING_INVALID = -1,
+    TTF_GPU_TEXTENGINE_WINDING_CLOCKWISE,
+    TTF_GPU_TEXTENGINE_WINDING_COUNTER_CLOCKWISE,
+};
+
+pub const TTF_TextEngine = opaque {};
+
+pub const TTF_Text = extern struct {
+    text: [*:0]u8,
+    num_lines: c_int,
+    refcount: c_int,
+    internal: ?*anyopaque,
+};
+
+pub const TTF_GPUAtlasDrawSequence = extern struct {
+    atlas_texture: ?*SDL_GPUTexture,
+    xy: ?*SDL_FPoint,
+    uv: ?*SDL_FPoint,
+    num_vertices: c_int,
+    indices: ?*c_int,
+    num_indices: c_int,
+    image_type: TTF_ImageType,
+    next: ?*TTF_GPUAtlasDrawSequence,
+};
+
+pub const TTF_SubStringFlags = Uint32;
+
+pub const TTF_SubString = extern struct {
+    flags: TTF_SubStringFlags,
+    offset: c_int,
+    length: c_int,
+    line_index: c_int,
+    cluster_index: c_int,
+    rect: SDL_Rect,
+};
 
 // Version functions
 pub const PFN_TTF_Version = *const fn () callconv(.c) c_int;
@@ -186,6 +246,84 @@ pub const PFN_TTF_RenderText_Blended_Float_Wrapped = *const fn (font: ?*const TT
 pub const PFN_TTF_RenderUTF8_Blended_Float_Wrapped = *const fn (font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_FColor, wrapLength: c_int) callconv(.c) ?*SDL_Surface;
 pub const PFN_TTF_RenderUNICODE_Blended_Float_Wrapped = *const fn (font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_FColor, wrapLength: c_int) callconv(.c) ?*SDL_Surface;
 
+// Missing core functions
+pub const PFN_TTF_WasInit = *const fn () callconv(.c) bool;
+pub const PFN_TTF_MeasureString = *const fn (font: ?*const TTF_Font, text: ?[*:0]const u8, length: usize, measure_width: c_int, extent: ?*c_int, count: ?*c_int) callconv(.c) bool;
+pub const PFN_TTF_FontHasGlyph = *const fn (font: ?*const TTF_Font, ch: core.Uint32) callconv(.c) bool;
+pub const PFN_TTF_GetGlyphKerning = *const fn (font: ?*const TTF_Font, previous_ch: core.Uint32, ch: core.Uint32, kerning: ?*c_int) callconv(.c) bool;
+pub const PFN_TTF_GetGlyphImage = *const fn (font: ?*const TTF_Font, ch: core.Uint32, image_type: ?*TTF_ImageType) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_GetGlyphImageForIndex = *const fn (font: ?*const TTF_Font, glyph_index: core.Uint32, image_type: ?*TTF_ImageType) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_GetGlyphScript = *const fn (font: ?*const TTF_Font, ch: core.Uint32) callconv(.c) core.Uint32;
+pub const PFN_TTF_SetFontDirection = *const fn (font: ?*TTF_Font, direction: TTF_Direction) callconv(.c) bool;
+pub const PFN_TTF_GetFontDirection = *const fn (font: ?*const TTF_Font) callconv(.c) TTF_Direction;
+pub const PFN_TTF_SetFontScript = *const fn (font: ?*TTF_Font, script: core.Uint32) callconv(.c) bool;
+pub const PFN_TTF_GetFontScript = *const fn (font: ?*const TTF_Font) callconv(.c) core.Uint32;
+pub const PFN_TTF_SetFontLanguage = *const fn (font: ?*TTF_Font, language: ?[*:0]const u8) callconv(.c) bool;
+pub const PFN_TTF_StringToTag = *const fn (string: ?[*:0]const u8) callconv(.c) core.Uint32;
+pub const PFN_TTF_TagToString = *const fn (tag: core.Uint32, string: ?[*]u8, size: usize) callconv(.c) void;
+
+// New render functions
+pub const PFN_TTF_RenderText_Solid_Wrapped = *const fn (font: ?*const TTF_Font, text: ?[*:0]const u8, length: usize, fg: SDL_Color, wrap_width: c_int) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderText_Shaded_Wrapped = *const fn (font: ?*const TTF_Font, text: ?[*:0]const u8, length: usize, fg: SDL_Color, bg: SDL_Color, wrap_width: c_int) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderText_LCD = *const fn (font: ?*const TTF_Font, text: ?[*:0]const u8, length: usize, fg: SDL_Color, bg: SDL_Color) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderText_LCD_Wrapped = *const fn (font: ?*const TTF_Font, text: ?[*:0]const u8, length: usize, fg: SDL_Color, bg: SDL_Color, wrap_width: c_int) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderGlyph_Solid = *const fn (font: ?*const TTF_Font, ch: core.Uint32, fg: SDL_Color) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderGlyph_Shaded = *const fn (font: ?*const TTF_Font, ch: core.Uint32, fg: SDL_Color, bg: SDL_Color) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderGlyph_Blended = *const fn (font: ?*const TTF_Font, ch: core.Uint32, fg: SDL_Color) callconv(.c) ?*SDL_Surface;
+pub const PFN_TTF_RenderGlyph_LCD = *const fn (font: ?*const TTF_Font, ch: core.Uint32, fg: SDL_Color, bg: SDL_Color) callconv(.c) ?*SDL_Surface;
+
+// Text engine functions
+pub const PFN_TTF_CreateSurfaceTextEngine = *const fn () callconv(.c) ?*TTF_TextEngine;
+pub const PFN_TTF_DestroySurfaceTextEngine = *const fn (engine: ?*TTF_TextEngine) callconv(.c) void;
+pub const PFN_TTF_DrawSurfaceText = *const fn (text: ?*TTF_Text, x: c_int, y: c_int, surface: ?*SDL_Surface) callconv(.c) bool;
+pub const PFN_TTF_CreateRendererTextEngine = *const fn (renderer: ?*SDL_Renderer) callconv(.c) ?*TTF_TextEngine;
+pub const PFN_TTF_CreateRendererTextEngineWithProperties = *const fn (props: SDL_PropertiesID) callconv(.c) ?*TTF_TextEngine;
+pub const PFN_TTF_DestroyRendererTextEngine = *const fn (engine: ?*TTF_TextEngine) callconv(.c) void;
+pub const PFN_TTF_DrawRendererText = *const fn (text: ?*TTF_Text, x: f32, y: f32, renderer: ?*SDL_Renderer) callconv(.c) bool;
+pub const PFN_TTF_CreateGPUTextEngine = *const fn (device: ?*SDL_GPUDevice) callconv(.c) ?*TTF_TextEngine;
+pub const PFN_TTF_CreateGPUTextEngineWithProperties = *const fn (props: SDL_PropertiesID) callconv(.c) ?*TTF_TextEngine;
+pub const PFN_TTF_DestroyGPUTextEngine = *const fn (engine: ?*TTF_TextEngine) callconv(.c) void;
+pub const PFN_TTF_GetGPUTextDrawData = *const fn (text: ?*TTF_Text) callconv(.c) ?*const TTF_GPUAtlasDrawSequence;
+pub const PFN_TTF_GetGPUTextEngineWinding = *const fn (engine: ?*TTF_TextEngine) callconv(.c) TTF_GPUTextEngineWinding;
+pub const PFN_TTF_SetGPUTextEngineWinding = *const fn (engine: ?*TTF_TextEngine, winding: TTF_GPUTextEngineWinding) callconv(.c) void;
+
+// Text object functions
+pub const PFN_TTF_CreateText = *const fn (engine: ?*TTF_TextEngine, font: ?*TTF_Font, text: ?[*:0]const u8, length: usize) callconv(.c) ?*TTF_Text;
+pub const PFN_TTF_DestroyText = *const fn (text: ?*TTF_Text) callconv(.c) void;
+pub const PFN_TTF_UpdateText = *const fn (text: ?*TTF_Text) callconv(.c) bool;
+pub const PFN_TTF_SetTextString = *const fn (text: ?*TTF_Text, string: ?[*:0]const u8, length: usize) callconv(.c) bool;
+pub const PFN_TTF_AppendTextString = *const fn (text: ?*TTF_Text, string: ?[*:0]const u8, length: usize) callconv(.c) bool;
+pub const PFN_TTF_DeleteTextString = *const fn (text: ?*TTF_Text, offset: c_int, length: c_int) callconv(.c) bool;
+pub const PFN_TTF_InsertTextString = *const fn (text: ?*TTF_Text, offset: c_int, string: ?[*:0]const u8, length: usize) callconv(.c) bool;
+pub const PFN_TTF_SetTextEngine = *const fn (text: ?*TTF_Text, engine: ?*TTF_TextEngine) callconv(.c) bool;
+pub const PFN_TTF_GetTextEngine = *const fn (text: ?*TTF_Text) callconv(.c) ?*TTF_TextEngine;
+pub const PFN_TTF_SetTextFont = *const fn (text: ?*TTF_Text, font: ?*TTF_Font) callconv(.c) bool;
+pub const PFN_TTF_GetTextFont = *const fn (text: ?*TTF_Text) callconv(.c) ?*TTF_Font;
+pub const PFN_TTF_SetTextDirection = *const fn (text: ?*TTF_Text, direction: TTF_Direction) callconv(.c) bool;
+pub const PFN_TTF_GetTextDirection = *const fn (text: ?*TTF_Text) callconv(.c) TTF_Direction;
+pub const PFN_TTF_SetTextPosition = *const fn (text: ?*TTF_Text, x: c_int, y: c_int) callconv(.c) bool;
+pub const PFN_TTF_GetTextPosition = *const fn (text: ?*TTF_Text, x: ?*c_int, y: ?*c_int) callconv(.c) bool;
+pub const PFN_TTF_SetTextColor = *const fn (text: ?*TTF_Text, r: core.Uint8, g: core.Uint8, b: core.Uint8, a: core.Uint8) callconv(.c) bool;
+pub const PFN_TTF_GetTextColor = *const fn (text: ?*TTF_Text, r: ?*core.Uint8, g: ?*core.Uint8, b: ?*core.Uint8, a: ?*core.Uint8) callconv(.c) bool;
+pub const PFN_TTF_SetTextColorFloat = *const fn (text: ?*TTF_Text, r: f32, g: f32, b: f32, a: f32) callconv(.c) bool;
+pub const PFN_TTF_GetTextColorFloat = *const fn (text: ?*TTF_Text, r: ?*f32, g: ?*f32, b: ?*f32, a: ?*f32) callconv(.c) bool;
+pub const PFN_TTF_SetTextWrapWidth = *const fn (text: ?*TTF_Text, wrap_width: c_int) callconv(.c) bool;
+pub const PFN_TTF_GetTextWrapWidth = *const fn (text: ?*TTF_Text, wrap_width: ?*c_int) callconv(.c) bool;
+pub const PFN_TTF_SetTextWrapWhitespaceVisible = *const fn (text: ?*TTF_Text, visible: bool) callconv(.c) bool;
+pub const PFN_TTF_TextWrapWhitespaceVisible = *const fn (text: ?*TTF_Text) callconv(.c) bool;
+pub const PFN_TTF_SetTextScript = *const fn (text: ?*TTF_Text, script: core.Uint32) callconv(.c) bool;
+pub const PFN_TTF_GetTextScript = *const fn (text: ?*TTF_Text) callconv(.c) core.Uint32;
+pub const PFN_TTF_GetTextProperties = *const fn (text: ?*TTF_Text) callconv(.c) SDL_PropertiesID;
+pub const PFN_TTF_GetTextSize = *const fn (text: ?*TTF_Text, w: ?*c_int, h: ?*c_int) callconv(.c) bool;
+
+// Substring functions
+pub const PFN_TTF_GetTextSubString = *const fn (text: ?*TTF_Text, offset: c_int, substring: ?*TTF_SubString) callconv(.c) bool;
+pub const PFN_TTF_GetTextSubStringForLine = *const fn (text: ?*TTF_Text, line: c_int, substring: ?*TTF_SubString) callconv(.c) bool;
+pub const PFN_TTF_GetTextSubStringForPoint = *const fn (text: ?*TTF_Text, x: c_int, y: c_int, substring: ?*TTF_SubString) callconv(.c) bool;
+pub const PFN_TTF_GetTextSubStringsForRange = *const fn (text: ?*TTF_Text, offset: c_int, length: c_int, substrings: ?*?*TTF_SubString) callconv(.c) c_int;
+pub const PFN_TTF_GetNextTextSubString = *const fn (text: ?*TTF_Text, substring: ?*const TTF_SubString, next: ?*TTF_SubString) callconv(.c) bool;
+pub const PFN_TTF_GetPreviousTextSubString = *const fn (text: ?*TTF_Text, substring: ?*const TTF_SubString, previous: ?*TTF_SubString) callconv(.c) bool;
+
 // Dispatch struct
 pub const TTFFunctions = struct {
     version: PFN_TTF_Version,
@@ -252,6 +390,74 @@ pub const TTFFunctions = struct {
     renderTextBlendedFloatWrapped: PFN_TTF_RenderText_Blended_Float_Wrapped,
     renderUTF8BlendedFloatWrapped: PFN_TTF_RenderUTF8_Blended_Float_Wrapped,
     renderUNICODEBlendedFloatWrapped: PFN_TTF_RenderUNICODE_Blended_Float_Wrapped,
+    wasInit: PFN_TTF_WasInit,
+    measureString: PFN_TTF_MeasureString,
+    fontHasGlyph: PFN_TTF_FontHasGlyph,
+    getGlyphKerning: PFN_TTF_GetGlyphKerning,
+    getGlyphImage: PFN_TTF_GetGlyphImage,
+    getGlyphImageForIndex: PFN_TTF_GetGlyphImageForIndex,
+    getGlyphScript: PFN_TTF_GetGlyphScript,
+    setFontDirection: PFN_TTF_SetFontDirection,
+    getFontDirection: PFN_TTF_GetFontDirection,
+    setFontScript: PFN_TTF_SetFontScript,
+    getFontScript: PFN_TTF_GetFontScript,
+    setFontLanguage: PFN_TTF_SetFontLanguage,
+    stringToTag: PFN_TTF_StringToTag,
+    tagToString: PFN_TTF_TagToString,
+    renderTextSolidWrapped: PFN_TTF_RenderText_Solid_Wrapped,
+    renderTextShadedWrapped: PFN_TTF_RenderText_Shaded_Wrapped,
+    renderTextLCD: PFN_TTF_RenderText_LCD,
+    renderTextLCDWrapped: PFN_TTF_RenderText_LCD_Wrapped,
+    renderGlyphSolid: PFN_TTF_RenderGlyph_Solid,
+    renderGlyphShaded: PFN_TTF_RenderGlyph_Shaded,
+    renderGlyphBlended: PFN_TTF_RenderGlyph_Blended,
+    renderGlyphLCD: PFN_TTF_RenderGlyph_LCD,
+    createSurfaceTextEngine: PFN_TTF_CreateSurfaceTextEngine,
+    destroySurfaceTextEngine: PFN_TTF_DestroySurfaceTextEngine,
+    drawSurfaceText: PFN_TTF_DrawSurfaceText,
+    createRendererTextEngine: PFN_TTF_CreateRendererTextEngine,
+    createRendererTextEngineWithProperties: PFN_TTF_CreateRendererTextEngineWithProperties,
+    destroyRendererTextEngine: PFN_TTF_DestroyRendererTextEngine,
+    drawRendererText: PFN_TTF_DrawRendererText,
+    createGPUTextEngine: PFN_TTF_CreateGPUTextEngine,
+    createGPUTextEngineWithProperties: PFN_TTF_CreateGPUTextEngineWithProperties,
+    destroyGPUTextEngine: PFN_TTF_DestroyGPUTextEngine,
+    getGPUTextDrawData: PFN_TTF_GetGPUTextDrawData,
+    getGPUTextEngineWinding: PFN_TTF_GetGPUTextEngineWinding,
+    setGPUTextEngineWinding: PFN_TTF_SetGPUTextEngineWinding,
+    createText: PFN_TTF_CreateText,
+    destroyText: PFN_TTF_DestroyText,
+    updateText: PFN_TTF_UpdateText,
+    setTextString: PFN_TTF_SetTextString,
+    appendTextString: PFN_TTF_AppendTextString,
+    deleteTextString: PFN_TTF_DeleteTextString,
+    insertTextString: PFN_TTF_InsertTextString,
+    setTextEngine: PFN_TTF_SetTextEngine,
+    getTextEngine: PFN_TTF_GetTextEngine,
+    setTextFont: PFN_TTF_SetTextFont,
+    getTextFont: PFN_TTF_GetTextFont,
+    setTextDirection: PFN_TTF_SetTextDirection,
+    getTextDirection: PFN_TTF_GetTextDirection,
+    setTextPosition: PFN_TTF_SetTextPosition,
+    getTextPosition: PFN_TTF_GetTextPosition,
+    setTextColor: PFN_TTF_SetTextColor,
+    getTextColor: PFN_TTF_GetTextColor,
+    setTextColorFloat: PFN_TTF_SetTextColorFloat,
+    getTextColorFloat: PFN_TTF_GetTextColorFloat,
+    setTextWrapWidth: PFN_TTF_SetTextWrapWidth,
+    getTextWrapWidth: PFN_TTF_GetTextWrapWidth,
+    setTextWrapWhitespaceVisible: PFN_TTF_SetTextWrapWhitespaceVisible,
+    textWrapWhitespaceVisible: PFN_TTF_TextWrapWhitespaceVisible,
+    setTextScript: PFN_TTF_SetTextScript,
+    getTextScript: PFN_TTF_GetTextScript,
+    getTextProperties: PFN_TTF_GetTextProperties,
+    getTextSize: PFN_TTF_GetTextSize,
+    getTextSubString: PFN_TTF_GetTextSubString,
+    getTextSubStringForLine: PFN_TTF_GetTextSubStringForLine,
+    getTextSubStringForPoint: PFN_TTF_GetTextSubStringForPoint,
+    getTextSubStringsForRange: PFN_TTF_GetTextSubStringsForRange,
+    getNextTextSubString: PFN_TTF_GetNextTextSubString,
+    getPreviousTextSubString: PFN_TTF_GetPreviousTextSubString,
 
     pub fn load(handle: dynamic.LibraryHandle) !TTFFunctions {
         return dynamic.loadFunctions(TTFFunctions, handle, "TTF_", .{
@@ -273,6 +479,14 @@ pub const TTFFunctions = struct {
             .{ "renderTextBlendedFloatWrapped", "TTF_RenderText_Blended_Float_Wrapped" },
             .{ "renderUTF8BlendedFloatWrapped", "TTF_RenderUTF8_Blended_Float_Wrapped" },
             .{ "renderUNICODEBlendedFloatWrapped", "TTF_RenderUNICODE_Blended_Float_Wrapped" },
+            .{ "renderTextSolidWrapped", "TTF_RenderText_Solid_Wrapped" },
+            .{ "renderTextShadedWrapped", "TTF_RenderText_Shaded_Wrapped" },
+            .{ "renderTextLCD", "TTF_RenderText_LCD" },
+            .{ "renderTextLCDWrapped", "TTF_RenderText_LCD_Wrapped" },
+            .{ "renderGlyphSolid", "TTF_RenderGlyph_Solid" },
+            .{ "renderGlyphShaded", "TTF_RenderGlyph_Shaded" },
+            .{ "renderGlyphBlended", "TTF_RenderGlyph_Blended" },
+            .{ "renderGlyphLCD", "TTF_RenderGlyph_LCD" },
         }, &.{ "getGlyphAdvance", "renderUTF8Solid", "renderUNICODESolid", "renderUTF8Shaded", "renderUNICODEShaded", "renderUTF8Blended", "renderUNICODEBlended", "renderUTF8BlendedWrapped", "renderUNICODEBlendedWrapped", "renderTextBlendedFloat", "renderUTF8BlendedFloat", "renderUNICODEBlendedFloat", "renderTextBlendedFloatWrapped", "renderUTF8BlendedFloatWrapped", "renderUNICODEBlendedFloatWrapped" });
     }
 };

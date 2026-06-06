@@ -684,6 +684,21 @@ pub const SDL_MESSAGEBOX_ERROR = messagebox.SDL_MESSAGEBOX_ERROR;
 pub const SDL_MESSAGEBOX_WARNING = messagebox.SDL_MESSAGEBOX_WARNING;
 pub const SDL_MESSAGEBOX_INFORMATION = messagebox.SDL_MESSAGEBOX_INFORMATION;
 
+// TTF types
+pub const TTF_Direction = ttf.TTF_Direction;
+pub const TTF_ImageType = ttf.TTF_ImageType;
+pub const TTF_GPUTextEngineWinding = ttf.TTF_GPUTextEngineWinding;
+pub const TTF_Text = ttf.TTF_Text;
+pub const TTF_TextEngine = ttf.TTF_TextEngine;
+pub const TTF_SubString = ttf.TTF_SubString;
+pub const TTF_SubStringFlags = ttf.TTF_SubStringFlags;
+pub const TTF_GPUAtlasDrawSequence = ttf.TTF_GPUAtlasDrawSequence;
+
+// Image types
+pub const IMG_AnimationDecoder = image.IMG_AnimationDecoder;
+pub const IMG_AnimationEncoder = image.IMG_AnimationEncoder;
+pub const IMG_AnimationDecoderStatus = image.IMG_AnimationDecoderStatus;
+
 pub const SDL = struct {
     _handle: dynamic.LibraryHandle,
 
