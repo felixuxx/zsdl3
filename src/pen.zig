@@ -33,14 +33,14 @@ pub const PFN_SDL_GetPenID = *const fn (pen: ?*SDL_Pen) callconv(.c) core.SDL_Pe
 pub const PFN_SDL_PenAxisSupported = *const fn (pen: ?*SDL_Pen, axis: SDL_PenAxis) callconv(.c) bool;
 
 pub const PenFunctions = struct {
-    getPens: PFN_SDL_GetPens,
-    getPenName: PFN_SDL_GetPenName,
-    getPenCapabilities: PFN_SDL_GetPenCapabilities,
-    getPenStatus: PFN_SDL_GetPenStatus,
-    penConnected: PFN_SDL_PenConnected,
-    getPenFromID: PFN_SDL_GetPenFromID,
-    getPenID: PFN_SDL_GetPenID,
-    penAxisSupported: PFN_SDL_PenAxisSupported,
+    getPens: ?PFN_SDL_GetPens,
+    getPenName: ?PFN_SDL_GetPenName,
+    getPenCapabilities: ?PFN_SDL_GetPenCapabilities,
+    getPenStatus: ?PFN_SDL_GetPenStatus,
+    penConnected: ?PFN_SDL_PenConnected,
+    getPenFromID: ?PFN_SDL_GetPenFromID,
+    getPenID: ?PFN_SDL_GetPenID,
+    penAxisSupported: ?PFN_SDL_PenAxisSupported,
 
     pub fn load(handle: dynamic.LibraryHandle) !PenFunctions {
         return dynamic.loadFunctions(PenFunctions, handle, "SDL_", .{}, &.{ "getPens", "getPenName", "getPenCapabilities", "getPenStatus", "penConnected", "getPenFromID", "getPenID", "penAxisSupported" });

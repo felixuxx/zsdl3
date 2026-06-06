@@ -9,7 +9,7 @@ pub const PFN_SDL_HasARMSVE = *const fn () callconv(.c) bool;
 
 pub const IntrinsicsFunctions = struct {
     hasARMSIMD: PFN_SDL_HasARMSIMD,
-    hasARMSVE: PFN_SDL_HasARMSVE,
+    hasARMSVE: ?PFN_SDL_HasARMSVE,
 
     pub fn load(handle: dynamic.LibraryHandle) !IntrinsicsFunctions {
         return dynamic.loadFunctions(IntrinsicsFunctions, handle, "SDL_", .{}, &.{ "hasARMSVE" });

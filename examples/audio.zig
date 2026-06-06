@@ -67,7 +67,11 @@ pub fn main() !void {
     _ = sdl.audio.setAudioDeviceGain(device, 0.5);
     std.log.info("Set device gain to: {d:.2}", .{sdl.audio.getAudioDeviceGain(device)});
 
-    const stream = sdl.audio.createAudioStream(&spec, &spec) orelse return;
+    const stream = sdl.audio.createAudioStream(&spec, &spec) orelse {
+        const err = sdl.core.getError() orelse "Unknown error";
+        std.log.err("Failed to create audio stream: {s}", .{err});
+        return error.AudioStreamCreationFailed;
+    };
     defer sdl.audio.destroyAudioStream(stream);
 
     _ = sdl.audio.bindAudioStream(device, stream);

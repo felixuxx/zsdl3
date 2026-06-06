@@ -23,7 +23,11 @@ pub fn main() !void {
     var sdl = try zsdl3.SDL.load();
     defer sdl.unload();
 
-    const window = sdl.video.createWindow("Dialog Test", 400, 300, zsdl3.SDL_WINDOW_RESIZABLE) orelse return;
+    const window = sdl.video.createWindow("Dialog Test", 400, 300, zsdl3.SDL_WINDOW_RESIZABLE) orelse {
+        const err = sdl.core.getError() orelse "Unknown error";
+        std.log.err("Failed to create window: {s}", .{err});
+        return error.WindowCreationFailed;
+    };
     defer sdl.video.destroyWindow(window);
 
     std.log.info("Opening file dialog...", .{});

@@ -91,7 +91,7 @@ pub const ThreadFunctions = struct {
     semValue: PFN_SDL_SemValue,
     getThreadName: PFN_SDL_GetThreadName,
     setCurrentThreadPriority: PFN_SDL_SetCurrentThreadPriority,
-    getCurrentThreadPriority: PFN_SDL_GetCurrentThreadPriority,
+    getCurrentThreadPriority: ?PFN_SDL_GetCurrentThreadPriority,
     getCurrentThreadID: PFN_SDL_GetCurrentThreadID,
     detachThread: PFN_SDL_DetachThread,
     getThreadID: PFN_SDL_GetThreadID,

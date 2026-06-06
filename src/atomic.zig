@@ -22,8 +22,8 @@ pub const AtomicFunctions = struct {
     tryLockSpinlock: PFN_SDL_TryLockSpinlock,
     lockSpinlock: PFN_SDL_LockSpinlock,
     unlockSpinlock: PFN_SDL_UnlockSpinlock,
-    atomicIncRef: PFN_SDL_AtomicIncRef,
-    atomicDecRef: PFN_SDL_AtomicDecRef,
+    atomicIncRef: ?PFN_SDL_AtomicIncRef,
+    atomicDecRef: ?PFN_SDL_AtomicDecRef,
     memoryBarrierReleaseFunction: PFN_SDL_MemoryBarrierReleaseFunction,
     memoryBarrierAcquireFunction: PFN_SDL_MemoryBarrierAcquireFunction,
 

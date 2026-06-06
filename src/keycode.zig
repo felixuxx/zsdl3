@@ -590,8 +590,8 @@ pub const PFN_SDL_GetScancodeName = *const fn (scancode: SDL_Scancode) callconv(
 pub const PFN_SDL_SetScancodeName = *const fn (scancode: SDL_Scancode, name: [*:0]const u8) callconv(.c) bool;
 
 // Additional useful functions
-pub const PFN_SDL_GetKeyFromScancode = *const fn (scancode: SDL_Scancode) callconv(.c) SDL_Keycode;
-pub const PFN_SDL_GetScancodeFromKey = *const fn (key: SDL_Keycode) callconv(.c) SDL_Scancode;
+pub const PFN_SDL_GetKeyFromScancode = *const fn (scancode: SDL_Scancode, modstate: core.SDL_Keymod, key_event: bool) callconv(.c) SDL_Keycode;
+pub const PFN_SDL_GetScancodeFromKey = *const fn (key: SDL_Keycode, modstate: ?*core.SDL_Keymod) callconv(.c) SDL_Scancode;
 
 // === Utility Functions ===
 /// Check if a keycode is printable (character)

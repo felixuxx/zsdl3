@@ -17,13 +17,13 @@ pub const PFN_SDL_Metal_GetLayer = *const fn (view: ?*SDL_MetalView) callconv(.c
 pub const PFN_SDL_Metal_GetDrawableSize = *const fn (window: ?*video.SDL_Window, w: ?*c_int, h: ?*c_int) callconv(.c) void;
 
 pub const MetalFunctions = struct {
-    loadLibrary: PFN_SDL_Metal_LoadLibrary,
-    getLibrary: PFN_SDL_Metal_GetLibrary,
-    unloadLibrary: PFN_SDL_Metal_UnloadLibrary,
+    loadLibrary: ?PFN_SDL_Metal_LoadLibrary,
+    getLibrary: ?PFN_SDL_Metal_GetLibrary,
+    unloadLibrary: ?PFN_SDL_Metal_UnloadLibrary,
     createView: PFN_SDL_Metal_CreateView,
     destroyView: PFN_SDL_Metal_DestroyView,
     getLayer: PFN_SDL_Metal_GetLayer,
-    getDrawableSize: PFN_SDL_Metal_GetDrawableSize,
+    getDrawableSize: ?PFN_SDL_Metal_GetDrawableSize,
 
     pub fn load(handle: dynamic.LibraryHandle) !MetalFunctions {
         return dynamic.loadFunctions(MetalFunctions, handle, "SDL_", .{

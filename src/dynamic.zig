@@ -98,6 +98,7 @@ pub fn loadFunctions(comptime T: type, handle: LibraryHandle, comptime prefix: [
                 break :try_opt false;
             };
             if (!is_optional) return LoadError.SymbolNotFound;
+            @field(self, field.name) = null;
         }
     }
     return self;

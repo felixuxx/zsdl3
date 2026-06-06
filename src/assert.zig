@@ -39,9 +39,9 @@ pub const AssertFunctions = struct {
     getAssertionHandler: PFN_SDL_GetAssertionHandler,
     getAssertionReport: PFN_SDL_GetAssertionReport,
     resetAssertionReport: PFN_SDL_ResetAssertionReport,
-    triggerBreakpoint: PFN_SDL_TriggerBreakpoint,
-    setAssertionRetry: PFN_SDL_SetAssertionRetry,
-    getAssertionRetry: PFN_SDL_GetAssertionRetry,
+    triggerBreakpoint: ?PFN_SDL_TriggerBreakpoint,
+    setAssertionRetry: ?PFN_SDL_SetAssertionRetry,
+    getAssertionRetry: ?PFN_SDL_GetAssertionRetry,
 
     pub fn load(handle: dynamic.LibraryHandle) !AssertFunctions {
         return dynamic.loadFunctions(AssertFunctions, handle, "SDL_", .{}, &.{ "triggerBreakpoint", "setAssertionRetry", "getAssertionRetry" });

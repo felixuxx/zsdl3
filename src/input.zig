@@ -602,8 +602,8 @@ pub const InputFunctions = extern struct {
     getGamepadVendorForID: PFN_SDL_GetGamepadVendorForID,
     getGamepadProductForID: PFN_SDL_GetGamepadProductForID,
     getGamepadProductVersionForID: PFN_SDL_GetGamepadProductVersionForID,
-    getGamepadFirmwareVersionForID: PFN_SDL_GetGamepadFirmwareVersionForID,
-    getGamepadSerialForID: PFN_SDL_GetGamepadSerialForID,
+    getGamepadFirmwareVersionForID: ?PFN_SDL_GetGamepadFirmwareVersionForID,
+    getGamepadSerialForID: ?PFN_SDL_GetGamepadSerialForID,
     gamepadConnected: PFN_SDL_GamepadConnected,
     getGamepadID: PFN_SDL_GetGamepadID,
     getGamepadFromID: PFN_SDL_GetGamepadFromID,
@@ -637,7 +637,7 @@ pub const InputFunctions = extern struct {
     getSensorName: PFN_SDL_GetSensorName,
     getSensorType: PFN_SDL_GetSensorType,
     getSensorNonPortableType: PFN_SDL_GetSensorNonPortableType,
-    getSensorInstanceID: PFN_SDL_GetSensorInstanceID,
+    getSensorInstanceID: ?PFN_SDL_GetSensorInstanceID,
 
     pub fn load(handle: dynamic.LibraryHandle) !InputFunctions {
         return dynamic.loadFunctions(InputFunctions, handle, "SDL_", .{}, &.{ "getGamepadFirmwareVersionForID", "getGamepadSerialForID", "getSensorInstanceID" });

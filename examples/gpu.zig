@@ -13,7 +13,7 @@ pub fn main() !void {
     if (!sdl.core.init(zsdl3.SDL_INIT_VIDEO)) {
         const err = sdl.core.getError() orelse "Unknown error";
         std.debug.print("Failed to initialize SDL video: {s}\n", .{err});
-        return;
+        return error.InitializationFailed;
     }
     defer sdl.core.quit();
 
@@ -33,7 +33,7 @@ pub fn main() !void {
 
     // Use Metal on macOS, otherwise fallback to SPIRV (Vulkan)
     if(std.mem.eql(u8, std.mem.sliceTo(sdl.platform.getPlatform().?, 0), "macOS")) {
-    	_ = sdl.properties.setBooleanProperty(props, zsdl3.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_METALLIB_BOOLEAN, true);
+        _ = sdl.properties.setBooleanProperty(props, zsdl3.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_METALLIB_BOOLEAN, true);
     }
     _ = sdl.properties.setBooleanProperty(props, zsdl3.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_SPIRV_BOOLEAN, true);
     _ = sdl.properties.setBooleanProperty(props, zsdl3.SDL_PROP_GPU_DEVICE_CREATE_DEBUGMODE_BOOLEAN, true);
@@ -43,7 +43,7 @@ pub fn main() !void {
         const err = sdl.core.getError() orelse "Unknown error";
         std.log.err("Failed to create GPU device: {s}", .{err});
         std.log.info("Note: GPU support requires a compatible GPU and driver", .{});
-        return;
+        return error.InitializationFailed;
     }
     defer sdl.gpu.destroyGPUDevice(device);
 
@@ -74,14 +74,14 @@ pub fn main() !void {
     if (window == null) {
         const err = sdl.core.getError() orelse "Unknown error";
         std.log.err("Failed to create window: {s}", .{err});
-        return;
+        return error.InitializationFailed;
     }
     defer sdl.video.destroyWindow(window);
 
     if (!sdl.gpu.claimWindowForGPUDevice(device, window)) {
         const err = sdl.core.getError() orelse "Unknown error";
         std.log.err("Failed to claim window for GPU: {s}", .{err});
-        return;
+        return error.InitializationFailed;
     }
     defer sdl.gpu.releaseWindowFromGPUDevice(device, window);
 
@@ -99,7 +99,7 @@ pub fn main() !void {
     if (buffer == null) {
         const err = sdl.core.getError() orelse "Unknown error";
         std.log.err("Failed to create buffer: {s}", .{err});
-        return;
+        return error.InitializationFailed;
     }
     defer sdl.gpu.releaseGPUBuffer(device, buffer);
 
@@ -120,7 +120,7 @@ pub fn main() !void {
     if (texture == null) {
         const err = sdl.core.getError() orelse "Unknown error";
         std.log.err("Failed to create texture: {s}", .{err});
-        return;
+        return error.InitializationFailed;
     }
     defer sdl.gpu.releaseGPUTexture(device, texture);
 
@@ -147,7 +147,7 @@ pub fn main() !void {
     if (sampler == null) {
         const err = sdl.core.getError() orelse "Unknown error";
         std.log.err("Failed to create sampler: {s}", .{err});
-        return;
+        return error.InitializationFailed;
     }
     defer sdl.gpu.releaseGPUSampler(device, sampler);
 
@@ -162,7 +162,7 @@ pub fn main() !void {
     if (transfer_buffer == null) {
         const err = sdl.core.getError() orelse "Unknown error";
         std.log.err("Failed to create transfer buffer: {s}", .{err});
-        return;
+        return error.InitializationFailed;
     }
     defer sdl.gpu.releaseGPUTransferBuffer(device, transfer_buffer);
 
@@ -172,7 +172,7 @@ pub fn main() !void {
     if (cmdbuf == null) {
         const err = sdl.core.getError() orelse "Unknown error";
         std.log.err("Failed to acquire command buffer: {s}", .{err});
-        return;
+        return error.InitializationFailed;
     }
 
     var swapchain_texture: ?*zsdl3.SDL_GPUTexture = undefined;

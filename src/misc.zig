@@ -24,7 +24,7 @@ pub const MiscFunctions = struct {
     crc32: PFN_SDL_CRC32,
     murmur3_32: PFN_SDL_murmur3_32,
     getNumAllocations: PFN_SDL_GetNumAllocations,
-    getFullPath: PFN_SDL_GetFullPath,
+    getFullPath: ?PFN_SDL_GetFullPath,
 
     pub fn load(handle: dynamic.LibraryHandle) !MiscFunctions {
         return dynamic.loadFunctions(MiscFunctions, handle, "SDL_", .{

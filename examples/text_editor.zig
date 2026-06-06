@@ -238,6 +238,7 @@ pub fn main() !void {
             }
 
             // Second pass: render text line by line
+            var cursor_drawn = false;
             line_num = 0;
             current_line_start = 0;
             for (0..text_len + 1) |i| {
@@ -292,6 +293,7 @@ pub fn main() !void {
                                             .h = tex_h,
                                         };
                                         _ = sdl.render.renderFillRect(renderer, &cursor_rect);
+                                        cursor_drawn = true;
                                     }
                                 }
                             }
@@ -307,6 +309,7 @@ pub fn main() !void {
                                 .h = @as(f32, @floatFromInt(LINE_HEIGHT)),
                             };
                             _ = sdl.render.renderFillRect(renderer, &cursor_rect);
+                            cursor_drawn = true;
                         }
                     }
 
@@ -316,8 +319,8 @@ pub fn main() !void {
                 }
             }
 
-            // Draw cursor at end of text if at end
-            if (cursor_pos == text_len and cursor_visible) {
+            // Draw cursor at end of text if at end (only if not already drawn in loop)
+            if (cursor_pos == text_len and cursor_visible and !cursor_drawn) {
                 const cursor_y: f32 = PADDING + @as(f32, @floatFromInt(cursor_line * LINE_HEIGHT)) - scroll_y;
                 _ = sdl.render.setRenderDrawColor(renderer, 255, 255, 255, 255);
                 const cursor_rect = zsdl3.SDL_FRect{

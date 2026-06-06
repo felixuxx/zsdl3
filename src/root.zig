@@ -1,4 +1,29 @@
 const dynamic = @import("dynamic.zig");
+const builtin = @import("builtin");
+
+fn libSdlName() [:0]const u8 {
+    return switch (builtin.os.tag) {
+        .windows => "SDL3.dll",
+        .macos, .ios => "libSDL3.dylib",
+        else => "libSDL3.so",
+    };
+}
+
+fn libSdlImageName() [:0]const u8 {
+    return switch (builtin.os.tag) {
+        .windows => "SDL3_image.dll",
+        .macos, .ios => "libSDL3_image.dylib",
+        else => "libSDL3_image.so",
+    };
+}
+
+fn libSdlTtfName() [:0]const u8 {
+    return switch (builtin.os.tag) {
+        .windows => "SDL3_ttf.dll",
+        .macos, .ios => "libSDL3_ttf.dylib",
+        else => "libSDL3_ttf.so",
+    };
+}
 
 pub const core = @import("core.zig");
 pub const camera = @import("camera.zig");
@@ -757,7 +782,7 @@ pub const SDL = struct {
     intrinsics: intrinsics.IntrinsicsFunctions,
 
     pub fn load() !SDL {
-        const handle = try dynamic.loadLibrary("libSDL3.so");
+        const handle = try dynamic.loadLibrary(libSdlName());
         errdefer dynamic.unloadLibrary(handle);
         return SDL{
             ._handle = handle,
@@ -820,7 +845,8 @@ pub const Image = struct {
     functions: image.ImageFunctions,
 
     pub fn load() !Image {
-        const handle = try dynamic.loadLibrary("libSDL3_image.so");
+        const handle = try dynamic.loadLibrary(libSdlImageName());
+        errdefer dynamic.unloadLibrary(handle);
         return Image{
             ._handle = handle,
             .functions = try image.ImageFunctions.loadFunctions(handle),
@@ -838,7 +864,8 @@ pub const TTF = struct {
     functions: ttf.TTFFunctions,
 
     pub fn load() !TTF {
-        const handle = try dynamic.loadLibrary("libSDL3_ttf.so");
+        const handle = try dynamic.loadLibrary(libSdlTtfName());
+        errdefer dynamic.unloadLibrary(handle);
         return TTF{
             ._handle = handle,
             .functions = try ttf.TTFFunctions.load(handle),

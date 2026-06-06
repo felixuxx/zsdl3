@@ -48,10 +48,10 @@ pub const SensorFunctions = struct {
     getSensorName: PFN_SDL_GetSensorName,
     getSensorType: PFN_SDL_GetSensorType,
     getSensorNonPortableType: PFN_SDL_GetSensorNonPortableType,
-    isSensorEnabled: PFN_SDL_IsSensorEnabled,
+    isSensorEnabled: ?PFN_SDL_IsSensorEnabled,
     getSensorData: PFN_SDL_GetSensorData,
     getSensorProperties: PFN_SDL_GetSensorProperties,
-    setSensorEnabled: PFN_SDL_SetSensorEnabled,
+    setSensorEnabled: ?PFN_SDL_SetSensorEnabled,
     closeSensor: PFN_SDL_CloseSensor,
     updateSensors: PFN_SDL_UpdateSensors,
 
