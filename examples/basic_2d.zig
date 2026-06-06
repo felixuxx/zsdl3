@@ -71,9 +71,6 @@ pub fn main() !void {
         _ = sdl.render.setRenderColorScale(renderer, 0.5);
         _ = sdl.render.setRenderDrawColor(renderer, 255, 255, 0, 255);
         _ = sdl.render.renderFillRect(renderer, &rect_b);
-        var scale: f32 = 0;
-        _ = sdl.render.getRenderColorScale(renderer, &scale);
-        std.log.info("Color scale: {d:.2}", .{scale});
         _ = sdl.render.setRenderColorScale(renderer, 1.0);
 
         // Draw non-intersecting rect (cyan)
