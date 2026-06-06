@@ -69,6 +69,64 @@ pub const SDL_EGLDisplay = ?*anyopaque;
 pub const SDL_EGLConfig = ?*anyopaque;
 pub const SDL_EGLSurface = ?*anyopaque;
 
+// GL attribute enum
+pub const SDL_GLAttr = enum(c_int) {
+    SDL_GL_RED_SIZE,
+    SDL_GL_GREEN_SIZE,
+    SDL_GL_BLUE_SIZE,
+    SDL_GL_ALPHA_SIZE,
+    SDL_GL_BUFFER_SIZE,
+    SDL_GL_DOUBLEBUFFER,
+    SDL_GL_DEPTH_SIZE,
+    SDL_GL_STENCIL_SIZE,
+    SDL_GL_ACCUM_RED_SIZE,
+    SDL_GL_ACCUM_GREEN_SIZE,
+    SDL_GL_ACCUM_BLUE_SIZE,
+    SDL_GL_ACCUM_ALPHA_SIZE,
+    SDL_GL_STEREO,
+    SDL_GL_MULTISAMPLEBUFFERS,
+    SDL_GL_MULTISAMPLESAMPLES,
+    SDL_GL_ACCELERATED_VISUAL,
+    SDL_GL_RETAINED_BACKING,
+    SDL_GL_CONTEXT_MAJOR_VERSION,
+    SDL_GL_CONTEXT_MINOR_VERSION,
+    SDL_GL_CONTEXT_FLAGS,
+    SDL_GL_CONTEXT_PROFILE_MASK,
+    SDL_GL_SHARE_WITH_CURRENT_CONTEXT,
+    SDL_GL_FRAMEBUFFER_SRGB_CAPABLE,
+    SDL_GL_CONTEXT_RELEASE_BEHAVIOR,
+    SDL_GL_CONTEXT_RESET_NOTIFICATION,
+    SDL_GL_CONTEXT_NO_ERROR,
+    SDL_GL_FLOATBUFFERS,
+    SDL_GL_EGL_PLATFORM,
+};
+
+// GL profile constants
+pub const SDL_GL_CONTEXT_PROFILE_CORE: Uint32 = 0x0001;
+pub const SDL_GL_CONTEXT_PROFILE_COMPATIBILITY: Uint32 = 0x0002;
+pub const SDL_GL_CONTEXT_PROFILE_ES: Uint32 = 0x0004;
+
+// GL context flags
+pub const SDL_GL_CONTEXT_DEBUG_FLAG: Uint32 = 0x0001;
+pub const SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG: Uint32 = 0x0002;
+pub const SDL_GL_CONTEXT_ROBUST_ACCESS_FLAG: Uint32 = 0x0004;
+pub const SDL_GL_CONTEXT_RESET_ISOLATION_FLAG: Uint32 = 0x0008;
+
+// GL context release behavior
+pub const SDL_GL_CONTEXT_RELEASE_BEHAVIOR_NONE: Uint32 = 0x0000;
+pub const SDL_GL_CONTEXT_RELEASE_BEHAVIOR_FLUSH: Uint32 = 0x0001;
+
+// GL context reset notification
+pub const SDL_GL_CONTEXT_RESET_NO_NOTIFICATION: Uint32 = 0x0000;
+pub const SDL_GL_CONTEXT_RESET_LOSE_CONTEXT: Uint32 = 0x0001;
+
+// EGL types
+pub const SDL_EGLAttrib = isize;
+pub const SDL_FunctionPointer = ?*anyopaque;
+
+pub const SDL_EGLAttribArrayCallback = ?*const fn (userdata: ?*anyopaque) callconv(.c) ?*SDL_EGLAttrib;
+pub const SDL_EGLIntArrayCallback = ?*const fn (userdata: ?*anyopaque, display: SDL_EGLDisplay, config: SDL_EGLConfig) callconv(.c) ?*c_int;
+
 // Display mode struct
 pub const SDL_DisplayMode = extern struct {
     displayID: SDL_DisplayID,
@@ -191,6 +249,28 @@ pub const PFN_SDL_GetWindowSurfaceVSync = *const fn (window: ?*SDL_Window, vsync
 pub const PFN_SDL_SetWindowSurfaceVSync = *const fn (window: ?*SDL_Window, vsync: c_int) callconv(.c) bool;
 pub const PFN_SDL_SyncWindow = *const fn (window: ?*SDL_Window) callconv(.c) bool;
 
+// GL/EGL functions
+pub const PFN_SDL_GL_CreateContext = *const fn (window: ?*SDL_Window) callconv(.c) ?*SDL_GLContext;
+pub const PFN_SDL_GL_DestroyContext = *const fn (context: ?*SDL_GLContext) callconv(.c) bool;
+pub const PFN_SDL_GL_ExtensionSupported = *const fn (extension: ?[*:0]const u8) callconv(.c) bool;
+pub const PFN_SDL_GL_GetAttribute = *const fn (attr: SDL_GLAttr, value: ?*c_int) callconv(.c) bool;
+pub const PFN_SDL_GL_GetCurrentContext = *const fn () callconv(.c) ?*SDL_GLContext;
+pub const PFN_SDL_GL_GetCurrentWindow = *const fn () callconv(.c) ?*SDL_Window;
+pub const PFN_SDL_GL_GetProcAddress = *const fn (proc: ?[*:0]const u8) callconv(.c) SDL_FunctionPointer;
+pub const PFN_SDL_GL_GetSwapInterval = *const fn (interval: ?*c_int) callconv(.c) bool;
+pub const PFN_SDL_GL_LoadLibrary = *const fn (path: ?[*:0]const u8) callconv(.c) bool;
+pub const PFN_SDL_GL_MakeCurrent = *const fn (window: ?*SDL_Window, context: ?*SDL_GLContext) callconv(.c) bool;
+pub const PFN_SDL_GL_ResetAttributes = *const fn () callconv(.c) void;
+pub const PFN_SDL_GL_SetAttribute = *const fn (attr: SDL_GLAttr, value: c_int) callconv(.c) bool;
+pub const PFN_SDL_GL_SetSwapInterval = *const fn (interval: c_int) callconv(.c) bool;
+pub const PFN_SDL_GL_SwapWindow = *const fn (window: ?*SDL_Window) callconv(.c) bool;
+pub const PFN_SDL_GL_UnloadLibrary = *const fn () callconv(.c) void;
+pub const PFN_SDL_EGL_GetCurrentConfig = *const fn () callconv(.c) SDL_EGLConfig;
+pub const PFN_SDL_EGL_GetCurrentDisplay = *const fn () callconv(.c) SDL_EGLDisplay;
+pub const PFN_SDL_EGL_GetProcAddress = *const fn (proc: ?[*:0]const u8) callconv(.c) SDL_FunctionPointer;
+pub const PFN_SDL_EGL_GetWindowSurface = *const fn (window: ?*SDL_Window) callconv(.c) SDL_EGLSurface;
+pub const PFN_SDL_EGL_SetAttributeCallbacks = *const fn (platform_attrib_callback: SDL_EGLAttribArrayCallback, surface_attrib_callback: SDL_EGLIntArrayCallback, context_attrib_callback: SDL_EGLAttribArrayCallback, userdata: ?*anyopaque) callconv(.c) void;
+
 // Import types from pixels
 pub const SDL_Point = pixels.SDL_Point;
 pub const SDL_FPoint = pixels.SDL_FPoint;
@@ -312,11 +392,51 @@ pub const VideoFunctions = struct {
     getWindowSurfaceVSync: PFN_SDL_GetWindowSurfaceVSync,
     setWindowSurfaceVSync: PFN_SDL_SetWindowSurfaceVSync,
     syncWindow: PFN_SDL_SyncWindow,
+    glCreateContext: PFN_SDL_GL_CreateContext,
+    glDestroyContext: PFN_SDL_GL_DestroyContext,
+    glExtensionSupported: PFN_SDL_GL_ExtensionSupported,
+    glGetAttribute: PFN_SDL_GL_GetAttribute,
+    glGetCurrentContext: PFN_SDL_GL_GetCurrentContext,
+    glGetCurrentWindow: PFN_SDL_GL_GetCurrentWindow,
+    glGetProcAddress: PFN_SDL_GL_GetProcAddress,
+    glGetSwapInterval: PFN_SDL_GL_GetSwapInterval,
+    glLoadLibrary: PFN_SDL_GL_LoadLibrary,
+    glMakeCurrent: PFN_SDL_GL_MakeCurrent,
+    glResetAttributes: PFN_SDL_GL_ResetAttributes,
+    glSetAttribute: PFN_SDL_GL_SetAttribute,
+    glSetSwapInterval: PFN_SDL_GL_SetSwapInterval,
+    glSwapWindow: PFN_SDL_GL_SwapWindow,
+    glUnloadLibrary: PFN_SDL_GL_UnloadLibrary,
+    eglGetCurrentConfig: PFN_SDL_EGL_GetCurrentConfig,
+    eglGetCurrentDisplay: PFN_SDL_EGL_GetCurrentDisplay,
+    eglGetProcAddress: PFN_SDL_EGL_GetProcAddress,
+    eglGetWindowSurface: PFN_SDL_EGL_GetWindowSurface,
+    eglSetAttributeCallbacks: PFN_SDL_EGL_SetAttributeCallbacks,
 
     pub fn load(handle: dynamic.LibraryHandle) !VideoFunctions {
         return dynamic.loadFunctions(VideoFunctions, handle, "SDL_", .{
             .{ "hasWindowSurface", "SDL_WindowHasSurface" },
             .{ "isScreenSaverEnabled", "SDL_ScreenSaverEnabled" },
+            .{ "glCreateContext", "SDL_GL_CreateContext" },
+            .{ "glDestroyContext", "SDL_GL_DestroyContext" },
+            .{ "glExtensionSupported", "SDL_GL_ExtensionSupported" },
+            .{ "glGetAttribute", "SDL_GL_GetAttribute" },
+            .{ "glGetCurrentContext", "SDL_GL_GetCurrentContext" },
+            .{ "glGetCurrentWindow", "SDL_GL_GetCurrentWindow" },
+            .{ "glGetProcAddress", "SDL_GL_GetProcAddress" },
+            .{ "glGetSwapInterval", "SDL_GL_GetSwapInterval" },
+            .{ "glLoadLibrary", "SDL_GL_LoadLibrary" },
+            .{ "glMakeCurrent", "SDL_GL_MakeCurrent" },
+            .{ "glResetAttributes", "SDL_GL_ResetAttributes" },
+            .{ "glSetAttribute", "SDL_GL_SetAttribute" },
+            .{ "glSetSwapInterval", "SDL_GL_SetSwapInterval" },
+            .{ "glSwapWindow", "SDL_GL_SwapWindow" },
+            .{ "glUnloadLibrary", "SDL_GL_UnloadLibrary" },
+            .{ "eglGetProcAddress", "SDL_EGL_GetProcAddress" },
+            .{ "eglGetCurrentDisplay", "SDL_EGL_GetCurrentDisplay" },
+            .{ "eglGetCurrentConfig", "SDL_EGL_GetCurrentConfig" },
+            .{ "eglGetWindowSurface", "SDL_EGL_GetWindowSurface" },
+            .{ "eglSetAttributeCallbacks", "SDL_EGL_SetAttributeCallbacks" },
         }, &.{});
     }
 };

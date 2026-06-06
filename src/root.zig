@@ -167,6 +167,14 @@ pub const SDL_DisplayOrientation = video.SDL_DisplayOrientation;
 pub const SDL_SystemTheme = video.SDL_SystemTheme;
 pub const SDL_HitTestResult = video.SDL_HitTestResult;
 pub const SDL_GLContext = video.SDL_GLContext;
+pub const SDL_GLAttr = video.SDL_GLAttr;
+pub const SDL_EGLAttrib = video.SDL_EGLAttrib;
+pub const SDL_EGLDisplay = video.SDL_EGLDisplay;
+pub const SDL_EGLConfig = video.SDL_EGLConfig;
+pub const SDL_EGLSurface = video.SDL_EGLSurface;
+pub const SDL_FunctionPointer = video.SDL_FunctionPointer;
+pub const SDL_EGLAttribArrayCallback = video.SDL_EGLAttribArrayCallback;
+pub const SDL_EGLIntArrayCallback = video.SDL_EGLIntArrayCallback;
 
 pub const SDL_FlipMode = surface.SDL_FlipMode;
 pub const SDL_FLIP_NONE = surface.SDL_FlipMode.SDL_FLIP_NONE;
