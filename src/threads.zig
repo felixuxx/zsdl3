@@ -17,6 +17,7 @@ pub const SDL_Thread = opaque {};
 pub const SDL_Mutex = opaque {};
 pub const SDL_Condition = opaque {};
 pub const SDL_Semaphore = opaque {};
+pub const SDL_RWLock = opaque {};
 
 pub const SDL_ThreadPriority = enum(c_int) {
     SDL_THREAD_PRIORITY_LOW,
@@ -67,6 +68,15 @@ pub const PFN_SDL_GetTLS = *const fn (id: ?*SDL_TLSID) callconv(.c) ?*anyopaque;
 pub const PFN_SDL_SetTLS = *const fn (id: ?*SDL_TLSID, value: ?*const anyopaque, destructor: SDL_TLSDestructorCallback) callconv(.c) bool;
 pub const PFN_SDL_CleanupTLS = *const fn () callconv(.c) void;
 
+// RWLock functions
+pub const PFN_SDL_CreateRWLock = *const fn () callconv(.c) ?*SDL_RWLock;
+pub const PFN_SDL_DestroyRWLock = *const fn (rwlock: ?*SDL_RWLock) callconv(.c) void;
+pub const PFN_SDL_LockRWLockForReading = *const fn (rwlock: ?*SDL_RWLock) callconv(.c) bool;
+pub const PFN_SDL_LockRWLockForWriting = *const fn (rwlock: ?*SDL_RWLock) callconv(.c) bool;
+pub const PFN_SDL_UnlockRWLock = *const fn (rwlock: ?*SDL_RWLock) callconv(.c) bool;
+pub const PFN_SDL_TryLockRWLockForReading = *const fn (rwlock: ?*SDL_RWLock) callconv(.c) bool;
+pub const PFN_SDL_TryLockRWLockForWriting = *const fn (rwlock: ?*SDL_RWLock) callconv(.c) bool;
+
 pub const ThreadFunctions = struct {
     createThread: PFN_SDL_CreateThread,
     createThreadWithProperties: PFN_SDL_CreateThreadWithProperties,
@@ -99,6 +109,13 @@ pub const ThreadFunctions = struct {
     getTLS: PFN_SDL_GetTLS,
     setTLS: PFN_SDL_SetTLS,
     cleanupTLS: PFN_SDL_CleanupTLS,
+    createRWLock: PFN_SDL_CreateRWLock,
+    destroyRWLock: PFN_SDL_DestroyRWLock,
+    lockRWLockForReading: PFN_SDL_LockRWLockForReading,
+    lockRWLockForWriting: PFN_SDL_LockRWLockForWriting,
+    unlockRWLock: PFN_SDL_UnlockRWLock,
+    tryLockRWLockForReading: PFN_SDL_TryLockRWLockForReading,
+    tryLockRWLockForWriting: PFN_SDL_TryLockRWLockForWriting,
 
     pub fn load(handle: dynamic.LibraryHandle) !ThreadFunctions {
         return dynamic.loadFunctions(ThreadFunctions, handle, "SDL_", .{

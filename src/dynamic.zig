@@ -72,7 +72,7 @@ fn makeSymbolName(comptime zig_name: []const u8, comptime prefix: []const u8) [p
 }
 
 pub fn loadFunctions(comptime T: type, handle: LibraryHandle, comptime prefix: [:0]const u8, comptime overrides: anytype, comptime optionals: []const [:0]const u8) !T {
-    @setEvalBranchQuota(15000);
+    @setEvalBranchQuota(50000);
     var self: T = undefined;
     inline for (@typeInfo(T).@"struct".fields) |field| {
         if (field.name[0] == '_') continue;
