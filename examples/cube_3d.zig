@@ -101,29 +101,25 @@ fn computeNormal(a: Vec3, b: Vec3, c: Vec3) Vec3 {
     return .{ .x = nx / len, .y = ny / len, .z = nz / len };
 }
 
-pub fn main() void {
-    if (!zsdl3.init(zsdl3.SDL_INIT_VIDEO)) {
-        const err = zsdl3.getError() orelse "Unknown error";
-        std.log.err("Failed to initialize SDL: {s}", .{err});
-        return;
-    }
-    defer zsdl3.quit();
+pub fn main() !void {
+    var sdl = try zsdl3.SDL.load();
+    defer sdl.unload();
 
-    const window = zsdl3.createWindow("3D Cube", 800, 600, zsdl3.SDL_WINDOW_RESIZABLE);
+    const window = sdl.video.createWindow("3D Cube", 800, 600, zsdl3.SDL_WINDOW_RESIZABLE);
     if (window == null) {
-        const err = zsdl3.getError() orelse "Unknown error";
+        const err = sdl.core.getError() orelse "Unknown error";
         std.log.err("Failed to create window: {s}", .{err});
         return;
     }
-    defer zsdl3.destroyWindow(window);
+    defer sdl.video.destroyWindow(window);
 
-    const renderer = zsdl3.createRenderer(window, null);
+    const renderer = sdl.render.createRenderer(window, null);
     if (renderer == null) {
-        const err = zsdl3.getError() orelse "Unknown error";
+        const err = sdl.core.getError() orelse "Unknown error";
         std.log.err("Failed to create renderer: {s}", .{err});
         return;
     }
-    defer zsdl3.destroyRenderer(renderer);
+    defer sdl.render.destroyRenderer(renderer);
 
     var yaw: f32 = 0.0;
     var pitch: f32 = 0.0;
@@ -131,7 +127,7 @@ pub fn main() void {
 
     while (running) {
         var event: zsdl3.SDL_Event = undefined;
-        while (zsdl3.pollEvent(&event)) {
+        while (sdl.events.pollEvent(&event)) {
             switch (event.type) {
                 zsdl3.SDL_EVENT_QUIT => running = false,
                 zsdl3.SDL_EVENT_KEY_DOWN => {
@@ -143,12 +139,12 @@ pub fn main() void {
             }
         }
 
-        _ = zsdl3.setRenderDrawColor(renderer, 15, 15, 20, 255);
-        _ = zsdl3.renderClear(renderer);
+        _ = sdl.render.setRenderDrawColor(renderer, 15, 15, 20, 255);
+        _ = sdl.render.renderClear(renderer);
 
         var output_w: c_int = 800;
         var output_h: c_int = 600;
-        _ = zsdl3.getCurrentRenderOutputSize(renderer, &output_w, &output_h);
+        _ = sdl.render.getCurrentRenderOutputSize(renderer, &output_w, &output_h);
 
         const center_x: f32 = @as(f32, @floatFromInt(output_w)) / 2.0;
         const center_y: f32 = @as(f32, @floatFromInt(output_h)) / 2.0;
@@ -225,9 +221,9 @@ pub fn main() void {
             }
         }
 
-        _ = zsdl3.renderGeometry(renderer, null, &sdl_vertices, @intCast(vert_count), &indices, @intCast(indices.len));
+        _ = sdl.render.renderGeometry(renderer, null, &sdl_vertices, @intCast(vert_count), &indices, @intCast(indices.len));
 
-        _ = zsdl3.renderPresent(renderer);
-        zsdl3.delay(16);
+        _ = sdl.render.renderPresent(renderer);
+        sdl.time.delay(16);
     }
 }

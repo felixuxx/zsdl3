@@ -19,16 +19,12 @@ fn fileDialogCallback(userdata: ?*anyopaque, files: ?[*]const ?[*:0]const u8, co
     }
 }
 
-pub fn main() void {
-    if (!zsdl3.init(zsdl3.SDL_INIT_VIDEO)) {
-        const err = zsdl3.getError() orelse "Unknown error";
-        std.log.err("Failed to initialize SDL: {s}", .{err});
-        return;
-    }
-    defer zsdl3.quit();
+pub fn main() !void {
+    var sdl = try zsdl3.SDL.load();
+    defer sdl.unload();
 
-    const window = zsdl3.createWindow("Dialog Test", 400, 300, zsdl3.SDL_WINDOW_RESIZABLE) orelse return;
-    defer zsdl3.destroyWindow(window);
+    const window = sdl.video.createWindow("Dialog Test", 400, 300, zsdl3.SDL_WINDOW_RESIZABLE) orelse return;
+    defer sdl.video.destroyWindow(window);
 
     std.log.info("Opening file dialog...", .{});
 
@@ -37,12 +33,12 @@ pub fn main() void {
     };
 
     var dialog_done = false;
-    zsdl3.showOpenFileDialog(fileDialogCallback, &dialog_done, window, &filter, 1, null, false);
+    sdl.dialog.showOpenFileDialog(fileDialogCallback, &dialog_done, window, &filter, 1, null, false);
 
     var running = true;
     while (running) {
         var event: zsdl3.SDL_Event = undefined;
-        while (zsdl3.pollEvent(&event)) {
+        while (sdl.events.pollEvent(&event)) {
             switch (event.type) {
                 zsdl3.SDL_EVENT_QUIT => running = false,
                 zsdl3.SDL_EVENT_KEY_DOWN => {
@@ -52,10 +48,10 @@ pub fn main() void {
             }
         }
         if (dialog_done) {
-            _ = zsdl3.showSimpleMessageBox(zsdl3.SDL_MESSAGEBOX_INFORMATION, "File Dialog", "File dialog completed! Check console for path.", window);
+            _ = sdl.messagebox.showSimpleMessageBox(zsdl3.SDL_MESSAGEBOX_INFORMATION, "File Dialog", "File dialog completed! Check console for path.", window);
             dialog_done = false;
         }
-        zsdl3.delay(16);
+        sdl.time.delay(16);
     }
 
     std.log.info("Dialog test complete!", .{});

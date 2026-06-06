@@ -7,33 +7,29 @@
 const std = @import("std");
 const zsdl3 = @import("zsdl3");
 
-pub fn main() void {
-    if (!zsdl3.init(zsdl3.SDL_INIT_AUDIO)) {
-        const err = zsdl3.getError() orelse "Unknown error";
-        std.log.err("Failed to initialize SDL: {s}", .{err});
-        return;
-    }
-    defer zsdl3.quit();
+pub fn main() !void {
+    var sdl = try zsdl3.SDL.load();
+    defer sdl.unload();
 
     std.log.info("=== Audio Drivers ===", .{});
-    const num_drivers = zsdl3.getNumAudioDrivers();
+    const num_drivers = sdl.audio.getNumAudioDrivers();
     std.log.info("Audio drivers: {d}", .{num_drivers});
     var i: c_int = 0;
     while (i < num_drivers) : (i += 1) {
-        if (zsdl3.getAudioDriver(i)) |name| {
+        if (sdl.audio.getAudioDriver(i)) |name| {
             std.log.info("  {d}: {s}", .{ i, name });
         }
     }
-    if (zsdl3.getCurrentAudioDriver()) |cur| {
+    if (sdl.audio.getCurrentAudioDriver()) |cur| {
         std.log.info("Current audio driver: {s}", .{cur});
     }
 
     var dev_count: c_int = 0;
-    const devices = zsdl3.getAudioPlaybackDevices(&dev_count);
+    const devices = sdl.audio.getAudioPlaybackDevices(&dev_count);
     std.log.info("Playback devices: {d}", .{dev_count});
     if (devices) |devs| {
         for (0..@as(usize, @intCast(dev_count))) |j| {
-            if (zsdl3.getAudioDeviceName(devs[j])) |name| {
+            if (sdl.audio.getAudioDeviceName(devs[j])) |name| {
                 std.log.info("  {d}: {s}", .{ j, name });
             }
         }
@@ -45,33 +41,33 @@ pub fn main() void {
         .freq = 48000,
     };
 
-    const device = zsdl3.openAudioDevice(zsdl3.SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec);
+    const device = sdl.audio.openAudioDevice(zsdl3.SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec);
     if (device == 0) {
-        const err = zsdl3.getError() orelse "Unknown error";
+        const err = sdl.core.getError() orelse "Unknown error";
         std.log.err("Failed to open audio device: {s}", .{err});
         return;
     }
-    defer zsdl3.closeAudioDevice(device);
+    defer sdl.audio.closeAudioDevice(device);
 
     var got_spec: zsdl3.SDL_AudioSpec = undefined;
     var sample_frames: c_int = 0;
-    _ = zsdl3.getAudioDeviceFormat(device, &got_spec, &sample_frames);
+    _ = sdl.audio.getAudioDeviceFormat(device, &got_spec, &sample_frames);
     std.log.info("Opened device: {}Hz {}ch format={}", .{ got_spec.freq, got_spec.channels, got_spec.format });
 
     // Gain control
-    const default_gain = zsdl3.getAudioDeviceGain(device);
+    const default_gain = sdl.audio.getAudioDeviceGain(device);
     std.log.info("Default device gain: {d:.2}", .{default_gain});
-    _ = zsdl3.setAudioDeviceGain(device, 0.5);
-    std.log.info("Set device gain to: {d:.2}", .{zsdl3.getAudioDeviceGain(device)});
+    _ = sdl.audio.setAudioDeviceGain(device, 0.5);
+    std.log.info("Set device gain to: {d:.2}", .{sdl.audio.getAudioDeviceGain(device)});
 
-    const stream = zsdl3.createAudioStream(&spec, &spec) orelse return;
-    defer zsdl3.destroyAudioStream(stream);
+    const stream = sdl.audio.createAudioStream(&spec, &spec) orelse return;
+    defer sdl.audio.destroyAudioStream(stream);
 
-    _ = zsdl3.bindAudioStream(device, stream);
+    _ = sdl.audio.bindAudioStream(device, stream);
 
     // Frequency ratio (pitch/speed shift)
-    _ = zsdl3.setAudioStreamFrequencyRatio(stream, 1.0);
-    std.log.info("Audio stream frequency ratio: {d:.2}", .{zsdl3.getAudioStreamFrequencyRatio(stream)});
+    _ = sdl.audio.setAudioStreamFrequencyRatio(stream, 1.0);
+    std.log.info("Audio stream frequency ratio: {d:.2}", .{sdl.audio.getAudioStreamFrequencyRatio(stream)});
 
     // Generate a 440Hz sine wave
     const freq: f32 = 440.0;
@@ -90,21 +86,21 @@ pub fn main() void {
     }
 
     const buf_len: c_int = @intCast(buf.len);
-    _ = zsdl3.putAudioStreamData(stream, buf.ptr, buf_len);
-    _ = zsdl3.flushAudioStream(stream);
+    _ = sdl.audio.putAudioStreamData(stream, buf.ptr, buf_len);
+    _ = sdl.audio.flushAudioStream(stream);
 
     std.log.info("Playing 440Hz sine wave for 3 seconds...", .{});
 
     // Device-level pause/resume
-    _ = zsdl3.pauseAudioDevice(device);
-    zsdl3.delay(500);
-    _ = zsdl3.resumeAudioDevice(device);
+    _ = sdl.audio.pauseAudioDevice(device);
+    sdl.time.delay(500);
+    _ = sdl.audio.resumeAudioDevice(device);
 
     var running = true;
     var frame: u32 = 0;
     while (running and frame < 60 * 3) : (frame += 1) {
         var event: zsdl3.SDL_Event = undefined;
-        while (zsdl3.pollEvent(&event)) {
+        while (sdl.events.pollEvent(&event)) {
             switch (event.type) {
                 zsdl3.SDL_EVENT_QUIT => running = false,
                 zsdl3.SDL_EVENT_KEY_DOWN => {
@@ -113,15 +109,15 @@ pub fn main() void {
                 else => {},
             }
         }
-        zsdl3.delay(16);
+        sdl.time.delay(16);
     }
 
     // Stream-level pause/resume (distinct from device-level)
-    _ = zsdl3.pauseAudioStreamDevice(stream);
-    std.log.info("Stream device paused: {}", .{zsdl3.audioStreamDevicePaused(stream)});
-    _ = zsdl3.resumeAudioStreamDevice(stream);
-    std.log.info("Stream device resumed: {}", .{zsdl3.audioStreamDevicePaused(stream)});
+    _ = sdl.audio.pauseAudioStreamDevice(stream);
+    std.log.info("Stream device paused: {}", .{sdl.audio.audioStreamDevicePaused(stream)});
+    _ = sdl.audio.resumeAudioStreamDevice(stream);
+    std.log.info("Stream device resumed: {}", .{sdl.audio.audioStreamDevicePaused(stream)});
 
-    _ = zsdl3.unbindAudioStream(stream);
+    _ = sdl.audio.unbindAudioStream(stream);
     std.log.info("Audio test complete!", .{});
 }

@@ -4,43 +4,47 @@
 // text rendering via renderTextBlended, surface-to-texture conversion.
 
 const std = @import("std");
-
 const zsdl3 = @import("zsdl3");
 
-pub fn main() void {
+pub fn main() !void {
+    var sdl = try zsdl3.SDL.load();
+    defer sdl.unload();
+
     // Initialize SDL with video subsystem
-    if (!zsdl3.init(zsdl3.SDL_INIT_VIDEO)) {
-        const err = zsdl3.getError() orelse "Unknown error";
+    if (!sdl.core.init(zsdl3.SDL_INIT_VIDEO)) {
+        const err = sdl.core.getError() orelse "Unknown error";
         std.debug.print("Failed to initialize SDL: {s}\n", .{err});
         return;
     }
-    defer zsdl3.quit();
+
+    var ttf = try zsdl3.TTF.load();
+    defer ttf.unload();
 
     // Initialize TTF
-    if (!zsdl3.ttf.init()) {
-        const err = zsdl3.getError() orelse "Unknown error";
+    if (!ttf.functions.init()) {
+        const err = sdl.core.getError() orelse "Unknown error";
         std.debug.print("Failed to initialize TTF: {s}\n", .{err});
         return;
     }
-    defer zsdl3.ttf.quit();
+    defer ttf.functions.quit();
 
     // Create a window
-    const window = zsdl3.createWindow("TTF Example", 800, 600, zsdl3.SDL_WINDOW_RESIZABLE);
+    const window = sdl.video.createWindow("TTF Example", 800, 600, zsdl3.SDL_WINDOW_RESIZABLE);
     if (window == null) {
-        const err = zsdl3.getError() orelse "Unknown error";
+        const err = sdl.core.getError() orelse "Unknown error";
         std.debug.print("Failed to create window: {s}\n", .{err});
         return;
     }
-    defer zsdl3.destroyWindow(window);
+    defer sdl.video.destroyWindow(window);
 
     // Create a renderer
-    const renderer = zsdl3.createRenderer(window, null);
+    const renderer = sdl.render.createRenderer(window, null);
     if (renderer == null) {
-        const err = zsdl3.getError() orelse "Unknown error";
+        const err = sdl.core.getError() orelse "Unknown error";
         std.debug.print("Failed to create renderer: {s}\n", .{err});
         return;
     }
-    defer zsdl3.destroyRenderer(renderer);
+    defer sdl.render.destroyRenderer(renderer);
 
     // Try to open a font
     const font_paths = [_][:0]const u8{
@@ -59,13 +63,13 @@ pub fn main() void {
     var font: ?*zsdl3.ttf.TTF_Font = null;
 
     for (font_paths) |path| {
-        font = zsdl3.ttf.openFont(path, 48.0);
+        font = ttf.functions.openFont(path, 48.0);
         if (font != null) {
             std.debug.print("Successfully loaded font from: {s}\n", .{path});
             break;
         }
     }
-    defer if (font) |f| zsdl3.ttf.closeFont(f);
+    defer if (font) |f| ttf.functions.closeFont(f);
 
     // Main loop
     var running = true;
@@ -73,7 +77,7 @@ pub fn main() void {
     while (running) {
         // Handle events
         var event: zsdl3.SDL_Event = undefined;
-        while (zsdl3.pollEvent(&event)) {
+        while (sdl.events.pollEvent(&event)) {
             switch (event.type) {
                 zsdl3.SDL_EVENT_QUIT => running = false,
                 zsdl3.SDL_EVENT_KEY_DOWN => {
@@ -86,8 +90,8 @@ pub fn main() void {
         }
 
         // Clear screen with dark background
-        _ = zsdl3.setRenderDrawColor(renderer, 20, 20, 30, 255);
-        _ = zsdl3.renderClear(renderer);
+        _ = sdl.render.setRenderDrawColor(renderer, 20, 20, 30, 255);
+        _ = sdl.render.renderClear(renderer);
 
         // Render text if font is available
         if (font) |f| {
@@ -95,39 +99,39 @@ pub fn main() void {
 
             // Render text to surface and then to texture
             // Pass 0 for length to use null-terminated string
-            if (zsdl3.ttf.renderTextBlended(f, "Hello, SDL3 TTF!", 0, white_color)) |surf| {
-                defer zsdl3.destroySurface(surf);
-                if (zsdl3.createTextureFromSurface(renderer, surf)) |tex| {
-                    defer zsdl3.destroyTexture(tex);
+            if (ttf.functions.renderTextBlended(f, "Hello, SDL3 TTF!", 0, white_color)) |surf| {
+                defer sdl.surface.destroySurface(surf);
+                if (sdl.render.createTextureFromSurface(renderer, surf)) |tex| {
+                    defer sdl.render.destroyTexture(tex);
                     var tex_w: f32 = 0;
                     var tex_h: f32 = 0;
-                    if (zsdl3.textureSize(tex, &tex_w, &tex_h)) {
+                    if (sdl.render.textureSize(tex, &tex_w, &tex_h)) {
                         const text_rect = zsdl3.SDL_FRect{
                             .x = 50,
                             .y = 50,
                             .w = tex_w,
                             .h = tex_h,
                         };
-                        _ = zsdl3.renderTexture(renderer, tex, null, &text_rect);
+                        _ = sdl.render.renderTexture(renderer, tex, null, &text_rect);
                     }
                 }
             }
         } else {
             // Show message if no font available
-            _ = zsdl3.setRenderDrawColor(renderer, 255, 255, 0, 255);
+            _ = sdl.render.setRenderDrawColor(renderer, 255, 255, 0, 255);
             const msg_rect = zsdl3.SDL_FRect{
                 .x = 50,
                 .y = 250,
                 .w = 700,
                 .h = 100,
             };
-            _ = zsdl3.renderFillRect(renderer, &msg_rect);
+            _ = sdl.render.renderFillRect(renderer, &msg_rect);
         }
 
         // Present the rendered frame
-        _ = zsdl3.renderPresent(renderer);
+        _ = sdl.render.renderPresent(renderer);
 
         // Small delay to prevent 100% CPU usage
-        zsdl3.delay(16); // ~60 FPS
+        sdl.time.delay(16); // ~60 FPS
     }
 }
