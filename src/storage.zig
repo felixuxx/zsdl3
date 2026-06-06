@@ -33,6 +33,9 @@ pub const PFN_SDL_EnumerateStorageDirectory = *const fn (storage: ?*SDL_Storage,
 pub const PFN_SDL_RemoveStoragePath = *const fn (storage: ?*SDL_Storage, path: ?[*:0]const u8) callconv(.c) bool;
 pub const PFN_SDL_GlobStorageDirectory = *const fn (storage: ?*SDL_Storage, path: ?[*:0]const u8, pattern: ?[*:0]const u8, flags: SDL_GlobFlags, count: ?*c_int) callconv(.c) ?[*]?[*:0]u8;
 pub const PFN_SDL_GetStoragePathInfo = *const fn (storage: ?*SDL_Storage, path: ?[*:0]const u8, info: ?*SDL_PathInfo) callconv(.c) bool;
+pub const PFN_SDL_GetStorageSpaceRemaining = *const fn (storage: ?*SDL_Storage) callconv(.c) Uint64;
+pub const PFN_SDL_CopyStorageFile = *const fn (storage: ?*SDL_Storage, old_path: ?[*:0]const u8, new_path: ?[*:0]const u8) callconv(.c) bool;
+pub const PFN_SDL_RenameStoragePath = *const fn (storage: ?*SDL_Storage, old_path: ?[*:0]const u8, new_path: ?[*:0]const u8) callconv(.c) bool;
 
 // Storage path info
 pub const SDL_PathInfo = extern struct {
@@ -57,8 +60,13 @@ pub const StorageFunctions = struct {
     removeStoragePath: PFN_SDL_RemoveStoragePath,
     globStorageDirectory: PFN_SDL_GlobStorageDirectory,
     getStoragePathInfo: PFN_SDL_GetStoragePathInfo,
+    spaceRemaining: PFN_SDL_GetStorageSpaceRemaining,
+    copyStorageFile: PFN_SDL_CopyStorageFile,
+    renameStoragePath: PFN_SDL_RenameStoragePath,
 
     pub fn load(handle: dynamic.LibraryHandle) !StorageFunctions {
-        return dynamic.loadFunctions(StorageFunctions, handle, "SDL_", .{}, &.{});
+        return dynamic.loadFunctions(StorageFunctions, handle, "SDL_", .{
+            .{ "spaceRemaining", "SDL_GetStorageSpaceRemaining" },
+        }, &.{});
     }
 };
