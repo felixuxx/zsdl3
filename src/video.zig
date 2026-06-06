@@ -181,6 +181,15 @@ pub const PFN_SDL_FlashWindow = *const fn (window: ?*SDL_Window, operation: SDL_
 pub const PFN_SDL_DisableScreenSaver = *const fn () callconv(.c) bool;
 pub const PFN_SDL_EnableScreenSaver = *const fn () callconv(.c) bool;
 pub const PFN_SDL_ScreenSaverEnabled = *const fn () callconv(.c) bool;
+pub const PFN_SDL_GetWindowAspectRatio = *const fn (window: ?*SDL_Window, min_aspect: ?*f32, max_aspect: ?*f32) callconv(.c) bool;
+pub const PFN_SDL_SetWindowAspectRatio = *const fn (window: ?*SDL_Window, min_aspect: f32, max_aspect: f32) callconv(.c) bool;
+pub const PFN_SDL_CreatePopupWindow = *const fn (parent: ?*SDL_Window, offset_x: c_int, offset_y: c_int, w: c_int, h: c_int, flags: SDL_WindowFlags) callconv(.c) ?*SDL_Window;
+pub const PFN_SDL_SetWindowParent = *const fn (window: ?*SDL_Window, parent: ?*SDL_Window) callconv(.c) bool;
+pub const PFN_SDL_GetGrabbedWindow = *const fn () callconv(.c) ?*SDL_Window;
+pub const PFN_SDL_GetWindowSafeArea = *const fn (window: ?*SDL_Window, rect: ?*SDL_Rect) callconv(.c) bool;
+pub const PFN_SDL_GetWindowSurfaceVSync = *const fn (window: ?*SDL_Window, vsync: ?*c_int) callconv(.c) bool;
+pub const PFN_SDL_SetWindowSurfaceVSync = *const fn (window: ?*SDL_Window, vsync: c_int) callconv(.c) bool;
+pub const PFN_SDL_SyncWindow = *const fn (window: ?*SDL_Window) callconv(.c) bool;
 
 // Import types from pixels
 pub const SDL_Point = pixels.SDL_Point;
@@ -294,6 +303,15 @@ pub const VideoFunctions = struct {
     disableScreenSaver: PFN_SDL_DisableScreenSaver,
     enableScreenSaver: PFN_SDL_EnableScreenSaver,
     isScreenSaverEnabled: PFN_SDL_ScreenSaverEnabled,
+    getWindowAspectRatio: PFN_SDL_GetWindowAspectRatio,
+    setWindowAspectRatio: PFN_SDL_SetWindowAspectRatio,
+    createPopupWindow: PFN_SDL_CreatePopupWindow,
+    setWindowParent: PFN_SDL_SetWindowParent,
+    getGrabbedWindow: PFN_SDL_GetGrabbedWindow,
+    getWindowSafeArea: PFN_SDL_GetWindowSafeArea,
+    getWindowSurfaceVSync: PFN_SDL_GetWindowSurfaceVSync,
+    setWindowSurfaceVSync: PFN_SDL_SetWindowSurfaceVSync,
+    syncWindow: PFN_SDL_SyncWindow,
 
     pub fn load(handle: dynamic.LibraryHandle) !VideoFunctions {
         return dynamic.loadFunctions(VideoFunctions, handle, "SDL_", .{
