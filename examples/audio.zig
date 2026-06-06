@@ -11,6 +11,13 @@ pub fn main() !void {
     var sdl = try zsdl3.SDL.load();
     defer sdl.unload();
 
+    if (!sdl.core.init(zsdl3.SDL_INIT_AUDIO | zsdl3.SDL_INIT_EVENTS)) {
+        const err = sdl.core.getError() orelse "Unknown error";
+        std.debug.print("Failed to initialize SDL audio: {s}\n", .{err});
+        return;
+    }
+    defer sdl.core.quit();
+
     std.log.info("=== Audio Drivers ===", .{});
     const num_drivers = sdl.audio.getNumAudioDrivers();
     std.log.info("Audio drivers: {d}", .{num_drivers});

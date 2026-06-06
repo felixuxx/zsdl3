@@ -273,6 +273,6 @@ pub const TTFFunctions = struct {
             .{ "renderTextBlendedFloatWrapped", "TTF_RenderText_Blended_Float_Wrapped" },
             .{ "renderUTF8BlendedFloatWrapped", "TTF_RenderUTF8_Blended_Float_Wrapped" },
             .{ "renderUNICODEBlendedFloatWrapped", "TTF_RenderUNICODE_Blended_Float_Wrapped" },
-        }, &.{});
+        }, &.{ "getGlyphAdvance", "renderUTF8Solid", "renderUNICODESolid", "renderUTF8Shaded", "renderUNICODEShaded", "renderUTF8Blended", "renderUNICODEBlended", "renderUTF8BlendedWrapped", "renderUNICODEBlendedWrapped", "renderTextBlendedFloat", "renderUTF8BlendedFloat", "renderUNICODEBlendedFloat", "renderTextBlendedFloatWrapped", "renderUTF8BlendedFloatWrapped", "renderUNICODEBlendedFloatWrapped" });
     }
 };

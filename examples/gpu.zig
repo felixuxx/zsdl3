@@ -10,6 +10,13 @@ pub fn main() !void {
     var sdl = try zsdl3.SDL.load();
     defer sdl.unload();
 
+    if (!sdl.core.init(zsdl3.SDL_INIT_VIDEO)) {
+        const err = sdl.core.getError() orelse "Unknown error";
+        std.debug.print("Failed to initialize SDL video: {s}\n", .{err});
+        return;
+    }
+    defer sdl.core.quit();
+
     std.log.info("SDL3 GPU API Test", .{});
 
     const num_drivers = sdl.gpu.getNumGPUDrivers();
