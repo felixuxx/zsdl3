@@ -1,7 +1,5 @@
-// SDL3 Zig Bindings - Root Module
-// Pure Zig bindings for SDL3 without @cImport
+const dynamic = @import("dynamic.zig");
 
-// Import all subsystems
 pub const core = @import("core.zig");
 pub const camera = @import("camera.zig");
 pub const pixels = @import("pixels.zig");
@@ -50,36 +48,64 @@ pub const guid = @import("guid.zig");
 pub const intrinsics = @import("intrinsics.zig");
 pub const ttf = @import("ttf.zig");
 
-// Re-export core functions
-pub const init = core.init;
-pub const initSubSystem = core.initSubSystem;
-pub const quitSubSystem = core.quitSubSystem;
-pub const wasInit = core.wasInit;
-pub const quit = core.quit;
-pub const isMainThread = core.isMainThread;
-pub const runOnMainThread = core.runOnMainThread;
-pub const setAppMetadata = core.setAppMetadata;
-pub const setAppMetadataProperty = core.setAppMetadataProperty;
-pub const getAppMetadataProperty = core.getAppMetadataProperty;
-pub const getError = core.getError;
-pub const clearError = core.clearError;
-pub const setError = core.setError;
-pub const getVersion = core.getVersion;
-pub const getRevision = core.getRevision;
+// Re-export common types and constants for convenience
+pub const Sint8 = core.Sint8;
+pub const Uint8 = core.Uint8;
+pub const Sint16 = core.Sint16;
+pub const Uint16 = core.Uint16;
+pub const Sint32 = core.Sint32;
+pub const Uint32 = core.Uint32;
+pub const Sint64 = core.Sint64;
+pub const Uint64 = core.Uint64;
 
-// Re-export camera functions
-pub const getNumCameraDrivers = camera.getNumCameraDrivers;
-pub const getCameraDriver = camera.getCameraDriver;
-pub const getCameraDevices = camera.getCameraDevices;
-pub const getCameraDeviceName = camera.getCameraDeviceName;
-pub const openCameraDevice = camera.openCameraDevice;
-pub const closeCameraDevice = camera.closeCameraDevice;
-pub const getCameraSpec = camera.getCameraSpec;
-pub const startCamera = camera.startCamera;
-pub const stopCamera = camera.stopCamera;
-pub const getCameraFrame = camera.getCameraFrame;
+pub const SDL_DisplayID = core.SDL_DisplayID;
+pub const SDL_WindowID = core.SDL_WindowID;
+pub const SDL_KeyboardID = core.SDL_KeyboardID;
+pub const SDL_SensorID = core.SDL_SensorID;
+pub const SDL_PenID = core.SDL_PenID;
+pub const SDL_JoystickID = core.SDL_JoystickID;
+pub const SDL_GamepadID = core.SDL_GamepadID;
+pub const SDL_Keymod = core.SDL_Keymod;
+pub const SDL_Keycode = core.SDL_Keycode;
+pub const SDL_Scancode = core.SDL_Scancode;
 
-// Re-export pixel/rect types and functions
+pub const SDL_InitFlags = core.SDL_InitFlags;
+pub const SDL_INIT_AUDIO = core.SDL_INIT_AUDIO;
+pub const SDL_INIT_VIDEO = core.SDL_INIT_VIDEO;
+pub const SDL_INIT_JOYSTICK = core.SDL_INIT_JOYSTICK;
+pub const SDL_INIT_HAPTIC = core.SDL_INIT_HAPTIC;
+pub const SDL_INIT_GAMEPAD = core.SDL_INIT_GAMEPAD;
+pub const SDL_INIT_EVENTS = core.SDL_INIT_EVENTS;
+pub const SDL_INIT_SENSOR = core.SDL_INIT_SENSOR;
+pub const SDL_INIT_CAMERA = core.SDL_INIT_CAMERA;
+pub const SDL_AppResult = core.SDL_AppResult;
+pub const SDL_AppInit_func = core.SDL_AppInit_func;
+pub const SDL_AppIterate_func = core.SDL_AppIterate_func;
+pub const SDL_AppEvent_func = core.SDL_AppEvent_func;
+pub const SDL_AppQuit_func = core.SDL_AppQuit_func;
+pub const SDL_MainThreadCallback = core.SDL_MainThreadCallback;
+
+pub const SDL_EventType = core.SDL_EventType;
+pub const SDL_Event = core.SDL_Event;
+pub const SDL_CommonEvent = core.SDL_CommonEvent;
+pub const SDL_QuitEvent = core.SDL_QuitEvent;
+pub const SDL_KeyboardEvent = core.SDL_KeyboardEvent;
+pub const SDL_MouseMotionEvent = core.SDL_MouseMotionEvent;
+pub const SDL_TextEditingEvent = core.SDL_TextEditingEvent;
+pub const SDL_TextEditingCandidatesEvent = core.SDL_TextEditingCandidatesEvent;
+pub const SDL_TextInputEvent = core.SDL_TextInputEvent;
+pub const SDL_PropertiesID = core.SDL_PropertiesID;
+pub const SDL_Version = core.SDL_Version;
+
+pub const SDL_EVENT_FIRST = core.SDL_EVENT_FIRST;
+pub const SDL_EVENT_QUIT = core.SDL_EVENT_QUIT;
+pub const SDL_EVENT_KEY_DOWN = core.SDL_EVENT_KEY_DOWN;
+pub const SDL_EVENT_KEY_UP = core.SDL_EVENT_KEY_UP;
+pub const SDL_EVENT_MOUSE_MOTION = core.SDL_EVENT_MOUSE_MOTION;
+pub const SDL_EVENT_MOUSE_BUTTON_DOWN = core.SDL_EVENT_MOUSE_BUTTON_DOWN;
+pub const SDL_EVENT_MOUSE_BUTTON_UP = core.SDL_EVENT_MOUSE_BUTTON_UP;
+pub const SDL_EVENT_MOUSE_WHEEL = core.SDL_EVENT_MOUSE_WHEEL;
+
 pub const SDL_Point = pixels.SDL_Point;
 pub const SDL_FPoint = pixels.SDL_FPoint;
 pub const SDL_Rect = pixels.SDL_Rect;
@@ -92,401 +118,62 @@ pub const SDL_BlendOperation = pixels.SDL_BlendOperation;
 pub const SDL_BlendFactor = pixels.SDL_BlendFactor;
 pub const SDL_PointInRect = pixels.SDL_PointInRect;
 pub const SDL_RectEmpty = pixels.SDL_RectEmpty;
-pub const getPixelFormatName = pixels.getPixelFormatName;
-pub const getMasksForPixelFormat = pixels.getMasksForPixelFormat;
-pub const composeCustomBlendMode = pixels.composeCustomBlendMode;
-pub const mapRGB = pixels.mapRGB;
-pub const mapRGBA = pixels.mapRGBA;
-pub const getRGB = pixels.getRGB;
-pub const getRGBA = pixels.getRGBA;
-pub const allocPalette = pixels.allocPalette;
-pub const setPaletteColors = pixels.setPaletteColors;
-pub const freePalette = pixels.freePalette;
-pub const getPixelFormatForMasks = pixels.getPixelFormatForMasks;
-pub const getPixelFormatDetails = pixels.getPixelFormatDetails;
-pub const createPalette = pixels.createPalette;
-pub const destroyPalette = pixels.destroyPalette;
-pub const hasRectIntersection = pixels.hasRectIntersection;
-pub const getRectIntersection = pixels.getRectIntersection;
-pub const getRectUnion = pixels.getRectUnion;
-pub const getRectEnclosingPoints = pixels.getRectEnclosingPoints;
-pub const getRectAndLineIntersection = pixels.getRectAndLineIntersection;
-pub const hasRectIntersectionFloat = pixels.hasRectIntersectionFloat;
-pub const getRectIntersectionFloat = pixels.getRectIntersectionFloat;
-pub const getRectUnionFloat = pixels.getRectUnionFloat;
-pub const getRectEnclosingPointsFloat = pixels.getRectEnclosingPointsFloat;
-pub const getRectAndLineIntersectionFloat = pixels.getRectAndLineIntersectionFloat;
-
-// Re-export video functions
-pub const getNumVideoDrivers = video.getNumVideoDrivers;
-pub const getVideoDriver = video.getVideoDriver;
-pub const getCurrentVideoDriver = video.getCurrentVideoDriver;
-pub const getSystemTheme = video.getSystemTheme;
-pub const getDisplays = video.getDisplays;
-pub const getPrimaryDisplay = video.getPrimaryDisplay;
-pub const getDisplayName = video.getDisplayName;
-pub const getDisplayBounds = video.getDisplayBounds;
-pub const getDisplayUsableBounds = video.getDisplayUsableBounds;
-pub const getNaturalDisplayOrientation = video.getNaturalDisplayOrientation;
-pub const getCurrentDisplayOrientation = video.getCurrentDisplayOrientation;
-pub const getDisplayContentScale = video.getDisplayContentScale;
-pub const getDesktopDisplayMode = video.getDesktopDisplayMode;
-pub const getCurrentDisplayMode = video.getCurrentDisplayMode;
-pub const getDisplayForPoint = video.getDisplayForPoint;
-pub const getDisplayForRect = video.getDisplayForRect;
-pub const getDisplayForWindow = video.getDisplayForWindow;
-pub const getWindowPixelDensity = video.getWindowPixelDensity;
-pub const getWindowDisplayScale = video.getWindowDisplayScale;
-pub const setWindowFullscreenMode = video.setWindowFullscreenMode;
-pub const getWindowFullscreenMode = video.getWindowFullscreenMode;
-pub const getWindowPixelFormat = video.getWindowPixelFormat;
-pub const getWindows = video.getWindows;
-pub const createWindow = video.createWindow;
-pub const destroyWindow = video.destroyWindow;
-pub const getWindowID = video.getWindowID;
-pub const getWindowFromID = video.getWindowFromID;
-pub const getWindowParent = video.getWindowParent;
-pub const getWindowProperties = video.getWindowProperties;
-pub const getWindowFlags = video.getWindowFlags;
-pub const setWindowTitle = video.setWindowTitle;
-pub const getWindowTitle = video.getWindowTitle;
-pub const setWindowIcon = video.setWindowIcon;
-pub const setWindowPosition = video.setWindowPosition;
-pub const getWindowPosition = video.getWindowPosition;
-pub const setWindowSize = video.setWindowSize;
-pub const getWindowSize = video.getWindowSize;
-pub const getWindowBordersSize = video.getWindowBordersSize;
-pub const getWindowSizeInPixels = video.getWindowSizeInPixels;
-pub const setWindowMinimumSize = video.setWindowMinimumSize;
-pub const getWindowMinimumSize = video.getWindowMinimumSize;
-pub const setWindowMaximumSize = video.setWindowMaximumSize;
-pub const getWindowMaximumSize = video.getWindowMaximumSize;
-pub const setWindowBordered = video.setWindowBordered;
-pub const setWindowResizable = video.setWindowResizable;
-pub const setWindowAlwaysOnTop = video.setWindowAlwaysOnTop;
-pub const showWindow = video.showWindow;
-pub const hideWindow = video.hideWindow;
-pub const raiseWindow = video.raiseWindow;
-pub const maximizeWindow = video.maximizeWindow;
-pub const minimizeWindow = video.minimizeWindow;
-pub const restoreWindow = video.restoreWindow;
-pub const setWindowFullscreen = video.setWindowFullscreen;
-pub const hasWindowSurface = video.hasWindowSurface;
-pub const getWindowSurface = video.getWindowSurface;
-pub const updateWindowSurface = video.updateWindowSurface;
-pub const updateWindowSurfaceRects = video.updateWindowSurfaceRects;
-pub const destroyWindowSurface = video.destroyWindowSurface;
-pub const setWindowGrab = video.setWindowGrab;
-pub const setWindowKeyboardGrab = video.setWindowKeyboardGrab;
-pub const setWindowMouseGrab = video.setWindowMouseGrab;
-pub const getWindowGrab = video.getWindowGrab;
-pub const getWindowKeyboardGrab = video.getWindowKeyboardGrab;
-pub const getWindowMouseGrab = video.getWindowMouseGrab;
-pub const setWindowMouseRect = video.setWindowMouseRect;
-pub const getWindowMouseRect = video.getWindowMouseRect;
-pub const setWindowOpacity = video.setWindowOpacity;
-pub const getWindowOpacity = video.getWindowOpacity;
-pub const setWindowModalFor = video.setWindowModalFor;
-pub const setWindowFocusable = video.setWindowFocusable;
-pub const showWindowSystemMenu = video.showWindowSystemMenu;
-pub const setWindowHitTest = video.setWindowHitTest;
-pub const setWindowShape = video.setWindowShape;
-pub const setWindowModal = video.setWindowModal;
-pub const setWindowProgressState = video.setWindowProgressState;
-pub const getWindowProgressState = video.getWindowProgressState;
-pub const setWindowProgressValue = video.setWindowProgressValue;
-pub const getWindowProgressValue = video.getWindowProgressValue;
-pub const flashWindow = video.flashWindow;
-pub const setWindowGammaRamp = video.setWindowGammaRamp;
-pub const getWindowGammaRamp = video.getWindowGammaRamp;
-pub const disableScreenSaver = video.disableScreenSaver;
-pub const enableScreenSaver = video.enableScreenSaver;
-pub const isScreenSaverEnabled = video.isScreenSaverEnabled;
-pub const getWindowWMInfo = video.getWindowWMInfo;
-
-// Re-export surface functions
-pub const createSurface = surface.createSurface;
-pub const createSurfaceFrom = surface.createSurfaceFrom;
-pub const destroySurface = surface.destroySurface;
-pub const getSurfaceProperties = surface.getSurfaceProperties;
-pub const setSurfaceColorspace = surface.setSurfaceColorspace;
-pub const getSurfaceColorspace = surface.getSurfaceColorspace;
-pub const createSurfacePalette = surface.createSurfacePalette;
-pub const setSurfacePalette = surface.setSurfacePalette;
-pub const getSurfacePalette = surface.getSurfacePalette;
-pub const addSurfaceAlternateImage = surface.addSurfaceAlternateImage;
-pub const surfaceHasAlternateImages = surface.surfaceHasAlternateImages;
-pub const getSurfaceImages = surface.getSurfaceImages;
-pub const removeSurfaceAlternateImages = surface.removeSurfaceAlternateImages;
-pub const lockSurface = surface.lockSurface;
-pub const unlockSurface = surface.unlockSurface;
-pub const loadBMP = surface.loadBMP;
-pub const loadBMP_IO = surface.loadBMP_IO;
-pub const saveBMP = surface.saveBMP;
-pub const saveBMP_IO = surface.saveBMP_IO;
-pub const setSurfaceRLE = surface.setSurfaceRLE;
-pub const surfaceHasRLE = surface.surfaceHasRLE;
-pub const setSurfaceColorKey = surface.setSurfaceColorKey;
-pub const surfaceHasColorKey = surface.surfaceHasColorKey;
-pub const getSurfaceColorKey = surface.getSurfaceColorKey;
-pub const setSurfaceColorMod = surface.setSurfaceColorMod;
-pub const getSurfaceColorMod = surface.getSurfaceColorMod;
-pub const setSurfaceAlphaMod = surface.setSurfaceAlphaMod;
-pub const getSurfaceAlphaMod = surface.getSurfaceAlphaMod;
-pub const setSurfaceBlendMode = surface.setSurfaceBlendMode;
-pub const getSurfaceBlendMode = surface.getSurfaceBlendMode;
-pub const setSurfaceClipRect = surface.setSurfaceClipRect;
-pub const getSurfaceClipRect = surface.getSurfaceClipRect;
-pub const flipSurface = surface.flipSurface;
-pub const duplicateSurface = surface.duplicateSurface;
-pub const scaleSurface = surface.scaleSurface;
-pub const convertSurface = surface.convertSurface;
-pub const convertSurfaceAndColorspace = surface.convertSurfaceAndColorspace;
-pub const premultiplyAlpha = surface.premultiplyAlpha;
-pub const clearSurface = surface.clearSurface;
-pub const fillSurfaceRect = surface.fillSurfaceRect;
-pub const fillSurfaceRects = surface.fillSurfaceRects;
-pub const blitSurface = surface.blitSurface;
-pub const blitSurfaceUnchecked = surface.blitSurfaceUnchecked;
-pub const blitSurfaceScaled = surface.blitSurfaceScaled;
-pub const blitSurfaceUncheckedScaled = surface.blitSurfaceUncheckedScaled;
-pub const blitSurfaceTiled = surface.blitSurfaceTiled;
-pub const blitSurfaceTiledWithScale = surface.blitSurfaceTiledWithScale;
-pub const blitSurface9Grid = surface.blitSurface9Grid;
-pub const mapSurfaceRGB = surface.mapSurfaceRGB;
-pub const mapSurfaceRGBA = surface.mapSurfaceRGBA;
-pub const readSurfacePixel = surface.readSurfacePixel;
-pub const loadSurface = surface.loadSurface;
-pub const loadSurface_IO = surface.loadSurface_IO;
-pub const loadPNG = surface.loadPNG;
-pub const loadPNG_IO = surface.loadPNG_IO;
-pub const savePNG = surface.savePNG;
-pub const savePNG_IO = surface.savePNG_IO;
-pub const rotateSurface = surface.rotateSurface;
-pub const convertPixels = surface.convertPixels;
-pub const stretchSurface = surface.stretchSurface;
-pub const readSurfacePixelFloat = surface.readSurfacePixelFloat;
-pub const writeSurfacePixel = surface.writeSurfacePixel;
-pub const writeSurfacePixelFloat = surface.writeSurfacePixelFloat;
-pub const softStretch = surface.softStretch;
-pub const softStretchLinear = surface.softStretchLinear;
-
-// Re-export event types (core already has basic ones)
-pub const SDL_Event = events.SDL_Event;
-pub const SDL_EventAction = events.SDL_EventAction;
+pub const SDL_PIXELFORMAT_RGBA8888 = pixels.SDL_PIXELFORMAT_RGBA8888;
+pub const SDL_PIXELFORMAT_ARGB8888 = pixels.SDL_PIXELFORMAT_ARGB8888;
+pub const SDL_PIXELFORMAT_ABGR8888 = pixels.SDL_PIXELFORMAT_ABGR8888;
+pub const SDL_PIXELFORMAT_BGRA8888 = pixels.SDL_PIXELFORMAT_BGRA8888;
+pub const SDL_PIXELFORMAT_RGB565 = pixels.SDL_PIXELFORMAT_RGB565;
+pub const SDL_Surface = video.SDL_Surface;
 pub const SDL_Window = video.SDL_Window;
+pub const SDL_WindowFlags = video.SDL_WindowFlags;
+pub const SDL_WINDOW_FULLSCREEN = video.SDL_WINDOW_FULLSCREEN;
+pub const SDL_WINDOW_OPENGL = video.SDL_WINDOW_OPENGL;
+pub const SDL_WINDOW_OCCLUDED = video.SDL_WINDOW_OCCLUDED;
+pub const SDL_WINDOW_HIDDEN = video.SDL_WINDOW_HIDDEN;
+pub const SDL_WINDOW_BORDERLESS = video.SDL_WINDOW_BORDERLESS;
+pub const SDL_WINDOW_RESIZABLE = video.SDL_WINDOW_RESIZABLE;
+pub const SDL_WINDOW_MINIMIZED = video.SDL_WINDOW_MINIMIZED;
+pub const SDL_WINDOW_MAXIMIZED = video.SDL_WINDOW_MAXIMIZED;
+pub const SDL_WINDOW_MOUSE_GRABBED = video.SDL_WINDOW_MOUSE_GRABBED;
+pub const SDL_WINDOW_INPUT_FOCUS = video.SDL_WINDOW_INPUT_FOCUS;
+pub const SDL_WINDOW_MOUSE_FOCUS = video.SDL_WINDOW_MOUSE_FOCUS;
+pub const SDL_WINDOW_EXTERNAL = video.SDL_WINDOW_EXTERNAL;
+pub const SDL_WINDOW_MODAL = video.SDL_WINDOW_MODAL;
+pub const SDL_WINDOW_HIGH_PIXEL_DENSITY = video.SDL_WINDOW_HIGH_PIXEL_DENSITY;
+pub const SDL_WINDOW_MOUSE_CAPTURE = video.SDL_WINDOW_MOUSE_CAPTURE;
+pub const SDL_WINDOW_MOUSE_RELATIVE_MODE = video.SDL_WINDOW_MOUSE_RELATIVE_MODE;
+pub const SDL_WINDOW_ALWAYS_ON_TOP = video.SDL_WINDOW_ALWAYS_ON_TOP;
+pub const SDL_WINDOW_UTILITY = video.SDL_WINDOW_UTILITY;
+pub const SDL_WINDOW_TOOLTIP = video.SDL_WINDOW_TOOLTIP;
+pub const SDL_WINDOW_POPUP_MENU = video.SDL_WINDOW_POPUP_MENU;
+pub const SDL_WINDOW_KEYBOARD_GRABBED = video.SDL_WINDOW_KEYBOARD_GRABBED;
+pub const SDL_WINDOW_FILL_DOCUMENT = video.SDL_WINDOW_FILL_DOCUMENT;
+pub const SDL_WINDOW_VULKAN = video.SDL_WINDOW_VULKAN;
+pub const SDL_WINDOW_METAL = video.SDL_WINDOW_METAL;
+pub const SDL_WINDOW_TRANSPARENT = video.SDL_WINDOW_TRANSPARENT;
+pub const SDL_WINDOW_NOT_FOCUSABLE = video.SDL_WINDOW_NOT_FOCUSABLE;
+pub const SDL_WINDOWPOS_UNDEFINED = video.SDL_WINDOWPOS_UNDEFINED;
+pub const SDL_WINDOWPOS_CENTERED = video.SDL_WINDOWPOS_CENTERED;
+pub const SDL_FlashOperation = video.SDL_FlashOperation;
 pub const SDL_ProgressState = video.SDL_ProgressState;
 pub const SDL_PROGRESS_STATE_INVALID = video.SDL_ProgressState.SDL_PROGRESS_STATE_INVALID;
 pub const SDL_PROGRESS_STATE_NONE = video.SDL_ProgressState.SDL_PROGRESS_STATE_NONE;
 pub const SDL_PROGRESS_STATE_INDETERMINATE = video.SDL_ProgressState.SDL_PROGRESS_STATE_INDETERMINATE;
-pub const SDL_PROGRESS_STATE_NORMAL = video.SDL_ProgressState.SDL_PROGRESS_STATE_NORMAL;
-pub const SDL_PROGRESS_STATE_PAUSED = video.SDL_ProgressState.SDL_PROGRESS_STATE_PAUSED;
-pub const SDL_PROGRESS_STATE_ERROR = video.SDL_ProgressState.SDL_PROGRESS_STATE_ERROR;
+pub const SDL_PROGRESS_STATE_NORMAL = video.SDL_PROGRESS_STATE_NORMAL;
+pub const SDL_PROGRESS_STATE_PAUSED = video.SDL_PROGRESS_STATE_PAUSED;
+pub const SDL_PROGRESS_STATE_ERROR = video.SDL_PROGRESS_STATE_ERROR;
+pub const SDL_DisplayMode = video.SDL_DisplayMode;
+pub const SDL_DisplayOrientation = video.SDL_DisplayOrientation;
+pub const SDL_SystemTheme = video.SDL_SystemTheme;
+pub const SDL_HitTestResult = video.SDL_HitTestResult;
+pub const SDL_GLContext = video.SDL_GLContext;
 
-pub const SDL_WINDOW_HIGH_PIXEL_DENSITY = video.SDL_WINDOW_HIGH_PIXEL_DENSITY;
+pub const SDL_FlipMode = surface.SDL_FlipMode;
+pub const SDL_FLIP_NONE = surface.SDL_FlipMode.SDL_FLIP_NONE;
+pub const SDL_FLIP_HORIZONTAL = surface.SDL_FlipMode.SDL_FLIP_HORIZONTAL;
+pub const SDL_FLIP_VERTICAL = surface.SDL_FlipMode.SDL_FLIP_VERTICAL;
+pub const SDL_FLIP_HORIZONTAL_AND_VERTICAL = surface.SDL_FlipMode.SDL_FLIP_HORIZONTAL_AND_VERTICAL;
 
-// Additional application event types (not in core)
-pub const SDL_EVENT_TERMINATING = events.SDL_EVENT_TERMINATING;
-pub const SDL_EVENT_LOW_MEMORY = events.SDL_EVENT_LOW_MEMORY;
-pub const SDL_EVENT_WILL_ENTER_BACKGROUND = events.SDL_EVENT_WILL_ENTER_BACKGROUND;
-pub const SDL_EVENT_DID_ENTER_BACKGROUND = events.SDL_EVENT_DID_ENTER_BACKGROUND;
-pub const SDL_EVENT_WILL_ENTER_FOREGROUND = events.SDL_EVENT_WILL_ENTER_FOREGROUND;
-pub const SDL_EVENT_DID_ENTER_FOREGROUND = events.SDL_EVENT_DID_ENTER_FOREGROUND;
-
-// Window event types (not in core)
-pub const SDL_EVENT_WINDOW_SHOWN = events.SDL_EVENT_WINDOW_SHOWN;
-pub const SDL_EVENT_WINDOW_HIDDEN = events.SDL_EVENT_WINDOW_HIDDEN;
-pub const SDL_EVENT_WINDOW_EXPOSED = events.SDL_EVENT_WINDOW_EXPOSED;
-pub const SDL_EVENT_WINDOW_MOVED = events.SDL_EVENT_WINDOW_MOVED;
-pub const SDL_EVENT_WINDOW_RESIZED = events.SDL_EVENT_WINDOW_RESIZED;
-pub const SDL_EVENT_WINDOW_SIZE_CHANGED = events.SDL_EVENT_WINDOW_SIZE_CHANGED;
-pub const SDL_EVENT_WINDOW_MINIMIZED = events.SDL_EVENT_WINDOW_MINIMIZED;
-pub const SDL_EVENT_WINDOW_MAXIMIZED = events.SDL_EVENT_WINDOW_MAXIMIZED;
-pub const SDL_EVENT_WINDOW_RESTORED = events.SDL_EVENT_WINDOW_RESTORED;
-pub const SDL_EVENT_WINDOW_MOUSE_ENTER = events.SDL_EVENT_WINDOW_MOUSE_ENTER;
-pub const SDL_EVENT_WINDOW_MOUSE_LEAVE = events.SDL_EVENT_WINDOW_MOUSE_LEAVE;
-pub const SDL_EVENT_WINDOW_FOCUS_GAINED = events.SDL_EVENT_WINDOW_FOCUS_GAINED;
-pub const SDL_EVENT_WINDOW_FOCUS_LOST = events.SDL_EVENT_WINDOW_FOCUS_LOST;
-pub const SDL_EVENT_WINDOW_CLOSE_REQUESTED = events.SDL_EVENT_WINDOW_CLOSE_REQUESTED;
-pub const SDL_EVENT_WINDOW_TAKE_FOCUS = events.SDL_EVENT_WINDOW_TAKE_FOCUS;
-pub const SDL_EVENT_WINDOW_HIT_TEST = events.SDL_EVENT_WINDOW_HIT_TEST;
-pub const SDL_EVENT_WINDOW_ICCPROF_CHANGED = events.SDL_EVENT_WINDOW_ICCPROF_CHANGED;
-pub const SDL_EVENT_WINDOW_DISPLAY_CHANGED = events.SDL_EVENT_WINDOW_DISPLAY_CHANGED;
-pub const SDL_EVENT_WINDOW_DISPLAY_STATE_CHANGED = events.SDL_EVENT_WINDOW_DISPLAY_STATE_CHANGED;
-pub const SDL_EVENT_WINDOW_OCCLUDED = events.SDL_EVENT_WINDOW_OCCLUDED;
-pub const SDL_EVENT_WINDOW_ENTER_FULLSCREEN = events.SDL_EVENT_WINDOW_ENTER_FULLSCREEN;
-pub const SDL_EVENT_WINDOW_LEAVE_FULLSCREEN = events.SDL_EVENT_WINDOW_LEAVE_FULLSCREEN;
-pub const SDL_EVENT_WINDOW_DESTROYED = events.SDL_EVENT_WINDOW_DESTROYED;
-pub const SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED = events.SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED;
-
-// Additional keyboard and text events (not in core)
-pub const SDL_EVENT_TEXT_EDITING = events.SDL_EVENT_TEXT_EDITING;
-pub const SDL_EVENT_TEXT_INPUT = events.SDL_EVENT_TEXT_INPUT;
-pub const SDL_EVENT_KEYMAP_CHANGED = events.SDL_EVENT_KEYMAP_CHANGED;
-
-// Window event structures
-pub const SDL_WindowEvent = events.SDL_WindowEvent;
-
-// Display event structures
-pub const SDL_DisplayEvent = events.SDL_DisplayEvent;
-
-// Keyboard device event structures
-pub const SDL_KeyboardDeviceEvent = events.SDL_KeyboardDeviceEvent;
-
-// Mouse event structures
-pub const SDL_MouseButtonEvent = events.SDL_MouseButtonEvent;
-pub const SDL_MouseWheelEvent = events.SDL_MouseWheelEvent;
-
-// Joystick event structures
-pub const SDL_JoystickDeviceEvent = events.SDL_JoystickDeviceEvent;
-pub const SDL_JoystickButtonEvent = events.SDL_JoystickButtonEvent;
-pub const SDL_JoystickHatEvent = events.SDL_JoystickHatEvent;
-pub const SDL_JoystickAxisEvent = events.SDL_JoystickAxisEvent;
-
-// Gamepad event structures
-pub const SDL_GamepadDeviceEvent = events.SDL_GamepadDeviceEvent;
-pub const SDL_GamepadButtonEvent = events.SDL_GamepadButtonEvent;
-pub const SDL_GamepadAxisEvent = events.SDL_GamepadAxisEvent;
-
-// Text event structures
-pub const SDL_TextEditingEvent = events.SDL_TextEditingEvent;
-pub const SDL_TextInputEvent = events.SDL_TextInputEvent;
-
-// Touch event structures
-pub const SDL_TouchFingerEvent = events.SDL_TouchFingerEvent;
-
-// Gesture event structures
-pub const SDL_GestureEvent = events.SDL_GestureEvent;
-
-// Drop and other event structures
-pub const SDL_DropEvent = events.SDL_DropEvent;
-pub const SDL_AudioDeviceEvent = events.SDL_AudioDeviceEvent;
-pub const SDL_CameraDeviceEvent = events.SDL_CameraDeviceEvent;
-pub const SDL_SensorEvent = events.SDL_SensorEvent;
-pub const SDL_PenEvent = events.SDL_PenEvent;
-pub const SDL_PenAxisEvent = events.SDL_PenAxisEvent;
-pub const pumpEvents = events.pumpEvents;
-pub const pollEvent = events.pollEvent;
-pub const waitEvent = events.waitEvent;
-pub const waitEventTimeout = events.waitEventTimeout;
-pub const pushEvent = events.pushEvent;
-pub const filterEvents = events.filterEvents;
-pub const addEventWatch = events.addEventWatch;
-pub const delEventWatch = events.delEventWatch;
-pub const peepEvents = events.peepEvents;
-pub const hasEvent = events.hasEvent;
-pub const hasEvents = events.hasEvents;
-pub const flushEvent = events.flushEvent;
-pub const flushEvents = events.flushEvents;
-pub const setEventEnabled = events.setEventEnabled;
-pub const eventEnabled = events.eventEnabled;
-pub const registerEvents = events.registerEvents;
-pub const getEventFilter = events.getEventFilter;
-pub const setEventFilter = events.setEventFilter;
-pub const getNumTouchFingers = events.getNumTouchFingers;
-pub const getTouchFinger = events.getTouchFinger;
-pub const getEventName = events.getEventName;
-
-// Re-export input types
-pub const SDL_JoystickType = input.SDL_JoystickType;
-pub const SDL_GamepadType = input.SDL_GamepadType;
-pub const SDL_GamepadAxis = input.SDL_GamepadAxis;
-pub const SDL_GamepadButton = input.SDL_GamepadButton;
-pub const SDL_GamepadButtonLabel = input.SDL_GamepadButtonLabel;
-pub const SDL_GamepadBindingType = input.SDL_GamepadBindingType;
-pub const SDL_GamepadBinding = input.SDL_GamepadBinding;
-pub const SDL_SystemCursor = input.SDL_SystemCursor;
-pub const SDL_Joystick = input.SDL_Joystick;
-pub const SDL_Gamepad = input.SDL_Gamepad;
-
-// Re-export input functions
-pub const hasKeyboard = input.hasKeyboard;
-pub const getKeyboardState = input.getKeyboardState;
-pub const getModState = input.getModState;
-pub const setModState = input.setModState;
-pub const getKeyFromScancode = input.getKeyFromScancode;
-pub const getScancodeFromKey = input.getScancodeFromKey;
-pub const hasMouse = input.hasMouse;
-pub const getMouseState = input.getMouseState;
-pub const getGlobalMouseState = input.getGlobalMouseState;
-pub const getRelativeMouseState = input.getRelativeMouseState;
-pub const warpMouseInWindow = input.warpMouseInWindow;
-pub const warpMouseGlobal = input.warpMouseGlobal;
-pub const numJoysticks = input.numJoysticks;
-pub const joystickOpen = input.joystickOpen;
-pub const joystickClose = input.joystickClose;
-pub const joystickName = input.joystickName;
-pub const joystickPath = input.joystickPath;
-pub const joystickGetType = input.joystickGetType;
-pub const joystickGetGUID = input.joystickGetGUID;
-pub const joystickGetVendor = input.joystickGetVendor;
-pub const joystickGetProduct = input.joystickGetProduct;
-pub const joystickGetProductVersion = input.joystickGetProductVersion;
-pub const joystickGetFirmwareVersion = input.joystickGetFirmwareVersion;
-pub const joystickGetSerial = input.joystickGetSerial;
-pub const joystickGetAxis = input.joystickGetAxis;
-pub const joystickGetHat = input.joystickGetHat;
-pub const joystickGetBall = input.joystickGetBall;
-pub const joystickGetButton = input.joystickGetButton;
-pub const joystickRumble = input.joystickRumble;
-pub const joystickRumbleTriggers = input.joystickRumbleTriggers;
-pub const joystickHasLED = input.joystickHasLED;
-pub const joystickSetLED = input.joystickSetLED;
-pub const joystickSendEffect = input.joystickSendEffect;
-pub const numGamepads = input.numGamepads;
-pub const isGamepad = input.isGamepad;
-pub const openGamepad = input.openGamepad;
-pub const closeGamepad = input.closeGamepad;
-pub const getGamepadName = input.getGamepadName;
-pub const getGamepadPath = input.getGamepadPath;
-pub const getGamepadType = input.getGamepadType;
-pub const getGamepadGUID = input.getGamepadGUID;
-pub const getGamepadVendor = input.getGamepadVendor;
-pub const getGamepadProduct = input.getGamepadProduct;
-pub const getGamepadProductVersion = input.getGamepadProductVersion;
-pub const getGamepadFirmwareVersion = input.getGamepadFirmwareVersion;
-pub const getGamepadSerial = input.getGamepadSerial;
-pub const gamepadHasAxis = input.gamepadHasAxis;
-pub const getGamepadAxis = input.getGamepadAxis;
-pub const gamepadHasButton = input.gamepadHasButton;
-pub const getGamepadButton = input.getGamepadButton;
-pub const getGamepadButtonLabel = input.getGamepadButtonLabel;
-pub const setGamepadEventsEnabled = input.setGamepadEventsEnabled;
-pub const gamepadEventsEnabled = input.gamepadEventsEnabled;
-pub const getGamepadBindings = input.getGamepadBindings;
-pub const reloadGamepadMappings = input.reloadGamepadMappings;
-pub const getGamepadMapping = input.getGamepadMapping;
-pub const addGamepadMapping = input.addGamepadMapping;
-pub const getGamepadMappingForGUID = input.getGamepadMappingForGUID;
-pub const setGamepadMapping = input.setGamepadMapping;
-pub const hasGamepad = input.hasGamepad;
-pub const getGamepads = input.getGamepads;
-pub const getGamepadNameForID = input.getGamepadNameForID;
-pub const getGamepadPathForID = input.getGamepadPathForID;
-pub const getGamepadTypeForID = input.getGamepadTypeForID;
-pub const getGamepadGUIDForID = input.getGamepadGUIDForID;
-pub const getGamepadVendorForID = input.getGamepadVendorForID;
-pub const getGamepadProductForID = input.getGamepadProductForID;
-pub const getGamepadProductVersionForID = input.getGamepadProductVersionForID;
-pub const getGamepadFirmwareVersionForID = input.getGamepadFirmwareVersionForID;
-pub const getGamepadSerialForID = input.getGamepadSerialForID;
-pub const gamepadConnected = input.gamepadConnected;
-pub const getGamepadID = input.getGamepadID;
-pub const getGamepadFromID = input.getGamepadFromID;
-pub const getGamepadFromPlayerIndex = input.getGamepadFromPlayerIndex;
-pub const getGamepadPlayerIndex = input.getGamepadPlayerIndex;
-pub const setGamepadPlayerIndex = input.setGamepadPlayerIndex;
-pub const rumbleGamepad = input.rumbleGamepad;
-pub const rumbleGamepadTriggers = input.rumbleGamepadTriggers;
-pub const setGamepadLED = input.setGamepadLED;
-pub const sendGamepadEffect = input.sendGamepadEffect;
-pub const getGamepadSensorData = input.getGamepadSensorData;
-pub const setGamepadSensorEnabled = input.setGamepadSensorEnabled;
-pub const gamepadSensorEnabled = input.gamepadSensorEnabled;
-pub const getGamepadProperties = input.getGamepadProperties;
-pub const getGamepadIDMap = input.getGamepadIDMap;
-
-// Re-export render types
 pub const SDL_Renderer = render.SDL_Renderer;
 pub const SDL_Texture = render.SDL_Texture;
 pub const SDL_Vertex = render.SDL_Vertex;
@@ -496,25 +183,16 @@ pub const SDL_SCALEMODE_INVALID = render.SDL_ScaleMode.SDL_SCALEMODE_INVALID;
 pub const SDL_SCALEMODE_NEAREST = render.SDL_ScaleMode.SDL_SCALEMODE_NEAREST;
 pub const SDL_SCALEMODE_LINEAR = render.SDL_ScaleMode.SDL_SCALEMODE_LINEAR;
 pub const SDL_SCALEMODE_PIXELART = render.SDL_ScaleMode.SDL_SCALEMODE_PIXELART;
-pub const SDL_FlipMode = surface.SDL_FlipMode;
-pub const SDL_FLIP_NONE = surface.SDL_FlipMode.SDL_FLIP_NONE;
-pub const SDL_FLIP_HORIZONTAL = surface.SDL_FlipMode.SDL_FLIP_HORIZONTAL;
-pub const SDL_FLIP_VERTICAL = surface.SDL_FlipMode.SDL_FLIP_VERTICAL;
-pub const SDL_FLIP_HORIZONTAL_AND_VERTICAL = surface.SDL_FlipMode.SDL_FLIP_HORIZONTAL_AND_VERTICAL;
 pub const SDL_RendererLogicalPresentation = render.SDL_RendererLogicalPresentation;
 pub const SDL_LOGICAL_PRESENTATION_DISABLED = render.SDL_RendererLogicalPresentation.SDL_LOGICAL_PRESENTATION_DISABLED;
 pub const SDL_LOGICAL_PRESENTATION_STRETCH = render.SDL_RendererLogicalPresentation.SDL_LOGICAL_PRESENTATION_STRETCH;
 pub const SDL_LOGICAL_PRESENTATION_LETTERBOX = render.SDL_RendererLogicalPresentation.SDL_LOGICAL_PRESENTATION_LETTERBOX;
 pub const SDL_LOGICAL_PRESENTATION_OVERSCAN = render.SDL_RendererLogicalPresentation.SDL_LOGICAL_PRESENTATION_OVERSCAN;
 pub const SDL_LOGICAL_PRESENTATION_INTEGER_SCALE = render.SDL_RendererLogicalPresentation.SDL_LOGICAL_PRESENTATION_INTEGER_SCALE;
-
-// Re-export renderer constants
 pub const SDL_RENDERER_SOFTWARE = render.SDL_RENDERER_SOFTWARE;
 pub const SDL_RENDERER_ACCELERATED = render.SDL_RENDERER_ACCELERATED;
 pub const SDL_RENDERER_PRESENTVSYNC = render.SDL_RENDERER_PRESENTVSYNC;
 pub const SDL_RENDERER_TARGETTEXTURE = render.SDL_RENDERER_TARGETTEXTURE;
-
-// Re-export texture enums
 pub const SDL_TextureAccess = render.SDL_TextureAccess;
 pub const SDL_TEXTUREACCESS_STATIC = render.SDL_TEXTUREACCESS_STATIC;
 pub const SDL_TEXTUREACCESS_STREAMING = render.SDL_TEXTUREACCESS_STREAMING;
@@ -525,116 +203,12 @@ pub const SDL_TEXTURE_ADDRESS_AUTO = render.SDL_TextureAddressMode.SDL_TEXTURE_A
 pub const SDL_TEXTURE_ADDRESS_CLAMP = render.SDL_TextureAddressMode.SDL_TEXTURE_ADDRESS_CLAMP;
 pub const SDL_TEXTURE_ADDRESS_WRAP = render.SDL_TextureAddressMode.SDL_TEXTURE_ADDRESS_WRAP;
 pub const SDL_Colorspace = render.SDL_Colorspace;
-
-// Re-export texture creation property constants
 pub const SDL_PROP_TEXTURE_CREATE_FORMAT_NUMBER = render.SDL_PROP_TEXTURE_CREATE_FORMAT_NUMBER;
 pub const SDL_PROP_TEXTURE_CREATE_ACCESS_NUMBER = render.SDL_PROP_TEXTURE_CREATE_ACCESS_NUMBER;
 pub const SDL_PROP_TEXTURE_CREATE_WIDTH_NUMBER = render.SDL_PROP_TEXTURE_CREATE_WIDTH_NUMBER;
 pub const SDL_PROP_TEXTURE_CREATE_HEIGHT_NUMBER = render.SDL_PROP_TEXTURE_CREATE_HEIGHT_NUMBER;
 pub const SDL_PROP_TEXTURE_CREATE_COLORSPACE_NUMBER = render.SDL_PROP_TEXTURE_CREATE_COLORSPACE_NUMBER;
 
-// Re-export render functions
-pub const createRenderer = render.createRenderer;
-pub const createRendererWithProperties = render.createRendererWithProperties;
-pub const createSoftwareRenderer = render.createSoftwareRenderer;
-pub const createWindowAndRenderer = render.createWindowAndRenderer;
-pub const destroyRenderer = render.destroyRenderer;
-pub const renderClear = render.renderClear;
-pub const renderPresent = render.renderPresent;
-pub const setRenderDrawColor = render.setRenderDrawColor;
-pub const setRenderDrawColorFloat = render.setRenderDrawColorFloat;
-pub const renderPoint = render.renderPoint;
-pub const renderLine = render.renderLine;
-pub const renderFillRect = render.renderFillRect;
-pub const createTexture = render.createTexture;
-pub const createTextureWithProperties = render.createTextureWithProperties;
-pub const destroyTexture = render.destroyTexture;
-pub const updateTexture = render.updateTexture;
-pub const renderTexture = render.renderTexture;
-pub const renderTextureRotated = render.renderTextureRotated;
-pub const renderGeometry = render.renderGeometry;
-pub const renderCoordinatesFromWindow = render.renderCoordinatesFromWindow;
-pub const renderCoordinatesToWindow = render.renderCoordinatesToWindow;
-pub const getDefaultTextureScaleMode = render.getDefaultTextureScaleMode;
-pub const setDefaultTextureScaleMode = render.setDefaultTextureScaleMode;
-pub const getRenderTextureAddressMode = render.getRenderTextureAddressMode;
-pub const setRenderTextureAddressMode = render.setRenderTextureAddressMode;
-pub const getTextureProperties = render.getTextureProperties;
-pub const renderViewportSet = render.renderViewportSet;
-pub const setRenderColorScale = render.setRenderColorScale;
-pub const getRenderColorScale = render.getRenderColorScale;
-
-// Renderer properties
-pub const getNumRenderDrivers = render.getNumRenderDrivers;
-pub const getRenderDriver = render.getRenderDriver;
-pub const getRendererName = render.getRendererName;
-pub const getRendererProperties = render.getRendererProperties;
-pub const getRenderOutputSize = render.getRenderOutputSize;
-pub const getCurrentRenderOutputSize = render.getCurrentRenderOutputSize;
-pub const getRenderViewport = render.getRenderViewport;
-pub const setRenderViewport = render.setRenderViewport;
-pub const getRenderSafeArea = render.getRenderSafeArea;
-pub const getRenderWindow = render.getRenderWindow;
-pub const getRendererFromTexture = render.getRendererFromTexture;
-
-// Draw operations
-pub const renderPoints = render.renderPoints;
-pub const renderLines = render.renderLines;
-pub const renderRect = render.renderRect;
-pub const renderRects = render.renderRects;
-pub const renderFillRects = render.renderFillRects;
-
-// Target rendering
-pub const setRenderTarget = render.setRenderTarget;
-pub const getRenderTarget = render.getRenderTarget;
-
-// Color and blend
-pub const getRenderDrawColor = render.getRenderDrawColor;
-pub const setRenderScale = render.setRenderScale;
-pub const getRenderScale = render.getRenderScale;
-pub const getRenderDrawBlendMode = render.getRenderDrawBlendMode;
-pub const setRenderDrawBlendMode = render.setRenderDrawBlendMode;
-
-// Texture operations
-pub const createTextureFromSurface = render.createTextureFromSurface;
-pub const queryTexture = render.queryTexture;
-pub const lockTexture = render.lockTexture;
-pub const unlockTexture = render.unlockTexture;
-pub const setTextureColorMod = render.setTextureColorMod;
-pub const setTextureColorModFloat = render.setTextureColorModFloat;
-pub const getTextureColorMod = render.getTextureColorMod;
-pub const getTextureColorModFloat = render.getTextureColorModFloat;
-pub const setTextureAlphaMod = render.setTextureAlphaMod;
-pub const setTextureAlphaModFloat = render.setTextureAlphaModFloat;
-pub const getTextureAlphaMod = render.getTextureAlphaMod;
-pub const getTextureAlphaModFloat = render.getTextureAlphaModFloat;
-pub const setTextureBlendMode = render.setTextureBlendMode;
-pub const getTextureBlendMode = render.getTextureBlendMode;
-pub const setTextureScaleMode = render.setTextureScaleMode;
-pub const getTextureScaleMode = render.getTextureScaleMode;
-
-// Clipping
-pub const setRenderClipRect = render.setRenderClipRect;
-pub const getRenderClipRect = render.getRenderClipRect;
-pub const renderClipEnabled = render.renderClipEnabled;
-
-// Logical presentation
-pub const setRenderLogicalPresentation = render.setRenderLogicalPresentation;
-pub const getRenderLogicalPresentation = render.getRenderLogicalPresentation;
-pub const setRenderLogicalSize = render.setRenderLogicalSize;
-pub const getRenderLogicalSize = render.getRenderLogicalSize;
-
-// Debug
-pub const renderDebugText = render.renderDebugText;
-pub const renderDebugTextFormat = render.renderDebugTextFormat;
-pub const renderGeometryRaw = render.renderGeometryRaw;
-pub const renderReadPixels = render.renderReadPixels;
-pub const renderFlush = render.renderFlush;
-pub const textureSize = render.textureSize;
-pub const getRenderVSync = render.getRenderVSync;
-pub const setRenderVSync = render.setRenderVSync;
-
-// Re-export audio types and functions
 pub const SDL_AudioSpec = audio.SDL_AudioSpec;
 pub const SDL_AudioDeviceID = audio.SDL_AudioDeviceID;
 pub const SDL_AudioStream = audio.SDL_AudioStream;
@@ -650,249 +224,35 @@ pub const SDL_AUDIO_S32LE = audio.SDL_AUDIO_S32LE;
 pub const SDL_AUDIO_S32BE = audio.SDL_AUDIO_S32BE;
 pub const SDL_AUDIO_F32LE = audio.SDL_AUDIO_F32LE;
 pub const SDL_AUDIO_F32BE = audio.SDL_AUDIO_F32BE;
-pub const openAudioDevice = audio.openAudioDevice;
-pub const closeAudioDevice = audio.closeAudioDevice;
-pub const pauseAudioDevice = audio.pauseAudioDevice;
-pub const getAudioDeviceName = audio.getAudioDeviceName;
-pub const getNumAudioDrivers = audio.getNumAudioDrivers;
-pub const getAudioDriver = audio.getAudioDriver;
-pub const getCurrentAudioDriver = audio.getCurrentAudioDriver;
-pub const getAudioPlaybackDevices = audio.getAudioPlaybackDevices;
-pub const getAudioRecordingDevices = audio.getAudioRecordingDevices;
-pub const getAudioDeviceFormat = audio.getAudioDeviceFormat;
-pub const resumeAudioDevice = audio.resumeAudioDevice;
-pub const audioDevicePaused = audio.audioDevicePaused;
-pub const clearAudioStream = audio.clearAudioStream;
-pub const createAudioStream = audio.createAudioStream;
-pub const destroyAudioStream = audio.destroyAudioStream;
-pub const getAudioStreamData = audio.getAudioStreamData;
-pub const getAudioStreamDevice = audio.getAudioStreamDevice;
-pub const getAudioStreamFormat = audio.getAudioStreamFormat;
-pub const getAudioStreamProperties = audio.getAudioStreamProperties;
-pub const getAudioStreamQueued = audio.getAudioStreamQueued;
-pub const lockAudioStream = audio.lockAudioStream;
-pub const openAudioDeviceStream = audio.openAudioDeviceStream;
-pub const putAudioStreamData = audio.putAudioStreamData;
-pub const setAudioStreamFormat = audio.setAudioStreamFormat;
-pub const setAudioStreamGetCallback = audio.setAudioStreamGetCallback;
-pub const setAudioStreamPutCallback = audio.setAudioStreamPutCallback;
-pub const unlockAudioStream = audio.unlockAudioStream;
-pub const flushAudioStream = audio.flushAudioStream;
-pub const bindAudioStream = audio.bindAudioStream;
-pub const bindAudioStreams = audio.bindAudioStreams;
-pub const unbindAudioStream = audio.unbindAudioStream;
-pub const unbindAudioStreams = audio.unbindAudioStreams;
-pub const convertAudioSamples = audio.convertAudioSamples;
-pub const getAudioFormatName = audio.getAudioFormatName;
-pub const getSilenceValueForFormat = audio.getSilenceValueForFormat;
-pub const mixAudio = audio.mixAudio;
-pub const queueAudio = audio.queueAudio;
-pub const dequeueAudio = audio.dequeueAudio;
-pub const getQueuedAudioSize = audio.getQueuedAudioSize;
-pub const clearQueuedAudio = audio.clearQueuedAudio;
-pub const getAudioStreamGain = audio.getAudioStreamGain;
-pub const setAudioStreamGain = audio.setAudioStreamGain;
-pub const loadWAV_IO = audio.loadWAV_IO;
-pub const loadWAV = audio.loadWAV;
-pub const getAudioDeviceGain = audio.getAudioDeviceGain;
-pub const setAudioDeviceGain = audio.setAudioDeviceGain;
-pub const getAudioStreamFrequencyRatio = audio.getAudioStreamFrequencyRatio;
-pub const setAudioStreamFrequencyRatio = audio.setAudioStreamFrequencyRatio;
-pub const getAudioStreamInputChannelMap = audio.getAudioStreamInputChannelMap;
-pub const getAudioStreamOutputChannelMap = audio.getAudioStreamOutputChannelMap;
-pub const setAudioStreamInputChannelMap = audio.setAudioStreamInputChannelMap;
-pub const setAudioStreamOutputChannelMap = audio.setAudioStreamOutputChannelMap;
-pub const getAudioStreamAvailable = audio.getAudioStreamAvailable;
-pub const pauseAudioStreamDevice = audio.pauseAudioStreamDevice;
-pub const resumeAudioStreamDevice = audio.resumeAudioStreamDevice;
-pub const audioStreamDevicePaused = audio.audioStreamDevicePaused;
 
-// Re-export time types and functions
 pub const SDL_TimerID = time.SDL_TimerID;
 pub const SDL_TimerCallback = time.SDL_TimerCallback;
 pub const SDL_DateTime = time.SDL_DateTime;
-pub const getTicks = time.getTicks;
-pub const getTicksNS = time.getTicksNS;
-pub const delay = time.delay;
-pub const addTimer = time.addTimer;
-pub const removeTimer = time.removeTimer;
-pub const getPerformanceCounter = time.getPerformanceCounter;
-pub const getPerformanceFrequency = time.getPerformanceFrequency;
-pub const getCurrentTime = time.getCurrentTime;
-pub const timeToDateTime = time.timeToDateTime;
-pub const dateTimeToTime = time.dateTimeToTime;
 
-// Re-export thread types and functions
 pub const SDL_Condition = threads.SDL_Condition;
 pub const SDL_Semaphore = threads.SDL_Semaphore;
-pub const createThread = threads.createThread;
-pub const waitThread = threads.waitThread;
-pub const createMutex = threads.createMutex;
-pub const destroyMutex = threads.destroyMutex;
-pub const lockMutex = threads.lockMutex;
-pub const unlockMutex = threads.unlockMutex;
-pub const tryLockMutex = threads.tryLockMutex;
-pub const createCondition = threads.createCondition;
-pub const destroyCondition = threads.destroyCondition;
-pub const signalCondition = threads.signalCondition;
-pub const broadcastCondition = threads.broadcastCondition;
-pub const waitCondition = threads.waitCondition;
-pub const waitConditionTimeout = threads.waitConditionTimeout;
-pub const createSemaphore = threads.createSemaphore;
-pub const destroySemaphore = threads.destroySemaphore;
-pub const semWait = threads.semWait;
-pub const semTryWait = threads.semTryWait;
-pub const semWaitTimeout = threads.semWaitTimeout;
-pub const semPost = threads.semPost;
-pub const semValue = threads.semValue;
-pub const getThreadName = threads.getThreadName;
-pub const setThreadPriority = threads.setThreadPriority;
-pub const getCurrentThreadID = threads.getCurrentThreadID;
-pub const detachThread = threads.detachThread;
-pub const getThreadID = threads.getThreadID;
 
-// Re-export filesystem functions
-pub const getBasePath = filesystem.getBasePath;
-pub const ioFromFile = filesystem.ioFromFile;
-pub const closeIO = filesystem.closeIO;
-pub const readIO = filesystem.readIO;
-pub const writeIO = filesystem.writeIO;
-pub const seekIO = filesystem.seekIO;
-pub const tellIO = filesystem.tellIO;
-pub const getIOSize = filesystem.getIOSize;
-pub const flushIO = filesystem.flushIO;
-pub const loadFile = filesystem.loadFile;
-pub const saveFile = filesystem.saveFile;
-pub const readU8 = filesystem.readU8;
-pub const readS8 = filesystem.readS8;
-pub const readU16LE = filesystem.readU16LE;
-pub const readS16LE = filesystem.readS16LE;
-pub const readU16BE = filesystem.readU16BE;
-pub const readS16BE = filesystem.readS16BE;
-pub const readU32LE = filesystem.readU32LE;
-pub const readS32LE = filesystem.readS32LE;
-pub const readU32BE = filesystem.readU32BE;
-pub const readS32BE = filesystem.readS32BE;
-pub const readU64LE = filesystem.readU64LE;
-pub const readS64LE = filesystem.readS64LE;
-pub const readU64BE = filesystem.readU64BE;
-pub const readS64BE = filesystem.readS64BE;
-pub const writeU8 = filesystem.writeU8;
-pub const writeS8 = filesystem.writeS8;
-pub const writeU16LE = filesystem.writeU16LE;
-pub const writeS16LE = filesystem.writeS16LE;
-pub const writeU16BE = filesystem.writeU16BE;
-pub const writeS16BE = filesystem.writeS16BE;
-pub const writeU32LE = filesystem.writeU32LE;
-pub const writeS32LE = filesystem.writeS32LE;
-pub const writeU32BE = filesystem.writeU32BE;
-pub const writeS32BE = filesystem.writeS32BE;
-pub const writeU64LE = filesystem.writeU64LE;
-pub const writeS64LE = filesystem.writeS64LE;
-pub const writeU64BE = filesystem.writeU64BE;
-pub const writeS64BE = filesystem.writeS64BE;
-pub const ioFromConstMem = filesystem.ioFromConstMem;
-pub const ioFromMem = filesystem.ioFromMem;
-pub const ioFromDynamicMem = filesystem.ioFromDynamicMem;
-pub const getIOProperties = filesystem.getIOProperties;
-pub const getIOStatus = filesystem.getIOStatus;
-
-// Re-export hints types and functions
 pub const SDL_HintPriority = hints.SDL_HintPriority;
-pub const setHint = hints.setHint;
-pub const getHint = hints.getHint;
-pub const setHintWithPriority = hints.setHintWithPriority;
-pub const resetHint = hints.resetHint;
-pub const addHintCallback = hints.addHintCallback;
-pub const removeHintCallback = hints.removeHintCallback;
-pub const delHintCallback = hints.delHintCallback;
-pub const getHintBoolean = hints.getHintBoolean;
-
-// Re-export properties types and functions
 pub const SDL_PropertyType = properties.SDL_PropertyType;
-pub const createProperties = properties.createProperties;
-pub const destroyProperties = properties.destroyProperties;
-pub const setProperty = properties.setProperty;
-pub const setStringProperty = properties.setStringProperty;
-pub const setNumberProperty = properties.setNumberProperty;
-pub const setFloatProperty = properties.setFloatProperty;
-pub const setBooleanProperty = properties.setBooleanProperty;
-pub const getProperty = properties.getProperty;
-pub const getStringProperty = properties.getStringProperty;
-pub const getNumberProperty = properties.getNumberProperty;
-pub const getFloatProperty = properties.getFloatProperty;
-pub const getBooleanProperty = properties.getBooleanProperty;
-pub const getPropertyType = properties.getPropertyType;
-pub const propertyIterator = properties.propertyIterator;
-pub const clearProperty = properties.clearProperty;
-pub const enumerateProperties = properties.enumerateProperties;
-pub const lockProperties = properties.lockProperties;
-pub const unlockProperties = properties.unlockProperties;
-pub const hasProperty = properties.hasProperty;
-pub const copyProperties = properties.copyProperties;
-pub const getGlobalProperties = properties.getGlobalProperties;
-
-// Re-export log types and functions
 pub const SDL_LogPriority = log.SDL_LogPriority;
-pub const SDL_LOG_PRIORITY_VERBOSE = 1;
-pub const SDL_LOG_PRIORITY_DEBUG = 2;
-pub const SDL_LOG_PRIORITY_INFO = 3;
-pub const SDL_LOG_PRIORITY_WARN = 4;
-pub const SDL_LOG_PRIORITY_ERROR = 5;
-pub const SDL_LOG_PRIORITY_CRITICAL = 6;
 pub const SDL_LogCategory = log.SDL_LogCategory;
-pub const SDL_LOG_CATEGORY_APPLICATION = 0;
-pub const SDL_LOG_CATEGORY_ERROR = 1;
-pub const SDL_LOG_CATEGORY_ASSERT = 2;
-pub const SDL_LOG_CATEGORY_SYSTEM = 3;
-pub const SDL_LOG_CATEGORY_AUDIO = 4;
-pub const SDL_LOG_CATEGORY_VIDEO = 5;
-pub const SDL_LOG_CATEGORY_RENDER = 6;
-pub const SDL_LOG_CATEGORY_INPUT = 7;
-pub const SDL_LOG_CATEGORY_TEST = 8;
-pub const SDL_LOG_CATEGORY_GPU = 9;
-pub const setLogPriorities = log.setLogPriorities;
-pub const setLogPriority = log.setLogPriority;
-pub const getLogPriority = log.getLogPriority;
-pub const resetLogPriorities = log.resetLogPriorities;
-pub const sdlLog = log.log;
-pub const logVerbose = log.logVerbose;
-pub const logDebug = log.logDebug;
-pub const logInfo = log.logInfo;
-pub const logWarn = log.logWarn;
-pub const logError = log.logError;
-pub const logCritical = log.logCritical;
-pub const logMessage = log.logMessage;
-pub const setLogOutputFunction = log.setLogOutputFunction;
-pub const getLogOutputFunction = log.getLogOutputFunction;
-pub const setLogPriorityPrefix = log.setLogPriorityPrefix;
+pub const SDL_LOG_CATEGORY_APPLICATION = @intFromEnum(log.SDL_LogCategory.SDL_LOG_CATEGORY_APPLICATION);
+pub const SDL_LOG_CATEGORY_ERROR = @intFromEnum(log.SDL_LogCategory.SDL_LOG_CATEGORY_ERROR);
+pub const SDL_LOG_CATEGORY_ASSERT = @intFromEnum(log.SDL_LogCategory.SDL_LOG_CATEGORY_ASSERT);
+pub const SDL_LOG_CATEGORY_SYSTEM = @intFromEnum(log.SDL_LogCategory.SDL_LOG_CATEGORY_SYSTEM);
+pub const SDL_LOG_CATEGORY_AUDIO = @intFromEnum(log.SDL_LogCategory.SDL_LOG_CATEGORY_AUDIO);
+pub const SDL_LOG_CATEGORY_VIDEO = @intFromEnum(log.SDL_LogCategory.SDL_LOG_CATEGORY_VIDEO);
+pub const SDL_LOG_CATEGORY_RENDER = @intFromEnum(log.SDL_LogCategory.SDL_LOG_CATEGORY_RENDER);
+pub const SDL_LOG_CATEGORY_INPUT = @intFromEnum(log.SDL_LogCategory.SDL_LOG_CATEGORY_INPUT);
+pub const SDL_LOG_CATEGORY_TEST = @intFromEnum(log.SDL_LogCategory.SDL_LOG_CATEGORY_TEST);
+pub const SDL_LOG_CATEGORY_GPU = @intFromEnum(log.SDL_LogCategory.SDL_LOG_CATEGORY_GPU);
+pub const SDL_LOG_PRIORITY_VERBOSE = @intFromEnum(log.SDL_LogPriority.SDL_LOG_PRIORITY_VERBOSE);
+pub const SDL_LOG_PRIORITY_DEBUG = @intFromEnum(log.SDL_LogPriority.SDL_LOG_PRIORITY_DEBUG);
+pub const SDL_LOG_PRIORITY_INFO = @intFromEnum(log.SDL_LogPriority.SDL_LOG_PRIORITY_INFO);
+pub const SDL_LOG_PRIORITY_WARN = @intFromEnum(log.SDL_LogPriority.SDL_LOG_PRIORITY_WARN);
+pub const SDL_LOG_PRIORITY_ERROR = @intFromEnum(log.SDL_LogPriority.SDL_LOG_PRIORITY_ERROR);
+pub const SDL_LOG_PRIORITY_CRITICAL = @intFromEnum(log.SDL_LogPriority.SDL_LOG_PRIORITY_CRITICAL);
 
-// Re-export clipboard functions
-pub const setClipboardText = clipboard.setClipboardText;
-pub const getClipboardText = clipboard.getClipboardText;
-pub const hasClipboardText = clipboard.hasClipboardText;
-pub const setPrimarySelectionText = clipboard.setPrimarySelectionText;
-pub const getPrimarySelectionText = clipboard.getPrimarySelectionText;
-pub const hasPrimarySelectionText = clipboard.hasPrimarySelectionText;
-pub const clearClipboardData = clipboard.clearClipboardData;
-
-// Re-export platform functions
-pub const getPlatform = platform.getPlatform;
-
-// Re-export power types and functions
-pub const SDL_PowerState = power.SDL_PowerState;
-pub const getPowerInfo = power.getPowerInfo;
-
-// Re-export system functions
-pub const getSystemRAM = system.getSystemRAM;
-pub const getSIMDAlignment = system.getSIMDAlignment;
-
-// Re-export all keycode types and constants
-pub const SDL_Keycode = keycode.SDL_Keycode;
-pub const SDL_Scancode = keycode.SDL_Scancode;
-pub const SDL_Keymod = core.SDL_Keymod;
-
-// Re-export scancode constants
 pub const SDL_SCANCODE_UNKNOWN = keycode.SDL_SCANCODE_UNKNOWN;
 pub const SDL_SCANCODE_A = keycode.SDL_SCANCODE_A;
 pub const SDL_SCANCODE_B = keycode.SDL_SCANCODE_B;
@@ -920,7 +280,6 @@ pub const SDL_SCANCODE_W = keycode.SDL_SCANCODE_W;
 pub const SDL_SCANCODE_X = keycode.SDL_SCANCODE_X;
 pub const SDL_SCANCODE_Y = keycode.SDL_SCANCODE_Y;
 pub const SDL_SCANCODE_Z = keycode.SDL_SCANCODE_Z;
-
 pub const SDL_SCANCODE_1 = keycode.SDL_SCANCODE_1;
 pub const SDL_SCANCODE_2 = keycode.SDL_SCANCODE_2;
 pub const SDL_SCANCODE_3 = keycode.SDL_SCANCODE_3;
@@ -931,7 +290,6 @@ pub const SDL_SCANCODE_7 = keycode.SDL_SCANCODE_7;
 pub const SDL_SCANCODE_8 = keycode.SDL_SCANCODE_8;
 pub const SDL_SCANCODE_9 = keycode.SDL_SCANCODE_9;
 pub const SDL_SCANCODE_0 = keycode.SDL_SCANCODE_0;
-
 pub const SDL_SCANCODE_RETURN = keycode.SDL_SCANCODE_RETURN;
 pub const SDL_SCANCODE_ESCAPE = keycode.SDL_SCANCODE_ESCAPE;
 pub const SDL_SCANCODE_BACKSPACE = keycode.SDL_SCANCODE_BACKSPACE;
@@ -950,7 +308,6 @@ pub const SDL_SCANCODE_F9 = keycode.SDL_SCANCODE_F9;
 pub const SDL_SCANCODE_F10 = keycode.SDL_SCANCODE_F10;
 pub const SDL_SCANCODE_F11 = keycode.SDL_SCANCODE_F11;
 pub const SDL_SCANCODE_F12 = keycode.SDL_SCANCODE_F12;
-
 pub const SDL_SCANCODE_PRINTSCREEN = keycode.SDL_SCANCODE_PRINTSCREEN;
 pub const SDL_SCANCODE_SCROLLLOCK = keycode.SDL_SCANCODE_SCROLLLOCK;
 pub const SDL_SCANCODE_PAUSE = keycode.SDL_SCANCODE_PAUSE;
@@ -965,12 +322,10 @@ pub const SDL_SCANCODE_LEFT = keycode.SDL_SCANCODE_LEFT;
 pub const SDL_SCANCODE_DOWN = keycode.SDL_SCANCODE_DOWN;
 pub const SDL_SCANCODE_UP = keycode.SDL_SCANCODE_UP;
 
-// Re-export keycode constants
 pub const SDLK_UNKNOWN = keycode.SDLK_UNKNOWN;
 pub const SDLK_SCANCODE_MASK = keycode.SDLK_SCANCODE_MASK;
 pub const SDLK_EXTENDED_MASK = keycode.SDLK_EXTENDED_MASK;
 pub const SDL_SCANCODE_TO_KEYCODE = keycode.SDL_SCANCODE_TO_KEYCODE;
-
 pub const SDLK_RETURN = keycode.SDLK_RETURN;
 pub const SDLK_ESCAPE = keycode.SDLK_ESCAPE;
 pub const SDLK_BACKSPACE = keycode.SDLK_BACKSPACE;
@@ -1014,7 +369,6 @@ pub const SDLK_RIGHTBRACKET = keycode.SDLK_RIGHTBRACKET;
 pub const SDLK_CARET = keycode.SDLK_CARET;
 pub const SDLK_UNDERSCORE = keycode.SDLK_UNDERSCORE;
 pub const SDLK_BACKQUOTE = keycode.SDLK_BACKQUOTE;
-
 pub const SDLK_a = keycode.SDLK_a;
 pub const SDLK_b = keycode.SDLK_b;
 pub const SDLK_c = keycode.SDLK_c;
@@ -1041,8 +395,8 @@ pub const SDLK_w = keycode.SDLK_w;
 pub const SDLK_x = keycode.SDLK_x;
 pub const SDLK_y = keycode.SDLK_y;
 pub const SDLK_z = keycode.SDLK_z;
-
-// Function keys
+pub const SDLK_DELETE = keycode.SDLK_DELETE;
+pub const SDLK_CAPSLOCK = keycode.SDLK_CAPSLOCK;
 pub const SDLK_F1 = keycode.SDLK_F1;
 pub const SDLK_F2 = keycode.SDLK_F2;
 pub const SDLK_F3 = keycode.SDLK_F3;
@@ -1055,388 +409,136 @@ pub const SDLK_F9 = keycode.SDLK_F9;
 pub const SDLK_F10 = keycode.SDLK_F10;
 pub const SDLK_F11 = keycode.SDLK_F11;
 pub const SDLK_F12 = keycode.SDLK_F12;
-
-// Arrow keys
+pub const SDLK_PRINTSCREEN = keycode.SDLK_PRINTSCREEN;
+pub const SDLK_SCROLLLOCK = keycode.SDLK_SCROLLLOCK;
+pub const SDLK_PAUSE = keycode.SDLK_PAUSE;
+pub const SDLK_INSERT = keycode.SDLK_INSERT;
+pub const SDLK_HOME = keycode.SDLK_HOME;
+pub const SDLK_PAGEUP = keycode.SDLK_PAGEUP;
+pub const SDLK_END = keycode.SDLK_END;
+pub const SDLK_PAGEDOWN = keycode.SDLK_PAGEDOWN;
 pub const SDLK_RIGHT = keycode.SDLK_RIGHT;
 pub const SDLK_LEFT = keycode.SDLK_LEFT;
 pub const SDLK_DOWN = keycode.SDLK_DOWN;
 pub const SDLK_UP = keycode.SDLK_UP;
+pub const SDLK_NUMLOCKCLEAR = keycode.SDLK_NUMLOCKCLEAR;
+pub const SDLK_KP_DIVIDE = keycode.SDLK_KP_DIVIDE;
+pub const SDLK_KP_MULTIPLY = keycode.SDLK_KP_MULTIPLY;
+pub const SDLK_KP_MINUS = keycode.SDLK_KP_MINUS;
+pub const SDLK_KP_PLUS = keycode.SDLK_KP_PLUS;
+pub const SDLK_KP_ENTER = keycode.SDLK_KP_ENTER;
+pub const SDLK_KP_1 = keycode.SDLK_KP_1;
+pub const SDLK_KP_2 = keycode.SDLK_KP_2;
+pub const SDLK_KP_3 = keycode.SDLK_KP_3;
+pub const SDLK_KP_4 = keycode.SDLK_KP_4;
+pub const SDLK_KP_5 = keycode.SDLK_KP_5;
+pub const SDLK_KP_6 = keycode.SDLK_KP_6;
+pub const SDLK_KP_7 = keycode.SDLK_KP_7;
+pub const SDLK_KP_8 = keycode.SDLK_KP_8;
+pub const SDLK_KP_9 = keycode.SDLK_KP_9;
+pub const SDLK_KP_0 = keycode.SDLK_KP_0;
+pub const SDLK_KP_PERIOD = keycode.SDLK_KP_PERIOD;
+pub const SDLK_KP_COMMA = keycode.SDLK_KP_COMMA;
+pub const SDLK_KP_EQUALS = keycode.SDLK_KP_EQUALS;
+pub const SDLK_KP_LEFTPAREN = keycode.SDLK_KP_LEFTPAREN;
+pub const SDLK_KP_RIGHTPAREN = keycode.SDLK_KP_RIGHTPAREN;
+pub const SDLK_APPLICATION = keycode.SDLK_APPLICATION;
+pub const SDLK_POWER = keycode.SDLK_POWER;
+pub const SDLK_KP_EQUALSAS400 = keycode.SDLK_KP_EQUALSAS400;
+pub const SDLK_CURRENCYUNIT = keycode.SDLK_CURRENCYUNIT;
+pub const SDLK_CURRENCYSUBUNIT = keycode.SDLK_CURRENCYSUBUNIT;
 
-// Modifier constants
-pub const KMOD_NONE = keycode.KMOD_NONE;
-pub const KMOD_LSHIFT = keycode.KMOD_LSHIFT;
-pub const KMOD_RSHIFT = keycode.KMOD_RSHIFT;
-pub const KMOD_SHIFT = keycode.KMOD_SHIFT;
-pub const KMOD_LCTRL = keycode.KMOD_LCTRL;
-pub const KMOD_RCTRL = keycode.KMOD_RCTRL;
-pub const KMOD_CTRL = keycode.KMOD_CTRL;
-pub const KMOD_LALT = keycode.KMOD_LALT;
-pub const KMOD_RALT = keycode.KMOD_RALT;
-pub const KMOD_ALT = keycode.KMOD_ALT;
-pub const KMOD_LGUI = keycode.KMOD_LGUI;
-pub const KMOD_RGUI = keycode.KMOD_RGUI;
-pub const KMOD_GUI = keycode.KMOD_GUI;
-pub const KMOD_NUM = keycode.KMOD_NUM;
-pub const KMOD_CAPS = keycode.KMOD_CAPS;
-pub const KMOD_MODE = keycode.KMOD_MODE;
-pub const KMOD_SCROLL = keycode.KMOD_SCROLL;
+pub const SDL_EventAction = events.SDL_EventAction;
+pub const SDL_WindowEvent = events.SDL_WindowEvent;
+pub const SDL_DisplayEvent = events.SDL_DisplayEvent;
+pub const SDL_KeyboardDeviceEvent = events.SDL_KeyboardDeviceEvent;
+pub const SDL_MouseButtonEvent = events.SDL_MouseButtonEvent;
+pub const SDL_MouseWheelEvent = events.SDL_MouseWheelEvent;
+pub const SDL_JoystickDeviceEvent = events.SDL_JoyDeviceEvent;
+pub const SDL_JoystickButtonEvent = events.SDL_JoyButtonEvent;
+pub const SDL_JoystickHatEvent = events.SDL_JoyHatEvent;
+pub const SDL_JoystickAxisEvent = events.SDL_JoyAxisEvent;
+pub const SDL_GamepadDeviceEvent = events.SDL_GamepadDeviceEvent;
+pub const SDL_GamepadButtonEvent = events.SDL_GamepadButtonEvent;
+pub const SDL_GamepadAxisEvent = events.SDL_GamepadAxisEvent;
+pub const SDL_TouchFingerEvent = events.SDL_TouchFingerEvent;
+pub const SDL_GestureEvent = events.SDL_GestureEvent;
+pub const SDL_DropEvent = events.SDL_DropEvent;
+pub const SDL_AudioDeviceEvent = events.SDL_AudioDeviceEvent;
+pub const SDL_CameraDeviceEvent = events.SDL_CameraDeviceEvent;
+pub const SDL_SensorEvent = events.SDL_SensorEvent;
+pub const SDL_PenEvent = events.SDL_PenEvent;
+pub const SDL_PenAxisEvent = events.SDL_PenAxisEvent;
+pub const SDL_JoystickType = input.SDL_JoystickType;
+pub const SDL_GamepadType = input.SDL_GamepadType;
+pub const SDL_GamepadAxis = input.SDL_GamepadAxis;
+pub const SDL_GamepadButton = input.SDL_GamepadButton;
+pub const SDL_GamepadButtonLabel = input.SDL_GamepadButtonLabel;
+pub const SDL_GamepadBindingType = input.SDL_GamepadBindingType;
+pub const SDL_GamepadBinding = input.SDL_GamepadBinding;
+pub const SDL_SystemCursor = input.SDL_SystemCursor;
+pub const SDL_Joystick = input.SDL_Joystick;
+pub const SDL_Gamepad = input.SDL_Gamepad;
+pub const SDL_PowerState = power.SDL_PowerState;
+pub const SDL_PROP_APP_METADATA_NAME_STRING = core.SDL_PROP_APP_METADATA_NAME_STRING;
+pub const SDL_PROP_APP_METADATA_VERSION_STRING = core.SDL_PROP_APP_METADATA_VERSION_STRING;
+pub const SDL_PROP_APP_METADATA_IDENTIFIER_STRING = core.SDL_PROP_APP_METADATA_IDENTIFIER_STRING;
+pub const SDL_PROP_APP_METADATA_CREATOR_STRING = core.SDL_PROP_APP_METADATA_CREATOR_STRING;
+pub const SDL_PROP_APP_METADATA_COPYRIGHT_STRING = core.SDL_PROP_APP_METADATA_COPYRIGHT_STRING;
+pub const SDL_PROP_APP_METADATA_URL_STRING = core.SDL_PROP_APP_METADATA_URL_STRING;
+pub const SDL_PROP_APP_METADATA_TYPE_STRING = core.SDL_PROP_APP_METADATA_TYPE_STRING;
+pub const SDL_EVENT_TERMINATING = events.SDL_EVENT_TERMINATING;
+pub const SDL_EVENT_LOW_MEMORY = events.SDL_EVENT_LOW_MEMORY;
+pub const SDL_EVENT_WILL_ENTER_BACKGROUND = events.SDL_EVENT_WILL_ENTER_BACKGROUND;
+pub const SDL_EVENT_DID_ENTER_BACKGROUND = events.SDL_EVENT_DID_ENTER_BACKGROUND;
+pub const SDL_EVENT_WILL_ENTER_FOREGROUND = events.SDL_EVENT_WILL_ENTER_FOREGROUND;
+pub const SDL_EVENT_DID_ENTER_FOREGROUND = events.SDL_EVENT_DID_ENTER_FOREGROUND;
+pub const SDL_EVENT_WINDOW_SHOWN = events.SDL_EVENT_WINDOW_SHOWN;
+pub const SDL_EVENT_WINDOW_HIDDEN = events.SDL_EVENT_WINDOW_HIDDEN;
+pub const SDL_EVENT_WINDOW_EXPOSED = events.SDL_EVENT_WINDOW_EXPOSED;
+pub const SDL_EVENT_WINDOW_MOVED = events.SDL_EVENT_WINDOW_MOVED;
+pub const SDL_EVENT_WINDOW_RESIZED = events.SDL_EVENT_WINDOW_RESIZED;
+pub const SDL_EVENT_WINDOW_SIZE_CHANGED = events.SDL_EVENT_WINDOW_SIZE_CHANGED;
+pub const SDL_EVENT_WINDOW_MINIMIZED = events.SDL_EVENT_WINDOW_MINIMIZED;
+pub const SDL_EVENT_WINDOW_MAXIMIZED = events.SDL_EVENT_WINDOW_MAXIMIZED;
+pub const SDL_EVENT_WINDOW_RESTORED = events.SDL_EVENT_WINDOW_RESTORED;
+pub const SDL_EVENT_WINDOW_MOUSE_ENTER = events.SDL_EVENT_WINDOW_MOUSE_ENTER;
+pub const SDL_EVENT_WINDOW_MOUSE_LEAVE = events.SDL_EVENT_WINDOW_MOUSE_LEAVE;
+pub const SDL_EVENT_WINDOW_FOCUS_GAINED = events.SDL_EVENT_WINDOW_FOCUS_GAINED;
+pub const SDL_EVENT_WINDOW_FOCUS_LOST = events.SDL_EVENT_WINDOW_FOCUS_LOST;
+pub const SDL_EVENT_WINDOW_CLOSE_REQUESTED = events.SDL_EVENT_WINDOW_CLOSE_REQUESTED;
+pub const SDL_EVENT_WINDOW_TAKE_FOCUS = events.SDL_EVENT_WINDOW_TAKE_FOCUS;
+pub const SDL_EVENT_WINDOW_HIT_TEST = events.SDL_EVENT_WINDOW_HIT_TEST;
+pub const SDL_EVENT_WINDOW_ICCPROF_CHANGED = events.SDL_EVENT_WINDOW_ICCPROF_CHANGED;
+pub const SDL_EVENT_WINDOW_DISPLAY_CHANGED = events.SDL_EVENT_WINDOW_DISPLAY_CHANGED;
+pub const SDL_EVENT_WINDOW_DISPLAY_STATE_CHANGED = events.SDL_EVENT_WINDOW_DISPLAY_STATE_CHANGED;
+pub const SDL_EVENT_WINDOW_OCCLUDED = events.SDL_EVENT_WINDOW_OCCLUDED;
+pub const SDL_EVENT_WINDOW_ENTER_FULLSCREEN = events.SDL_EVENT_WINDOW_ENTER_FULLSCREEN;
+pub const SDL_EVENT_WINDOW_LEAVE_FULLSCREEN = events.SDL_EVENT_WINDOW_LEAVE_FULLSCREEN;
+pub const SDL_EVENT_WINDOW_DESTROYED = events.SDL_EVENT_WINDOW_DESTROYED;
+pub const SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED = events.SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED;
+pub const SDL_EVENT_TEXT_EDITING = events.SDL_EVENT_TEXT_EDITING;
+pub const SDL_EVENT_TEXT_INPUT = events.SDL_EVENT_TEXT_INPUT;
+pub const SDL_EVENT_KEYMAP_CHANGED = events.SDL_EVENT_KEYMAP_CHANGED;
 
-// Re-export mouse button constants
-pub const SDL_BUTTON_LEFT = keycode.SDL_BUTTON_LEFT;
-pub const SDL_BUTTON_MIDDLE = keycode.SDL_BUTTON_MIDDLE;
-pub const SDL_BUTTON_RIGHT = keycode.SDL_BUTTON_RIGHT;
-pub const SDL_BUTTON_X1 = keycode.SDL_BUTTON_X1;
-pub const SDL_BUTTON_X2 = keycode.SDL_BUTTON_X2;
-pub const SDL_BUTTON_LMASK = keycode.SDL_BUTTON_LMASK;
-pub const SDL_BUTTON_MMASK = keycode.SDL_BUTTON_MMASK;
-pub const SDL_BUTTON_RMASK = keycode.SDL_BUTTON_RMASK;
-pub const SDL_BUTTON_X1MASK = keycode.SDL_BUTTON_X1MASK;
-pub const SDL_BUTTON_X2MASK = keycode.SDL_BUTTON_X2MASK;
-
-// Re-export keycode functions
-pub const getKeyFromName = keycode.getKeyFromName;
-pub const getKeyName = keycode.getKeyName;
-pub const getScancodeFromName = keycode.getScancodeFromName;
-pub const getScancodeName = keycode.getScancodeName;
-pub const setScancodeName = keycode.setScancodeName;
-
-// Re-export additional keycode functions (some are already exported from input module)
-pub const isPrintable = keycode.isPrintable;
-pub const isScancodeKeycode = keycode.isScancodeKeycode;
-pub const keycodeToScancode = keycode.keycodeToScancode;
-
-// Re-export locale types and functions
-pub const SDL_Locale = locale.SDL_Locale;
-pub const getPreferredLocales = locale.getPreferredLocales;
-
-// Re-export messagebox types and functions
-pub const SDL_MessageBoxFlags = messagebox.SDL_MessageBoxFlags;
-pub const SDL_MessageBoxButton = messagebox.SDL_MessageBoxButton;
-pub const SDL_MessageBoxColor = messagebox.SDL_MessageBoxColor;
-pub const SDL_MessageBoxColorScheme = messagebox.SDL_MessageBoxColorScheme;
-pub const SDL_MessageBoxData = messagebox.SDL_MessageBoxData;
-pub const SDL_MESSAGEBOX_INFORMATION = messagebox.SDL_MESSAGEBOX_INFORMATION;
-pub const SDL_MESSAGEBOX_WARNING = messagebox.SDL_MESSAGEBOX_WARNING;
-pub const SDL_MESSAGEBOX_ERROR = messagebox.SDL_MESSAGEBOX_ERROR;
-pub const showMessageBox = messagebox.showMessageBox;
-pub const showSimpleMessageBox = messagebox.showSimpleMessageBox;
-
-// Re-export misc functions
-pub const openURL = misc.openURL;
-pub const getDefaultLogOutputFunction = misc.getDefaultLogOutputFunction;
-pub const crc16 = misc.crc16;
-pub const crc32 = misc.crc32;
-pub const murmur3_32 = misc.murmur3_32;
-pub const getNumAllocations = misc.getNumAllocations;
-pub const getFullPath = misc.getFullPath;
-
-// Re-export Vulkan functions and types
-pub const vulkanLoadLibrary = vulkan.loadLibrary;
-pub const vulkanGetVkGetInstanceProcAddr = vulkan.getVkGetInstanceProcAddr;
-pub const vulkanUnloadLibrary = vulkan.unloadLibrary;
-pub const vulkanGetInstanceExtensions = vulkan.getInstanceExtensions;
-pub const vulkanCreateSurface = vulkan.createSurface;
-pub const vulkanDestroySurface = vulkan.destroySurface;
-pub const vulkanGetPresentationSupport = vulkan.getPresentationSupport;
-
-// Note: Vulkan types are now handled through SDL3's GPU system
-
-// Re-export Tray types and functions
-pub const SDL_Tray = tray.SDL_Tray;
-pub const SDL_TrayMenu = tray.SDL_TrayMenu;
-pub const SDL_TrayEntry = tray.SDL_TrayEntry;
-pub const createTray = tray.createTray;
-pub const setTrayIcon = tray.setTrayIcon;
-pub const setTrayTooltip = tray.setTrayTooltip;
-pub const createTrayMenu = tray.createTrayMenu;
-pub const destroyTray = tray.destroyTray;
-pub const updateTrays = tray.updateTrays;
-
-// Re-export HIDAPI types and functions
-pub const SDL_hid_device = hidapi.SDL_hid_device;
-pub const SDL_hid_device_info = hidapi.SDL_hid_device_info;
-pub const hid_init = hidapi.hid_init;
-pub const hid_exit = hidapi.hid_exit;
-pub const hid_enumerate = hidapi.hid_enumerate;
-pub const hid_free_enumeration = hidapi.hid_free_enumeration;
-pub const hid_open = hidapi.hid_open;
-pub const hid_open_path = hidapi.hid_open_path;
-pub const hid_write = hidapi.hid_write;
-pub const hid_read = hidapi.hid_read;
-pub const hid_close = hidapi.hid_close;
-
-// Re-export Storage types and functions
-pub const SDL_Storage = storage.SDL_Storage;
-pub const SDL_PathInfo = storage.SDL_PathInfo;
-pub const openTitleStorage = storage.openTitleStorage;
-pub const openUserStorage = storage.openUserStorage;
-pub const openFileStorage = storage.openFileStorage;
-pub const closeStorage = storage.closeStorage;
-pub const storageReady = storage.storageReady;
-pub const readStorageFile = storage.readStorageFile;
-pub const writeStorageFile = storage.writeStorageFile;
-
-// Re-export Assert types and functions
-pub const SDL_AssertState = assert.SDL_AssertState;
-pub const SDL_AssertData = assert.SDL_AssertData;
-pub const setAssertionHandler = assert.setAssertionHandler;
-pub const getAssertionHandler = assert.getAssertionHandler;
-pub const getAssertionReport = assert.getAssertionReport;
-pub const resetAssertionReport = assert.resetAssertionReport;
-
-// Re-export SharedObject types and functions
-pub const SDL_SharedObject = sharedobject.SDL_SharedObject;
-pub const loadObject = sharedobject.loadObject;
-pub const loadFunction = sharedobject.loadFunction;
-pub const unloadObject = sharedobject.unloadObject;
-
-// Re-export Haptic types and functions
-pub const SDL_Haptic = haptic.SDL_Haptic;
-pub const SDL_HapticEffect = haptic.SDL_HapticEffect;
-pub const SDL_HapticDirection = haptic.SDL_HapticDirection;
-pub const numHaptics = haptic.numHaptics;
-pub const hapticOpen = haptic.hapticOpen;
-pub const hapticClose = haptic.hapticClose;
-pub const hapticRumbleSupported = haptic.hapticRumbleSupported;
-pub const hapticRumblePlay = haptic.hapticRumblePlay;
-pub const hapticRumbleStop = haptic.hapticRumbleStop;
-
-// Re-export process types and functions
-pub const SDL_Process = process.SDL_Process;
-pub const SDL_ProcessIO = process.SDL_ProcessIO;
-pub const createProcess = process.createProcess;
-pub const getProcessInput = process.getProcessInput;
-pub const getProcessOutput = process.getProcessOutput;
-pub const getProcessError = process.getProcessError;
-pub const waitProcess = process.waitProcess;
-pub const killProcess = process.killProcess;
-pub const destroyProcess = process.destroyProcess;
-pub const createProcessWithProperties = process.createProcessWithProperties;
-pub const getProcessProperties = process.getProcessProperties;
-pub const readProcess = process.readProcess;
-
-// Re-export metal types and functions
-pub const SDL_MetalView = metal.SDL_MetalView;
-pub const metalLoadLibrary = metal.loadLibrary;
-pub const metalGetLibrary = metal.getLibrary;
-pub const metalUnloadLibrary = metal.unloadLibrary;
-pub const metalCreateView = metal.createView;
-pub const metalDestroyView = metal.destroyView;
-pub const metalGetLayer = metal.getLayer;
-pub const metalGetDrawableSize = metal.getDrawableSize;
-
-// Re-export sensor types and functions
-pub const SDL_SensorType = sensor.SDL_SensorType;
-pub const SDL_Sensor = sensor.SDL_Sensor;
-pub const getSensors = sensor.getSensors;
-pub const getSensorNameForID = sensor.getSensorNameForID;
-pub const getSensorTypeForID = sensor.getSensorTypeForID;
-pub const openSensor = sensor.openSensor;
-pub const closeSensor = sensor.closeSensor;
-pub const getSensorData = sensor.getSensorData;
-pub const updateSensors = sensor.updateSensors;
-
-// Re-export pen types and functions
-pub const SDL_PenAxis = pen.SDL_PenAxis;
-pub const SDL_Pen = pen.SDL_Pen;
-pub const getPens = pen.getPens;
-pub const getPenName = pen.getPenName;
-pub const getPenCapabilities = pen.getPenCapabilities;
-pub const getPenStatus = pen.getPenStatus;
-pub const penConnected = pen.penConnected;
-pub const getPenFromID = pen.getPenFromID;
-pub const getPenID = pen.getPenID;
-pub const penAxisSupported = pen.penAxisSupported;
-
-// Re-export touch types and functions
-pub const SDL_TouchID = touch.SDL_TouchID;
-pub const SDL_FingerID = touch.SDL_FingerID;
-pub const SDL_TouchDeviceType = touch.SDL_TouchDeviceType;
-pub const SDL_Finger = touch.SDL_Finger;
-pub const getTouchDevices = touch.getTouchDevices;
-pub const getTouchDeviceName = touch.getTouchDeviceName;
-pub const getTouchDeviceType = touch.getTouchDeviceType;
-pub const getTouchFingers = touch.getTouchFingers;
-
-// Re-export asyncio types and functions
-pub const SDL_AsyncIO = asyncio.SDL_AsyncIO;
-pub const SDL_AsyncIOQueue = asyncio.SDL_AsyncIOQueue;
-pub const SDL_AsyncIOTaskType = asyncio.SDL_AsyncIOTaskType;
-pub const SDL_AsyncIOResult = asyncio.SDL_AsyncIOResult;
-pub const SDL_AsyncIOOutcome = asyncio.SDL_AsyncIOOutcome;
-pub const asyncIOFromFile = asyncio.asyncIOFromFile;
-pub const readAsyncIO = asyncio.readAsyncIO;
-pub const writeAsyncIO = asyncio.writeAsyncIO;
-pub const closeAsyncIO = asyncio.closeAsyncIO;
-pub const createAsyncIOQueue = asyncio.createAsyncIOQueue;
-pub const getAsyncIOResult = asyncio.getAsyncIOResult;
-pub const waitAsyncIOResult = asyncio.waitAsyncIOResult;
-
-// Re-export atomic types and functions
-pub const SDL_SpinLock = atomic.SDL_SpinLock;
-pub const tryLockSpinlock = atomic.tryLockSpinlock;
-pub const lockSpinlock = atomic.lockSpinlock;
-pub const unlockSpinlock = atomic.unlockSpinlock;
-pub const atomicIncRef = atomic.atomicIncRef;
-pub const atomicDecRef = atomic.atomicDecRef;
-pub const memoryBarrierReleaseFunction = atomic.memoryBarrierReleaseFunction;
-pub const memoryBarrierAcquireFunction = atomic.memoryBarrierAcquireFunction;
-
-// Re-export bits functions
-pub const mostSignificantBitIndex32 = bits.mostSignificantBitIndex32;
-pub const hasExactlyOneBitSet32 = bits.hasExactlyOneBitSet32;
-
-// Re-export cpuinfo functions
-pub const getCPUCount = cpuinfo.getCPUCount;
-pub const getCPUCacheLineSize = cpuinfo.getCPUCacheLineSize;
-pub const hasAltiVec = cpuinfo.hasAltiVec;
-pub const hasMMX = cpuinfo.hasMMX;
-pub const hasSSE = cpuinfo.hasSSE;
-pub const hasSSE2 = cpuinfo.hasSSE2;
-pub const hasSSE3 = cpuinfo.hasSSE3;
-pub const hasSSE41 = cpuinfo.hasSSE41;
-pub const hasSSE42 = cpuinfo.hasSSE42;
-pub const hasAVX = cpuinfo.hasAVX;
-pub const hasAVX2 = cpuinfo.hasAVX2;
-pub const hasAVX512F = cpuinfo.hasAVX512F;
-pub const hasNEON = cpuinfo.hasNEON;
-pub const hasLSX = cpuinfo.hasLSX;
-pub const hasLASX = cpuinfo.hasLASX;
-pub const getSystemPageSize = cpuinfo.getSystemPageSize;
-
-// Re-export dialog types and functions
 pub const SDL_DialogFileCallback = dialog.SDL_DialogFileCallback;
 pub const SDL_DialogFileFilter = dialog.SDL_DialogFileFilter;
-pub const showOpenFileDialog = dialog.showOpenFileDialog;
-pub const showSaveFileDialog = dialog.showSaveFileDialog;
-pub const showOpenFolderDialog = dialog.showOpenFolderDialog;
-pub const showFileDialogWithProperties = dialog.showFileDialogWithProperties;
-
-// Re-export endian functions and constants
-pub const SDL_BYTEORDER = endian.SDL_BYTEORDER;
-pub const SDL_LIL_ENDIAN = endian.SDL_LIL_ENDIAN;
-pub const SDL_BIG_ENDIAN = endian.SDL_BIG_ENDIAN;
-pub const swap16 = endian.SDL_Swap16;
-pub const swap32 = endian.SDL_Swap32;
-pub const swap64 = endian.SDL_Swap64;
-pub const swapFloat = endian.SDL_SwapFloat;
-pub const swapLE16 = endian.SDL_SwapLE16;
-pub const swapLE32 = endian.SDL_SwapLE32;
-pub const swapLE64 = endian.SDL_SwapLE64;
-pub const swapBE16 = endian.SDL_SwapBE16;
-pub const swapBE32 = endian.SDL_SwapBE32;
-pub const swapBE64 = endian.SDL_SwapBE64;
-pub const swapFloatLE = endian.SDL_SwapFloatLE;
-pub const swapFloatBE = endian.SDL_SwapFloatBE;
-
-// Re-export guid types and functions
-pub const SDL_GUID = guid.SDL_GUID;
-pub const guidToString = guid.guidToString;
-pub const stringToGUID = guid.stringToGUID;
-
-// Re-export intrinsics functions
-pub const hasARMSIMD = intrinsics.hasARMSIMD;
-pub const hasARMSVE = intrinsics.hasARMSVE;
-
-// Constants
-pub const SDL_INIT_AUDIO = core.SDL_INIT_AUDIO;
-pub const SDL_INIT_VIDEO = core.SDL_INIT_VIDEO;
-pub const SDL_INIT_JOYSTICK = core.SDL_INIT_JOYSTICK;
-pub const SDL_INIT_HAPTIC = core.SDL_INIT_HAPTIC;
-pub const SDL_INIT_GAMEPAD = core.SDL_INIT_GAMEPAD;
-pub const SDL_INIT_EVENTS = core.SDL_INIT_EVENTS;
-pub const SDL_INIT_SENSOR = core.SDL_INIT_SENSOR;
-pub const SDL_INIT_CAMERA = core.SDL_INIT_CAMERA;
-
-pub const SDL_WINDOW_FULLSCREEN = video.SDL_WINDOW_FULLSCREEN;
-pub const SDL_WINDOW_OPENGL = video.SDL_WINDOW_OPENGL;
-pub const SDL_WINDOW_HIDDEN = video.SDL_WINDOW_HIDDEN;
-pub const SDL_WINDOW_BORDERLESS = video.SDL_WINDOW_BORDERLESS;
-pub const SDL_WINDOW_RESIZABLE = video.SDL_WINDOW_RESIZABLE;
-pub const SDL_WINDOW_MINIMIZED = video.SDL_WINDOW_MINIMIZED;
-pub const SDL_WINDOW_MAXIMIZED = video.SDL_WINDOW_MAXIMIZED;
-pub const SDL_WINDOW_VULKAN = video.SDL_WINDOW_VULKAN;
-
-pub const SDL_PIXELFORMAT_RGBA8888 = pixels.SDL_PIXELFORMAT_RGBA8888;
-pub const SDL_PIXELFORMAT_ARGB8888 = pixels.SDL_PIXELFORMAT_ARGB8888;
-pub const SDL_PIXELFORMAT_ABGR8888 = pixels.SDL_PIXELFORMAT_ABGR8888;
-pub const SDL_PIXELFORMAT_BGRA8888 = pixels.SDL_PIXELFORMAT_BGRA8888;
-pub const SDL_PIXELFORMAT_RGB565 = pixels.SDL_PIXELFORMAT_RGB565;
-
-pub const SDL_BLENDMODE_NONE = pixels.SDL_BLENDMODE_NONE;
-pub const SDL_BLENDMODE_BLEND = pixels.SDL_BLENDMODE_BLEND;
-
-pub const SDL_EVENT_QUIT = core.SDL_EVENT_QUIT;
-pub const SDL_EVENT_KEY_DOWN = core.SDL_EVENT_KEY_DOWN;
-pub const SDL_EVENT_KEY_UP = core.SDL_EVENT_KEY_UP;
-pub const SDL_EVENT_MOUSE_MOTION = core.SDL_EVENT_MOUSE_MOTION;
-pub const SDL_EVENT_MOUSE_BUTTON_DOWN = core.SDL_EVENT_MOUSE_BUTTON_DOWN;
-pub const SDL_EVENT_MOUSE_BUTTON_UP = core.SDL_EVENT_MOUSE_BUTTON_UP;
-pub const SDL_EVENT_MOUSE_WHEEL = core.SDL_EVENT_MOUSE_WHEEL;
-
-// Joystick events (not in core)
-pub const SDL_EVENT_JOYSTICK_ADDED = events.SDL_EVENT_JOYSTICK_ADDED;
-pub const SDL_EVENT_JOYSTICK_REMOVED = events.SDL_EVENT_JOYSTICK_REMOVED;
-pub const SDL_EVENT_JOYSTICK_BATTERY_UPDATED = events.SDL_EVENT_JOYSTICK_BATTERY_UPDATED;
-pub const SDL_EVENT_JOYSTICK_BUTTON_DOWN = events.SDL_EVENT_JOYSTICK_BUTTON_DOWN;
-pub const SDL_EVENT_JOYSTICK_BUTTON_UP = events.SDL_EVENT_JOYSTICK_BUTTON_UP;
-pub const SDL_EVENT_JOYSTICK_HAT_MOTION = events.SDL_EVENT_JOYSTICK_HAT_MOTION;
-pub const SDL_EVENT_JOYSTICK_AXIS_MOTION = events.SDL_EVENT_JOYSTICK_AXIS_MOTION;
-
-// Gamepad events (not in core)
-pub const SDL_EVENT_GAMEPAD_ADDED = events.SDL_EVENT_GAMEPAD_ADDED;
-pub const SDL_EVENT_GAMEPAD_REMOVED = events.SDL_EVENT_GAMEPAD_REMOVED;
-pub const SDL_EVENT_GAMEPAD_BUTTON_DOWN = events.SDL_EVENT_GAMEPAD_BUTTON_DOWN;
-pub const SDL_EVENT_GAMEPAD_BUTTON_UP = events.SDL_EVENT_GAMEPAD_BUTTON_UP;
-pub const SDL_EVENT_GAMEPAD_AXIS_MOTION = events.SDL_EVENT_GAMEPAD_AXIS_MOTION;
-pub const SDL_EVENT_GAMEPAD_REMAPPED = events.SDL_EVENT_GAMEPAD_REMAPPED;
-pub const SDL_EVENT_GAMEPAD_STEAM_HANDLE_UPDATED = events.SDL_EVENT_GAMEPAD_STEAM_HANDLE_UPDATED;
-pub const SDL_EVENT_GAMEPAD_TOUCHPAD_DOWN = events.SDL_EVENT_GAMEPAD_TOUCHPAD_DOWN;
-pub const SDL_EVENT_GAMEPAD_TOUCHPAD_MOTION = events.SDL_EVENT_GAMEPAD_TOUCHPAD_MOTION;
-pub const SDL_EVENT_GAMEPAD_TOUCHPAD_UP = events.SDL_EVENT_GAMEPAD_TOUCHPAD_UP;
-pub const SDL_EVENT_GAMEPAD_SENSOR_UPDATE = events.SDL_EVENT_GAMEPAD_SENSOR_UPDATE;
-pub const SDL_EVENT_GAMEPAD_STEAM_HANDLE_CHANGED = events.SDL_EVENT_GAMEPAD_STEAM_HANDLE_CHANGED;
-
-// Touch and gesture events (not in core)
-pub const SDL_EVENT_FINGER_DOWN = events.SDL_EVENT_FINGER_DOWN;
-pub const SDL_EVENT_FINGER_UP = events.SDL_EVENT_FINGER_UP;
-pub const SDL_EVENT_FINGER_MOTION = events.SDL_EVENT_FINGER_MOTION;
-pub const SDL_EVENT_GESTURE_SWIPE = events.SDL_EVENT_GESTURE_SWIPE;
-pub const SDL_EVENT_GESTURE_MULTIGESTURE = events.SDL_EVENT_GESTURE_MULTIGESTURE;
-
-// Other events (not in core)
-pub const SDL_EVENT_CLIPBOARD_UPDATE = events.SDL_EVENT_CLIPBOARD_UPDATE;
-pub const SDL_EVENT_DROP_FILE = events.SDL_EVENT_DROP_FILE;
-pub const SDL_EVENT_DROP_TEXT = events.SDL_EVENT_DROP_TEXT;
-pub const SDL_EVENT_DROP_BEGIN = events.SDL_EVENT_DROP_BEGIN;
-pub const SDL_EVENT_DROP_COMPLETE = events.SDL_EVENT_DROP_COMPLETE;
-pub const SDL_EVENT_DROP_POSITION = events.SDL_EVENT_DROP_POSITION;
-pub const SDL_EVENT_AUDIO_DEVICE_ADDED = events.SDL_EVENT_AUDIO_DEVICE_ADDED;
-pub const SDL_EVENT_AUDIO_DEVICE_REMOVED = events.SDL_EVENT_AUDIO_DEVICE_REMOVED;
-pub const SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED = events.SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED;
-pub const SDL_EVENT_SENSOR_UPDATE = events.SDL_EVENT_SENSOR_UPDATE;
-pub const SDL_EVENT_DISPLAY_ORIENTATION = events.SDL_EVENT_DISPLAY_ORIENTATION;
-pub const SDL_EVENT_DISPLAY_CONNECTED = events.SDL_EVENT_DISPLAY_CONNECTED;
-pub const SDL_EVENT_DISPLAY_DISCONNECTED = events.SDL_EVENT_DISPLAY_DISCONNECTED;
-pub const SDL_EVENT_POWER_STATE_CHANGED = events.SDL_EVENT_POWER_STATE_CHANGED;
-pub const SDL_EVENT_PEN_DOWN = events.SDL_EVENT_PEN_DOWN;
-pub const SDL_EVENT_PEN_UP = events.SDL_EVENT_PEN_UP;
-pub const SDL_EVENT_PEN_MOTION = events.SDL_EVENT_PEN_MOTION;
-pub const SDL_EVENT_PEN_BUTTON_DOWN = events.SDL_EVENT_PEN_BUTTON_DOWN;
-pub const SDL_EVENT_PEN_BUTTON_UP = events.SDL_EVENT_PEN_BUTTON_UP;
-pub const SDL_EVENT_PEN_ERASER_DOWN = events.SDL_EVENT_PEN_ERASER_DOWN;
-pub const SDL_EVENT_PEN_ERASER_UP = events.SDL_EVENT_PEN_ERASER_UP;
-pub const SDL_EVENT_PEN_AXIS = events.SDL_EVENT_PEN_AXIS;
-pub const SDL_EVENT_CAMERA_DEVICE_ADDED = events.SDL_EVENT_CAMERA_DEVICE_ADDED;
-pub const SDL_EVENT_CAMERA_DEVICE_REMOVED = events.SDL_EVENT_CAMERA_DEVICE_REMOVED;
-pub const SDL_EVENT_CAMERA_DEVICE_APPROVED = events.SDL_EVENT_CAMERA_DEVICE_APPROVED;
-pub const SDL_EVENT_CAMERA_DEVICE_DENIED = events.SDL_EVENT_CAMERA_DEVICE_DENIED;
-pub const SDL_EVENT_USER = events.SDL_EVENT_USER;
-
-// Key constants are now exported from keycode module above
-
-// Re-export GPU types and functions
 pub const SDL_GPUDevice = gpu.SDL_GPUDevice;
+pub const SDL_GPUFence = gpu.SDL_GPUFence;
+pub const SDL_GPUIndexElementSize = gpu.SDL_GPUIndexElementSize;
+pub const SDL_GPULoadOp = gpu.SDL_GPULoadOp;
+pub const SDL_GPUPresentMode = gpu.SDL_GPUPresentMode;
+pub const SDL_GPUPrimitiveType = gpu.SDL_GPUPrimitiveType;
+pub const SDL_GPUStoreOp = gpu.SDL_GPUStoreOp;
+pub const SDL_GPUSwapchainComposition = gpu.SDL_GPUSwapchainComposition;
+pub const SDL_GPU_TEXTURETYPE_2D = gpu.SDL_GPUTextureType.SDL_GPU_TEXTURETYPE_2D;
+pub const SDL_GPU_SAMPLECOUNT_1 = gpu.SDL_GPUSampleCount.SDL_GPU_SAMPLECOUNT_1;
+pub const SDL_GPU_FILTER_NEAREST = gpu.SDL_GPUFilter.SDL_GPU_FILTER_NEAREST;
+pub const SDL_GPU_FILTER_LINEAR = gpu.SDL_GPUFilter.SDL_GPU_FILTER_LINEAR;
+pub const SDL_GPU_SAMPLERMIPMAPMODE_LINEAR = gpu.SDL_GPUSamplerMipmapMode.SDL_GPU_SAMPLERMIPMAPMODE_LINEAR;
+pub const SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE = gpu.SDL_GPUSamplerAddressMode.SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;
+pub const SDL_GPU_COMPAREOP_NEVER = gpu.SDL_GPUCompareOp.SDL_GPU_COMPAREOP_NEVER;
+pub const SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD = gpu.SDL_GPUTransferBufferUsage.SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD;
 pub const SDL_GPUBuffer = gpu.SDL_GPUBuffer;
 pub const SDL_GPUTransferBuffer = gpu.SDL_GPUTransferBuffer;
 pub const SDL_GPUTexture = gpu.SDL_GPUTexture;
@@ -1448,315 +550,275 @@ pub const SDL_GPUCommandBuffer = gpu.SDL_GPUCommandBuffer;
 pub const SDL_GPURenderPass = gpu.SDL_GPURenderPass;
 pub const SDL_GPUComputePass = gpu.SDL_GPUComputePass;
 pub const SDL_GPUCopyPass = gpu.SDL_GPUCopyPass;
-pub const SDL_GPUFence = gpu.SDL_GPUFence;
-pub const SDL_GPUPrimitiveType = gpu.SDL_GPUPrimitiveType;
-pub const SDL_GPULoadOp = gpu.SDL_GPULoadOp;
-pub const SDL_GPUStoreOp = gpu.SDL_GPUStoreOp;
-pub const SDL_GPUIndexElementSize = gpu.SDL_GPUIndexElementSize;
-pub const SDL_GPUPresentMode = gpu.SDL_GPUPresentMode;
-pub const SDL_GPUSwapchainComposition = gpu.SDL_GPUSwapchainComposition;
-
-// GPU present mode values
-pub const SDL_GPU_PRESENTMODE_VSYNC = gpu.SDL_GPUPresentMode.SDL_GPU_PRESENTMODE_VSYNC;
-pub const SDL_GPU_PRESENTMODE_IMMEDIATE = gpu.SDL_GPUPresentMode.SDL_GPU_PRESENTMODE_IMMEDIATE;
-pub const SDL_GPU_PRESENTMODE_MAILBOX = gpu.SDL_GPUPresentMode.SDL_GPU_PRESENTMODE_MAILBOX;
-
-// GPU swapchain composition values
-pub const SDL_GPU_SWAPCHAINCOMPOSITION_SDR = gpu.SDL_GPUSwapchainComposition.SDL_GPU_SWAPCHAINCOMPOSITION_SDR;
-pub const SDL_GPU_SWAPCHAINCOMPOSITION_SDR_LINEAR = gpu.SDL_GPUSwapchainComposition.SDL_GPU_SWAPCHAINCOMPOSITION_SDR_LINEAR;
-pub const SDL_GPU_SWAPCHAINCOMPOSITION_HDR_EXTENDED_LINEAR = gpu.SDL_GPUSwapchainComposition.SDL_GPU_SWAPCHAINCOMPOSITION_HDR_EXTENDED_LINEAR;
-pub const SDL_GPU_SWAPCHAINCOMPOSITION_HDR10_ST2084 = gpu.SDL_GPUSwapchainComposition.SDL_GPU_SWAPCHAINCOMPOSITION_HDR10_ST2084;
-
-pub const SDL_GPU_SHADERFORMAT_INVALID = gpu.SDL_GPU_SHADERFORMAT_INVALID;
-pub const SDL_GPU_SHADERFORMAT_PRIVATE = gpu.SDL_GPU_SHADERFORMAT_PRIVATE;
-pub const SDL_GPU_SHADERFORMAT_SPIRV = gpu.SDL_GPU_SHADERFORMAT_SPIRV;
-pub const SDL_GPU_SHADERFORMAT_DXBC = gpu.SDL_GPU_SHADERFORMAT_DXBC;
-pub const SDL_GPU_SHADERFORMAT_DXIL = gpu.SDL_GPU_SHADERFORMAT_DXIL;
-pub const SDL_GPU_SHADERFORMAT_MSL = gpu.SDL_GPU_SHADERFORMAT_MSL;
-pub const SDL_GPU_SHADERFORMAT_METALLIB = gpu.SDL_GPU_SHADERFORMAT_METALLIB;
-pub const SDL_GPU_BUFFERUSAGE_VERTEX = gpu.SDL_GPU_BUFFERUSAGE_VERTEX;
-pub const SDL_GPU_BUFFERUSAGE_INDEX = gpu.SDL_GPU_BUFFERUSAGE_INDEX;
-pub const SDL_GPU_BUFFERUSAGE_INDIRECT = gpu.SDL_GPU_BUFFERUSAGE_INDIRECT;
-pub const SDL_GPU_BUFFERUSAGE_GRAPHICS_STORAGE_READ = gpu.SDL_GPU_BUFFERUSAGE_GRAPHICS_STORAGE_READ;
-pub const SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_READ = gpu.SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_READ;
-pub const SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_WRITE = gpu.SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_WRITE;
-
-// GPU texture type values
-pub const SDL_GPU_TEXTURETYPE_2D = gpu.SDL_GPUTextureType.SDL_GPU_TEXTURETYPE_2D;
-pub const SDL_GPU_TEXTURETYPE_2D_ARRAY = gpu.SDL_GPUTextureType.SDL_GPU_TEXTURETYPE_2D_ARRAY;
-pub const SDL_GPU_TEXTURETYPE_3D = gpu.SDL_GPUTextureType.SDL_GPU_TEXTURETYPE_3D;
-pub const SDL_GPU_TEXTURETYPE_CUBE = gpu.SDL_GPUTextureType.SDL_GPU_TEXTURETYPE_CUBE;
-pub const SDL_GPU_TEXTURETYPE_CUBE_ARRAY = gpu.SDL_GPUTextureType.SDL_GPU_TEXTURETYPE_CUBE_ARRAY;
-
-// GPU texture usage flags
-pub const SDL_GPU_TEXTUREUSAGE_SAMPLER = gpu.SDL_GPU_TEXTUREUSAGE_SAMPLER;
-pub const SDL_GPU_TEXTUREUSAGE_COLOR_TARGET = gpu.SDL_GPU_TEXTUREUSAGE_COLOR_TARGET;
-pub const SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET = gpu.SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET;
-pub const SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ = gpu.SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ;
-pub const SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_READ = gpu.SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_READ;
-pub const SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_WRITE = gpu.SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_WRITE;
-pub const SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE = gpu.SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE;
-
-// GPU sample count values
-pub const SDL_GPU_SAMPLECOUNT_1 = gpu.SDL_GPUSampleCount.SDL_GPU_SAMPLECOUNT_1;
-pub const SDL_GPU_SAMPLECOUNT_2 = gpu.SDL_GPUSampleCount.SDL_GPU_SAMPLECOUNT_2;
-pub const SDL_GPU_SAMPLECOUNT_4 = gpu.SDL_GPUSampleCount.SDL_GPU_SAMPLECOUNT_4;
-pub const SDL_GPU_SAMPLECOUNT_8 = gpu.SDL_GPUSampleCount.SDL_GPU_SAMPLECOUNT_8;
-
-// GPU filter values
-pub const SDL_GPU_FILTER_NEAREST = gpu.SDL_GPUFilter.SDL_GPU_FILTER_NEAREST;
-pub const SDL_GPU_FILTER_LINEAR = gpu.SDL_GPUFilter.SDL_GPU_FILTER_LINEAR;
-
-// GPU sampler mipmap mode values
-pub const SDL_GPU_SAMPLERMIPMAPMODE_NEAREST = gpu.SDL_GPUSamplerMipmapMode.SDL_GPU_SAMPLERMIPMAPMODE_NEAREST;
-pub const SDL_GPU_SAMPLERMIPMAPMODE_LINEAR = gpu.SDL_GPUSamplerMipmapMode.SDL_GPU_SAMPLERMIPMAPMODE_LINEAR;
-
-// GPU sampler address mode values
-pub const SDL_GPU_SAMPLERADDRESSMODE_REPEAT = gpu.SDL_GPUSamplerAddressMode.SDL_GPU_SAMPLERADDRESSMODE_REPEAT;
-pub const SDL_GPU_SAMPLERADDRESSMODE_MIRRORED_REPEAT = gpu.SDL_GPUSamplerAddressMode.SDL_GPU_SAMPLERADDRESSMODE_MIRRORED_REPEAT;
-pub const SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE = gpu.SDL_GPUSamplerAddressMode.SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;
-
-// GPU compare op values
-pub const SDL_GPU_COMPAREOP_NEVER = gpu.SDL_GPUCompareOp.SDL_GPU_COMPAREOP_NEVER;
-pub const SDL_GPU_COMPAREOP_LESS = gpu.SDL_GPUCompareOp.SDL_GPU_COMPAREOP_LESS;
-pub const SDL_GPU_COMPAREOP_EQUAL = gpu.SDL_GPUCompareOp.SDL_GPU_COMPAREOP_EQUAL;
-pub const SDL_GPU_COMPAREOP_LESS_OR_EQUAL = gpu.SDL_GPUCompareOp.SDL_GPU_COMPAREOP_LESS_OR_EQUAL;
-pub const SDL_GPU_COMPAREOP_GREATER = gpu.SDL_GPUCompareOp.SDL_GPU_COMPAREOP_GREATER;
-pub const SDL_GPU_COMPAREOP_NOT_EQUAL = gpu.SDL_GPUCompareOp.SDL_GPU_COMPAREOP_NOT_EQUAL;
-pub const SDL_GPU_COMPAREOP_GREATER_OR_EQUAL = gpu.SDL_GPUCompareOp.SDL_GPU_COMPAREOP_GREATER_OR_EQUAL;
-pub const SDL_GPU_COMPAREOP_ALWAYS = gpu.SDL_GPUCompareOp.SDL_GPU_COMPAREOP_ALWAYS;
-
-// GPU shader stage values
-pub const SDL_GPU_SHADERSTAGE_VERTEX = gpu.SDL_GPUShaderStage.SDL_GPU_SHADERSTAGE_VERTEX;
-pub const SDL_GPU_SHADERSTAGE_FRAGMENT = gpu.SDL_GPUShaderStage.SDL_GPU_SHADERSTAGE_FRAGMENT;
-
-// GPU vertex input rate values
-pub const SDL_GPU_VERTEXINPUTRATE_VERTEX = gpu.SDL_GPUVertexInputRate.SDL_GPU_VERTEXINPUTRATE_VERTEX;
-pub const SDL_GPU_VERTEXINPUTRATE_INSTANCE = gpu.SDL_GPUVertexInputRate.SDL_GPU_VERTEXINPUTRATE_INSTANCE;
-
-// GPU fill mode values
-pub const SDL_GPU_FILLMODE_FILL = gpu.SDL_GPUFillMode.SDL_GPU_FILLMODE_FILL;
-pub const SDL_GPU_FILLMODE_LINE = gpu.SDL_GPUFillMode.SDL_GPU_FILLMODE_LINE;
-
-// GPU cull mode values
-pub const SDL_GPU_CULLMODE_NONE = gpu.SDL_GPUCullMode.SDL_GPU_CULLMODE_NONE;
-pub const SDL_GPU_CULLMODE_FRONT = gpu.SDL_GPUCullMode.SDL_GPU_CULLMODE_FRONT;
-pub const SDL_GPU_CULLMODE_BACK = gpu.SDL_GPUCullMode.SDL_GPU_CULLMODE_BACK;
-
-// GPU front face values
-pub const SDL_GPU_FRONTFACE_COUNTER_CLOCKWISE = gpu.SDL_GPUFrontFace.SDL_GPU_FRONTFACE_COUNTER_CLOCKWISE;
-pub const SDL_GPU_FRONTFACE_CLOCKWISE = gpu.SDL_GPUFrontFace.SDL_GPU_FRONTFACE_CLOCKWISE;
-
-// GPU blend factor values
-pub const SDL_GPU_BLENDFACTOR_ZERO = gpu.SDL_GPUBlendFactor.SDL_GPU_BLENDFACTOR_ZERO;
-pub const SDL_GPU_BLENDFACTOR_ONE = gpu.SDL_GPUBlendFactor.SDL_GPU_BLENDFACTOR_ONE;
-pub const SDL_GPU_BLENDFACTOR_SRC_COLOR = gpu.SDL_GPUBlendFactor.SDL_GPU_BLENDFACTOR_SRC_COLOR;
-pub const SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_COLOR = gpu.SDL_GPUBlendFactor.SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_COLOR;
-pub const SDL_GPU_BLENDFACTOR_DST_COLOR = gpu.SDL_GPUBlendFactor.SDL_GPU_BLENDFACTOR_DST_COLOR;
-pub const SDL_GPU_BLENDFACTOR_ONE_MINUS_DST_COLOR = gpu.SDL_GPUBlendFactor.SDL_GPU_BLENDFACTOR_ONE_MINUS_DST_COLOR;
-pub const SDL_GPU_BLENDFACTOR_SRC_ALPHA = gpu.SDL_GPUBlendFactor.SDL_GPU_BLENDFACTOR_SRC_ALPHA;
-pub const SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA = gpu.SDL_GPUBlendFactor.SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA;
-pub const SDL_GPU_BLENDFACTOR_DST_ALPHA = gpu.SDL_GPUBlendFactor.SDL_GPU_BLENDFACTOR_DST_ALPHA;
-pub const SDL_GPU_BLENDFACTOR_ONE_MINUS_DST_ALPHA = gpu.SDL_GPUBlendFactor.SDL_GPU_BLENDFACTOR_ONE_MINUS_DST_ALPHA;
-pub const SDL_GPU_BLENDFACTOR_CONSTANT_COLOR = gpu.SDL_GPUBlendFactor.SDL_GPU_BLENDFACTOR_CONSTANT_COLOR;
-pub const SDL_GPU_BLENDFACTOR_ONE_MINUS_CONSTANT_COLOR = gpu.SDL_GPUBlendFactor.SDL_GPU_BLENDFACTOR_ONE_MINUS_CONSTANT_COLOR;
-pub const SDL_GPU_BLENDFACTOR_SRC_ALPHA_SATURATE = gpu.SDL_GPUBlendFactor.SDL_GPU_BLENDFACTOR_SRC_ALPHA_SATURATE;
-
-// GPU blend op values
-pub const SDL_GPU_BLENDOP_ADD = gpu.SDL_GPUBlendOp.SDL_GPU_BLENDOP_ADD;
-pub const SDL_GPU_BLENDOP_SUBTRACT = gpu.SDL_GPUBlendOp.SDL_GPU_BLENDOP_SUBTRACT;
-pub const SDL_GPU_BLENDOP_REVERSE_SUBTRACT = gpu.SDL_GPUBlendOp.SDL_GPU_BLENDOP_REVERSE_SUBTRACT;
-pub const SDL_GPU_BLENDOP_MIN = gpu.SDL_GPUBlendOp.SDL_GPU_BLENDOP_MIN;
-pub const SDL_GPU_BLENDOP_MAX = gpu.SDL_GPUBlendOp.SDL_GPU_BLENDOP_MAX;
-
-// GPU stencil op values
-pub const SDL_GPU_STENCILOP_KEEP = gpu.SDL_GPUStencilOp.SDL_GPU_STENCILOP_KEEP;
-pub const SDL_GPU_STENCILOP_ZERO = gpu.SDL_GPUStencilOp.SDL_GPU_STENCILOP_ZERO;
-pub const SDL_GPU_STENCILOP_REPLACE = gpu.SDL_GPUStencilOp.SDL_GPU_STENCILOP_REPLACE;
-pub const SDL_GPU_STENCILOP_INCREMENT_AND_CLAMP = gpu.SDL_GPUStencilOp.SDL_GPU_STENCILOP_INCREMENT_AND_CLAMP;
-pub const SDL_GPU_STENCILOP_DECREMENT_AND_CLAMP = gpu.SDL_GPUStencilOp.SDL_GPU_STENCILOP_DECREMENT_AND_CLAMP;
-pub const SDL_GPU_STENCILOP_INVERT = gpu.SDL_GPUStencilOp.SDL_GPU_STENCILOP_INVERT;
-pub const SDL_GPU_STENCILOP_INCREMENT_AND_WRAP = gpu.SDL_GPUStencilOp.SDL_GPU_STENCILOP_INCREMENT_AND_WRAP;
-pub const SDL_GPU_STENCILOP_DECREMENT_AND_WRAP = gpu.SDL_GPUStencilOp.SDL_GPU_STENCILOP_DECREMENT_AND_WRAP;
-
-// GPU transfer buffer usage values
-pub const SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD = gpu.SDL_GPUTransferBufferUsage.SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD;
-pub const SDL_GPU_TRANSFERBUFFERUSAGE_DOWNLOAD = gpu.SDL_GPUTransferBufferUsage.SDL_GPU_TRANSFERBUFFERUSAGE_DOWNLOAD;
-
-// GPU primitive type values
-pub const SDL_GPU_PRIMITIVETYPE_TRIANGLELIST = gpu.SDL_GPUPrimitiveType.SDL_GPU_PRIMITIVETYPE_TRIANGLELIST;
-pub const SDL_GPU_PRIMITIVETYPE_TRIANGLESTRIP = gpu.SDL_GPUPrimitiveType.SDL_GPU_PRIMITIVETYPE_TRIANGLESTRIP;
-pub const SDL_GPU_PRIMITIVETYPE_LINELIST = gpu.SDL_GPUPrimitiveType.SDL_GPU_PRIMITIVETYPE_LINELIST;
-pub const SDL_GPU_PRIMITIVETYPE_LINESTRIP = gpu.SDL_GPUPrimitiveType.SDL_GPU_PRIMITIVETYPE_LINESTRIP;
-pub const SDL_GPU_PRIMITIVETYPE_POINTLIST = gpu.SDL_GPUPrimitiveType.SDL_GPU_PRIMITIVETYPE_POINTLIST;
-
-// GPU load op values
-pub const SDL_GPU_LOADOP_LOAD = gpu.SDL_GPULoadOp.SDL_GPU_LOADOP_LOAD;
-pub const SDL_GPU_LOADOP_CLEAR = gpu.SDL_GPULoadOp.SDL_GPU_LOADOP_CLEAR;
-pub const SDL_GPU_LOADOP_DONT_CARE = gpu.SDL_GPULoadOp.SDL_GPU_LOADOP_DONT_CARE;
-
-// GPU store op values
-pub const SDL_GPU_STOREOP_STORE = gpu.SDL_GPUStoreOp.SDL_GPU_STOREOP_STORE;
-pub const SDL_GPU_STOREOP_DONT_CARE = gpu.SDL_GPUStoreOp.SDL_GPU_STOREOP_DONT_CARE;
-pub const SDL_GPU_STOREOP_RESOLVE = gpu.SDL_GPUStoreOp.SDL_GPU_STOREOP_RESOLVE;
-pub const SDL_GPU_STOREOP_RESOLVE_AND_STORE = gpu.SDL_GPUStoreOp.SDL_GPU_STOREOP_RESOLVE_AND_STORE;
-
-// GPU index element size values
-pub const SDL_GPU_INDEXELEMENTSIZE_16BIT = gpu.SDL_GPUIndexElementSize.SDL_GPU_INDEXELEMENTSIZE_16BIT;
-pub const SDL_GPU_INDEXELEMENTSIZE_32BIT = gpu.SDL_GPUIndexElementSize.SDL_GPU_INDEXELEMENTSIZE_32BIT;
-
-// GPU color component flags
-pub const SDL_GPU_COLORCOMPONENT_R = gpu.SDL_GPU_COLORCOMPONENT_R;
-pub const SDL_GPU_COLORCOMPONENT_G = gpu.SDL_GPU_COLORCOMPONENT_G;
-pub const SDL_GPU_COLORCOMPONENT_B = gpu.SDL_GPU_COLORCOMPONENT_B;
-pub const SDL_GPU_COLORCOMPONENT_A = gpu.SDL_GPU_COLORCOMPONENT_A;
-
-pub const SDL_GPUBufferCreateInfo = gpu.SDL_GPUBufferCreateInfo;
-pub const SDL_GPUBufferUsageFlags = gpu.SDL_GPUBufferUsageFlags;
-pub const SDL_GPUTextureCreateInfo = gpu.SDL_GPUTextureCreateInfo;
-pub const SDL_GPUTextureType = gpu.SDL_GPUTextureType;
-pub const SDL_GPUTextureFormat = gpu.SDL_GPUTextureFormat;
-pub const SDL_GPUTextureUsageFlags = gpu.SDL_GPUTextureUsageFlags;
-pub const SDL_GPUSampleCount = gpu.SDL_GPUSampleCount;
-pub const SDL_GPUSamplerCreateInfo = gpu.SDL_GPUSamplerCreateInfo;
-pub const SDL_GPUShaderCreateInfo = gpu.SDL_GPUShaderCreateInfo;
-pub const SDL_GPUShaderStage = gpu.SDL_GPUShaderStage;
-pub const SDL_GPUTransferBufferCreateInfo = gpu.SDL_GPUTransferBufferCreateInfo;
-pub const SDL_GPUTransferBufferUsage = gpu.SDL_GPUTransferBufferUsage;
-pub const SDL_GPUTextureTransferInfo = gpu.SDL_GPUTextureTransferInfo;
-pub const SDL_GPUTransferBufferLocation = gpu.SDL_GPUTransferBufferLocation;
-pub const SDL_GPUTextureRegion = gpu.SDL_GPUTextureRegion;
-pub const SDL_GPUBufferRegion = gpu.SDL_GPUBufferRegion;
-pub const SDL_GPUColorTargetInfo = gpu.SDL_GPUColorTargetInfo;
-pub const SDL_GPUDepthStencilTargetInfo = gpu.SDL_GPUDepthStencilTargetInfo;
-pub const SDL_GPUViewport = gpu.SDL_GPUViewport;
-pub const SDL_GPUBufferBinding = gpu.SDL_GPUBufferBinding;
-pub const SDL_GPUGraphicsPipelineCreateInfo = gpu.SDL_GPUGraphicsPipelineCreateInfo;
-pub const SDL_GPUComputePipelineCreateInfo = gpu.SDL_GPUComputePipelineCreateInfo;
-pub const SDL_GPUBlitInfo = gpu.SDL_GPUBlitInfo;
-pub const SDL_GPUStorageTextureReadWriteBinding = gpu.SDL_GPUStorageTextureReadWriteBinding;
-pub const SDL_GPUStorageBufferReadWriteBinding = gpu.SDL_GPUStorageBufferReadWriteBinding;
-pub const createGPUDevice = gpu.createGPUDevice;
-pub const createGPUDeviceWithProperties = gpu.createGPUDeviceWithProperties;
-pub const getGPUShaderFormats = gpu.getGPUShaderFormats;
-pub const createGPUVertexBuffer = gpu.createGPUVertexBuffer;
-pub const createGPUIndexBuffer = gpu.createGPUIndexBuffer;
-pub const destroyGPUDevice = gpu.destroyGPUDevice;
-pub const claimWindowForGPUDevice = gpu.claimWindowForGPUDevice;
-pub const releaseWindowFromGPUDevice = gpu.releaseWindowFromGPUDevice;
-pub const acquireGPUSwapchainTexture = gpu.acquireGPUSwapchainTexture;
-pub const waitForGPUSwapchain = gpu.waitForGPUSwapchain;
-pub const waitAndAcquireGPUSwapchainTexture = gpu.waitAndAcquireGPUSwapchainTexture;
-pub const acquireGPUCommandBuffer = gpu.acquireGPUCommandBuffer;
-pub const submitGPUCommandBuffer = gpu.submitGPUCommandBuffer;
-pub const submitGPUCommandBufferAndAcquireFence = gpu.submitGPUCommandBufferAndAcquireFence;
-pub const cancelGPUCommandBuffer = gpu.cancelGPUCommandBuffer;
-pub const waitForGPUFences = gpu.waitForGPUFences;
-pub const releaseGPUFence = gpu.releaseGPUFence;
-pub const createGPUBuffer = gpu.createGPUBuffer;
-pub const setGPUBufferName = gpu.setGPUBufferName;
-pub const getGPUBufferSizeInBytes = gpu.getGPUBufferSizeInBytes;
-pub const releaseGPUBuffer = gpu.releaseGPUBuffer;
-pub const createGPUTexture = gpu.createGPUTexture;
-pub const setGPUTextureName = gpu.setGPUTextureName;
-pub const getGPUTextureSize = gpu.getGPUTextureSize;
-pub const releaseGPUTexture = gpu.releaseGPUTexture;
-pub const createGPUSampler = gpu.createGPUSampler;
-pub const releaseGPUSampler = gpu.releaseGPUSampler;
-pub const createGPUShader = gpu.createGPUShader;
-pub const releaseGPUShader = gpu.releaseGPUShader;
-pub const createGPUTransferBuffer = gpu.createGPUTransferBuffer;
-pub const mapGPUTransferBuffer = gpu.mapGPUTransferBuffer;
-pub const unmapGPUTransferBuffer = gpu.unmapGPUTransferBuffer;
-pub const releaseGPUTransferBuffer = gpu.releaseGPUTransferBuffer;
-pub const beginGPUCopyPass = gpu.beginGPUCopyPass;
-pub const uploadToGPUTexture = gpu.uploadToGPUTexture;
-pub const uploadToGPUBuffer = gpu.uploadToGPUBuffer;
-pub const downloadFromGPUTexture = gpu.downloadFromGPUTexture;
-pub const downloadFromGPUBuffer = gpu.downloadFromGPUBuffer;
-pub const copyGPUTextureToTexture = gpu.copyGPUTextureToTexture;
-pub const copyGPUBufferToBuffer = gpu.copyGPUBufferToBuffer;
-pub const endGPUCopyPass = gpu.endGPUCopyPass;
-pub const beginGPURenderPass = gpu.beginGPURenderPass;
-pub const bindGPUGraphicsPipeline = gpu.bindGPUGraphicsPipeline;
-pub const setGPUViewport = gpu.setGPUViewport;
-pub const setGPUScissor = gpu.setGPUScissor;
-pub const bindGPUVertexBuffers = gpu.bindGPUVertexBuffers;
-pub const bindGPUIndexBuffer = gpu.bindGPUIndexBuffer;
-pub const drawGPUPrimitives = gpu.drawGPUPrimitives;
-pub const drawGPUIndexedPrimitives = gpu.drawGPUIndexedPrimitives;
-pub const drawGPUPrimitivesIndirect = gpu.drawGPUPrimitivesIndirect;
-pub const drawGPUIndexedPrimitivesIndirect = gpu.drawGPUIndexedPrimitivesIndirect;
-pub const endGPURenderPass = gpu.endGPURenderPass;
-pub const createGPUGraphicsPipeline = gpu.createGPUGraphicsPipeline;
-pub const createGPUComputePipeline = gpu.createGPUComputePipeline;
-pub const releaseGPUGraphicsPipeline = gpu.releaseGPUGraphicsPipeline;
-pub const releaseGPUComputePipeline = gpu.releaseGPUComputePipeline;
-pub const beginGPUComputePass = gpu.beginGPUComputePass;
-pub const bindGPUComputePipeline = gpu.bindGPUComputePipeline;
-pub const bindGPUComputeStorageTextures = gpu.bindGPUComputeStorageTextures;
-pub const bindGPUComputeStorageBuffers = gpu.bindGPUComputeStorageBuffers;
-pub const pushGPUComputeUniformData = gpu.pushGPUComputeUniformData;
-pub const dispatchGPUCompute = gpu.dispatchGPUCompute;
-pub const dispatchGPUComputeIndirect = gpu.dispatchGPUComputeIndirect;
-pub const endGPUComputePass = gpu.endGPUComputePass;
-pub const bindGPUVertexSamplers = gpu.bindGPUVertexSamplers;
-pub const bindGPUFragmentSamplers = gpu.bindGPUFragmentSamplers;
-pub const pushGPUVertexUniformData = gpu.pushGPUVertexUniformData;
-pub const pushGPUFragmentUniformData = gpu.pushGPUFragmentUniformData;
-pub const blitGPUTexture = gpu.blitGPUTexture;
-pub const generateMipmapsForGPUTexture = gpu.generateMipmapsForGPUTexture;
-pub const insertGPUDebugLabel = gpu.insertGPUDebugLabel;
-pub const pushGPUDebugGroup = gpu.pushGPUDebugGroup;
-pub const popGPUDebugGroup = gpu.popGPUDebugGroup;
-pub const setGPUAllowedFramesInFlight = gpu.setGPUAllowedFramesInFlight;
-pub const gpuSupportsShaderFormats = gpu.gpuSupportsShaderFormats;
-pub const gpuSupportsProperties = gpu.gpuSupportsProperties;
-pub const gpuTextureSupportsFormat = gpu.gpuTextureSupportsFormat;
-pub const gpuBufferSize = gpu.gpuBufferSize;
-pub const gpuTextureFormatTexelBlockSize = gpu.gpuTextureFormatTexelBlockSize;
-pub const gpuTextureSupportsSampleCount = gpu.gpuTextureSupportsSampleCount;
-pub const getGPUDeviceProperties = gpu.getGPUDeviceProperties;
-pub const setGPUSwapchainParameters = gpu.setGPUSwapchainParameters;
-pub const windowSupportsGPUSwapchainComposition = gpu.windowSupportsGPUSwapchainComposition;
-pub const windowSupportsGPUPresentMode = gpu.windowSupportsGPUPresentMode;
-pub const getGPUSwapchainTextureFormat = gpu.getGPUSwapchainTextureFormat;
-pub const waitForGPUIdle = gpu.waitForGPUIdle;
-pub const setGPUBlendConstants = gpu.setGPUBlendConstants;
-pub const setGPUStencilReference = gpu.setGPUStencilReference;
-pub const bindGPUComputeSamplers = gpu.bindGPUComputeSamplers;
-pub const calculateGPUTextureFormatSize = gpu.calculateGPUTextureFormatSize;
-pub const getPixelFormatFromGPUTextureFormat = gpu.getPixelFormatFromGPUTextureFormat;
-pub const getGPUTextureFormatFromPixelFormat = gpu.getGPUTextureFormatFromPixelFormat;
-
-// GPU driver functions
-pub const getNumGPUDrivers = gpu.getNumGPUDrivers;
-pub const getGPUDriver = gpu.getGPUDriver;
-pub const getGPUDeviceDriver = gpu.getGPUDeviceDriver;
-
-// GPU device creation properties
-pub const SDL_PROP_GPU_DEVICE_CREATE_DEBUGMODE_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_DEBUGMODE_BOOLEAN;
-pub const SDL_PROP_GPU_DEVICE_CREATE_PREFERLOWPOWER_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_PREFERLOWPOWER_BOOLEAN;
-pub const SDL_PROP_GPU_DEVICE_CREATE_VERBOSE_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_VERBOSE_BOOLEAN;
-pub const SDL_PROP_GPU_DEVICE_CREATE_NAME_STRING = gpu.SDL_PROP_GPU_DEVICE_CREATE_NAME_STRING;
-pub const SDL_PROP_GPU_DEVICE_CREATE_FEATURE_CLIP_DISTANCE_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_FEATURE_CLIP_DISTANCE_BOOLEAN;
-pub const SDL_PROP_GPU_DEVICE_CREATE_FEATURE_DEPTH_CLAMPING_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_FEATURE_DEPTH_CLAMPING_BOOLEAN;
-pub const SDL_PROP_GPU_DEVICE_CREATE_FEATURE_INDIRECT_DRAW_FIRST_INSTANCE_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_FEATURE_INDIRECT_DRAW_FIRST_INSTANCE_BOOLEAN;
-pub const SDL_PROP_GPU_DEVICE_CREATE_FEATURE_ANISOTROPY_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_FEATURE_ANISOTROPY_BOOLEAN;
-pub const SDL_PROP_GPU_DEVICE_CREATE_SHADERS_PRIVATE_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_PRIVATE_BOOLEAN;
-pub const SDL_PROP_GPU_DEVICE_CREATE_SHADERS_SPIRV_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_SPIRV_BOOLEAN;
-pub const SDL_PROP_GPU_DEVICE_CREATE_SHADERS_DXBC_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_DXBC_BOOLEAN;
-pub const SDL_PROP_GPU_DEVICE_CREATE_SHADERS_DXIL_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_DXIL_BOOLEAN;
-pub const SDL_PROP_GPU_DEVICE_CREATE_SHADERS_MSL_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_MSL_BOOLEAN;
-pub const SDL_PROP_GPU_DEVICE_CREATE_SHADERS_METALLIB_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_METALLIB_BOOLEAN;
-pub const SDL_PROP_GPU_DEVICE_CREATE_D3D12_ALLOW_FEWER_RESOURCE_SLOTS_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_D3D12_ALLOW_FEWER_RESOURCE_SLOTS_BOOLEAN;
-pub const SDL_PROP_GPU_DEVICE_CREATE_D3D12_SEMANTIC_NAME_STRING = gpu.SDL_PROP_GPU_DEVICE_CREATE_D3D12_SEMANTIC_NAME_STRING;
-pub const SDL_PROP_GPU_DEVICE_CREATE_VULKAN_REQUIRE_HARDWARE_ACCELERATION_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_VULKAN_REQUIRE_HARDWARE_ACCELERATION_BOOLEAN;
-pub const SDL_PROP_GPU_DEVICE_CREATE_VULKAN_OPTIONS_POINTER = gpu.SDL_PROP_GPU_DEVICE_CREATE_VULKAN_OPTIONS_POINTER;
-pub const SDL_PROP_GPU_DEVICE_CREATE_METAL_ALLOW_MACFAMILY1_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_METAL_ALLOW_MACFAMILY1_BOOLEAN;
-
-// GPU device properties
 pub const SDL_PROP_GPU_DEVICE_NAME_STRING = gpu.SDL_PROP_GPU_DEVICE_NAME_STRING;
 pub const SDL_PROP_GPU_DEVICE_DRIVER_NAME_STRING = gpu.SDL_PROP_GPU_DEVICE_DRIVER_NAME_STRING;
 pub const SDL_PROP_GPU_DEVICE_DRIVER_VERSION_STRING = gpu.SDL_PROP_GPU_DEVICE_DRIVER_VERSION_STRING;
 pub const SDL_PROP_GPU_DEVICE_DRIVER_INFO_STRING = gpu.SDL_PROP_GPU_DEVICE_DRIVER_INFO_STRING;
+pub const SDL_GPUBlendFactor = gpu.SDL_GPUBlendFactor;
+pub const SDL_GPUBlendOp = gpu.SDL_GPUBlendOp;
+pub const SDL_GPUBlitInfo = gpu.SDL_GPUBlitInfo;
+pub const SDL_GPUBlitRegion = gpu.SDL_GPUBlitRegion;
+pub const SDL_GPUBufferBinding = gpu.SDL_GPUBufferBinding;
+pub const SDL_GPUBufferCreateInfo = gpu.SDL_GPUBufferCreateInfo;
+pub const SDL_GPUBufferLocation = gpu.SDL_GPUBufferLocation;
+pub const SDL_GPUBufferRegion = gpu.SDL_GPUBufferRegion;
+pub const SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_READ = gpu.SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_READ;
+pub const SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_WRITE = gpu.SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_WRITE;
+pub const SDL_GPUBufferUsageFlags = gpu.SDL_GPUBufferUsageFlags;
+pub const SDL_GPU_BUFFERUSAGE_GRAPHICS_STORAGE_READ = gpu.SDL_GPU_BUFFERUSAGE_GRAPHICS_STORAGE_READ;
+pub const SDL_GPU_BUFFERUSAGE_INDEX = gpu.SDL_GPU_BUFFERUSAGE_INDEX;
+pub const SDL_GPU_BUFFERUSAGE_INDIRECT = gpu.SDL_GPU_BUFFERUSAGE_INDIRECT;
+pub const SDL_GPU_BUFFERUSAGE_VERTEX = gpu.SDL_GPU_BUFFERUSAGE_VERTEX;
+pub const SDL_GPU_COLORCOMPONENT_A = gpu.SDL_GPU_COLORCOMPONENT_A;
+pub const SDL_GPU_COLORCOMPONENT_B = gpu.SDL_GPU_COLORCOMPONENT_B;
+pub const SDL_GPUColorComponentFlags = gpu.SDL_GPUColorComponentFlags;
+pub const SDL_GPU_COLORCOMPONENT_G = gpu.SDL_GPU_COLORCOMPONENT_G;
+pub const SDL_GPU_COLORCOMPONENT_R = gpu.SDL_GPU_COLORCOMPONENT_R;
+pub const SDL_GPUColorTargetBlendState = gpu.SDL_GPUColorTargetBlendState;
+pub const SDL_GPUColorTargetDescription = gpu.SDL_GPUColorTargetDescription;
+pub const SDL_GPUColorTargetInfo = gpu.SDL_GPUColorTargetInfo;
+pub const SDL_GPUCompareOp = gpu.SDL_GPUCompareOp;
+pub const SDL_GPUComputePipelineCreateInfo = gpu.SDL_GPUComputePipelineCreateInfo;
+pub const SDL_GPUCullMode = gpu.SDL_GPUCullMode;
+pub const SDL_GPUDepthStencilState = gpu.SDL_GPUDepthStencilState;
+pub const SDL_GPUDepthStencilTargetInfo = gpu.SDL_GPUDepthStencilTargetInfo;
+pub const SDL_GPUFillMode = gpu.SDL_GPUFillMode;
+pub const SDL_GPUFilter = gpu.SDL_GPUFilter;
+pub const SDL_GPUFlipMode = gpu.SDL_GPUFlipMode;
+pub const SDL_GPUFrontFace = gpu.SDL_GPUFrontFace;
+pub const SDL_GPUGraphicsPipelineCreateInfo = gpu.SDL_GPUGraphicsPipelineCreateInfo;
+pub const SDL_GPUGraphicsPipelineTargetInfo = gpu.SDL_GPUGraphicsPipelineTargetInfo;
+pub const SDL_GPUIndexedIndirectDrawCommand = gpu.SDL_GPUIndexedIndirectDrawCommand;
+pub const SDL_GPUIndirectDispatchCommand = gpu.SDL_GPUIndirectDispatchCommand;
+pub const SDL_GPUIndirectDrawCommand = gpu.SDL_GPUIndirectDrawCommand;
+pub const SDL_GPUMultisampleState = gpu.SDL_GPUMultisampleState;
+pub const SDL_GPURasterizerState = gpu.SDL_GPURasterizerState;
+pub const SDL_GPUSampleCount = gpu.SDL_GPUSampleCount;
+pub const SDL_GPUSamplerAddressMode = gpu.SDL_GPUSamplerAddressMode;
+pub const SDL_GPUSamplerCreateInfo = gpu.SDL_GPUSamplerCreateInfo;
+pub const SDL_GPUSamplerMipmapMode = gpu.SDL_GPUSamplerMipmapMode;
+pub const SDL_GPUShaderCreateInfo = gpu.SDL_GPUShaderCreateInfo;
+pub const SDL_GPUShaderFormat = gpu.SDL_GPUShaderFormat;
+pub const SDL_GPU_SHADERFORMAT_DXBC = gpu.SDL_GPU_SHADERFORMAT_DXBC;
+pub const SDL_GPU_SHADERFORMAT_DXIL = gpu.SDL_GPU_SHADERFORMAT_DXIL;
+pub const SDL_GPU_SHADERFORMAT_INVALID = gpu.SDL_GPU_SHADERFORMAT_INVALID;
+pub const SDL_GPU_SHADERFORMAT_METALLIB = gpu.SDL_GPU_SHADERFORMAT_METALLIB;
+pub const SDL_GPU_SHADERFORMAT_MSL = gpu.SDL_GPU_SHADERFORMAT_MSL;
+pub const SDL_GPU_SHADERFORMAT_PRIVATE = gpu.SDL_GPU_SHADERFORMAT_PRIVATE;
+pub const SDL_GPU_SHADERFORMAT_SPIRV = gpu.SDL_GPU_SHADERFORMAT_SPIRV;
+pub const SDL_GPUShaderStage = gpu.SDL_GPUShaderStage;
+pub const SDL_GPUStencilOp = gpu.SDL_GPUStencilOp;
+pub const SDL_GPUStencilOpState = gpu.SDL_GPUStencilOpState;
+pub const SDL_GPUStorageBufferReadWriteBinding = gpu.SDL_GPUStorageBufferReadWriteBinding;
+pub const SDL_GPUStorageTextureReadWriteBinding = gpu.SDL_GPUStorageTextureReadWriteBinding;
+pub const SDL_GPUTextureCreateInfo = gpu.SDL_GPUTextureCreateInfo;
+pub const SDL_GPUTextureFormat = gpu.SDL_GPUTextureFormat;
+pub const SDL_GPUTextureLocation = gpu.SDL_GPUTextureLocation;
+pub const SDL_GPUTextureRegion = gpu.SDL_GPUTextureRegion;
+pub const SDL_GPUTextureSamplerBinding = gpu.SDL_GPUTextureSamplerBinding;
+pub const SDL_GPUTextureTransferInfo = gpu.SDL_GPUTextureTransferInfo;
+pub const SDL_GPUTextureType = gpu.SDL_GPUTextureType;
+pub const SDL_GPU_TEXTUREUSAGE_COLOR_TARGET = gpu.SDL_GPU_TEXTUREUSAGE_COLOR_TARGET;
+pub const SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_READ = gpu.SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_READ;
+pub const SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE = gpu.SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE;
+pub const SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_WRITE = gpu.SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_WRITE;
+pub const SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET = gpu.SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET;
+pub const SDL_GPUTextureUsageFlags = gpu.SDL_GPUTextureUsageFlags;
+pub const SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ = gpu.SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ;
+pub const SDL_GPU_TEXTUREUSAGE_SAMPLER = gpu.SDL_GPU_TEXTUREUSAGE_SAMPLER;
+pub const SDL_GPUTransferBufferCreateInfo = gpu.SDL_GPUTransferBufferCreateInfo;
+pub const SDL_GPUTransferBufferLocation = gpu.SDL_GPUTransferBufferLocation;
+pub const SDL_GPUTransferBufferUsage = gpu.SDL_GPUTransferBufferUsage;
+pub const SDL_GPUVertexAttribute = gpu.SDL_GPUVertexAttribute;
+pub const SDL_GPUVertexBufferDescription = gpu.SDL_GPUVertexBufferDescription;
+pub const SDL_GPUVertexElementFormat = gpu.SDL_GPUVertexElementFormat;
+pub const SDL_GPUVertexInputRate = gpu.SDL_GPUVertexInputRate;
+pub const SDL_GPUVertexInputState = gpu.SDL_GPUVertexInputState;
+pub const SDL_GPUViewport = gpu.SDL_GPUViewport;
+pub const SDL_GPUVulkanOptions = gpu.SDL_GPUVulkanOptions;
+pub const SDL_PROP_GPU_BUFFER_CREATE_NAME_STRING = gpu.SDL_PROP_GPU_BUFFER_CREATE_NAME_STRING;
+pub const SDL_PROP_GPU_COMPUTEPIPELINE_CREATE_NAME_STRING = gpu.SDL_PROP_GPU_COMPUTEPIPELINE_CREATE_NAME_STRING;
+pub const SDL_PROP_GPU_DEVICE_CREATE_D3D12_AGILITY_SDK_PATH_STRING = gpu.SDL_PROP_GPU_DEVICE_CREATE_D3D12_AGILITY_SDK_PATH_STRING;
+pub const SDL_PROP_GPU_DEVICE_CREATE_D3D12_AGILITY_SDK_VERSION_NUMBER = gpu.SDL_PROP_GPU_DEVICE_CREATE_D3D12_AGILITY_SDK_VERSION_NUMBER;
+pub const SDL_PROP_GPU_DEVICE_CREATE_DEBUGMODE_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_DEBUGMODE_BOOLEAN;
+pub const SDL_PROP_GPU_DEVICE_CREATE_NAME_STRING = gpu.SDL_PROP_GPU_DEVICE_CREATE_NAME_STRING;
+pub const SDL_PROP_GPU_DEVICE_CREATE_PREFERLOWPOWER_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_PREFERLOWPOWER_BOOLEAN;
+pub const SDL_PROP_GPU_DEVICE_CREATE_SHADERS_SPIRV_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_SPIRV_BOOLEAN;
+pub const SDL_PROP_GPU_DEVICE_CREATE_VERBOSE_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_VERBOSE_BOOLEAN;
+pub const SDL_PROP_GPU_DEVICE_CREATE_D3D12_ALLOW_FEWER_RESOURCE_SLOTS_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_D3D12_ALLOW_FEWER_RESOURCE_SLOTS_BOOLEAN;
+pub const SDL_PROP_GPU_DEVICE_CREATE_D3D12_SEMANTIC_NAME_STRING = gpu.SDL_PROP_GPU_DEVICE_CREATE_D3D12_SEMANTIC_NAME_STRING;
+pub const SDL_PROP_GPU_DEVICE_CREATE_FEATURE_ANISOTROPY_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_FEATURE_ANISOTROPY_BOOLEAN;
+pub const SDL_PROP_GPU_DEVICE_CREATE_FEATURE_CLIP_DISTANCE_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_FEATURE_CLIP_DISTANCE_BOOLEAN;
+pub const SDL_PROP_GPU_DEVICE_CREATE_FEATURE_DEPTH_CLAMPING_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_FEATURE_DEPTH_CLAMPING_BOOLEAN;
+pub const SDL_PROP_GPU_DEVICE_CREATE_FEATURE_INDIRECT_DRAW_FIRST_INSTANCE_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_FEATURE_INDIRECT_DRAW_FIRST_INSTANCE_BOOLEAN;
+pub const SDL_PROP_GPU_DEVICE_CREATE_METAL_ALLOW_MACFAMILY1_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_METAL_ALLOW_MACFAMILY1_BOOLEAN;
+pub const SDL_PROP_GPU_DEVICE_CREATE_SHADERS_DXBC_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_DXBC_BOOLEAN;
+pub const SDL_PROP_GPU_DEVICE_CREATE_SHADERS_DXIL_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_DXIL_BOOLEAN;
+pub const SDL_PROP_GPU_DEVICE_CREATE_SHADERS_MSL_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_MSL_BOOLEAN;
+pub const SDL_PROP_GPU_DEVICE_CREATE_SHADERS_METALLIB_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_METALLIB_BOOLEAN;
+pub const SDL_PROP_GPU_DEVICE_CREATE_SHADERS_PRIVATE_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_SHADERS_PRIVATE_BOOLEAN;
+pub const SDL_PROP_GPU_DEVICE_CREATE_VULKAN_OPTIONS_POINTER = gpu.SDL_PROP_GPU_DEVICE_CREATE_VULKAN_OPTIONS_POINTER;
+pub const SDL_PROP_GPU_DEVICE_CREATE_VULKAN_REQUIRE_HARDWARE_ACCELERATION_BOOLEAN = gpu.SDL_PROP_GPU_DEVICE_CREATE_VULKAN_REQUIRE_HARDWARE_ACCELERATION_BOOLEAN;
+pub const SDL_PROP_GPU_GRAPHICSPIPELINE_CREATE_NAME_STRING = gpu.SDL_PROP_GPU_GRAPHICSPIPELINE_CREATE_NAME_STRING;
+pub const SDL_PROP_GPU_SAMPLER_CREATE_NAME_STRING = gpu.SDL_PROP_GPU_SAMPLER_CREATE_NAME_STRING;
+pub const SDL_PROP_GPU_SHADER_CREATE_NAME_STRING = gpu.SDL_PROP_GPU_SHADER_CREATE_NAME_STRING;
+pub const SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_A_FLOAT = gpu.SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_A_FLOAT;
+pub const SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_B_FLOAT = gpu.SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_B_FLOAT;
+pub const SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_DEPTH_FLOAT = gpu.SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_DEPTH_FLOAT;
+pub const SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_G_FLOAT = gpu.SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_G_FLOAT;
+pub const SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_R_FLOAT = gpu.SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_R_FLOAT;
+pub const SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_STENCIL_NUMBER = gpu.SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_STENCIL_NUMBER;
+pub const SDL_PROP_GPU_TEXTURE_CREATE_NAME_STRING = gpu.SDL_PROP_GPU_TEXTURE_CREATE_NAME_STRING;
+pub const SDL_PROP_GPU_TRANSFERBUFFER_CREATE_NAME_STRING = gpu.SDL_PROP_GPU_TRANSFERBUFFER_CREATE_NAME_STRING;
+
+pub const SDL_MessageBoxFlags = messagebox.SDL_MessageBoxFlags;
+pub const SDL_MessageBoxButton = messagebox.SDL_MessageBoxButton;
+pub const SDL_MessageBoxColor = messagebox.SDL_MessageBoxColor;
+pub const SDL_MessageBoxColorScheme = messagebox.SDL_MessageBoxColorScheme;
+pub const SDL_MessageBoxData = messagebox.SDL_MessageBoxData;
+pub const SDL_MESSAGEBOX_ERROR = messagebox.SDL_MESSAGEBOX_ERROR;
+pub const SDL_MESSAGEBOX_WARNING = messagebox.SDL_MESSAGEBOX_WARNING;
+pub const SDL_MESSAGEBOX_INFORMATION = messagebox.SDL_MESSAGEBOX_INFORMATION;
+
+pub const SDL = struct {
+    _handle: dynamic.LibraryHandle,
+
+    core: core.CoreFunctions,
+    video: video.VideoFunctions,
+    surface: surface.SurfaceFunctions,
+    render: render.RenderFunctions,
+    events: events.EventFunctions,
+    input: input.InputFunctions,
+    audio: audio.AudioFunctions,
+    pixels: pixels.PixelFunctions,
+    time: time.TimeFunctions,
+    threads: threads.ThreadFunctions,
+    filesystem: filesystem.FileSystemFunctions,
+    hints: hints.HintFunctions,
+    properties: properties.PropertyFunctions,
+    log: log.LogFunctions,
+    clipboard: clipboard.ClipboardFunctions,
+    platform: platform.PlatformFunctions,
+    power: power.PowerFunctions,
+    system: system.SystemFunctions,
+    misc: misc.MiscFunctions,
+    stdinc: stdinc.StdincFunctions,
+    process: process.ProcessFunctions,
+    gpu: gpu.GpuFunctions,
+    camera: camera.CameraFunctions,
+    vulkan: vulkan.VulkanFunctions,
+    metal: metal.MetalFunctions,
+    tray: tray.TrayFunctions,
+    messagebox: messagebox.MessageBoxFunctions,
+    dialog: dialog.DialogFunctions,
+    storage: storage.StorageFunctions,
+    hidapi: hidapi.HidapiFunctions,
+    sensor: sensor.SensorFunctions,
+    pen: pen.PenFunctions,
+    touch: touch.TouchFunctions,
+    haptic: haptic.HapticFunctions,
+    keycode: keycode.KeycodeFunctions,
+    locale: locale.LocaleFunctions,
+    assert: assert.AssertFunctions,
+    sharedobject: sharedobject.SharedObjectFunctions,
+    asyncio: asyncio.AsyncIOFunctions,
+    atomic: atomic.AtomicFunctions,
+    bits: bits.BitsFunctions,
+    cpuinfo: cpuinfo.CpuInfoFunctions,
+    endian: endian.EndianFunctions,
+    guid: guid.GuidFunctions,
+    intrinsics: intrinsics.IntrinsicsFunctions,
+
+    pub fn load() !SDL {
+        const handle = try dynamic.loadLibrary("libSDL3.so");
+        errdefer dynamic.unloadLibrary(handle);
+        return SDL{
+            ._handle = handle,
+            .core = try core.CoreFunctions.load(handle),
+            .video = try video.VideoFunctions.load(handle),
+            .surface = try surface.SurfaceFunctions.load(handle),
+            .render = try render.RenderFunctions.load(handle),
+            .events = try events.EventFunctions.load(handle),
+            .input = try input.InputFunctions.load(handle),
+            .audio = try audio.AudioFunctions.load(handle),
+            .pixels = try pixels.PixelFunctions.load(handle),
+            .time = try time.TimeFunctions.load(handle),
+            .threads = try threads.ThreadFunctions.load(handle),
+            .filesystem = try filesystem.FileSystemFunctions.load(handle),
+            .hints = try hints.HintFunctions.load(handle),
+            .properties = try properties.PropertyFunctions.load(handle),
+            .log = try log.LogFunctions.load(handle),
+            .clipboard = try clipboard.ClipboardFunctions.load(handle),
+            .platform = try platform.PlatformFunctions.load(handle),
+            .power = try power.PowerFunctions.load(handle),
+            .system = try system.SystemFunctions.load(handle),
+            .misc = try misc.MiscFunctions.load(handle),
+            .stdinc = try stdinc.StdincFunctions.load(handle),
+            .process = try process.ProcessFunctions.load(handle),
+            .gpu = try gpu.GpuFunctions.load(handle),
+            .camera = try camera.CameraFunctions.load(handle),
+            .vulkan = try vulkan.VulkanFunctions.load(handle),
+            .metal = try metal.MetalFunctions.load(handle),
+            .tray = try tray.TrayFunctions.load(handle),
+            .messagebox = try messagebox.MessageBoxFunctions.load(handle),
+            .dialog = try dialog.DialogFunctions.load(handle),
+            .storage = try storage.StorageFunctions.load(handle),
+            .hidapi = try hidapi.HidapiFunctions.load(handle),
+            .sensor = try sensor.SensorFunctions.load(handle),
+            .pen = try pen.PenFunctions.load(handle),
+            .touch = try touch.TouchFunctions.load(handle),
+            .haptic = try haptic.HapticFunctions.load(handle),
+            .keycode = try keycode.KeycodeFunctions.load(handle),
+            .locale = try locale.LocaleFunctions.load(handle),
+            .assert = try assert.AssertFunctions.load(handle),
+            .sharedobject = try sharedobject.SharedObjectFunctions.load(handle),
+            .asyncio = try asyncio.AsyncIOFunctions.load(handle),
+            .atomic = try atomic.AtomicFunctions.load(handle),
+            .bits = try bits.BitsFunctions.load(handle),
+            .cpuinfo = try cpuinfo.CpuInfoFunctions.load(handle),
+            .endian = try endian.EndianFunctions.load(handle),
+            .guid = try guid.GuidFunctions.load(handle),
+            .intrinsics = try intrinsics.IntrinsicsFunctions.load(handle),
+        };
+    }
+
+    pub fn unload(self: *SDL) void {
+        dynamic.unloadLibrary(self._handle);
+    }
+};
+
+pub const Image = struct {
+    _handle: dynamic.LibraryHandle,
+
+    functions: image.ImageFunctions,
+
+    pub fn load() !Image {
+        const handle = try dynamic.loadLibrary("libSDL3_image.so");
+        return Image{
+            ._handle = handle,
+            .functions = try image.ImageFunctions.loadFunctions(handle),
+        };
+    }
+
+    pub fn unload(self: *Image) void {
+        dynamic.unloadLibrary(self._handle);
+    }
+};
+
+pub const TTF = struct {
+    _handle: dynamic.LibraryHandle,
+
+    functions: ttf.TTFFunctions,
+
+    pub fn load() !TTF {
+        const handle = try dynamic.loadLibrary("libSDL3_ttf.so");
+        return TTF{
+            ._handle = handle,
+            .functions = try ttf.TTFFunctions.load(handle),
+        };
+    }
+
+    pub fn unload(self: *TTF) void {
+        dynamic.unloadLibrary(self._handle);
+    }
+};
