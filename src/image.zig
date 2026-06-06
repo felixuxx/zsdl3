@@ -4,12 +4,20 @@
 const dynamic = @import("dynamic.zig");
 const surface = @import("surface.zig");
 const render = @import("render.zig");
+const gpu = @import("gpu.zig");
+const video = @import("video.zig");
+const core = @import("core.zig");
 
 // Import types
 pub const SDL_Surface = surface.SDL_Surface;
 pub const SDL_IOStream = surface.SDL_IOStream;
 pub const SDL_Texture = render.SDL_Texture;
 pub const SDL_Renderer = render.SDL_Renderer;
+pub const SDL_GPUTexture = gpu.SDL_GPUTexture;
+pub const SDL_GPUDevice = gpu.SDL_GPUDevice;
+pub const SDL_GPUCopyPass = gpu.SDL_GPUCopyPass;
+pub const SDL_Cursor = video.SDL_Cursor;
+pub const SDL_PropertiesID = core.SDL_PropertiesID;
 
 // Version constants
 pub const SDL_IMAGE_MAJOR_VERSION = 3;
@@ -23,6 +31,17 @@ pub const IMG_Animation = extern struct {
     count: c_int,
     frames: ?[*]?*SDL_Surface,
     delays: ?[*]c_int,
+};
+
+// Animation decoder/encoder types
+pub const IMG_AnimationDecoder = opaque {};
+pub const IMG_AnimationEncoder = opaque {};
+
+pub const IMG_AnimationDecoderStatus = enum(c_int) {
+    IMG_DECODER_STATUS_INVALID = -1,
+    IMG_DECODER_STATUS_OK,
+    IMG_DECODER_STATUS_FAILED,
+    IMG_DECODER_STATUS_COMPLETE,
 };
 
 // Version function
@@ -101,6 +120,65 @@ pub const PFN_IMG_LoadAnimationTyped_IO = *const fn (src: ?*SDL_IOStream, closei
 pub const PFN_IMG_FreeAnimation = *const fn (anim: ?*IMG_Animation) callconv(.c) void;
 pub const PFN_IMG_LoadGIFAnimation_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*IMG_Animation;
 pub const PFN_IMG_LoadWEBPAnimation_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*IMG_Animation;
+pub const PFN_IMG_LoadANIAnimation_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*IMG_Animation;
+pub const PFN_IMG_LoadAPNGAnimation_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*IMG_Animation;
+pub const PFN_IMG_LoadAVIFAnimation_IO = *const fn (src: ?*SDL_IOStream) callconv(.c) ?*IMG_Animation;
+
+// Save functions
+pub const PFN_IMG_Save = *const fn (surface: ?*SDL_Surface, file: ?[*:0]const u8) callconv(.c) bool;
+pub const PFN_IMG_SaveBMP = *const fn (surface: ?*SDL_Surface, file: ?[*:0]const u8) callconv(.c) bool;
+pub const PFN_IMG_SaveBMP_IO = *const fn (surface: ?*SDL_Surface, dst: ?*SDL_IOStream, closeio: bool) callconv(.c) bool;
+pub const PFN_IMG_SaveCUR = *const fn (surface: ?*SDL_Surface, file: ?[*:0]const u8) callconv(.c) bool;
+pub const PFN_IMG_SaveCUR_IO = *const fn (surface: ?*SDL_Surface, dst: ?*SDL_IOStream, closeio: bool) callconv(.c) bool;
+pub const PFN_IMG_SaveGIF = *const fn (surface: ?*SDL_Surface, file: ?[*:0]const u8) callconv(.c) bool;
+pub const PFN_IMG_SaveGIF_IO = *const fn (surface: ?*SDL_Surface, dst: ?*SDL_IOStream, closeio: bool) callconv(.c) bool;
+pub const PFN_IMG_SaveICO = *const fn (surface: ?*SDL_Surface, file: ?[*:0]const u8) callconv(.c) bool;
+pub const PFN_IMG_SaveICO_IO = *const fn (surface: ?*SDL_Surface, dst: ?*SDL_IOStream, closeio: bool) callconv(.c) bool;
+pub const PFN_IMG_SaveTGA = *const fn (surface: ?*SDL_Surface, file: ?[*:0]const u8) callconv(.c) bool;
+pub const PFN_IMG_SaveTGA_IO = *const fn (surface: ?*SDL_Surface, dst: ?*SDL_IOStream, closeio: bool) callconv(.c) bool;
+pub const PFN_IMG_SaveWEBP = *const fn (surface: ?*SDL_Surface, file: ?[*:0]const u8, quality: f32) callconv(.c) bool;
+pub const PFN_IMG_SaveWEBP_IO = *const fn (surface: ?*SDL_Surface, dst: ?*SDL_IOStream, closeio: bool, quality: f32) callconv(.c) bool;
+pub const PFN_IMG_SaveTyped_IO = *const fn (surface: ?*SDL_Surface, dst: ?*SDL_IOStream, closeio: bool, type: ?[*:0]const u8) callconv(.c) bool;
+
+// Animated cursor
+pub const PFN_IMG_CreateAnimatedCursor = *const fn (anim: ?*IMG_Animation, hot_x: c_int, hot_y: c_int) callconv(.c) ?*SDL_Cursor;
+
+// Image detection
+pub const PFN_IMG_isANI = *const fn (src: ?*SDL_IOStream) callconv(.c) bool;
+
+// Animation encoder functions
+pub const PFN_IMG_CreateAnimationEncoder = *const fn (file: ?[*:0]const u8) callconv(.c) ?*IMG_AnimationEncoder;
+pub const PFN_IMG_CreateAnimationEncoder_IO = *const fn (dst: ?*SDL_IOStream, closeio: bool, type: ?[*:0]const u8) callconv(.c) ?*IMG_AnimationEncoder;
+pub const PFN_IMG_CreateAnimationEncoderWithProperties = *const fn (props: SDL_PropertiesID) callconv(.c) ?*IMG_AnimationEncoder;
+pub const PFN_IMG_CloseAnimationEncoder = *const fn (encoder: ?*IMG_AnimationEncoder) callconv(.c) bool;
+pub const PFN_IMG_AddAnimationEncoderFrame = *const fn (encoder: ?*IMG_AnimationEncoder, surface: ?*SDL_Surface, duration: core.Uint64) callconv(.c) bool;
+
+// Animation decoder functions
+pub const PFN_IMG_CreateAnimationDecoder = *const fn (file: ?[*:0]const u8) callconv(.c) ?*IMG_AnimationDecoder;
+pub const PFN_IMG_CreateAnimationDecoder_IO = *const fn (src: ?*SDL_IOStream, closeio: bool, type: ?[*:0]const u8) callconv(.c) ?*IMG_AnimationDecoder;
+pub const PFN_IMG_CreateAnimationDecoderWithProperties = *const fn (props: SDL_PropertiesID) callconv(.c) ?*IMG_AnimationDecoder;
+pub const PFN_IMG_CloseAnimationDecoder = *const fn (decoder: ?*IMG_AnimationDecoder) callconv(.c) bool;
+pub const PFN_IMG_GetAnimationDecoderFrame = *const fn (decoder: ?*IMG_AnimationDecoder, frame: ?*?*SDL_Surface, duration: ?*core.Uint64) callconv(.c) bool;
+pub const PFN_IMG_GetAnimationDecoderProperties = *const fn (decoder: ?*IMG_AnimationDecoder) callconv(.c) SDL_PropertiesID;
+pub const PFN_IMG_GetAnimationDecoderStatus = *const fn (decoder: ?*IMG_AnimationDecoder) callconv(.c) IMG_AnimationDecoderStatus;
+pub const PFN_IMG_ResetAnimationDecoder = *const fn (decoder: ?*IMG_AnimationDecoder) callconv(.c) bool;
+
+// Animation save functions
+pub const PFN_IMG_SaveAnimation = *const fn (anim: ?*IMG_Animation, file: ?[*:0]const u8) callconv(.c) bool;
+pub const PFN_IMG_SaveAnimationTyped_IO = *const fn (anim: ?*IMG_Animation, dst: ?*SDL_IOStream, closeio: bool, type: ?[*:0]const u8) callconv(.c) bool;
+pub const PFN_IMG_SaveANIAnimation_IO = *const fn (anim: ?*IMG_Animation, dst: ?*SDL_IOStream, closeio: bool) callconv(.c) bool;
+pub const PFN_IMG_SaveAPNGAnimation_IO = *const fn (anim: ?*IMG_Animation, dst: ?*SDL_IOStream, closeio: bool) callconv(.c) bool;
+pub const PFN_IMG_SaveAVIFAnimation_IO = *const fn (anim: ?*IMG_Animation, dst: ?*SDL_IOStream, closeio: bool, quality: c_int) callconv(.c) bool;
+pub const PFN_IMG_SaveGIFAnimation_IO = *const fn (anim: ?*IMG_Animation, dst: ?*SDL_IOStream, closeio: bool) callconv(.c) bool;
+pub const PFN_IMG_SaveWEBPAnimation_IO = *const fn (anim: ?*IMG_Animation, dst: ?*SDL_IOStream, closeio: bool, quality: c_int) callconv(.c) bool;
+
+// GPU texture loading
+pub const PFN_IMG_LoadGPUTexture = *const fn (device: ?*SDL_GPUDevice, copy_pass: ?*SDL_GPUCopyPass, file: ?[*:0]const u8, width: ?*c_int, height: ?*c_int) callconv(.c) ?*SDL_GPUTexture;
+pub const PFN_IMG_LoadGPUTexture_IO = *const fn (device: ?*SDL_GPUDevice, copy_pass: ?*SDL_GPUCopyPass, src: ?*SDL_IOStream, closeio: bool, width: ?*c_int, height: ?*c_int) callconv(.c) ?*SDL_GPUTexture;
+pub const PFN_IMG_LoadGPUTextureTyped_IO = *const fn (device: ?*SDL_GPUDevice, copy_pass: ?*SDL_GPUCopyPass, src: ?*SDL_IOStream, closeio: bool, type: ?[*:0]const u8, width: ?*c_int, height: ?*c_int) callconv(.c) ?*SDL_GPUTexture;
+
+// Clipboard
+pub const PFN_IMG_GetClipboardImage = *const fn () callconv(.c) ?*SDL_Surface;
 
 pub const ImageFunctions = struct {
     version: PFN_IMG_Version,
@@ -162,6 +240,49 @@ pub const ImageFunctions = struct {
     freeAnimation: PFN_IMG_FreeAnimation,
     loadGIFAnimationIO: PFN_IMG_LoadGIFAnimation_IO,
     loadWEBPAnimationIO: PFN_IMG_LoadWEBPAnimation_IO,
+    loadANIAnimationIO: PFN_IMG_LoadANIAnimation_IO,
+    loadAPNGAnimationIO: PFN_IMG_LoadAPNGAnimation_IO,
+    loadAVIFAnimationIO: PFN_IMG_LoadAVIFAnimation_IO,
+    save: PFN_IMG_Save,
+    saveBMP: PFN_IMG_SaveBMP,
+    saveBMPIO: PFN_IMG_SaveBMP_IO,
+    saveCUR: PFN_IMG_SaveCUR,
+    saveCURIO: PFN_IMG_SaveCUR_IO,
+    saveGIF: PFN_IMG_SaveGIF,
+    saveGIFIO: PFN_IMG_SaveGIF_IO,
+    saveICO: PFN_IMG_SaveICO,
+    saveICOIO: PFN_IMG_SaveICO_IO,
+    saveTGA: PFN_IMG_SaveTGA,
+    saveTGAIO: PFN_IMG_SaveTGA_IO,
+    saveWEBP: PFN_IMG_SaveWEBP,
+    saveWEBPIO: PFN_IMG_SaveWEBP_IO,
+    saveTypedIO: PFN_IMG_SaveTyped_IO,
+    createAnimatedCursor: PFN_IMG_CreateAnimatedCursor,
+    isANI: PFN_IMG_isANI,
+    createAnimationEncoder: PFN_IMG_CreateAnimationEncoder,
+    createAnimationEncoderIO: PFN_IMG_CreateAnimationEncoder_IO,
+    createAnimationEncoderWithProperties: PFN_IMG_CreateAnimationEncoderWithProperties,
+    closeAnimationEncoder: PFN_IMG_CloseAnimationEncoder,
+    addAnimationEncoderFrame: PFN_IMG_AddAnimationEncoderFrame,
+    createAnimationDecoder: PFN_IMG_CreateAnimationDecoder,
+    createAnimationDecoderIO: PFN_IMG_CreateAnimationDecoder_IO,
+    createAnimationDecoderWithProperties: PFN_IMG_CreateAnimationDecoderWithProperties,
+    closeAnimationDecoder: PFN_IMG_CloseAnimationDecoder,
+    getAnimationDecoderFrame: PFN_IMG_GetAnimationDecoderFrame,
+    getAnimationDecoderProperties: PFN_IMG_GetAnimationDecoderProperties,
+    getAnimationDecoderStatus: PFN_IMG_GetAnimationDecoderStatus,
+    resetAnimationDecoder: PFN_IMG_ResetAnimationDecoder,
+    saveAnimation: PFN_IMG_SaveAnimation,
+    saveAnimationTypedIO: PFN_IMG_SaveAnimationTyped_IO,
+    saveANIAnimationIO: PFN_IMG_SaveANIAnimation_IO,
+    saveAPNGAnimationIO: PFN_IMG_SaveAPNGAnimation_IO,
+    saveAVIFAnimationIO: PFN_IMG_SaveAVIFAnimation_IO,
+    saveGIFAnimationIO: PFN_IMG_SaveGIFAnimation_IO,
+    saveWEBPAnimationIO: PFN_IMG_SaveWEBPAnimation_IO,
+    loadGPUTexture: PFN_IMG_LoadGPUTexture,
+    loadGPUTextureIO: PFN_IMG_LoadGPUTexture_IO,
+    loadGPUTextureTypedIO: PFN_IMG_LoadGPUTextureTyped_IO,
+    getClipboardImage: PFN_IMG_GetClipboardImage,
 
     pub fn loadFunctions(handle: dynamic.LibraryHandle) !ImageFunctions {
         return dynamic.loadFunctions(ImageFunctions, handle, "IMG_", .{
@@ -214,6 +335,26 @@ pub const ImageFunctions = struct {
             .{ "loadAnimationTypedIO", "IMG_LoadAnimationTyped_IO" },
             .{ "loadGIFAnimationIO", "IMG_LoadGIFAnimation_IO" },
             .{ "loadWEBPAnimationIO", "IMG_LoadWEBPAnimation_IO" },
+            .{ "loadANIAnimationIO", "IMG_LoadANIAnimation_IO" },
+            .{ "loadAPNGAnimationIO", "IMG_LoadAPNGAnimation_IO" },
+            .{ "loadAVIFAnimationIO", "IMG_LoadAVIFAnimation_IO" },
+            .{ "saveBMPIO", "IMG_SaveBMP_IO" },
+            .{ "saveCURIO", "IMG_SaveCUR_IO" },
+            .{ "saveGIFIO", "IMG_SaveGIF_IO" },
+            .{ "saveICOIO", "IMG_SaveICO_IO" },
+            .{ "saveTGAIO", "IMG_SaveTGA_IO" },
+            .{ "saveWEBPIO", "IMG_SaveWEBP_IO" },
+            .{ "saveTypedIO", "IMG_SaveTyped_IO" },
+            .{ "createAnimationEncoderIO", "IMG_CreateAnimationEncoder_IO" },
+            .{ "createAnimationDecoderIO", "IMG_CreateAnimationDecoder_IO" },
+            .{ "saveAnimationTypedIO", "IMG_SaveAnimationTyped_IO" },
+            .{ "saveANIAnimationIO", "IMG_SaveANIAnimation_IO" },
+            .{ "saveAPNGAnimationIO", "IMG_SaveAPNGAnimation_IO" },
+            .{ "saveAVIFAnimationIO", "IMG_SaveAVIFAnimation_IO" },
+            .{ "saveGIFAnimationIO", "IMG_SaveGIFAnimation_IO" },
+            .{ "saveWEBPAnimationIO", "IMG_SaveWEBPAnimation_IO" },
+            .{ "loadGPUTextureIO", "IMG_LoadGPUTexture_IO" },
+            .{ "loadGPUTextureTypedIO", "IMG_LoadGPUTextureTyped_IO" },
         }, &.{});
     }
 };
