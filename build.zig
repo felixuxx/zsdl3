@@ -9,9 +9,6 @@ pub fn build(b: *std.Build) void {
         .link_libc = true,
     });
 
-    mod.linkSystemLibrary("SDL3", .{});
-    mod.linkSystemLibrary("SDL3_image", .{});
-
     const exe = b.addExecutable(.{
         .name = "zsdl3",
         .root_module = b.createModule(.{
@@ -23,8 +20,6 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    exe.root_module.linkSystemLibrary("SDL3", .{});
-    exe.root_module.linkSystemLibrary("SDL3_ttf", .{});
 
     // Renderer example
     const renderer = b.addExecutable(.{
@@ -38,7 +33,6 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    renderer.root_module.linkSystemLibrary("SDL3", .{});
     b.installArtifact(renderer);
 
     const run_renderer_step = b.step("run-renderer", "Run the renderer example");
@@ -61,7 +55,6 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    cube_3d.root_module.linkSystemLibrary("SDL3", .{});
     b.installArtifact(cube_3d);
 
     const run_cube_3d_step = b.step("run-cube-3d", "Run the 3D cube example");
@@ -84,7 +77,6 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    gpu.root_module.linkSystemLibrary("SDL3", .{});
     b.installArtifact(gpu);
 
     const run_gpu_step = b.step("run-gpu", "Run the GPU example");
@@ -107,8 +99,6 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    image.root_module.linkSystemLibrary("SDL3", .{});
-    image.root_module.linkSystemLibrary("SDL3_image", .{});
     b.installArtifact(image);
 
     const run_image_step = b.step("run-image", "Run the image example");
@@ -132,7 +122,6 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    basic_2d.root_module.linkSystemLibrary("SDL3", .{});
     b.installArtifact(basic_2d);
 
     const run_basic_2d_step = b.step("run-basic-2d", "Run the basic 2D example");
@@ -155,8 +144,6 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    ttf.root_module.linkSystemLibrary("SDL3", .{});
-    ttf.root_module.linkSystemLibrary("SDL3_ttf", .{});
     b.installArtifact(ttf);
 
     const run_ttf_step = b.step("run-ttf", "Run the TTF example");
@@ -180,8 +167,6 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    text_editor.root_module.linkSystemLibrary("SDL3", .{});
-    text_editor.root_module.linkSystemLibrary("SDL3_ttf", .{});
     b.installArtifact(text_editor);
 
     const run_text_editor_step = b.step("run-text-editor", "Run the text editor example");
@@ -205,7 +190,6 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    audio.root_module.linkSystemLibrary("SDL3", .{});
     b.installArtifact(audio);
 
     const run_audio_step = b.step("run-audio", "Run the audio example");
@@ -228,7 +212,6 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    dialog.root_module.linkSystemLibrary("SDL3", .{});
     b.installArtifact(dialog);
 
     const run_dialog_step = b.step("run-dialog", "Run the dialog example");
@@ -252,7 +235,6 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    process.root_module.linkSystemLibrary("SDL3", .{});
     b.installArtifact(process);
 
     const run_process_step = b.step("run-process", "Run the process example");
@@ -275,7 +257,6 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
-    clipboard.root_module.linkSystemLibrary("SDL3", .{});
     b.installArtifact(clipboard);
 
     const run_clipboard_step = b.step("run-clipboard", "Run the clipboard example");
@@ -301,14 +282,12 @@ pub fn build(b: *std.Build) void {
     const mod_tests = b.addTest(.{
         .root_module = mod,
     });
-    mod_tests.root_module.linkSystemLibrary("SDL3", .{});
 
     const run_mod_tests = b.addRunArtifact(mod_tests);
 
     const exe_tests = b.addTest(.{
         .root_module = exe.root_module,
     });
-    exe_tests.root_module.linkSystemLibrary("SDL3", .{});
 
     const run_exe_tests = b.addRunArtifact(exe_tests);
 
