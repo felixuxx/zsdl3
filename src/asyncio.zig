@@ -51,6 +51,7 @@ pub const PFN_SDL_CreateAsyncIOQueue = *const fn () callconv(.c) ?*SDL_AsyncIOQu
 pub const PFN_SDL_DestroyAsyncIOQueue = *const fn (queue: ?*SDL_AsyncIOQueue) callconv(.c) void;
 pub const PFN_SDL_GetAsyncIOResult = *const fn (queue: ?*SDL_AsyncIOQueue, outcome: ?*SDL_AsyncIOOutcome) callconv(.c) bool;
 pub const PFN_SDL_WaitAsyncIOResult = *const fn (queue: ?*SDL_AsyncIOQueue, outcome: ?*SDL_AsyncIOOutcome, timeoutMS: Sint32) callconv(.c) bool;
+pub const PFN_SDL_SignalAsyncIOQueue = *const fn (queue: ?*SDL_AsyncIOQueue) callconv(.c) void;
 
 pub const AsyncIOFunctions = struct {
     asyncIOFromFile: PFN_SDL_AsyncIOFromFile,
@@ -62,6 +63,7 @@ pub const AsyncIOFunctions = struct {
     destroyAsyncIOQueue: PFN_SDL_DestroyAsyncIOQueue,
     getAsyncIOResult: PFN_SDL_GetAsyncIOResult,
     waitAsyncIOResult: PFN_SDL_WaitAsyncIOResult,
+    signalAsyncIOQueue: PFN_SDL_SignalAsyncIOQueue,
 
     pub fn load(handle: dynamic.LibraryHandle) !AsyncIOFunctions {
         return dynamic.loadFunctions(AsyncIOFunctions, handle, "SDL_", .{}, &.{});

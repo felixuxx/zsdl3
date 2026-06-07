@@ -56,6 +56,8 @@ pub const PFN_SDL_GetDefaultLogOutputFunction = *const fn () callconv(.c) ?*cons
 pub const PFN_SDL_SetLogOutputFunction = *const fn (callback: ?*const fn (?*anyopaque, c_int, SDL_LogPriority, [*:0]const u8) callconv(.c) void, userdata: ?*anyopaque) callconv(.c) void;
 pub const PFN_SDL_GetLogOutputFunction = *const fn (callback: ?*?*const fn (?*anyopaque, c_int, SDL_LogPriority, [*:0]const u8) callconv(.c) void, userdata: ?*?*anyopaque) callconv(.c) void;
 pub const PFN_SDL_SetLogPriorityPrefix = *const fn (priority: SDL_LogPriority, prefix: [*:0]const u8) callconv(.c) bool;
+pub const PFN_SDL_LogMessageV = *const fn (category: c_int, priority: SDL_LogPriority, fmt: [*:0]const u8, ap: ?*anyopaque) callconv(.c) void;
+pub const PFN_SDL_LogTrace = *const fn (category: c_int, fmt: [*:0]const u8, ...) callconv(.c) void;
 
 pub const LogFunctions = struct {
     setLogPriorities: PFN_SDL_SetLogPriorities,
@@ -74,6 +76,8 @@ pub const LogFunctions = struct {
     setLogOutputFunction: PFN_SDL_SetLogOutputFunction,
     getLogOutputFunction: PFN_SDL_GetLogOutputFunction,
     setLogPriorityPrefix: PFN_SDL_SetLogPriorityPrefix,
+    logMessageV: PFN_SDL_LogMessageV,
+    logTrace: PFN_SDL_LogTrace,
 
     pub fn load(handle: dynamic.LibraryHandle) !LogFunctions {
         return dynamic.loadFunctions(LogFunctions, handle, "SDL_", .{}, &.{});

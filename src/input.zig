@@ -397,6 +397,7 @@ pub const PFN_SDL_GetGamepadPlayerIndexForID = *const fn (instance_id: SDL_Joyst
 pub const PFN_SDL_GetRealGamepadTypeForID = *const fn (instance_id: SDL_JoystickID) callconv(.c) SDL_GamepadType;
 pub const PFN_SDL_GetRealGamepadType = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) SDL_GamepadType;
 pub const PFN_SDL_GetNumGamepadTouchpads = *const fn (gamepad: ?*SDL_Gamepad) callconv(.c) c_int;
+pub const PFN_SDL_GetNumGamepadTouchpadFingers = *const fn (gamepad: ?*SDL_Gamepad, touchpad: c_int) callconv(.c) c_int;
 pub const PFN_SDL_GetGamepadTouchpadFinger = *const fn (gamepad: ?*SDL_Gamepad, touchpad: c_int, finger: c_int, down: ?*bool, x: ?*f32, y: ?*f32, pressure: ?*f32) callconv(.c) bool;
 pub const PFN_SDL_GetGamepadAppleSFSymbolsNameForAxis = *const fn (gamepad: ?*SDL_Gamepad, axis: SDL_GamepadAxis) callconv(.c) ?[*:0]const u8;
 pub const PFN_SDL_GetGamepadAppleSFSymbolsNameForButton = *const fn (gamepad: ?*SDL_Gamepad, button: SDL_GamepadButton) callconv(.c) ?[*:0]const u8;
@@ -590,6 +591,7 @@ pub const InputFunctions = extern struct {
     getRealGamepadTypeForID: PFN_SDL_GetRealGamepadTypeForID,
     getRealGamepadType: PFN_SDL_GetRealGamepadType,
     getNumGamepadTouchpads: PFN_SDL_GetNumGamepadTouchpads,
+    getNumGamepadTouchpadFingers: PFN_SDL_GetNumGamepadTouchpadFingers,
     getGamepadTouchpadFinger: PFN_SDL_GetGamepadTouchpadFinger,
     getGamepadAppleSFSymbolsNameForAxis: PFN_SDL_GetGamepadAppleSFSymbolsNameForAxis,
     getGamepadAppleSFSymbolsNameForButton: PFN_SDL_GetGamepadAppleSFSymbolsNameForButton,

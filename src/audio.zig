@@ -93,6 +93,10 @@ pub const PFN_SDL_GetAudioStreamAvailable = *const fn (stream: ?*SDL_AudioStream
 pub const PFN_SDL_PauseAudioStreamDevice = *const fn (stream: ?*SDL_AudioStream) callconv(.c) bool;
 pub const PFN_SDL_ResumeAudioStreamDevice = *const fn (stream: ?*SDL_AudioStream) callconv(.c) bool;
 pub const PFN_SDL_AudioStreamDevicePaused = *const fn (stream: ?*SDL_AudioStream) callconv(.c) bool;
+pub const PFN_SDL_PutAudioStreamDataNoCopy = *const fn (stream: ?*SDL_AudioStream, buf: ?*anyopaque, len: c_int) callconv(.c) bool;
+pub const PFN_SDL_PutAudioStreamPlanarData = *const fn (stream: ?*SDL_AudioStream, buf: ?*?*anyopaque, len: c_int, planes: c_int) callconv(.c) bool;
+pub const SDL_AudioPostmixCallback = ?*const fn (userdata: ?*anyopaque, stream: ?*SDL_AudioStream, additional_frames: c_int, total_frames: c_int) callconv(.c) void;
+pub const PFN_SDL_SetAudioPostmixCallback = *const fn (devid: SDL_AudioDeviceID, callback: SDL_AudioPostmixCallback, userdata: ?*anyopaque) callconv(.c) void;
 
 pub const AudioFunctions = struct {
     openAudioDevice: PFN_SDL_OpenAudioDevice,
@@ -150,6 +154,9 @@ pub const AudioFunctions = struct {
     pauseAudioStreamDevice: PFN_SDL_PauseAudioStreamDevice,
     resumeAudioStreamDevice: PFN_SDL_ResumeAudioStreamDevice,
     audioStreamDevicePaused: PFN_SDL_AudioStreamDevicePaused,
+    putAudioStreamDataNoCopy: PFN_SDL_PutAudioStreamDataNoCopy,
+    putAudioStreamPlanarData: PFN_SDL_PutAudioStreamPlanarData,
+    setAudioPostmixCallback: PFN_SDL_SetAudioPostmixCallback,
 
     pub fn load(handle: dynamic.LibraryHandle) !AudioFunctions {
         return dynamic.loadFunctions(AudioFunctions, handle, "SDL_", .{}, &.{});

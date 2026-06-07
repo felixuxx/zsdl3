@@ -55,6 +55,9 @@ pub const PFN_SDL_TimeFromWindows = *const fn (dwLowDateTime: core.Uint32, dwHig
 pub const PFN_SDL_GetDaysInMonth = *const fn (year: c_int, month: c_int) callconv(.c) c_int;
 pub const PFN_SDL_GetDayOfYear = *const fn (year: c_int, month: c_int, day: c_int) callconv(.c) c_int;
 pub const PFN_SDL_GetDayOfWeek = *const fn (year: c_int, month: c_int, day: c_int) callconv(.c) c_int;
+pub const PFN_SDL_AddTimerNS = *const fn (interval: core.Uint32, callback: SDL_TimerCallback, userdata: ?*anyopaque) callconv(.c) SDL_TimerID;
+pub const PFN_SDL_DelayNS = *const fn (ns: core.Uint64) callconv(.c) void;
+pub const PFN_SDL_DelayPrecise = *const fn (ns: core.Uint64) callconv(.c) bool;
 
 pub const TimeFunctions = struct {
     getTicks: PFN_SDL_GetTicks,
@@ -73,6 +76,9 @@ pub const TimeFunctions = struct {
     getDaysInMonth: PFN_SDL_GetDaysInMonth,
     getDayOfYear: PFN_SDL_GetDayOfYear,
     getDayOfWeek: PFN_SDL_GetDayOfWeek,
+    addTimerNS: PFN_SDL_AddTimerNS,
+    delayNS: PFN_SDL_DelayNS,
+    delayPrecise: PFN_SDL_DelayPrecise,
 
     pub fn load(handle: dynamic.LibraryHandle) !TimeFunctions {
         return dynamic.loadFunctions(TimeFunctions, handle, "SDL_", .{}, &.{});
