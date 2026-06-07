@@ -5,6 +5,8 @@
 
 Thin, zero-overhead, **runtime-loaded** bindings for SDL3, SDL3_image, and SDL3_ttf — no `@cImport`, no compile-time dependency on SDL development libraries.
 
+> Bindings partially AI-assisted.
+
 > **Need Zig 0.15.2?** Use the [`zig-0.15.2`](https://github.com/felixuxx/zsdl3/tree/zig-0.15.2) branch.
 
 ---
@@ -128,7 +130,5 @@ Each subsystem exposes PFN type aliases and a dispatch struct. The loader in `sr
 | **SDL3_ttf** | 117 | 0 | **100%** |
 
 ---
-
-> Bindings partially AI-assisted.
 
 **License:** zlib (same as SDL3) — see [LICENSE](LICENSE).
