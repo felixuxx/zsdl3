@@ -26,9 +26,9 @@ pub const PFN_SDL_CompareAndSwapAtomicU32 = *const fn (a: ?*core.Uint32, oldval:
 pub const PFN_SDL_GetAtomicInt = *const fn (a: ?*SDL_AtomicInt) callconv(.c) c_int;
 pub const PFN_SDL_GetAtomicPointer = *const fn (a: ?*?*anyopaque) callconv(.c) ?*anyopaque;
 pub const PFN_SDL_GetAtomicU32 = *const fn (a: ?*core.Uint32) callconv(.c) core.Uint32;
-pub const PFN_SDL_SetAtomicInt = *const fn (a: ?*SDL_AtomicInt, v: c_int) callconv(.c) bool;
-pub const PFN_SDL_SetAtomicPointer = *const fn (a: ?*?*anyopaque, v: ?*anyopaque) callconv(.c) bool;
-pub const PFN_SDL_SetAtomicU32 = *const fn (a: ?*core.Uint32, v: core.Uint32) callconv(.c) bool;
+pub const PFN_SDL_SetAtomicInt = *const fn (a: ?*SDL_AtomicInt, v: c_int) callconv(.c) c_int;
+pub const PFN_SDL_SetAtomicPointer = *const fn (a: ?*?*anyopaque, v: ?*anyopaque) callconv(.c) ?*anyopaque;
+pub const PFN_SDL_SetAtomicU32 = *const fn (a: ?*core.Uint32, v: core.Uint32) callconv(.c) core.Uint32;
 
 pub const AtomicFunctions = struct {
     tryLockSpinlock: PFN_SDL_TryLockSpinlock,

@@ -45,6 +45,6 @@ pub const PenFunctions = struct {
     getPenDeviceType: ?PFN_SDL_GetPenDeviceType,
 
     pub fn load(handle: dynamic.LibraryHandle) !PenFunctions {
-        return dynamic.loadFunctions(PenFunctions, handle, "SDL_", .{}, &.{ "getPens", "getPenName", "getPenCapabilities", "getPenStatus", "penConnected", "getPenFromID", "getPenID", "penAxisSupported" });
+        return dynamic.loadFunctions(PenFunctions, handle, "SDL_", .{}, &.{ "getPens", "getPenName", "getPenCapabilities", "getPenStatus", "penConnected", "getPenFromID", "getPenID", "penAxisSupported", "getPenDeviceType" });
     }
 };

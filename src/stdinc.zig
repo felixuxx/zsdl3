@@ -532,6 +532,7 @@ pub const StdincFunctions = struct {
             .{ "iconv_string", "SDL_iconv_string" },
             .{ "crc16", "SDL_crc16" },
             .{ "crc32", "SDL_crc32" },
+            .{ "ucs4ToUTF8", "SDL_UCS4ToUTF8" },
         }, &.{ "strtokr", "min", "max", "clamp", "malloc", "calloc", "realloc", "free", "aligned_alloc", "aligned_free", "memset4", "strcmp", "strncmp", "strcasecmp", "strncasecmp", "strndup", "strnlen", "strnstr", "strpbrk", "strtok_r", "vsnprintf", "vasprintf", "vsscanf", "vswprintf", "wcslen", "wcsdup", "wcslcat", "wcslcpy", "wcscmp", "wcsncmp", "wcscasecmp", "wcsncasecmp", "wcsnlen", "wcsnstr", "wcsstr", "wcstol", "acos", "asin", "atan", "atan2", "ceil", "copysign", "cos", "exp", "fabs", "floor", "fmod", "log", "log10", "lround", "modf", "pow", "round", "scalbn", "sin", "sqrt", "tan", "trunc", "acosf", "asinf", "atanf", "atan2f", "ceilf", "copysignf", "cosf", "expf", "fabsf", "floorf", "fmodf", "logf", "log10f", "lroundf", "modff", "powf", "roundf", "scalbnf", "sinf", "sqrtf", "tanf", "truncf", "isinf", "isinff", "isnan", "isnanf", "rand", "srand", "rand_r", "rand_bits", "rand_bits_r", "randf", "randf_r", "getenv", "getenv_unsafe", "setenv_unsafe", "unsetenv_unsafe", "qsort", "qsort_r", "bsearch", "bsearch_r", "iconv_open", "iconv_close", "iconv", "iconv_string", "getMemoryFunctions", "setMemoryFunctions", "getOriginalMemoryFunctions", "crc16", "crc32" });
     }
 };
