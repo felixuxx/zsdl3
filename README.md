@@ -1,9 +1,9 @@
-# ZSDL3 — Zig bindings for SDL3
+# ZSDL3 — Runtime-loaded Zig bindings for SDL3
 
 [![Zig](https://img.shields.io/badge/Zig-0.16.0+-orange.svg)](https://ziglang.org)
-[![SDL3](https://img.shields.io/badge/SDL-3.2.0+-blue.svg)](https://www.libsdl.org/)
+[![SDL3](https://img.shields.io/badge/SDL-3.4.4+-blue.svg)](https://www.libsdl.org/)
 
-Thin, zero-overhead bindings for SDL3, SDL3_image, and SDL3_ttf — without `@cImport`.
+Thin, zero-overhead, **runtime-loaded** bindings for SDL3, SDL3_image, and SDL3_ttf — no `@cImport`, no compile-time dependency on SDL development libraries.
 
 > **Need Zig 0.15.2?** Use the [`zig-0.15.2`](https://github.com/felixuxx/zsdl3/tree/zig-0.15.2) branch.
 
@@ -11,19 +11,16 @@ Thin, zero-overhead bindings for SDL3, SDL3_image, and SDL3_ttf — without `@cI
 
 ## Install
 
+The only requirement is the SDL3 shared library on your system at runtime.
+
 ```bash
 # macOS
 brew install sdl3 sdl3_ttf sdl3_image
-# Linux (Debian/Ubuntu)
-sudo apt install libsdl3-dev
-# Linux (Arch)
-sudo pacman -S sdl3
-# Linux (Fedora)
-sudo dnf install SDL3-devel SDL3_image SDL3_ttf
-# Windows — download from https://github.com/libsdl-org/SDL/releases
+# Linux — SDL3 .so must be findable via LD_LIBRARY_PATH or ldconfig
+# Windows — SDL3.dll must be in PATH or next to the executable
 ```
 
-Or build SDL3 from source.
+Build SDL3 from source if your package manager doesn't have it yet.
 
 ## Depend on it
 
@@ -36,8 +33,9 @@ Then in `build.zig`:
 ```zig
 const zsdl3 = b.dependency("zsdl3", .{});
 exe.root_module.addImport("zsdl3", zsdl3.module("zsdl3"));
-exe.root_module.linkSystemLibrary("SDL3", .{});
 ```
+
+No `linkSystemLibrary` needed — all symbols are resolved at runtime via `dlopen`/`LoadLibrary`.
 
 ## Build
 
@@ -54,11 +52,15 @@ zig build run      # run the app
 |---|---|
 | `zig build run-basic-2d` | window + yellow rect |
 | `zig build run-cube-3d` | rotating 3D cube |
-| `zig build run-gpu-test` | GPU device + shader formats |
-| `zig build run-image-test` | load PNG via SDL3_image |
-| `zig build run-ttf-example` | render TTF text |
+| `zig build run-renderer` | renderer smoke test |
+| `zig build run-gpu` | GPU device + shader formats |
+| `zig build run-image` | load PNG via SDL3_image |
+| `zig build run-ttf` | render TTF text |
 | `zig build run-text-editor` | text editor with file dialogs |
-| `zig build run-test-enhanced-renderer-visual` | renderer smoke test |
+| `zig build run-audio` | sine wave playback |
+| `zig build run-dialog` | native file dialogs |
+| `zig build run-process` | process creation/management |
+| `zig build run-clipboard` | clipboard read/write |
 
 ## Usage
 
@@ -66,35 +68,66 @@ zig build run      # run the app
 const std = @import("std");
 const zsdl3 = @import("zsdl3");
 
-pub fn main() void {
-    if (!zsdl3.init(zsdl3.SDL_INIT_VIDEO)) return;
-    defer zsdl3.quit();
+pub fn main() !void {
+    var sdl = try zsdl3.SDL.load();
+    defer sdl.unload();
 
-    const window = zsdl3.createWindow("Demo", 800, 600, zsdl3.SDL_WINDOW_RESIZABLE) orelse return;
-    defer zsdl3.destroyWindow(window);
+    if (!sdl.core.init(zsdl3.SDL_INIT_VIDEO)) return error.SDLInitFailed;
+    defer sdl.core.quit();
 
-    const renderer = zsdl3.createRenderer(window, null) orelse return;
-    defer zsdl3.destroyRenderer(renderer);
+    const window = sdl.video.createWindow("Demo", 800, 600, zsdl3.SDL_WINDOW_RESIZABLE) orelse return error.WindowCreateFailed;
+    defer sdl.video.destroyWindow(window);
+
+    const renderer = sdl.video.createRenderer(window, null) orelse return error.RendererCreateFailed;
+    defer sdl.video.destroyRenderer(renderer);
 
     while (true) {
         var event: zsdl3.SDL_Event = undefined;
-        while (zsdl3.pollEvent(&event)) if (event.type == zsdl3.SDL_EVENT_QUIT) return;
-        _ = zsdl3.setRenderDrawColor(renderer, 30, 60, 90, 255);
-        _ = zsdl3.renderClear(renderer);
-        zsdl3.renderPresent(renderer);
-        zsdl3.delay(16);
+        while (sdl.events.pollEvent(&event)) if (event.type == zsdl3.SDL_EVENT_QUIT) return;
+        _ = sdl.video.setRenderDrawColor(renderer, 30, 60, 90, 255);
+        _ = sdl.video.renderClear(renderer);
+        sdl.video.renderPresent(renderer);
+        sdl.time.delay(16);
     }
 }
 ```
 
-All functions use short Zig-friendly names (`init`, `createWindow`, `pollEvent`). Full API at [SDL3 Wiki](https://wiki.libsdl.org/SDL3/APIByCategory).
+All functions use short Zig-friendly names (`init`, `createWindow`, `pollEvent`), dispatched by subsystem (`sdl.video.*`, `sdl.audio.*`, `sdl.gpu.*`, …). Full API at [SDL3 Wiki](https://wiki.libsdl.org/SDL3/APIByCategory).
+
+### Sub-libraries
+
+SDL3_image and SDL3_ttf are loaded on demand:
+
+```zig
+var img = try zsdl3.Image.load();
+defer img.unload();
+_ = img.functions.load("icon.png");
+```
+
+```zig
+var ttf = try zsdl3.TTF.load();
+defer ttf.unload();
+const font = ttf.functions.openFont("sans.ttf", 24) orelse return;
+```
 
 ## Structure
 
 ```
-src/     — 50+ subsystem files (core, video, render, gpu, audio, image, ttf, …)
-examples/ — 7 runnable examples
+src/        — 50 subsystem files (core, video, render, gpu, audio, image, ttf, …)
+examples/   — 11 runnable examples
 ```
+
+Each subsystem exposes PFN type aliases and a dispatch struct. The loader in `src/dynamic.zig` maps Zig field names to `SDL_CamelCase` symbols via `dlsym`.
+
+## Coverage
+
+| Library | Bound | Unbound | Coverage |
+|---|---|---|---|
+| **SDL3 core** (3.4.4) | 1,149 | 121 | **~90%** |
+| **SDL3_image** | 102 | 0 | **100%** |
+| **SDL3_ttf** | 117 | 0 | **100%** |
+
+Remaining SDL3 symbols are mostly niche APIs (platform-specific, async I/O, HID, tray).
 
 ---
 
