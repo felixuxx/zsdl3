@@ -40,7 +40,7 @@ No `linkSystemLibrary` needed — all symbols are resolved at runtime via `dlope
 ## Build
 
 ```bash
-git clone https://github.com/felixuxx/zsdl3.git
+git clone -b cleanup https://github.com/felixuxx/zsdl3.git
 cd zsdl3
 zig build          # builds main binary + all examples
 zig build run      # run the app
@@ -123,12 +123,12 @@ Each subsystem exposes PFN type aliases and a dispatch struct. The loader in `sr
 
 | Library | Bound | Unbound | Coverage |
 |---|---|---|---|
-| **SDL3 core** (3.4.4) | 1,149 | 121 | **~90%** |
+| **SDL3 core** (3.4.4) | 1,270 | 0 | **100%** |
 | **SDL3_image** | 102 | 0 | **100%** |
 | **SDL3_ttf** | 117 | 0 | **100%** |
 
-Remaining SDL3 symbols are mostly niche APIs (platform-specific, async I/O, HID, tray).
-
 ---
+
+> Bindings partially AI-assisted.
 
 **License:** zlib (same as SDL3) — see [LICENSE](LICENSE).
