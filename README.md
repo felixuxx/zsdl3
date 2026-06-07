@@ -1,13 +1,12 @@
 # ZSDL3 — Runtime-loaded Zig bindings for SDL3
 
-[![Zig](https://img.shields.io/badge/Zig-0.16.0+-orange.svg)](https://ziglang.org)
+[![Zig](https://img.shields.io/badge/Zig-0.15.2+-orange.svg)](https://ziglang.org)
 [![SDL3](https://img.shields.io/badge/SDL-3.4.4+-blue.svg)](https://www.libsdl.org/)
 
 Thin, zero-overhead, **runtime-loaded** bindings for SDL3, SDL3_image, and SDL3_ttf — no `@cImport`, no compile-time dependency on SDL development libraries.
 
 > Bindings partially AI-assisted.
-
-> **Need Zig 0.15.2?** Use the [`zig-0.15.2`](https://github.com/felixuxx/zsdl3/tree/zig-0.15.2) branch.
+> Compatible with Zig 0.15.2 and 0.16.0.
 
 ---
 
