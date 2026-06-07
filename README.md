@@ -25,7 +25,7 @@ Build SDL3 from source if your package manager doesn't have it yet.
 ## Depend on it
 
 ```bash
-zig fetch --save git+https://github.com/felixuxx/zsdl3.git
+zig fetch --save git+https://github.com/felixuxx/zsdl3#cleanup
 ```
 
 Then in `build.zig`:
@@ -78,15 +78,15 @@ pub fn main() !void {
     const window = sdl.video.createWindow("Demo", 800, 600, zsdl3.SDL_WINDOW_RESIZABLE) orelse return error.WindowCreateFailed;
     defer sdl.video.destroyWindow(window);
 
-    const renderer = sdl.video.createRenderer(window, null) orelse return error.RendererCreateFailed;
-    defer sdl.video.destroyRenderer(renderer);
+    const renderer = sdl.render.createRenderer(window, null) orelse return error.RendererCreateFailed;
+    defer sdl.render.destroyRenderer(renderer);
 
     while (true) {
         var event: zsdl3.SDL_Event = undefined;
         while (sdl.events.pollEvent(&event)) if (event.type == zsdl3.SDL_EVENT_QUIT) return;
-        _ = sdl.video.setRenderDrawColor(renderer, 30, 60, 90, 255);
-        _ = sdl.video.renderClear(renderer);
-        sdl.video.renderPresent(renderer);
+        _ = sdl.render.setRenderDrawColor(renderer, 30, 60, 90, 255);
+        _ = sdl.render.renderClear(renderer);
+        sdl.render.renderPresent(renderer);
         sdl.time.delay(16);
     }
 }
