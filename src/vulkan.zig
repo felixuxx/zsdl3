@@ -9,7 +9,7 @@ const video = @import("video.zig");
 pub const Uint32 = core.Uint32;
 
 // Vulkan function pointer type for vkGetInstanceProcAddr
-pub const PFN_vkGetInstanceProcAddr = ?*const fn (?*anyopaque, ?[*:0]const u8) callconv(.c) ?*anyopaque;
+pub const PFN_vkGetInstanceProcAddr = *const fn (?*anyopaque, ?[*:0]const u8) callconv(.c) ?*anyopaque;
 
 // Vulkan functions
 pub const PFN_SDL_Vulkan_LoadLibrary = *const fn (path: ?[*:0]const u8) callconv(.c) bool;
