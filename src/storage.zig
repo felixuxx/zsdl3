@@ -11,6 +11,20 @@ pub const SDL_Time = core.Sint64; // SDL_Time is Sint64 (nanoseconds since epoch
 // Storage structs
 pub const SDL_Storage = opaque {};
 
+pub const SDL_StorageInterface = extern struct {
+    version: core.Uint32,
+    close: ?*const fn (userdata: ?*anyopaque) callconv(.c) bool,
+    ready: ?*const fn (userdata: ?*anyopaque) callconv(.c) bool,
+    enumerate: ?*const fn (userdata: ?*anyopaque, path: ?[*:0]const u8, callback: ?*const fn (?*anyopaque, ?[*:0]const u8, c_int) callconv(.c) c_int, userdata2: ?*anyopaque) callconv(.c) bool,
+    info: ?*const fn (userdata: ?*anyopaque, path: ?[*:0]const u8, info: ?*anyopaque) callconv(.c) bool,
+    read_file: ?*const fn (userdata: ?*anyopaque, path: ?[*:0]const u8, dest: ?*anyopaque, size: Uint64) callconv(.c) bool,
+    write_file: ?*const fn (userdata: ?*anyopaque, path: ?[*:0]const u8, source: ?*const anyopaque, size: Uint64) callconv(.c) bool,
+    mkdir: ?*const fn (userdata: ?*anyopaque, path: ?[*:0]const u8) callconv(.c) bool,
+    remove: ?*const fn (userdata: ?*anyopaque, path: ?[*:0]const u8) callconv(.c) bool,
+    rename: ?*const fn (userdata: ?*anyopaque, oldpath: ?[*:0]const u8, newpath: ?[*:0]const u8) callconv(.c) bool,
+    space_remaining: ?*const fn (userdata: ?*anyopaque) callconv(.c) Uint64,
+};
+
 pub const SDL_EnumerationResult = enum(c_int) {
     SDL_ENUM_CONTINUE,
     SDL_ENUM_SUCCESS,
@@ -37,6 +51,7 @@ pub const PFN_SDL_GetStoragePathInfo = *const fn (storage: ?*SDL_Storage, path: 
 pub const PFN_SDL_GetStorageSpaceRemaining = *const fn (storage: ?*SDL_Storage) callconv(.c) Uint64;
 pub const PFN_SDL_CopyStorageFile = *const fn (storage: ?*SDL_Storage, old_path: ?[*:0]const u8, new_path: ?[*:0]const u8) callconv(.c) bool;
 pub const PFN_SDL_RenameStoragePath = *const fn (storage: ?*SDL_Storage, old_path: ?[*:0]const u8, new_path: ?[*:0]const u8) callconv(.c) bool;
+pub const PFN_SDL_OpenStorage = *const fn (iface: ?*const SDL_StorageInterface, userdata: ?*anyopaque) callconv(.c) ?*SDL_Storage;
 
 // Storage path info
 pub const SDL_PathInfo = extern struct {
@@ -64,10 +79,11 @@ pub const StorageFunctions = struct {
     spaceRemaining: PFN_SDL_GetStorageSpaceRemaining,
     copyStorageFile: PFN_SDL_CopyStorageFile,
     renameStoragePath: PFN_SDL_RenameStoragePath,
+    openStorage: ?PFN_SDL_OpenStorage,
 
     pub fn load(handle: dynamic.LibraryHandle) !StorageFunctions {
         return dynamic.loadFunctions(StorageFunctions, handle, "SDL_", .{
             .{ "spaceRemaining", "SDL_GetStorageSpaceRemaining" },
-        }, &.{});
+        }, &.{"openStorage"});
     }
 };

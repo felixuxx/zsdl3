@@ -248,6 +248,9 @@ pub const PFN_SDL_GetWindowSafeArea = *const fn (window: ?*SDL_Window, rect: ?*S
 pub const PFN_SDL_GetWindowSurfaceVSync = *const fn (window: ?*SDL_Window, vsync: ?*c_int) callconv(.c) bool;
 pub const PFN_SDL_SetWindowSurfaceVSync = *const fn (window: ?*SDL_Window, vsync: c_int) callconv(.c) bool;
 pub const PFN_SDL_SyncWindow = *const fn (window: ?*SDL_Window) callconv(.c) bool;
+pub const PFN_SDL_CreateWindowWithProperties = *const fn (props: core.SDL_PropertiesID) callconv(.c) ?*SDL_Window;
+pub const PFN_SDL_GetWindowICCProfile = *const fn (window: ?*SDL_Window, size: ?*usize) callconv(.c) ?*anyopaque;
+pub const PFN_SDL_SetWindowFillDocument = *const fn (window: ?*SDL_Window) callconv(.c) bool;
 
 // GL/EGL functions
 pub const PFN_SDL_GL_CreateContext = *const fn (window: ?*SDL_Window) callconv(.c) ?*SDL_GLContext;
@@ -392,6 +395,9 @@ pub const VideoFunctions = struct {
     getWindowSurfaceVSync: PFN_SDL_GetWindowSurfaceVSync,
     setWindowSurfaceVSync: PFN_SDL_SetWindowSurfaceVSync,
     syncWindow: PFN_SDL_SyncWindow,
+    createWindowWithProperties: PFN_SDL_CreateWindowWithProperties,
+    getWindowICCProfile: PFN_SDL_GetWindowICCProfile,
+    setWindowFillDocument: ?PFN_SDL_SetWindowFillDocument,
     glCreateContext: PFN_SDL_GL_CreateContext,
     glDestroyContext: PFN_SDL_GL_DestroyContext,
     glExtensionSupported: PFN_SDL_GL_ExtensionSupported,
@@ -437,6 +443,6 @@ pub const VideoFunctions = struct {
             .{ "eglGetCurrentConfig", "SDL_EGL_GetCurrentConfig" },
             .{ "eglGetWindowSurface", "SDL_EGL_GetWindowSurface" },
             .{ "eglSetAttributeCallbacks", "SDL_EGL_SetAttributeCallbacks" },
-        }, &.{});
+        }, &.{"setWindowFillDocument"});
     }
 };

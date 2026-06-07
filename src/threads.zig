@@ -35,6 +35,8 @@ pub const SDL_ThreadState = enum(c_int) {
 
 pub const SDL_TLSDestructorCallback = ?*const fn (?*anyopaque) callconv(.c) void;
 
+pub const SDL_ThreadFunction = *const fn (data: ?*anyopaque) callconv(.c) c_int;
+
 // Thread functions
 pub const PFN_SDL_CreateThread = *const fn (func: ?*const fn (?*anyopaque) callconv(.c) c_int, name: ?[*:0]const u8, data: ?*anyopaque) callconv(.c) ?*SDL_Thread;
 pub const PFN_SDL_CreateThreadWithProperties = *const fn (props: core.SDL_PropertiesID) callconv(.c) ?*SDL_Thread;
@@ -57,6 +59,11 @@ pub const PFN_SDL_SemTryWait = *const fn (sem: ?*SDL_Semaphore) callconv(.c) boo
 pub const PFN_SDL_SemWaitTimeout = *const fn (sem: ?*SDL_Semaphore, ms: Sint32) callconv(.c) bool;
 pub const PFN_SDL_SemPost = *const fn (sem: ?*SDL_Semaphore) callconv(.c) bool;
 pub const PFN_SDL_SemValue = *const fn (sem: ?*SDL_Semaphore) callconv(.c) Uint32;
+pub const PFN_SDL_SignalSemaphore = *const fn (sem: ?*SDL_Semaphore) callconv(.c) bool;
+pub const PFN_SDL_TryWaitSemaphore = *const fn (sem: ?*SDL_Semaphore) callconv(.c) bool;
+pub const PFN_SDL_WaitSemaphore = *const fn (sem: ?*SDL_Semaphore) callconv(.c) bool;
+pub const PFN_SDL_WaitSemaphoreTimeout = *const fn (sem: ?*SDL_Semaphore, timeout: c_int) callconv(.c) bool;
+pub const PFN_SDL_GetSemaphoreValue = *const fn (sem: ?*SDL_Semaphore) callconv(.c) Uint32;
 pub const PFN_SDL_GetThreadName = *const fn (thread: ?*SDL_Thread) callconv(.c) ?[*:0]const u8;
 pub const PFN_SDL_SetCurrentThreadPriority = *const fn (priority: SDL_ThreadPriority) callconv(.c) bool;
 pub const PFN_SDL_GetCurrentThreadPriority = *const fn () callconv(.c) SDL_ThreadPriority;
@@ -67,6 +74,11 @@ pub const PFN_SDL_GetThreadState = *const fn (thread: ?*SDL_Thread) callconv(.c)
 pub const PFN_SDL_GetTLS = *const fn (id: ?*SDL_TLSID) callconv(.c) ?*anyopaque;
 pub const PFN_SDL_SetTLS = *const fn (id: ?*SDL_TLSID, value: ?*const anyopaque, destructor: SDL_TLSDestructorCallback) callconv(.c) bool;
 pub const PFN_SDL_CleanupTLS = *const fn () callconv(.c) void;
+
+pub const PFN_SDL_CreateThreadRuntime = *const fn (f: SDL_ThreadFunction, name: ?[*:0]const u8, data: ?*anyopaque, finish: SDL_ThreadFunction, stype: ?[*:0]const u8) callconv(.c) ?*SDL_Thread;
+pub const PFN_SDL_CreateThreadWithPropertiesRuntime = *const fn (props: core.SDL_PropertiesID, f: SDL_ThreadFunction, finish: SDL_ThreadFunction, stype: ?[*:0]const u8) callconv(.c) ?*SDL_Thread;
+pub const PFN_SDL_SetLinuxThreadPriority = *const fn (thread_id: core.Sint64, priority: c_int) callconv(.c) bool;
+pub const PFN_SDL_SetLinuxThreadPriorityAndPolicy = *const fn (thread_id: core.Sint64, priority: c_int, sched_policy: c_int) callconv(.c) bool;
 
 // RWLock functions
 pub const PFN_SDL_CreateRWLock = *const fn () callconv(.c) ?*SDL_RWLock;
@@ -99,6 +111,11 @@ pub const ThreadFunctions = struct {
     semWaitTimeout: PFN_SDL_SemWaitTimeout,
     semPost: PFN_SDL_SemPost,
     semValue: PFN_SDL_SemValue,
+    signalSemaphore: PFN_SDL_SignalSemaphore,
+    tryWaitSemaphore: PFN_SDL_TryWaitSemaphore,
+    waitSemaphore: PFN_SDL_WaitSemaphore,
+    waitSemaphoreTimeout: PFN_SDL_WaitSemaphoreTimeout,
+    getSemaphoreValue: PFN_SDL_GetSemaphoreValue,
     getThreadName: PFN_SDL_GetThreadName,
     setCurrentThreadPriority: PFN_SDL_SetCurrentThreadPriority,
     getCurrentThreadPriority: ?PFN_SDL_GetCurrentThreadPriority,
@@ -116,6 +133,10 @@ pub const ThreadFunctions = struct {
     unlockRWLock: PFN_SDL_UnlockRWLock,
     tryLockRWLockForReading: PFN_SDL_TryLockRWLockForReading,
     tryLockRWLockForWriting: PFN_SDL_TryLockRWLockForWriting,
+    createThreadRuntime: ?PFN_SDL_CreateThreadRuntime,
+    createThreadWithPropertiesRuntime: ?PFN_SDL_CreateThreadWithPropertiesRuntime,
+    setLinuxThreadPriority: ?PFN_SDL_SetLinuxThreadPriority,
+    setLinuxThreadPriorityAndPolicy: ?PFN_SDL_SetLinuxThreadPriorityAndPolicy,
 
     pub fn load(handle: dynamic.LibraryHandle) !ThreadFunctions {
         return dynamic.loadFunctions(ThreadFunctions, handle, "SDL_", .{
@@ -126,6 +147,6 @@ pub const ThreadFunctions = struct {
             .{ "semWaitTimeout", "SDL_WaitSemaphoreTimeout" },
             .{ "semPost", "SDL_SignalSemaphore" },
             .{ "semValue", "SDL_GetSemaphoreValue" },
-        }, &.{ "getCurrentThreadPriority" });
+        }, &.{ "getCurrentThreadPriority", "createThreadRuntime", "createThreadWithPropertiesRuntime", "setLinuxThreadPriority", "setLinuxThreadPriorityAndPolicy" });
     }
 };

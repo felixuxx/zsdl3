@@ -3,6 +3,7 @@
 
 const core = @import("core.zig");
 const dynamic = @import("dynamic.zig");
+const asyncio = @import("asyncio.zig");
 
 pub const Uint8 = core.Uint8;
 pub const Sint8 = core.Sint8;
@@ -17,6 +18,16 @@ pub const SDL_GlobFlags = Uint32;
 // Import types
 // Filesystem structs
 pub const SDL_IOStream = opaque {};
+
+pub const SDL_IOStreamInterface = extern struct {
+    version: Uint32,
+    size: ?*const fn (userdata: ?*anyopaque) callconv(.c) Sint64,
+    seek: ?*const fn (userdata: ?*anyopaque, offset: Sint64, whence: c_int) callconv(.c) Sint64,
+    read: ?*const fn (userdata: ?*anyopaque, ptr: ?*anyopaque, size: usize, status: ?*c_int) callconv(.c) usize,
+    write: ?*const fn (userdata: ?*anyopaque, ptr: ?*const anyopaque, size: usize, status: ?*c_int) callconv(.c) usize,
+    flush: ?*const fn (userdata: ?*anyopaque) callconv(.c) bool,
+    close: ?*const fn (userdata: ?*anyopaque) callconv(.c) bool,
+};
 
 // Filesystem path types and enums
 pub const SDL_Folder = enum(c_int) {
@@ -139,6 +150,11 @@ pub const PFN_SDL_IOFromMem = *const fn (mem: ?*anyopaque, size: usize) callconv
 pub const PFN_SDL_IOFromDynamicMem = *const fn () callconv(.c) ?*SDL_IOStream;
 pub const PFN_SDL_GetIOProperties = *const fn (stream: ?*SDL_IOStream) callconv(.c) core.SDL_PropertiesID;
 pub const PFN_SDL_GetIOStatus = *const fn (stream: ?*SDL_IOStream) callconv(.c) c_int;
+pub const PFN_SDL_LoadFile_IO = *const fn (src: ?*SDL_IOStream, datasize: ?*usize, closeio: bool) callconv(.c) ?*anyopaque;
+pub const PFN_SDL_SaveFile_IO = *const fn (dest: ?*SDL_IOStream, data: ?*const anyopaque, datasize: usize, closeio: bool) callconv(.c) bool;
+pub const PFN_SDL_LoadFileAsync = *const fn (src: ?*SDL_IOStream, offset: usize, size: usize, queue: ?*asyncio.SDL_AsyncIOQueue, userdata: ?*anyopaque) callconv(.c) ?*asyncio.SDL_AsyncIO;
+pub const PFN_SDL_IOvprintf = *const fn (stream: ?*SDL_IOStream, fmt: ?[*:0]const u8, ap: ?*anyopaque) callconv(.c) usize;
+pub const PFN_SDL_OpenIO = *const fn (iface: ?*const SDL_IOStreamInterface, userdata: ?*anyopaque) callconv(.c) ?*SDL_IOStream;
 
 pub const FileSystemFunctions = struct {
     getBasePath: PFN_SDL_GetBasePath,
@@ -195,6 +211,11 @@ pub const FileSystemFunctions = struct {
     ioFromDynamicMem: PFN_SDL_IOFromDynamicMem,
     getIOProperties: PFN_SDL_GetIOProperties,
     getIOStatus: PFN_SDL_GetIOStatus,
+    loadFile_IO: PFN_SDL_LoadFile_IO,
+    saveFile_IO: PFN_SDL_SaveFile_IO,
+    loadFileAsync: PFN_SDL_LoadFileAsync,
+    IOvprintf: PFN_SDL_IOvprintf,
+    openIO: PFN_SDL_OpenIO,
 
     pub fn load(handle: dynamic.LibraryHandle) !FileSystemFunctions {
         return dynamic.loadFunctions(FileSystemFunctions, handle, "SDL_", .{.{ "ioFromFile", "SDL_IOFromFile" }, .{ "ioFromConstMem", "SDL_IOFromConstMem" }, .{ "ioFromMem", "SDL_IOFromMem" }, .{ "ioFromDynamicMem", "SDL_IOFromDynamicMem" }}, &.{});

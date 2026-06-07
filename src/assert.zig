@@ -32,6 +32,7 @@ pub const PFN_SDL_ResetAssertionReport = *const fn () callconv(.c) void;
 pub const PFN_SDL_TriggerBreakpoint = *const fn () callconv(.c) void;
 pub const PFN_SDL_SetAssertionRetry = *const fn (state: bool) callconv(.c) void;
 pub const PFN_SDL_GetAssertionRetry = *const fn () callconv(.c) bool;
+pub const PFN_SDL_ReportAssertion = *const fn (data: ?*SDL_AssertData, func: ?[*:0]const u8, file: ?[*:0]const u8, line: c_int) callconv(.c) SDL_AssertState;
 
 pub const AssertFunctions = struct {
     setAssertionHandler: PFN_SDL_SetAssertionHandler,
@@ -42,6 +43,7 @@ pub const AssertFunctions = struct {
     triggerBreakpoint: ?PFN_SDL_TriggerBreakpoint,
     setAssertionRetry: ?PFN_SDL_SetAssertionRetry,
     getAssertionRetry: ?PFN_SDL_GetAssertionRetry,
+    reportAssertion: PFN_SDL_ReportAssertion,
 
     pub fn load(handle: dynamic.LibraryHandle) !AssertFunctions {
         return dynamic.loadFunctions(AssertFunctions, handle, "SDL_", .{}, &.{ "triggerBreakpoint", "setAssertionRetry", "getAssertionRetry" });

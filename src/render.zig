@@ -3,6 +3,7 @@
 
 const core = @import("core.zig");
 pub const Uint32 = core.Uint32;
+pub const Sint64 = core.Sint64;
 const pixels = @import("pixels.zig");
 pub const SDL_PixelFormat = pixels.SDL_PixelFormat;
 pub const SDL_BlendMode = pixels.SDL_BlendMode;
@@ -18,6 +19,7 @@ const dynamic = @import("dynamic.zig");
 // Render structs
 pub const SDL_Renderer = opaque {};
 pub const SDL_Texture = opaque {};
+pub const SDL_GPURenderState = opaque {};
 pub const SDL_Vertex = extern struct {
     position: pixels.SDL_FPoint,
     color: SDL_FColor,
@@ -64,12 +66,7 @@ pub const SDL_TextureAddressMode = enum(c_int) {
     SDL_TEXTURE_ADDRESS_WRAP,
 };
 
-// Colorspace support
-pub const SDL_Colorspace = enum(c_int) {
-    SDL_COLORSPACE_UNKNOWN = 0,
-    SDL_COLORSPACE_SRGB = 1,
-    SDL_COLORSPACE_SRGB_LINEAR = 2,
-};
+pub const SDL_Colorspace = pixels.SDL_Colorspace;
 
 // Renderer flags
 pub const SDL_RENDERER_SOFTWARE: Uint32 = 0x00000001;
@@ -220,6 +217,17 @@ pub const PFN_SDL_GetTextureSize = *const fn (texture: ?*SDL_Texture, w: ?*f32, 
 pub const PFN_SDL_GetRenderVSync = *const fn (renderer: ?*SDL_Renderer, vsync: ?*c_int) callconv(.c) bool;
 pub const PFN_SDL_SetRenderVSync = *const fn (renderer: ?*SDL_Renderer, vsync: c_int) callconv(.c) bool;
 
+// GPU render state (via SDL_Renderer)
+pub const PFN_SDL_AddVulkanRenderSemaphores = *const fn (renderer: ?*SDL_Renderer, wait_stage_mask: Uint32, wait_semaphore: Sint64, signal_semaphore: Sint64) callconv(.c) bool;
+pub const PFN_SDL_CreateGPURenderState = *const fn (renderer: ?*SDL_Renderer, createinfo: ?*const anyopaque) callconv(.c) ?*SDL_GPURenderState;
+pub const PFN_SDL_DestroyGPURenderState = *const fn (state: ?*SDL_GPURenderState) callconv(.c) void;
+pub const PFN_SDL_SetGPURenderState = *const fn (renderer: ?*SDL_Renderer, state: ?*SDL_GPURenderState) callconv(.c) bool;
+pub const PFN_SDL_SetGPURenderStateFragmentUniforms = *const fn (state: ?*SDL_GPURenderState, slot_index: Uint32, data: ?*const anyopaque, length: Uint32) callconv(.c) bool;
+
+// Metal-specific functions (platform-locked)
+pub const PFN_SDL_GetRenderMetalCommandEncoder = *const fn (renderer: ?*SDL_Renderer) callconv(.c) ?*anyopaque;
+pub const PFN_SDL_GetRenderMetalLayer = *const fn (renderer: ?*SDL_Renderer) callconv(.c) ?*anyopaque;
+
 pub const RenderFunctions = struct {
     createRenderer: PFN_SDL_CreateRenderer,
     createRendererWithProperties: PFN_SDL_CreateRendererWithProperties,
@@ -316,10 +324,17 @@ pub const RenderFunctions = struct {
     renderViewportSet: PFN_SDL_RenderViewportSet,
     setRenderColorScale: PFN_SDL_SetRenderColorScale,
     getRenderColorScale: PFN_SDL_GetRenderColorScale,
+    addVulkanRenderSemaphores: PFN_SDL_AddVulkanRenderSemaphores,
+    createGPURenderState: PFN_SDL_CreateGPURenderState,
+    destroyGPURenderState: PFN_SDL_DestroyGPURenderState,
+    setGPURenderState: PFN_SDL_SetGPURenderState,
+    setGPURenderStateFragmentUniforms: PFN_SDL_SetGPURenderStateFragmentUniforms,
+    getRenderMetalCommandEncoder: ?PFN_SDL_GetRenderMetalCommandEncoder,
+    getRenderMetalLayer: ?PFN_SDL_GetRenderMetalLayer,
 
     pub fn load(handle: dynamic.LibraryHandle) !RenderFunctions {
         return dynamic.loadFunctions(RenderFunctions, handle, "SDL_", .{
             .{ "textureSize", "SDL_GetTextureSize" },
-        }, &.{});
+        }, &.{ "getRenderMetalCommandEncoder", "getRenderMetalLayer" });
     }
 };

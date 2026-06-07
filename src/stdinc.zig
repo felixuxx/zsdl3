@@ -7,8 +7,16 @@ const dynamic = @import("dynamic.zig");
 // Import types
 pub const Sint64 = core.Sint64;
 pub const Uint64 = core.Uint64;
+pub const Uint32 = core.Uint32;
+pub const Uint16 = core.Uint16;
 
 pub const wchar_t = if (@import("builtin").os.tag == .windows) u16 else u32;
+
+// Memory callback function types
+pub const SDL_malloc_func = *const fn (size: usize) callconv(.c) ?*anyopaque;
+pub const SDL_calloc_func = *const fn (nmemb: usize, size: usize) callconv(.c) ?*anyopaque;
+pub const SDL_realloc_func = *const fn (ptr: ?*anyopaque, size: usize) callconv(.c) ?*anyopaque;
+pub const SDL_free_func = *const fn (ptr: ?*anyopaque) callconv(.c) void;
 
 // Stdinc functions
 pub const PFN_SDL_memset = *const fn (dst: ?*anyopaque, c: c_int, len: usize) callconv(.c) ?*anyopaque;
@@ -30,6 +38,9 @@ pub const PFN_SDL_strcasestr = *const fn (haystack: ?[*:0]const u8, needle: ?[*:
 pub const PFN_SDL_strtokr = *const fn (s1: ?[*:0]u8, s2: ?[*:0]const u8, saveptr: ?*?[*:0]u8) callconv(.c) ?[*:0]u8;
 pub const PFN_SDL_utf8strlen = *const fn (str: ?[*:0]const u8) callconv(.c) usize;
 pub const PFN_SDL_utf8strnlen = *const fn (str: ?[*:0]const u8, bytes: usize) callconv(.c) usize;
+pub const PFN_SDL_StepBackUTF8 = *const fn (start: [*]const u8, p: [*]const u8) callconv(.c) [*]const u8;
+pub const PFN_SDL_StepUTF8 = *const fn (p: ?*[*:0]const u8, ps: ?*usize) callconv(.c) Uint32;
+pub const PFN_SDL_UCS4ToUTF8 = *const fn (codepoint: Uint32, dst: [*]u8) callconv(.c) [*]u8;
 pub const PFN_SDL_itoa = *const fn (value: c_int, str: ?[*:0]u8, radix: c_int) callconv(.c) ?[*:0]u8;
 pub const PFN_SDL_uitoa = *const fn (value: c_uint, str: ?[*:0]u8, radix: c_int) callconv(.c) ?[*:0]u8;
 pub const PFN_SDL_ltoa = *const fn (value: c_long, str: ?[*:0]u8, radix: c_int) callconv(.c) ?[*:0]u8;
@@ -70,6 +81,15 @@ pub const PFN_SDL_free = *const fn (mem: ?*anyopaque) callconv(.c) void;
 pub const PFN_SDL_aligned_alloc = *const fn (alignment: usize, size: usize) callconv(.c) ?*anyopaque;
 pub const PFN_SDL_aligned_free = *const fn (mem: ?*anyopaque) callconv(.c) void;
 pub const PFN_SDL_memset4 = *const fn (dst: ?*anyopaque, val: c_int, dwords: usize) callconv(.c) ?*anyopaque;
+
+// Memory function query/set
+pub const PFN_SDL_GetMemoryFunctions = *const fn (malloc_func: ?*SDL_malloc_func, calloc_func: ?*SDL_calloc_func, realloc_func: ?*SDL_realloc_func, free_func: ?*SDL_free_func) callconv(.c) bool;
+pub const PFN_SDL_SetMemoryFunctions = *const fn (malloc_func: SDL_malloc_func, calloc_func: SDL_calloc_func, realloc_func: SDL_realloc_func, free_func: SDL_free_func) callconv(.c) bool;
+pub const PFN_SDL_GetOriginalMemoryFunctions = *const fn (malloc_func: ?*SDL_malloc_func, calloc_func: ?*SDL_calloc_func, realloc_func: ?*SDL_realloc_func, free_func: ?*SDL_free_func) callconv(.c) bool;
+
+// CRC functions
+pub const PFN_SDL_crc16 = *const fn (crc: Uint16, data: ?*const anyopaque, len: usize) callconv(.c) Uint16;
+pub const PFN_SDL_crc32 = *const fn (crc: Uint32, data: ?*const anyopaque, len: usize) callconv(.c) Uint32;
 
 // Additional string functions
 pub const PFN_SDL_strcmp = *const fn (str1: ?[*:0]const u8, str2: ?[*:0]const u8) callconv(.c) c_int;
@@ -169,6 +189,18 @@ pub const PFN_SDL_getenv_unsafe = *const fn (name: ?[*:0]const u8) callconv(.c) 
 pub const PFN_SDL_setenv_unsafe = *const fn (name: ?[*:0]const u8, value: ?[*:0]const u8, overwrite: bool) callconv(.c) bool;
 pub const PFN_SDL_unsetenv_unsafe = *const fn (name: ?[*:0]const u8) callconv(.c) bool;
 
+// Environment opaque type
+pub const SDL_Environment = opaque {};
+
+// New Environment API
+pub const PFN_SDL_CreateEnvironment = *const fn (populate: bool) callconv(.c) ?*SDL_Environment;
+pub const PFN_SDL_DestroyEnvironment = *const fn (env: ?*SDL_Environment) callconv(.c) void;
+pub const PFN_SDL_GetEnvironment = *const fn () callconv(.c) ?*SDL_Environment;
+pub const PFN_SDL_GetEnvironmentVariable = *const fn (env: ?*SDL_Environment, name: ?[*:0]const u8) callconv(.c) ?[*:0]const u8;
+pub const PFN_SDL_GetEnvironmentVariables = *const fn (env: ?*SDL_Environment) callconv(.c) [*][*:0]const u8;
+pub const PFN_SDL_SetEnvironmentVariable = *const fn (env: ?*SDL_Environment, name: ?[*:0]const u8, value: ?[*:0]const u8, overwrite: bool) callconv(.c) bool;
+pub const PFN_SDL_UnsetEnvironmentVariable = *const fn (env: ?*SDL_Environment, name: ?[*:0]const u8) callconv(.c) bool;
+
 // Sort functions
 pub const PFN_SDL_qsort = *const fn (base: ?*anyopaque, nmemb: usize, size: usize, compare: ?*const fn (?*const anyopaque, ?*const anyopaque) callconv(.c) c_int) callconv(.c) void;
 pub const PFN_SDL_qsort_r = *const fn (base: ?*anyopaque, nmemb: usize, size: usize, compare: ?*const fn (?*const anyopaque, ?*const anyopaque, ?*anyopaque) callconv(.c) c_int, userdata: ?*anyopaque) callconv(.c) void;
@@ -201,6 +233,9 @@ pub const StdincFunctions = struct {
     strtokr: ?PFN_SDL_strtokr,
     utf8strlen: PFN_SDL_utf8strlen,
     utf8strnlen: PFN_SDL_utf8strnlen,
+    stepBackUTF8: PFN_SDL_StepBackUTF8,
+    stepUTF8: PFN_SDL_StepUTF8,
+    ucs4ToUTF8: PFN_SDL_UCS4ToUTF8,
     itoa: PFN_SDL_itoa,
     uitoa: PFN_SDL_uitoa,
     ltoa: PFN_SDL_ltoa,
@@ -239,6 +274,11 @@ pub const StdincFunctions = struct {
     aligned_alloc: ?PFN_SDL_aligned_alloc,
     aligned_free: ?PFN_SDL_aligned_free,
     memset4: ?PFN_SDL_memset4,
+    getMemoryFunctions: ?PFN_SDL_GetMemoryFunctions,
+    setMemoryFunctions: ?PFN_SDL_SetMemoryFunctions,
+    getOriginalMemoryFunctions: ?PFN_SDL_GetOriginalMemoryFunctions,
+    crc16: ?PFN_SDL_crc16,
+    crc32: ?PFN_SDL_crc32,
     strcmp: ?PFN_SDL_strcmp,
     strncmp: ?PFN_SDL_strncmp,
     strcasecmp: ?PFN_SDL_strcasecmp,
@@ -323,6 +363,13 @@ pub const StdincFunctions = struct {
     getenv_unsafe: ?PFN_SDL_getenv_unsafe,
     setenv_unsafe: ?PFN_SDL_setenv_unsafe,
     unsetenv_unsafe: ?PFN_SDL_unsetenv_unsafe,
+    createEnvironment: PFN_SDL_CreateEnvironment,
+    destroyEnvironment: PFN_SDL_DestroyEnvironment,
+    getEnvironment: PFN_SDL_GetEnvironment,
+    getEnvironmentVariable: PFN_SDL_GetEnvironmentVariable,
+    getEnvironmentVariables: PFN_SDL_GetEnvironmentVariables,
+    setEnvironmentVariable: PFN_SDL_SetEnvironmentVariable,
+    unsetEnvironmentVariable: PFN_SDL_UnsetEnvironmentVariable,
     qsort: ?PFN_SDL_qsort,
     qsort_r: ?PFN_SDL_qsort_r,
     bsearch: ?PFN_SDL_bsearch,
@@ -483,6 +530,8 @@ pub const StdincFunctions = struct {
             .{ "iconv_close", "SDL_iconv_close" },
             .{ "iconv", "SDL_iconv" },
             .{ "iconv_string", "SDL_iconv_string" },
-        }, &.{ "strtokr", "min", "max", "clamp", "malloc", "calloc", "realloc", "free", "aligned_alloc", "aligned_free", "memset4", "strcmp", "strncmp", "strcasecmp", "strncasecmp", "strndup", "strnlen", "strnstr", "strpbrk", "strtok_r", "vsnprintf", "vasprintf", "vsscanf", "vswprintf", "wcslen", "wcsdup", "wcslcat", "wcslcpy", "wcscmp", "wcsncmp", "wcscasecmp", "wcsncasecmp", "wcsnlen", "wcsnstr", "wcsstr", "wcstol", "acos", "asin", "atan", "atan2", "ceil", "copysign", "cos", "exp", "fabs", "floor", "fmod", "log", "log10", "lround", "modf", "pow", "round", "scalbn", "sin", "sqrt", "tan", "trunc", "acosf", "asinf", "atanf", "atan2f", "ceilf", "copysignf", "cosf", "expf", "fabsf", "floorf", "fmodf", "logf", "log10f", "lroundf", "modff", "powf", "roundf", "scalbnf", "sinf", "sqrtf", "tanf", "truncf", "isinf", "isinff", "isnan", "isnanf", "rand", "srand", "rand_r", "rand_bits", "rand_bits_r", "randf", "randf_r", "getenv", "getenv_unsafe", "setenv_unsafe", "unsetenv_unsafe", "qsort", "qsort_r", "bsearch", "bsearch_r", "iconv_open", "iconv_close", "iconv", "iconv_string" });
+            .{ "crc16", "SDL_crc16" },
+            .{ "crc32", "SDL_crc32" },
+        }, &.{ "strtokr", "min", "max", "clamp", "malloc", "calloc", "realloc", "free", "aligned_alloc", "aligned_free", "memset4", "strcmp", "strncmp", "strcasecmp", "strncasecmp", "strndup", "strnlen", "strnstr", "strpbrk", "strtok_r", "vsnprintf", "vasprintf", "vsscanf", "vswprintf", "wcslen", "wcsdup", "wcslcat", "wcslcpy", "wcscmp", "wcsncmp", "wcscasecmp", "wcsncasecmp", "wcsnlen", "wcsnstr", "wcsstr", "wcstol", "acos", "asin", "atan", "atan2", "ceil", "copysign", "cos", "exp", "fabs", "floor", "fmod", "log", "log10", "lround", "modf", "pow", "round", "scalbn", "sin", "sqrt", "tan", "trunc", "acosf", "asinf", "atanf", "atan2f", "ceilf", "copysignf", "cosf", "expf", "fabsf", "floorf", "fmodf", "logf", "log10f", "lroundf", "modff", "powf", "roundf", "scalbnf", "sinf", "sqrtf", "tanf", "truncf", "isinf", "isinff", "isnan", "isnanf", "rand", "srand", "rand_r", "rand_bits", "rand_bits_r", "randf", "randf_r", "getenv", "getenv_unsafe", "setenv_unsafe", "unsetenv_unsafe", "qsort", "qsort_r", "bsearch", "bsearch_r", "iconv_open", "iconv_close", "iconv", "iconv_string", "getMemoryFunctions", "setMemoryFunctions", "getOriginalMemoryFunctions", "crc16", "crc32" });
     }
 };

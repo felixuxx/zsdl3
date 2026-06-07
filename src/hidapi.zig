@@ -35,6 +35,10 @@ pub const PFN_SDL_hid_get_product_string = *const fn (dev: ?*SDL_hid_device, str
 pub const PFN_SDL_hid_get_serial_number_string = *const fn (dev: ?*SDL_hid_device, string: ?*c_wchar_t, maxlen: usize) callconv(.c) c_int;
 pub const PFN_SDL_hid_get_indexed_string = *const fn (dev: ?*SDL_hid_device, string_index: c_int, string: ?*c_wchar_t, maxlen: usize) callconv(.c) c_int;
 pub const PFN_SDL_hid_ble_scan = *const fn (scan: bool) callconv(.c) void;
+pub const PFN_SDL_hid_get_device_info = *const fn (dev: ?*SDL_hid_device) callconv(.c) ?*SDL_hid_device_info;
+pub const PFN_SDL_hid_get_input_report = *const fn (dev: ?*SDL_hid_device, data: ?*Uint8, length: usize) callconv(.c) c_int;
+pub const PFN_SDL_hid_get_properties = *const fn (dev: ?*SDL_hid_device) callconv(.c) core.SDL_PropertiesID;
+pub const PFN_SDL_hid_get_report_descriptor = *const fn (dev: ?*SDL_hid_device, buf: ?*?*Uint8) callconv(.c) usize;
 
 // HID device info struct
 pub const SDL_hid_device_info = extern struct {
@@ -74,6 +78,10 @@ pub const HidapiFunctions = struct {
     hidGetSerialNumberString: PFN_SDL_hid_get_serial_number_string,
     hidGetIndexedString: PFN_SDL_hid_get_indexed_string,
     hidBleScan: PFN_SDL_hid_ble_scan,
+    hidGetDeviceInfo: PFN_SDL_hid_get_device_info,
+    hidGetInputReport: PFN_SDL_hid_get_input_report,
+    hidGetProperties: PFN_SDL_hid_get_properties,
+    hidGetReportDescriptor: PFN_SDL_hid_get_report_descriptor,
 
     pub fn load(handle: dynamic.LibraryHandle) !HidapiFunctions {
         return dynamic.loadFunctions(HidapiFunctions, handle, "SDL_", .{
@@ -96,6 +104,10 @@ pub const HidapiFunctions = struct {
             .{ "hidGetSerialNumberString", "SDL_hid_get_serial_number_string" },
             .{ "hidGetIndexedString", "SDL_hid_get_indexed_string" },
             .{ "hidBleScan", "SDL_hid_ble_scan" },
+            .{ "hidGetDeviceInfo", "SDL_hid_get_device_info" },
+            .{ "hidGetInputReport", "SDL_hid_get_input_report" },
+            .{ "hidGetProperties", "SDL_hid_get_properties" },
+            .{ "hidGetReportDescriptor", "SDL_hid_get_report_descriptor" },
         }, &.{});
     }
 };

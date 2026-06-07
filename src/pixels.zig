@@ -11,6 +11,20 @@ pub const Uint32 = core.Uint32;
 // Pixel format
 pub const SDL_PixelFormat = c_uint;
 
+// Colorspace
+pub const SDL_Colorspace = Uint32;
+pub const SDL_COLORSPACE_UNKNOWN: SDL_Colorspace = 0;
+pub const SDL_COLORSPACE_SRGB: SDL_Colorspace = 0x120005a0;
+pub const SDL_COLORSPACE_SRGB_LINEAR: SDL_Colorspace = 0x12000500;
+pub const SDL_COLORSPACE_HDR10: SDL_Colorspace = 0x12002600;
+pub const SDL_COLORSPACE_JPEG: SDL_Colorspace = 0x220004c6;
+pub const SDL_COLORSPACE_BT601_LIMITED: SDL_Colorspace = 0x211018c6;
+pub const SDL_COLORSPACE_BT601_FULL: SDL_Colorspace = 0x221018c6;
+pub const SDL_COLORSPACE_BT709_LIMITED: SDL_Colorspace = 0x21100421;
+pub const SDL_COLORSPACE_BT709_FULL: SDL_Colorspace = 0x22100421;
+pub const SDL_COLORSPACE_BT2020_LIMITED: SDL_Colorspace = 0x21102609;
+pub const SDL_COLORSPACE_BT2020_FULL: SDL_Colorspace = 0x22102609;
+
 // Key pixel formats
 pub const SDL_PIXELFORMAT_UNKNOWN = 0;
 pub const SDL_PIXELFORMAT_RGBA8888 = 0x16462004;
@@ -135,6 +149,7 @@ pub const PFN_SDL_GetPixelFormatForMasks = *const fn (bpp: c_int, Rmask: Uint32,
 pub const PFN_SDL_GetPixelFormatDetails = *const fn (format: SDL_PixelFormat) callconv(.c) ?*const SDL_PixelFormatDetails;
 pub const PFN_SDL_CreatePalette = *const fn (ncolors: c_int) callconv(.c) ?*SDL_Palette;
 pub const PFN_SDL_DestroyPalette = *const fn (palette: ?*SDL_Palette) callconv(.c) void;
+pub const PFN_SDL_ConvertPixelsAndColorspace = *const fn (width: c_int, height: c_int, src_format: SDL_PixelFormat, src: ?*const anyopaque, src_pitch: c_int, src_colorspace: SDL_Colorspace, dst_format: SDL_PixelFormat, dst: ?*anyopaque, dst_pitch: c_int, dst_colorspace: SDL_Colorspace) callconv(.c) bool;
 
 // Rect functions
 pub const PFN_SDL_HasRectIntersection = *const fn (A: ?*const SDL_Rect, B: ?*const SDL_Rect) callconv(.c) bool;
@@ -172,6 +187,7 @@ pub const PixelFunctions = struct {
     getPixelFormatDetails: PFN_SDL_GetPixelFormatDetails,
     createPalette: PFN_SDL_CreatePalette,
     destroyPalette: PFN_SDL_DestroyPalette,
+    convertPixelsAndColorspace: PFN_SDL_ConvertPixelsAndColorspace,
     hasRectIntersection: PFN_SDL_HasRectIntersection,
     getRectIntersection: PFN_SDL_GetRectIntersection,
     getRectUnion: PFN_SDL_GetRectUnion,
