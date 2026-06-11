@@ -20,7 +20,10 @@ pub fn loadLibrary(name: [:0]const u8) LoadError!LibraryHandle {
         },
         .windows => {
             const kernel32 = std.os.windows.kernel32;
-            const handle = kernel32.LoadLibraryA(name);
+            var wide_buf: [260]u16 = undefined;
+            const wide_len = std.unicode.utf8ToUtf16Le(&wide_buf, name) catch return LoadError.LibraryNotFound;
+            wide_buf[wide_len] = 0;
+            const handle = kernel32.LoadLibraryW(wide_buf[0..wide_len :0]);
             if (handle) |h| return h;
             return LoadError.LibraryNotFound;
         },
