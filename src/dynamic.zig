@@ -11,6 +11,12 @@ pub const LoadError = error{
     SymbolNotFound,
 };
 
+const win32_kernel32 = struct {
+    pub extern "kernel32" fn LoadLibraryW(lpLibFileName: [*:0]const u16) callconv(.winapi) ?std.os.windows.HMODULE;
+    pub extern "kernel32" fn GetProcAddress(hModule: std.os.windows.HMODULE, lpProcName: [*:0]const u8) callconv(.winapi) ?*anyopaque;
+    pub extern "kernel32" fn FreeLibrary(hModule: std.os.windows.HMODULE) callconv(.winapi) c_int;
+};
+
 pub fn loadLibrary(name: [:0]const u8) LoadError!LibraryHandle {
     switch (builtin.os.tag) {
         .linux, .freebsd, .openbsd, .netbsd => {
@@ -19,11 +25,10 @@ pub fn loadLibrary(name: [:0]const u8) LoadError!LibraryHandle {
             return LoadError.LibraryNotFound;
         },
         .windows => {
-            const kernel32 = std.os.windows.kernel32;
             var wide_buf: [260]u16 = undefined;
             const wide_len = std.unicode.utf8ToUtf16Le(&wide_buf, name) catch return LoadError.LibraryNotFound;
             wide_buf[wide_len] = 0;
-            const handle = kernel32.LoadLibraryW(wide_buf[0..wide_len :0]);
+            const handle = win32_kernel32.LoadLibraryW(wide_buf[0..wide_len :0]);
             if (handle) |h| return h;
             return LoadError.LibraryNotFound;
         },
@@ -42,8 +47,7 @@ pub fn getSymbol(handle: LibraryHandle, name: [:0]const u8) ?*anyopaque {
             return std.c.dlsym(handle, name);
         },
         .windows => {
-            const kernel32 = std.os.windows.kernel32;
-            return kernel32.GetProcAddress(handle, name);
+            return win32_kernel32.GetProcAddress(handle, name);
         },
         else => @compileError("Unsupported platform for SDL bindings"),
     }
@@ -55,8 +59,7 @@ pub fn unloadLibrary(handle: LibraryHandle) void {
             _ = std.c.dlclose(handle);
         },
         .windows => {
-            const kernel32 = std.os.windows.kernel32;
-            _ = kernel32.FreeLibrary(handle);
+            _ = win32_kernel32.FreeLibrary(handle);
         },
         else => @compileError("Unsupported platform for SDL bindings"),
     }
