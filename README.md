@@ -51,14 +51,18 @@ zig build run      # run the app
 ### Run examples
 
 | Step | Example |
-|---|---|
-| `zig build run-basic-2d` | window + yellow rect |
+|---|---|---|
+| `zig build run-basic-2d` | window + colored rectangles |
 | `zig build run-cube-3d` | rotating 3D cube |
-| `zig build run-gpu-test` | GPU device + shader formats |
-| `zig build run-image-test` | load PNG via SDL3_image |
-| `zig build run-ttf-example` | render TTF text |
+| `zig build run-gpu` | GPU device + shader formats |
+| `zig build run-image` | load PNG via SDL3_image |
+| `zig build run-ttf` | render TTF text |
 | `zig build run-text-editor` | text editor with file dialogs |
-| `zig build run-test-enhanced-renderer-visual` | renderer smoke test |
+| `zig build run-renderer` | renderer smoke test |
+| `zig build run-audio` | sine wave audio playback |
+| `zig build run-dialog` | file open/save dialogs |
+| `zig build run-process` | external process spawning |
+| `zig build run-clipboard` | system clipboard I/O |
 
 ## Usage
 
@@ -93,7 +97,7 @@ All functions use short Zig-friendly names (`init`, `createWindow`, `pollEvent`)
 
 ```
 src/     — 50+ subsystem files (core, video, render, gpu, audio, image, ttf, …)
-examples/ — 7 runnable examples
+examples/ — 11 runnable examples
 ```
 
 ---

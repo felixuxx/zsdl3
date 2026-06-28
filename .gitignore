@@ -1,4 +1,3 @@
 .zig-cache/
 zig-out/
-1
-vkspecs.txt
+*.h
