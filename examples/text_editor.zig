@@ -311,18 +311,7 @@ pub fn main() void {
                 }
             }
             
-            // Draw cursor at end of text if at end
-            if (cursor_pos == text_len and cursor_visible) {
-                const cursor_y: f32 = PADDING + @as(f32, @floatFromInt(cursor_line * LINE_HEIGHT)) - scroll_y;
-                _ = zsdl3.setRenderDrawColor(renderer, 255, 255, 255, 255);
-                const cursor_rect = zsdl3.SDL_FRect{
-                    .x = PADDING,
-                    .y = cursor_y,
-                    .w = 2,
-                    .h = @as(f32, @floatFromInt(LINE_HEIGHT)),
-                };
-                _ = zsdl3.renderFillRect(renderer, &cursor_rect);
-            }
+
         } else {
             // Show message if no font available
             _ = zsdl3.setRenderDrawColor(renderer, 255, 100, 100, 255);

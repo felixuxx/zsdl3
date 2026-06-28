@@ -90,7 +90,7 @@ pub fn main() void {
     }
 
     const buf_len: c_int = @intCast(buf.len);
-    _ = zsdl3.putAudioStreamData(stream, buf.ptr, buf_len);
+    _ = zsdl3.putAudioStreamData(stream, @ptrCast(buf.ptr), buf_len);
     _ = zsdl3.flushAudioStream(stream);
 
     std.log.info("Playing 440Hz sine wave for 3 seconds...", .{});
