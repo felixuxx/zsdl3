@@ -3,9 +3,19 @@
 
 const core = @import("core.zig");
 
-// Import types
 pub const Sint64 = core.Sint64;
 pub const Uint64 = core.Uint64;
+pub const Uint16 = core.Uint16;
+pub const Uint32 = core.Uint32;
+
+// Allocator callback types
+pub const SDL_malloc_func = ?*const fn (size: usize) callconv(.c) ?*anyopaque;
+pub const SDL_calloc_func = ?*const fn (nmemb: usize, size: usize) callconv(.c) ?*anyopaque;
+pub const SDL_realloc_func = ?*const fn (mem: ?*anyopaque, size: usize) callconv(.c) ?*anyopaque;
+pub const SDL_free_func = ?*const fn (mem: ?*anyopaque) callconv(.c) void;
+
+// Environment opaque type
+pub const SDL_Environment = opaque {};
 
 // Stdinc functions
 extern fn SDL_memset(dst: ?*anyopaque, c: c_int, len: usize) ?*anyopaque;
@@ -58,6 +68,26 @@ extern fn SDL_isprint(x: c_int) c_int;
 extern fn SDL_isgraph(x: c_int) c_int;
 extern fn SDL_toupper(x: c_int) c_int;
 extern fn SDL_tolower(x: c_int) c_int;
+extern fn SDL_StepUTF8(pstr: ?*?[*:0]const u8, pslen: ?*usize) Uint32;
+extern fn SDL_StepBackUTF8(start: ?[*:0]const u8, pstr: ?*?[*:0]const u8) Uint32;
+extern fn SDL_UCS4ToUTF8(codepoint: Uint32, dst: ?[*:0]u8) ?[*:0]u8;
+extern fn SDL_crc16(crc: Uint16, data: ?*const anyopaque, len: usize) Uint16;
+extern fn SDL_crc32(crc: Uint32, data: ?*const anyopaque, len: usize) Uint32;
+extern fn SDL_murmur3_32(data: ?*const anyopaque, len: usize, seed: Uint32) Uint32;
+
+// Memory function query/set
+extern fn SDL_GetMemoryFunctions(malloc_func: ?*SDL_malloc_func, calloc_func: ?*SDL_calloc_func, realloc_func: ?*SDL_realloc_func, free_func: ?*SDL_free_func) void;
+extern fn SDL_SetMemoryFunctions(malloc_func: SDL_malloc_func, calloc_func: SDL_calloc_func, realloc_func: SDL_realloc_func, free_func: SDL_free_func) bool;
+extern fn SDL_GetOriginalMemoryFunctions(malloc_func: ?*SDL_malloc_func, calloc_func: ?*SDL_calloc_func, realloc_func: ?*SDL_realloc_func, free_func: ?*SDL_free_func) void;
+
+// Environment functions
+extern fn SDL_GetEnvironment() ?*SDL_Environment;
+extern fn SDL_CreateEnvironment(populated: bool) ?*SDL_Environment;
+extern fn SDL_DestroyEnvironment(env: ?*SDL_Environment) void;
+extern fn SDL_GetEnvironmentVariable(env: ?*SDL_Environment, name: ?[*:0]const u8) ?[*:0]const u8;
+extern fn SDL_GetEnvironmentVariables(env: ?*SDL_Environment) ?[*]?[*:0]u8;
+extern fn SDL_SetEnvironmentVariable(env: ?*SDL_Environment, name: ?[*:0]const u8, value: ?[*:0]const u8, overwrite: bool) bool;
+extern fn SDL_UnsetEnvironmentVariable(env: ?*SDL_Environment, name: ?[*:0]const u8) bool;
 
 // Public API
 pub const memset = SDL_memset;
@@ -110,3 +140,19 @@ pub const isprint = SDL_isprint;
 pub const isgraph = SDL_isgraph;
 pub const toupper = SDL_toupper;
 pub const tolower = SDL_tolower;
+pub const stepUTF8 = SDL_StepUTF8;
+pub const stepBackUTF8 = SDL_StepBackUTF8;
+pub const ucs4ToUTF8 = SDL_UCS4ToUTF8;
+pub const crc16 = SDL_crc16;
+pub const crc32 = SDL_crc32;
+pub const murmur3_32 = SDL_murmur3_32;
+pub const getMemoryFunctions = SDL_GetMemoryFunctions;
+pub const setMemoryFunctions = SDL_SetMemoryFunctions;
+pub const getOriginalMemoryFunctions = SDL_GetOriginalMemoryFunctions;
+pub const getEnvironment = SDL_GetEnvironment;
+pub const createEnvironment = SDL_CreateEnvironment;
+pub const destroyEnvironment = SDL_DestroyEnvironment;
+pub const getEnvironmentVariable = SDL_GetEnvironmentVariable;
+pub const getEnvironmentVariables = SDL_GetEnvironmentVariables;
+pub const setEnvironmentVariable = SDL_SetEnvironmentVariable;
+pub const unsetEnvironmentVariable = SDL_UnsetEnvironmentVariable;
