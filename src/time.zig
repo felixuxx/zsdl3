@@ -5,9 +5,9 @@ const core = @import("core.zig");
 pub const Uint32 = core.Uint32;
 pub const SDL_Time = core.Sint64;
 
-// Import types
 // Timer callback
 pub const SDL_TimerCallback = ?*const fn (?*anyopaque, SDL_TimerID, Uint32) callconv(.c) Uint32;
+pub const SDL_NSTimerCallback = ?*const fn (?*anyopaque, SDL_TimerID, core.Uint64) callconv(.c) core.Uint64;
 pub const SDL_TimerID = Uint32;
 
 // Time types
@@ -41,7 +41,10 @@ extern fn SDL_GetTicks() core.Uint64;
 extern fn SDL_GetTicksNS() core.Uint64;
 extern fn SDL_Delay(ms: core.Uint32) void;
 extern fn SDL_AddTimer(interval: Uint32, callback: SDL_TimerCallback, param: ?*anyopaque) SDL_TimerID;
+extern fn SDL_AddTimerNS(interval: core.Uint64, callback: SDL_NSTimerCallback, param: ?*anyopaque) SDL_TimerID;
 extern fn SDL_RemoveTimer(id: SDL_TimerID) bool;
+extern fn SDL_DelayNS(ns: core.Uint64) void;
+extern fn SDL_DelayPrecise(ns: core.Uint64) void;
 extern fn SDL_GetPerformanceCounter() core.Uint64;
 extern fn SDL_GetPerformanceFrequency() core.Uint64;
 extern fn SDL_GetCurrentTime(ticks: ?*core.SDL_Time) bool;
@@ -59,7 +62,10 @@ pub const getTicks = SDL_GetTicks;
 pub const getTicksNS = SDL_GetTicksNS;
 pub const delay = SDL_Delay;
 pub const addTimer = SDL_AddTimer;
+pub const addTimerNS = SDL_AddTimerNS;
 pub const removeTimer = SDL_RemoveTimer;
+pub const delayNS = SDL_DelayNS;
+pub const delayPrecise = SDL_DelayPrecise;
 pub const getPerformanceCounter = SDL_GetPerformanceCounter;
 pub const getPerformanceFrequency = SDL_GetPerformanceFrequency;
 pub const getCurrentTime = SDL_GetCurrentTime;
