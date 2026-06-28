@@ -420,7 +420,6 @@ pub const SDL_EVENT_MOUSE_BUTTON_DOWN = 0x401;
 pub const SDL_EVENT_MOUSE_BUTTON_UP = 0x402;
 pub const SDL_EVENT_MOUSE_WHEEL = 0x403;
 
-// SDL_Event - called in events.zig
 pub const SDL_KeyboardEvent = extern struct {
     type: SDL_EventType,
     reserved: Uint32,
@@ -466,6 +465,9 @@ extern fn SDL_InitSubSystem(flags: SDL_InitFlags) bool;
 extern fn SDL_QuitSubSystem(flags: SDL_InitFlags) void;
 extern fn SDL_WasInit(flags: SDL_InitFlags) SDL_InitFlags;
 extern fn SDL_Quit() void;
+extern fn SDL_SetMainReady() void;
+extern fn SDL_RegisterApp(name: ?[*:0]const u8, style: Uint32, hInst: ?*anyopaque) bool;
+extern fn SDL_UnregisterApp() void;
 extern fn SDL_IsMainThread() bool;
 extern fn SDL_RunOnMainThread(callback: SDL_MainThreadCallback, userdata: ?*anyopaque, wait_complete: bool) bool;
 extern fn SDL_SetAppMetadata(appname: ?[*:0]const u8, appversion: ?[*:0]const u8, appidentifier: ?[*:0]const u8) bool;
@@ -493,6 +495,9 @@ pub const initSubSystem = SDL_InitSubSystem;
 pub const quitSubSystem = SDL_QuitSubSystem;
 pub const wasInit = SDL_WasInit;
 pub const quit = SDL_Quit;
+pub const setMainReady = SDL_SetMainReady;
+pub const registerApp = SDL_RegisterApp;
+pub const unregisterApp = SDL_UnregisterApp;
 pub const isMainThread = SDL_IsMainThread;
 pub const runOnMainThread = SDL_RunOnMainThread;
 pub const setAppMetadata = SDL_SetAppMetadata;
