@@ -10,7 +10,6 @@ pub const SDL_PixelFormat = pixels.SDL_PixelFormat;
 pub const SDL_Palette = pixels.SDL_Palette;
 pub const SDL_Rect = pixels.SDL_Rect;
 
-// Import types
 // Placeholder for SDL_IOStream
 pub const SDL_IOStream = opaque {};
 
@@ -101,6 +100,7 @@ extern fn SDL_SavePNG(surface: ?*SDL_Surface, file: ?[*:0]const u8) bool;
 extern fn SDL_SavePNG_IO(surface: ?*SDL_Surface, dst: ?*SDL_IOStream, closeio: bool) bool;
 extern fn SDL_RotateSurface(surface: ?*SDL_Surface, angle: f32) ?*SDL_Surface;
 extern fn SDL_ConvertPixels(width: c_int, height: c_int, src_format: SDL_PixelFormat, src: ?*const anyopaque, src_pitch: c_int, dst_format: SDL_PixelFormat, dst: ?*anyopaque, dst_pitch: c_int) bool;
+extern fn SDL_ConvertPixelsAndColorspace(width: c_int, height: c_int, src_format: SDL_PixelFormat, src_colorspace: render.SDL_Colorspace, src_properties: core.SDL_PropertiesID, src: ?*const anyopaque, src_pitch: c_int, dst_format: SDL_PixelFormat, dst_colorspace: render.SDL_Colorspace, dst_properties: core.SDL_PropertiesID, dst: ?*anyopaque, dst_pitch: c_int) bool;
 extern fn SDL_StretchSurface(src: ?*SDL_Surface, srcrect: ?*const SDL_Rect, dst: ?*SDL_Surface, dstrect: ?*const SDL_Rect, scaleMode: render.SDL_ScaleMode) bool;
 extern fn SDL_ReadSurfacePixelFloat(surface: ?*SDL_Surface, x: c_int, y: c_int, r: ?*f32, g: ?*f32, b: ?*f32, a: ?*f32) bool;
 extern fn SDL_WriteSurfacePixel(surface: ?*SDL_Surface, x: c_int, y: c_int, r: Uint8, g: Uint8, b: Uint8, a: Uint8) bool;
@@ -167,6 +167,7 @@ pub const savePNG = SDL_SavePNG;
 pub const savePNG_IO = SDL_SavePNG_IO;
 pub const rotateSurface = SDL_RotateSurface;
 pub const convertPixels = SDL_ConvertPixels;
+pub const convertPixelsAndColorspace = SDL_ConvertPixelsAndColorspace;
 pub const stretchSurface = SDL_StretchSurface;
 pub const readSurfacePixelFloat = SDL_ReadSurfacePixelFloat;
 pub const writeSurfacePixel = SDL_WriteSurfacePixel;
