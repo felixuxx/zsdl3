@@ -2,13 +2,30 @@
 // User/title storage
 
 const core = @import("core.zig");
+const filesystem = @import("filesystem.zig");
 
-// Import types
+pub const Uint32 = core.Uint32;
 pub const Uint64 = core.Uint64;
 pub const SDL_Time = core.Sint64; // SDL_Time is Sint64 (nanoseconds since epoch)
 
 // Storage structs
 pub const SDL_Storage = opaque {};
+
+// Storage interface for custom storage implementations
+pub const SDL_StorageInterface = extern struct {
+    version: Uint32,
+    close: ?*const fn (userdata: ?*anyopaque) callconv(.c) bool,
+    ready: ?*const fn (userdata: ?*anyopaque) callconv(.c) bool,
+    enumerate: ?*const fn (userdata: ?*anyopaque, path: ?[*:0]const u8, callback: filesystem.SDL_EnumerateDirectoryCallback, callback_userdata: ?*anyopaque) callconv(.c) bool,
+    info: ?*const fn (userdata: ?*anyopaque, path: ?[*:0]const u8, info: ?*SDL_PathInfo) callconv(.c) bool,
+    read_file: ?*const fn (userdata: ?*anyopaque, path: ?[*:0]const u8, destination: ?*anyopaque, length: Uint64) callconv(.c) bool,
+    write_file: ?*const fn (userdata: ?*anyopaque, path: ?[*:0]const u8, source: ?*const anyopaque, length: Uint64) callconv(.c) bool,
+    mkdir: ?*const fn (userdata: ?*anyopaque, path: ?[*:0]const u8) callconv(.c) bool,
+    remove: ?*const fn (userdata: ?*anyopaque, path: ?[*:0]const u8) callconv(.c) bool,
+    rename: ?*const fn (userdata: ?*anyopaque, oldpath: ?[*:0]const u8, newpath: ?[*:0]const u8) callconv(.c) bool,
+    copy: ?*const fn (userdata: ?*anyopaque, oldpath: ?[*:0]const u8, newpath: ?[*:0]const u8) callconv(.c) bool,
+    space_remaining: ?*const fn (userdata: ?*anyopaque) callconv(.c) Uint64,
+};
 
 pub const SDL_EnumerationResult = enum(c_int) {
     SDL_ENUM_CONTINUE,
@@ -22,6 +39,7 @@ pub const SDL_GlobFlags = c_uint;
 extern fn SDL_OpenTitleStorage(override: ?[*:0]const u8, props: core.SDL_PropertiesID) ?*SDL_Storage;
 extern fn SDL_OpenUserStorage(root: ?[*:0]const u8, name: ?[*:0]const u8, props: core.SDL_PropertiesID) ?*SDL_Storage;
 extern fn SDL_OpenFileStorage(path: ?[*:0]const u8) ?*SDL_Storage;
+extern fn SDL_OpenStorage(iface: ?*const SDL_StorageInterface, userdata: ?*anyopaque) ?*SDL_Storage;
 extern fn SDL_CloseStorage(storage: ?*SDL_Storage) bool;
 extern fn SDL_StorageReady(storage: ?*SDL_Storage) bool;
 extern fn SDL_GetStorageFileSize(storage: ?*SDL_Storage, path: ?[*:0]const u8, length: ?*Uint64) bool;
@@ -30,6 +48,9 @@ extern fn SDL_WriteStorageFile(storage: ?*SDL_Storage, path: ?[*:0]const u8, sou
 extern fn SDL_CreateStorageDirectory(storage: ?*SDL_Storage, path: ?[*:0]const u8) bool;
 extern fn SDL_EnumerateStorageDirectory(storage: ?*SDL_Storage, path: ?[*:0]const u8, callback: ?*const fn (?*anyopaque, ?[*:0]const u8, ?[*:0]const u8, SDL_EnumerationResult) callconv(.c) bool, userdata: ?*anyopaque) bool;
 extern fn SDL_RemoveStoragePath(storage: ?*SDL_Storage, path: ?[*:0]const u8) bool;
+extern fn SDL_RenameStoragePath(storage: ?*SDL_Storage, oldpath: ?[*:0]const u8, newpath: ?[*:0]const u8) bool;
+extern fn SDL_CopyStorageFile(storage: ?*SDL_Storage, oldpath: ?[*:0]const u8, newpath: ?[*:0]const u8) bool;
+extern fn SDL_GetStorageSpaceRemaining(storage: ?*SDL_Storage) Uint64;
 extern fn SDL_GlobStorageDirectory(storage: ?*SDL_Storage, path: ?[*:0]const u8, pattern: ?[*:0]const u8, flags: SDL_GlobFlags, count: ?*c_int) ?[*]?[*:0]u8;
 extern fn SDL_GetStoragePathInfo(storage: ?*SDL_Storage, path: ?[*:0]const u8, info: ?*SDL_PathInfo) bool;
 
@@ -46,6 +67,7 @@ pub const SDL_PathInfo = extern struct {
 pub const openTitleStorage = SDL_OpenTitleStorage;
 pub const openUserStorage = SDL_OpenUserStorage;
 pub const openFileStorage = SDL_OpenFileStorage;
+pub const openStorage = SDL_OpenStorage;
 pub const closeStorage = SDL_CloseStorage;
 pub const storageReady = SDL_StorageReady;
 pub const getStorageFileSize = SDL_GetStorageFileSize;
@@ -54,5 +76,8 @@ pub const writeStorageFile = SDL_WriteStorageFile;
 pub const createStorageDirectory = SDL_CreateStorageDirectory;
 pub const enumerateStorageDirectory = SDL_EnumerateStorageDirectory;
 pub const removeStoragePath = SDL_RemoveStoragePath;
+pub const renameStoragePath = SDL_RenameStoragePath;
+pub const copyStorageFile = SDL_CopyStorageFile;
+pub const getStorageSpaceRemaining = SDL_GetStorageSpaceRemaining;
 pub const globStorageDirectory = SDL_GlobStorageDirectory;
 pub const getStoragePathInfo = SDL_GetStoragePathInfo;
