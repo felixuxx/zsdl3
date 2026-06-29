@@ -12,9 +12,24 @@ pub const Uint64 = core.Uint64;
 pub const Sint64 = core.Sint64;
 pub const SDL_GlobFlags = Uint32;
 
-// Import types
 // Filesystem structs
 pub const SDL_IOStream = opaque {};
+
+// IOStream enums
+pub const SDL_IOWhence = enum(c_int) {
+    SDL_IO_SEEK_SET,
+    SDL_IO_SEEK_CUR,
+    SDL_IO_SEEK_END,
+};
+
+pub const SDL_IOStatus = enum(c_int) {
+    SDL_IO_STATUS_READY,
+    SDL_IO_STATUS_ERROR,
+    SDL_IO_STATUS_EOF,
+    SDL_IO_STATUS_NOT_READY,
+    SDL_IO_STATUS_READONLY,
+    SDL_IO_STATUS_WRITEONLY,
+};
 
 // Filesystem path types and enums
 pub const SDL_Folder = enum(c_int) {
@@ -80,6 +95,17 @@ pub const SDL_AsyncIOResult = enum(c_int) {
 };
 pub const SDL_AsyncIOQueue = opaque {};
 
+// IOStream interface for custom IO implementations
+pub const SDL_IOStreamInterface = extern struct {
+    version: Uint32,
+    size: ?*const fn (userdata: ?*anyopaque) callconv(.c) Sint64,
+    seek: ?*const fn (userdata: ?*anyopaque, offset: Sint64, whence: SDL_IOWhence) callconv(.c) Sint64,
+    read: ?*const fn (userdata: ?*anyopaque, ptr: ?*anyopaque, size: usize, status: ?*SDL_IOStatus) callconv(.c) usize,
+    write: ?*const fn (userdata: ?*anyopaque, ptr: ?*const anyopaque, size: usize, status: ?*SDL_IOStatus) callconv(.c) usize,
+    flush: ?*const fn (userdata: ?*anyopaque, status: ?*SDL_IOStatus) callconv(.c) bool,
+    close: ?*const fn (userdata: ?*anyopaque) callconv(.c) bool,
+};
+
 // Filesystem path functions
 extern fn SDL_GetBasePath() ?[*:0]const u8;
 extern fn SDL_GetPrefPath(org: ?[*:0]const u8, app: [*:0]const u8) ?[*:0]u8;
@@ -103,7 +129,9 @@ extern fn SDL_TellIO(stream: ?*SDL_IOStream) Sint64;
 extern fn SDL_GetIOSize(stream: ?*SDL_IOStream) Sint64;
 extern fn SDL_FlushIO(stream: ?*SDL_IOStream) bool;
 extern fn SDL_LoadFile(file: ?[*:0]const u8, datasize: ?*usize) ?*anyopaque;
+extern fn SDL_LoadFile_IO(src: ?*SDL_IOStream, datasize: ?*usize, closeio: bool) ?*anyopaque;
 extern fn SDL_SaveFile(file: ?[*:0]const u8, data: ?*const anyopaque, datasize: usize) bool;
+extern fn SDL_SaveFile_IO(src: ?*SDL_IOStream, data: ?*const anyopaque, datasize: usize, closeio: bool) bool;
 extern fn SDL_ReadU8(stream: ?*SDL_IOStream, value: ?*Uint8) bool;
 extern fn SDL_ReadS8(stream: ?*SDL_IOStream, value: ?*Sint8) bool;
 extern fn SDL_ReadU16LE(stream: ?*SDL_IOStream, value: ?*Uint16) bool;
@@ -135,6 +163,7 @@ extern fn SDL_WriteS64BE(stream: ?*SDL_IOStream, value: Sint64) bool;
 extern fn SDL_IOFromConstMem(mem: ?*const anyopaque, size: usize) ?*SDL_IOStream;
 extern fn SDL_IOFromMem(mem: ?*anyopaque, size: usize) ?*SDL_IOStream;
 extern fn SDL_IOFromDynamicMem() ?*SDL_IOStream;
+extern fn SDL_OpenIO(iface: ?*const SDL_IOStreamInterface, userdata: ?*anyopaque) ?*SDL_IOStream;
 extern fn SDL_GetIOProperties(stream: ?*SDL_IOStream) core.SDL_PropertiesID;
 extern fn SDL_GetIOStatus(stream: ?*SDL_IOStream) c_int;
 
@@ -159,7 +188,9 @@ pub const tellIO = SDL_TellIO;
 pub const getIOSize = SDL_GetIOSize;
 pub const flushIO = SDL_FlushIO;
 pub const loadFile = SDL_LoadFile;
+pub const loadFile_IO = SDL_LoadFile_IO;
 pub const saveFile = SDL_SaveFile;
+pub const saveFile_IO = SDL_SaveFile_IO;
 pub const readU8 = SDL_ReadU8;
 pub const readS8 = SDL_ReadS8;
 pub const readU16LE = SDL_ReadU16LE;
@@ -191,5 +222,6 @@ pub const writeS64BE = SDL_WriteS64BE;
 pub const ioFromConstMem = SDL_IOFromConstMem;
 pub const ioFromMem = SDL_IOFromMem;
 pub const ioFromDynamicMem = SDL_IOFromDynamicMem;
+pub const openIO = SDL_OpenIO;
 pub const getIOProperties = SDL_GetIOProperties;
 pub const getIOStatus = SDL_GetIOStatus;
