@@ -20,6 +20,8 @@ pub const SDL_GUID = guid.SDL_GUID;
 const sensor = @import("sensor.zig");
 pub const SDL_SensorType = sensor.SDL_SensorType;
 pub const SDL_Sensor = sensor.SDL_Sensor;
+const power = @import("power.zig");
+pub const SDL_PowerState = power.SDL_PowerState;
 const surface = @import("surface.zig");
 const touch = @import("touch.zig");
 pub const SDL_TouchID = touch.SDL_TouchID;
@@ -29,7 +31,6 @@ pub const SDL_Finger = touch.SDL_Finger;
 const video = @import("video.zig");
 pub const SDL_Cursor = video.SDL_Cursor;
 
-// Import types
 // Joystick type
 pub const SDL_JoystickType = enum(c_int) {
     SDL_JOYSTICK_TYPE_UNKNOWN,
@@ -264,6 +265,7 @@ extern fn SDL_GetJoystickProductVersion(joystick: ?*SDL_Joystick) Uint16;
 extern fn SDL_GetJoystickFirmwareVersion(joystick: ?*SDL_Joystick) Uint16;
 extern fn SDL_GetJoystickSerial(joystick: ?*SDL_Joystick) ?[*:0]const u8;
 extern fn SDL_GetJoystickAxis(joystick: ?*SDL_Joystick, axis: c_int) Sint16;
+extern fn SDL_GetJoystickAxisInitialState(joystick: ?*SDL_Joystick, axis: c_int, state: ?*Sint16) bool;
 extern fn SDL_GetJoystickHat(joystick: ?*SDL_Joystick, hat: c_int) Uint8;
 extern fn SDL_GetJoystickBall(joystick: ?*SDL_Joystick, ball: c_int, dx: ?*c_int, dy: ?*c_int) bool;
 extern fn SDL_GetJoystickButton(joystick: ?*SDL_Joystick, button: c_int) bool;
@@ -271,6 +273,7 @@ extern fn SDL_RumbleJoystick(joystick: ?*SDL_Joystick, low_frequency_rumble: Uin
 extern fn SDL_RumbleJoystickTriggers(joystick: ?*SDL_Joystick, left_rumble: Uint16, right_rumble: Uint16, duration_ms: Uint32) bool;
 extern fn SDL_SetJoystickLED(joystick: ?*SDL_Joystick, red: Uint8, green: Uint8, blue: Uint8) bool;
 extern fn SDL_SendJoystickEffect(joystick: ?*SDL_Joystick, data: ?*anyopaque, size: c_int) bool;
+extern fn SDL_HasJoystick() bool;
 
 // Gamepad functions
 
@@ -293,6 +296,12 @@ extern fn SDL_GetGamepadButton(gamepad: ?*SDL_Gamepad, button: SDL_GamepadButton
 extern fn SDL_GetGamepadButtonLabel(gamepad: ?*SDL_Gamepad, button: SDL_GamepadButton) SDL_GamepadButtonLabel;
 extern fn SDL_SetGamepadEventsEnabled(enabled: bool) void;
 extern fn SDL_GamepadEventsEnabled() bool;
+extern fn SDL_GetGamepadAxisFromString(str: ?[*:0]const u8) SDL_GamepadAxis;
+extern fn SDL_GetGamepadStringForAxis(axis: SDL_GamepadAxis) ?[*:0]const u8;
+extern fn SDL_GetGamepadButtonFromString(str: ?[*:0]const u8) SDL_GamepadButton;
+extern fn SDL_GetGamepadStringForButton(button: SDL_GamepadButton) ?[*:0]const u8;
+extern fn SDL_GetGamepadTypeFromString(str: ?[*:0]const u8) SDL_GamepadType;
+extern fn SDL_GetGamepadStringForType(type: SDL_GamepadType) ?[*:0]const u8;
 extern fn SDL_GetGamepadBindings(gamepad: ?*SDL_Gamepad, count: ?*c_int) ?[*]?*SDL_GamepadBinding;
 extern fn SDL_ReloadGamepadMappings() bool;
 extern fn SDL_GetGamepadMapping(gamepad: ?*SDL_Gamepad) ?[*:0]const u8;
@@ -308,9 +317,12 @@ extern fn SDL_GetGamepadPlayerIndexForID(instance_id: SDL_JoystickID) c_int;
 extern fn SDL_GetRealGamepadTypeForID(instance_id: SDL_JoystickID) SDL_GamepadType;
 extern fn SDL_GetRealGamepadType(gamepad: ?*SDL_Gamepad) SDL_GamepadType;
 extern fn SDL_GetNumGamepadTouchpads(gamepad: ?*SDL_Gamepad) c_int;
+extern fn SDL_GetNumGamepadTouchpadFingers(gamepad: ?*SDL_Gamepad, touchpad: c_int) c_int;
 extern fn SDL_GetGamepadTouchpadFinger(gamepad: ?*SDL_Gamepad, touchpad: c_int, finger: c_int, down: ?*bool, x: ?*f32, y: ?*f32, pressure: ?*f32) bool;
 extern fn SDL_GetGamepadAppleSFSymbolsNameForAxis(gamepad: ?*SDL_Gamepad, axis: SDL_GamepadAxis) ?[*:0]const u8;
 extern fn SDL_GetGamepadAppleSFSymbolsNameForButton(gamepad: ?*SDL_Gamepad, button: SDL_GamepadButton) ?[*:0]const u8;
+extern fn SDL_UpdateGamepads() void;
+extern fn SDL_GetGamepadJoystick(gamepad: ?*SDL_Gamepad) ?*SDL_Joystick;
 extern fn SDL_HasGamepad() bool;
 extern fn SDL_GetGamepads(count: ?*c_int) ?[*]SDL_JoystickID;
 extern fn SDL_GetGamepadNameForID(instance_id: SDL_JoystickID) ?[*:0]const u8;
@@ -332,6 +344,9 @@ extern fn SDL_RumbleGamepad(gamepad: ?*SDL_Gamepad, low_frequency_rumble: Uint16
 extern fn SDL_RumbleGamepadTriggers(gamepad: ?*SDL_Gamepad, left_rumble: Uint16, right_rumble: Uint16, duration_ms: Uint32) bool;
 extern fn SDL_SetGamepadLED(gamepad: ?*SDL_Gamepad, red: Uint8, green: Uint8, blue: Uint8) bool;
 extern fn SDL_SendGamepadEffect(gamepad: ?*SDL_Gamepad, data: ?*anyopaque, size: c_int) bool;
+extern fn SDL_GamepadHasSensor(gamepad: ?*SDL_Gamepad, sensor: SDL_SensorType) bool;
+extern fn SDL_GetGamepadSensorDataRate(gamepad: ?*SDL_Gamepad, sensor: SDL_SensorType) f32;
+extern fn SDL_GetGamepadPowerInfo(gamepad: ?*SDL_Gamepad, percent: ?*c_int) SDL_PowerState;
 extern fn SDL_GetGamepadSensorData(gamepad: ?*SDL_Gamepad, sensor: SDL_SensorType, data: ?[*]f32, num_values: c_int) bool;
 extern fn SDL_SetGamepadSensorEnabled(gamepad: ?*SDL_Gamepad, sensor: SDL_SensorType, enabled: bool) bool;
 extern fn SDL_GamepadSensorEnabled(gamepad: ?*SDL_Gamepad, sensor: SDL_SensorType) bool;
@@ -414,6 +429,7 @@ pub const getJoystickProductVersion = SDL_GetJoystickProductVersion;
 pub const getJoystickFirmwareVersion = SDL_GetJoystickFirmwareVersion;
 pub const getJoystickSerial = SDL_GetJoystickSerial;
 pub const getJoystickAxis = SDL_GetJoystickAxis;
+pub const getJoystickAxisInitialState = SDL_GetJoystickAxisInitialState;
 pub const getJoystickHat = SDL_GetJoystickHat;
 pub const getJoystickBall = SDL_GetJoystickBall;
 pub const getJoystickButton = SDL_GetJoystickButton;
@@ -421,6 +437,7 @@ pub const rumbleJoystick = SDL_RumbleJoystick;
 pub const rumbleJoystickTriggers = SDL_RumbleJoystickTriggers;
 pub const setJoystickLED = SDL_SetJoystickLED;
 pub const sendJoystickEffect = SDL_SendJoystickEffect;
+pub const hasJoystick = SDL_HasJoystick;
 
 
 pub const isGamepad = SDL_IsGamepad;
@@ -442,6 +459,12 @@ pub const getGamepadButton = SDL_GetGamepadButton;
 pub const getGamepadButtonLabel = SDL_GetGamepadButtonLabel;
 pub const setGamepadEventsEnabled = SDL_SetGamepadEventsEnabled;
 pub const gamepadEventsEnabled = SDL_GamepadEventsEnabled;
+pub const getGamepadAxisFromString = SDL_GetGamepadAxisFromString;
+pub const getGamepadStringForAxis = SDL_GetGamepadStringForAxis;
+pub const getGamepadButtonFromString = SDL_GetGamepadButtonFromString;
+pub const getGamepadStringForButton = SDL_GetGamepadStringForButton;
+pub const getGamepadTypeFromString = SDL_GetGamepadTypeFromString;
+pub const getGamepadStringForType = SDL_GetGamepadStringForType;
 pub const getGamepadBindings = SDL_GetGamepadBindings;
 pub const reloadGamepadMappings = SDL_ReloadGamepadMappings;
 pub const getGamepadMapping = SDL_GetGamepadMapping;
@@ -456,9 +479,12 @@ pub const getGamepadPlayerIndexForID = SDL_GetGamepadPlayerIndexForID;
 pub const getRealGamepadTypeForID = SDL_GetRealGamepadTypeForID;
 pub const getRealGamepadType = SDL_GetRealGamepadType;
 pub const getNumGamepadTouchpads = SDL_GetNumGamepadTouchpads;
+pub const getNumGamepadTouchpadFingers = SDL_GetNumGamepadTouchpadFingers;
 pub const getGamepadTouchpadFinger = SDL_GetGamepadTouchpadFinger;
 pub const getGamepadAppleSFSymbolsNameForAxis = SDL_GetGamepadAppleSFSymbolsNameForAxis;
 pub const getGamepadAppleSFSymbolsNameForButton = SDL_GetGamepadAppleSFSymbolsNameForButton;
+pub const updateGamepads = SDL_UpdateGamepads;
+pub const getGamepadJoystick = SDL_GetGamepadJoystick;
 pub const hasGamepad = SDL_HasGamepad;
 pub const getGamepads = SDL_GetGamepads;
 pub const getGamepadNameForID = SDL_GetGamepadNameForID;
@@ -480,6 +506,9 @@ pub const rumbleGamepad = SDL_RumbleGamepad;
 pub const rumbleGamepadTriggers = SDL_RumbleGamepadTriggers;
 pub const setGamepadLED = SDL_SetGamepadLED;
 pub const sendGamepadEffect = SDL_SendGamepadEffect;
+pub const gamepadHasSensor = SDL_GamepadHasSensor;
+pub const getGamepadSensorDataRate = SDL_GetGamepadSensorDataRate;
+pub const getGamepadPowerInfo = SDL_GetGamepadPowerInfo;
 pub const getGamepadSensorData = SDL_GetGamepadSensorData;
 pub const setGamepadSensorEnabled = SDL_SetGamepadSensorEnabled;
 pub const gamepadSensorEnabled = SDL_GamepadSensorEnabled;
