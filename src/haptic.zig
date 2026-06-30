@@ -4,7 +4,6 @@
 const core = @import("core.zig");
 const input = @import("input.zig");
 
-// Import types
 pub const Uint8 = core.Uint8;
 pub const Uint16 = core.Uint16;
 pub const Uint32 = core.Uint32;

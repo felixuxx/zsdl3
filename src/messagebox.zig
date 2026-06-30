@@ -4,7 +4,6 @@
 const core = @import("core.zig");
 const video = @import("video.zig");
 
-// Import types
 pub const Uint8 = core.Uint8;
 pub const Uint32 = core.Uint32;
 

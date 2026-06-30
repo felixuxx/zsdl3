@@ -5,7 +5,6 @@ const core = @import("core.zig");
 pub const Uint32 = core.Uint32;
 const video = @import("video.zig");
 
-// Import types
 // Vulkan function pointer type for vkGetInstanceProcAddr
 // vkGetInstanceProcAddr signature: void* (VkInstance instance, const char* pName)
 pub const PFN_vkGetInstanceProcAddr = ?*const fn (?*anyopaque, ?[*:0]const u8) callconv(.c) ?*anyopaque;

@@ -3,7 +3,6 @@
 
 const core = @import("core.zig");
 
-// Import types
 pub const Uint32 = core.Uint32;
 
 // Bits functions

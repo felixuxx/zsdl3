@@ -13,7 +13,6 @@ const surface = @import("surface.zig");
 pub const SDL_FlipMode = surface.SDL_FlipMode;
 const video = @import("video.zig");
 
-// Import types
 // Render structs
 pub const SDL_Renderer = opaque {};
 pub const SDL_Texture = opaque {};

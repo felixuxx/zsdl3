@@ -22,7 +22,6 @@ pub const SDL_Finger = touch.SDL_Finger;
 pub const SDL_FingerID = touch.SDL_FingerID;
 const video = @import("video.zig");
 
-// Import types
 // === Complete SDL3 Event Type Constants ===
 // Application events
 pub const SDL_EVENT_FIRST = 0;

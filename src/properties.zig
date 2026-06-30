@@ -3,7 +3,6 @@
 
 const core = @import("core.zig");
 
-// Import types
 pub const Sint64 = core.Sint64;
 
 // Properties ID
