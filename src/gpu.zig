@@ -801,10 +801,6 @@ extern fn SDL_CalculateGPUTextureFormatSize(format: SDL_GPUTextureFormat, width:
 extern fn SDL_GetPixelFormatFromGPUTextureFormat(format: SDL_GPUTextureFormat) c_uint;
 extern fn SDL_GetGPUTextureFormatFromPixelFormat(format: c_uint) SDL_GPUTextureFormat;
 
-// video import
-// Import types
-// Import types
-// Shader format type
 // Shader formats
 pub const SDL_GPU_SHADERFORMAT_INVALID: SDL_GPUShaderFormat = 0;
 pub const SDL_GPU_SHADERFORMAT_PRIVATE: SDL_GPUShaderFormat = 1 << 0;
