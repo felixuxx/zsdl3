@@ -7,7 +7,6 @@ const surface = @import("surface.zig");
 const render = @import("render.zig");
 const properties = @import("properties.zig");
 
-// Import types
 pub const Uint32 = core.Uint32;
 pub const SDL_PropertiesID = properties.SDL_PropertiesID;
 pub const SDL_Surface = surface.SDL_Surface;
@@ -83,6 +82,7 @@ extern fn TTF_GetHarfBuzzVersion(major: ?*c_int, minor: ?*c_int, patch: ?*c_int)
 // Initialization
 extern fn TTF_Init() bool;
 extern fn TTF_Quit() void;
+extern fn TTF_WasInit() c_int;
 
 // Font creation
 extern fn TTF_OpenFont(file: [*:0]const u8, ptsize: f32) ?*TTF_Font;
@@ -144,26 +144,35 @@ extern fn TTF_GetFontKerning(font: ?*const TTF_Font) bool;
 // Font queries
 extern fn TTF_FontIsFixedWidth(font: ?*const TTF_Font) bool;
 extern fn TTF_FontIsScalable(font: ?*const TTF_Font) bool;
+extern fn TTF_FontHasGlyph(font: ?*const TTF_Font, ch: core.Uint32) bool;
 extern fn TTF_GetFontFamilyName(font: ?*const TTF_Font) ?[*:0]const u8;
 extern fn TTF_GetFontStyleName(font: ?*const TTF_Font) ?[*:0]const u8;
 
 // Glyph metrics
 extern fn TTF_GetGlyphMetrics(font: ?*const TTF_Font, ch: core.Uint32, minx: ?*c_int, maxx: ?*c_int, miny: ?*c_int, maxy: ?*c_int, advance: ?*c_int) bool;
 extern fn TTF_GetGlyphAdvance(font: ?*const TTF_Font, ch: core.Uint32) c_int;
+extern fn TTF_GetGlyphKerning(font: ?*const TTF_Font, previous_ch: core.Uint32, ch: core.Uint32, kerning: ?*c_int) bool;
 
 // Text size
 extern fn TTF_GetStringSize(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, w: ?*c_int, h: ?*c_int) bool;
 extern fn TTF_GetStringSizeWrapped(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, wrap_width: c_int, w: ?*c_int, h: ?*c_int) bool;
+extern fn TTF_MeasureString(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, max_width: c_int, measured_width: ?*c_int, measured_length: ?*usize) bool;
 
 // Text rendering (Solid)
 extern fn TTF_RenderText_Solid(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color) ?*SDL_Surface;
 extern fn TTF_RenderUTF8_Solid(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color) ?*SDL_Surface;
 extern fn TTF_RenderUNICODE_Solid(font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_Color) ?*SDL_Surface;
+extern fn TTF_RenderText_Solid_Wrapped(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color, wrapLength: c_int) ?*SDL_Surface;
+extern fn TTF_RenderUTF8_Solid_Wrapped(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color, wrapLength: c_int) ?*SDL_Surface;
+extern fn TTF_RenderUNICODE_Solid_Wrapped(font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_Color, wrapLength: c_int) ?*SDL_Surface;
 
 // Text rendering (Shaded)
 extern fn TTF_RenderText_Shaded(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color, bg: SDL_Color) ?*SDL_Surface;
 extern fn TTF_RenderUTF8_Shaded(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color, bg: SDL_Color) ?*SDL_Surface;
 extern fn TTF_RenderUNICODE_Shaded(font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_Color, bg: SDL_Color) ?*SDL_Surface;
+extern fn TTF_RenderText_Shaded_Wrapped(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color, bg: SDL_Color, wrap_width: c_int) ?*SDL_Surface;
+extern fn TTF_RenderUTF8_Shaded_Wrapped(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color, bg: SDL_Color, wrap_width: c_int) ?*SDL_Surface;
+extern fn TTF_RenderUNICODE_Shaded_Wrapped(font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_Color, bg: SDL_Color, wrap_width: c_int) ?*SDL_Surface;
 
 // Text rendering (Blended)
 extern fn TTF_RenderText_Blended(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color) ?*SDL_Surface;
@@ -185,12 +194,25 @@ extern fn TTF_RenderText_Blended_Float_Wrapped(font: ?*const TTF_Font, text: [*:
 extern fn TTF_RenderUTF8_Blended_Float_Wrapped(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_FColor, wrapLength: c_int) ?*SDL_Surface;
 extern fn TTF_RenderUNICODE_Blended_Float_Wrapped(font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_FColor, wrapLength: c_int) ?*SDL_Surface;
 
+// Glyph rendering
+extern fn TTF_RenderGlyph_Solid(font: ?*const TTF_Font, ch: core.Uint32, fg: SDL_Color) ?*SDL_Surface;
+extern fn TTF_RenderGlyph_Shaded(font: ?*const TTF_Font, ch: core.Uint32, fg: SDL_Color, bg: SDL_Color) ?*SDL_Surface;
+extern fn TTF_RenderGlyph_Blended(font: ?*const TTF_Font, ch: core.Uint32, fg: SDL_Color) ?*SDL_Surface;
+extern fn TTF_RenderGlyph_LCD(font: ?*const TTF_Font, ch: core.Uint32, fg: SDL_Color, bg: SDL_Color) ?*SDL_Surface;
+
+// LCD rendering
+extern fn TTF_RenderText_LCD(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color, bg: SDL_Color) ?*SDL_Surface;
+extern fn TTF_RenderUTF8_LCD(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color, bg: SDL_Color) ?*SDL_Surface;
+extern fn TTF_RenderUNICODE_LCD(font: ?*const TTF_Font, text: [*]const core.Uint16, length: usize, fg: SDL_Color, bg: SDL_Color) ?*SDL_Surface;
+extern fn TTF_RenderText_LCD_Wrapped(font: ?*const TTF_Font, text: [*:0]const u8, length: usize, fg: SDL_Color, bg: SDL_Color, wrap_width: c_int) ?*SDL_Surface;
+
 // Public API
 pub const version = TTF_Version;
 pub const getFreeTypeVersion = TTF_GetFreeTypeVersion;
 pub const getHarfBuzzVersion = TTF_GetHarfBuzzVersion;
 pub const init = TTF_Init;
 pub const quit = TTF_Quit;
+pub const wasInit = TTF_WasInit;
 pub const openFont = TTF_OpenFont;
 pub const openFontIO = TTF_OpenFontIO;
 pub const openFontWithProperties = TTF_OpenFontWithProperties;
@@ -226,18 +248,27 @@ pub const setFontKerning = TTF_SetFontKerning;
 pub const getFontKerning = TTF_GetFontKerning;
 pub const fontIsFixedWidth = TTF_FontIsFixedWidth;
 pub const fontIsScalable = TTF_FontIsScalable;
+pub const fontHasGlyph = TTF_FontHasGlyph;
 pub const getFontFamilyName = TTF_GetFontFamilyName;
 pub const getFontStyleName = TTF_GetFontStyleName;
 pub const getGlyphMetrics = TTF_GetGlyphMetrics;
 pub const getGlyphAdvance = TTF_GetGlyphAdvance;
+pub const getGlyphKerning = TTF_GetGlyphKerning;
 pub const getStringSize = TTF_GetStringSize;
 pub const getStringSizeWrapped = TTF_GetStringSizeWrapped;
+pub const measureString = TTF_MeasureString;
 pub const renderTextSolid = TTF_RenderText_Solid;
 pub const renderUTF8Solid = TTF_RenderUTF8_Solid;
 pub const renderUNICODESolid = TTF_RenderUNICODE_Solid;
+pub const renderTextSolidWrapped = TTF_RenderText_Solid_Wrapped;
+pub const renderUTF8SolidWrapped = TTF_RenderUTF8_Solid_Wrapped;
+pub const renderUNICODESolidWrapped = TTF_RenderUNICODE_Solid_Wrapped;
 pub const renderTextShaded = TTF_RenderText_Shaded;
 pub const renderUTF8Shaded = TTF_RenderUTF8_Shaded;
 pub const renderUNICODEShaded = TTF_RenderUNICODE_Shaded;
+pub const renderTextShadedWrapped = TTF_RenderText_Shaded_Wrapped;
+pub const renderUTF8ShadedWrapped = TTF_RenderUTF8_Shaded_Wrapped;
+pub const renderUNICODEShadedWrapped = TTF_RenderUNICODE_Shaded_Wrapped;
 pub const renderTextBlended = TTF_RenderText_Blended;
 pub const renderUTF8Blended = TTF_RenderUTF8_Blended;
 pub const renderUNICODEBlended = TTF_RenderUNICODE_Blended;
@@ -250,3 +281,11 @@ pub const renderUNICODEBlendedFloat = TTF_RenderUNICODE_Blended_Float;
 pub const renderTextBlendedFloatWrapped = TTF_RenderText_Blended_Float_Wrapped;
 pub const renderUTF8BlendedFloatWrapped = TTF_RenderUTF8_Blended_Float_Wrapped;
 pub const renderUNICODEBlendedFloatWrapped = TTF_RenderUNICODE_Blended_Float_Wrapped;
+pub const renderGlyphSolid = TTF_RenderGlyph_Solid;
+pub const renderGlyphShaded = TTF_RenderGlyph_Shaded;
+pub const renderGlyphBlended = TTF_RenderGlyph_Blended;
+pub const renderGlyphLCD = TTF_RenderGlyph_LCD;
+pub const renderTextLCD = TTF_RenderText_LCD;
+pub const renderUTF8LCD = TTF_RenderUTF8_LCD;
+pub const renderUNICODELCD = TTF_RenderUNICODE_LCD;
+pub const renderTextLCDWrapped = TTF_RenderText_LCD_Wrapped;
