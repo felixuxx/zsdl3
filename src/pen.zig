@@ -30,22 +30,6 @@ pub const SDL_PenAxis = enum(c_int) {
 
 // Pen functions
 extern fn SDL_GetPenDeviceType(instance_id: core.SDL_PenID) SDL_PenDeviceType;
-extern fn SDL_GetPens(count: ?*c_int) ?[*]core.SDL_PenID;
-extern fn SDL_GetPenName(pen: ?*SDL_Pen) ?[*:0]const u8;
-extern fn SDL_GetPenCapabilities(pen: ?*SDL_Pen, capabilities: ?*Uint32) bool;
-extern fn SDL_GetPenStatus(pen: ?*SDL_Pen, axes: ?[*]f32) bool;
-extern fn SDL_PenConnected(pen: ?*SDL_Pen) bool;
-extern fn SDL_GetPenFromID(id: core.SDL_PenID) ?*SDL_Pen;
-extern fn SDL_GetPenID(pen: ?*SDL_Pen) core.SDL_PenID;
-extern fn SDL_PenAxisSupported(pen: ?*SDL_Pen, axis: SDL_PenAxis) bool;
 
 // Public API
 pub const getPenDeviceType = SDL_GetPenDeviceType;
-pub const getPens = SDL_GetPens;
-pub const getPenName = SDL_GetPenName;
-pub const getPenCapabilities = SDL_GetPenCapabilities;
-pub const getPenStatus = SDL_GetPenStatus;
-pub const penConnected = SDL_PenConnected;
-pub const getPenFromID = SDL_GetPenFromID;
-pub const getPenID = SDL_GetPenID;
-pub const penAxisSupported = SDL_PenAxisSupported;
