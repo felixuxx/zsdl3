@@ -27,9 +27,7 @@ extern fn SDL_GetDefaultAssertionHandler() ?*const fn (?*const SDL_AssertData, ?
 extern fn SDL_GetAssertionHandler(userdata: ?*?*anyopaque) ?*const fn (?*const SDL_AssertData, ?*anyopaque) callconv(.c) SDL_AssertState;
 extern fn SDL_GetAssertionReport() ?*const SDL_AssertData;
 extern fn SDL_ResetAssertionReport() void;
-extern fn SDL_TriggerBreakpoint() void;
-extern fn SDL_SetAssertionRetry(state: bool) void;
-extern fn SDL_GetAssertionRetry() bool;
+extern fn SDL_ReportAssertion(data: ?*SDL_AssertData, func: ?[*:0]const u8, file: ?[*:0]const u8, line: c_int) SDL_AssertState;
 
 // Public API
 pub const setAssertionHandler = SDL_SetAssertionHandler;
@@ -37,6 +35,4 @@ pub const getDefaultAssertionHandler = SDL_GetDefaultAssertionHandler;
 pub const getAssertionHandler = SDL_GetAssertionHandler;
 pub const getAssertionReport = SDL_GetAssertionReport;
 pub const resetAssertionReport = SDL_ResetAssertionReport;
-pub const triggerBreakpoint = SDL_TriggerBreakpoint;
-pub const setAssertionRetry = SDL_SetAssertionRetry;
-pub const getAssertionRetry = SDL_GetAssertionRetry;
+pub const reportAssertion = SDL_ReportAssertion;
