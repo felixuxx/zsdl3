@@ -16,8 +16,6 @@ pub const SDL_AtomicU32 = extern struct {
 extern fn SDL_TryLockSpinlock(lock: ?*SDL_SpinLock) bool;
 extern fn SDL_LockSpinlock(lock: ?*SDL_SpinLock) void;
 extern fn SDL_UnlockSpinlock(lock: ?*SDL_SpinLock) void;
-extern fn SDL_AtomicIncRef(atomic: ?*anyopaque) c_int;
-extern fn SDL_AtomicDecRef(atomic: ?*anyopaque) c_int;
 extern fn SDL_MemoryBarrierReleaseFunction() void;
 extern fn SDL_MemoryBarrierAcquireFunction() void;
 extern fn SDL_CompareAndSwapAtomicInt(a: ?*SDL_AtomicInt, oldval: c_int, newval: c_int) bool;
@@ -31,6 +29,14 @@ extern fn SDL_AddAtomicU32(a: ?*SDL_AtomicU32, v: c_int) core.Uint32;
 extern fn SDL_CompareAndSwapAtomicPointer(a: ?*?*anyopaque, oldval: ?*anyopaque, newval: ?*anyopaque) bool;
 extern fn SDL_SetAtomicPointer(a: ?*?*anyopaque, v: ?*anyopaque) ?*anyopaque;
 extern fn SDL_GetAtomicPointer(a: ?*?*anyopaque) ?*anyopaque;
+
+// Inline wrappers for C macros
+pub fn SDL_AtomicIncRef(a: ?*SDL_AtomicInt) void {
+    _ = SDL_AddAtomicInt(a, 1);
+}
+pub fn SDL_AtomicDecRef(a: ?*SDL_AtomicInt) bool {
+    return SDL_AddAtomicInt(a, -1) == 1;
+}
 
 // Public API
 pub const tryLockSpinlock = SDL_TryLockSpinlock;
