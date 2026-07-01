@@ -1,5 +1,5 @@
 // SDL3 Zig Bindings - Root Module
-// Pure Zig bindings for SDL3 without @cImport
+// Zig bindings for SDL3, SDL3_image, and SDL3_ttf
 
 // Import all subsystems
 pub const core = @import("core.zig");
@@ -56,6 +56,9 @@ pub const initSubSystem = core.initSubSystem;
 pub const quitSubSystem = core.quitSubSystem;
 pub const wasInit = core.wasInit;
 pub const quit = core.quit;
+pub const setMainReady = core.setMainReady;
+pub const registerApp = core.registerApp;
+pub const unregisterApp = core.unregisterApp;
 pub const isMainThread = core.isMainThread;
 pub const runOnMainThread = core.runOnMainThread;
 pub const setAppMetadata = core.setAppMetadata;
@@ -886,6 +889,16 @@ pub const getPowerInfo = power.getPowerInfo;
 // Re-export system functions
 pub const getSystemRAM = system.getSystemRAM;
 pub const getSIMDAlignment = system.getSIMDAlignment;
+pub const isTablet = system.isTablet;
+pub const isTV = system.isTV;
+pub const getSandbox = system.getSandbox;
+pub const onApplicationWillTerminate = system.onApplicationWillTerminate;
+pub const onApplicationDidReceiveMemoryWarning = system.onApplicationDidReceiveMemoryWarning;
+pub const onApplicationWillEnterBackground = system.onApplicationWillEnterBackground;
+pub const onApplicationDidEnterBackground = system.onApplicationDidEnterBackground;
+pub const onApplicationWillEnterForeground = system.onApplicationWillEnterForeground;
+pub const onApplicationDidEnterForeground = system.onApplicationDidEnterForeground;
+pub const onApplicationDidChangeStatusBarOrientation = system.onApplicationDidChangeStatusBarOrientation;
 
 // Re-export all keycode types and constants
 pub const SDL_Keycode = keycode.SDL_Keycode;
@@ -1281,6 +1294,17 @@ pub const atomicIncRef = atomic.atomicIncRef;
 pub const atomicDecRef = atomic.atomicDecRef;
 pub const memoryBarrierReleaseFunction = atomic.memoryBarrierReleaseFunction;
 pub const memoryBarrierAcquireFunction = atomic.memoryBarrierAcquireFunction;
+pub const compareAndSwapAtomicInt = atomic.compareAndSwapAtomicInt;
+pub const setAtomicInt = atomic.setAtomicInt;
+pub const getAtomicInt = atomic.getAtomicInt;
+pub const addAtomicInt = atomic.addAtomicInt;
+pub const compareAndSwapAtomicU32 = atomic.compareAndSwapAtomicU32;
+pub const setAtomicU32 = atomic.setAtomicU32;
+pub const getAtomicU32 = atomic.getAtomicU32;
+pub const addAtomicU32 = atomic.addAtomicU32;
+pub const compareAndSwapAtomicPointer = atomic.compareAndSwapAtomicPointer;
+pub const setAtomicPointer = atomic.setAtomicPointer;
+pub const getAtomicPointer = atomic.getAtomicPointer;
 
 // Re-export bits functions
 pub const mostSignificantBitIndex32 = bits.mostSignificantBitIndex32;
