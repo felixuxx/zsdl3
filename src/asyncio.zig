@@ -3,7 +3,6 @@
 
 const core = @import("core.zig");
 
-// Import types
 pub const Uint64 = core.Uint64;
 pub const Sint64 = core.Sint64;
 pub const Sint32 = core.Sint32;
