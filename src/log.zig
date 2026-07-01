@@ -3,13 +3,15 @@
 
 // Log priority
 pub const SDL_LogPriority = enum(c_int) {
-    SDL_LOG_PRIORITY_VERBOSE = 1,
+    SDL_LOG_PRIORITY_INVALID = 0,
+    SDL_LOG_PRIORITY_TRACE,
+    SDL_LOG_PRIORITY_VERBOSE,
     SDL_LOG_PRIORITY_DEBUG,
     SDL_LOG_PRIORITY_INFO,
     SDL_LOG_PRIORITY_WARN,
     SDL_LOG_PRIORITY_ERROR,
     SDL_LOG_PRIORITY_CRITICAL,
-    SDL_NUM_LOG_PRIORITIES,
+    SDL_LOG_PRIORITY_COUNT,
 };
 
 // Log category
@@ -51,6 +53,7 @@ extern fn SDL_LogWarn(category: c_int, fmt: [*:0]const u8, ...) void;
 extern fn SDL_LogError(category: c_int, fmt: [*:0]const u8, ...) void;
 extern fn SDL_LogCritical(category: c_int, fmt: [*:0]const u8, ...) void;
 extern fn SDL_LogMessage(category: c_int, priority: SDL_LogPriority, fmt: [*:0]const u8, ...) void;
+extern fn SDL_LogMessageV(category: c_int, priority: SDL_LogPriority, fmt: [*:0]const u8, ap: *anyopaque) void;
 extern fn SDL_GetDefaultLogOutputFunction() ?*const fn (?*anyopaque, c_int, SDL_LogPriority, [*:0]const u8) callconv(.c) void;
 extern fn SDL_SetLogOutputFunction(callback: ?*const fn (?*anyopaque, c_int, SDL_LogPriority, [*:0]const u8) callconv(.c) void, userdata: ?*anyopaque) void;
 extern fn SDL_GetLogOutputFunction(callback: ?*?*const fn (?*anyopaque, c_int, SDL_LogPriority, [*:0]const u8) callconv(.c) void, userdata: ?*?*anyopaque) void;
@@ -70,6 +73,7 @@ pub const logWarn = SDL_LogWarn;
 pub const logError = SDL_LogError;
 pub const logCritical = SDL_LogCritical;
 pub const logMessage = SDL_LogMessage;
+pub const logMessageV = SDL_LogMessageV;
 pub const getDefaultLogOutputFunction = SDL_GetDefaultLogOutputFunction;
 pub const setLogOutputFunction = SDL_SetLogOutputFunction;
 pub const getLogOutputFunction = SDL_GetLogOutputFunction;

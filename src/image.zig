@@ -18,8 +18,8 @@ pub const SDL_PropertiesID = core.SDL_PropertiesID;
 
 // Version constants
 pub const SDL_IMAGE_MAJOR_VERSION = 3;
-pub const SDL_IMAGE_MINOR_VERSION = 2;
-pub const SDL_IMAGE_MICRO_VERSION = 6;
+pub const SDL_IMAGE_MINOR_VERSION = 4;
+pub const SDL_IMAGE_MICRO_VERSION = 0;
 
 // Animation struct
 pub const IMG_Animation = extern struct {
@@ -34,9 +34,9 @@ pub const IMG_AnimationDecoder = opaque {};
 pub const IMG_AnimationEncoder = opaque {};
 
 pub const IMG_AnimationDecoderStatus = enum(c_int) {
-    IMG_DECODER_STATUS_OK = 0,
+    IMG_DECODER_STATUS_INVALID = -1,
+    IMG_DECODER_STATUS_OK,
     IMG_DECODER_STATUS_FAILED,
-    IMG_DECODER_STATUS_INVALID,
     IMG_DECODER_STATUS_COMPLETE,
 };
 
@@ -165,9 +165,9 @@ extern fn IMG_AddAnimationEncoderFrame(encoder: ?*IMG_AnimationEncoder, surface:
 extern fn IMG_CloseAnimationEncoder(encoder: ?*IMG_AnimationEncoder) bool;
 
 // GPU texture loading
-extern fn IMG_LoadGPUTexture(device: ?*SDL_GPUDevice, copy_pass: ?*SDL_GPUCopyPass, file: ?[*:0]const u8, width: ?*c_int, height: ?*c_int) ?*SDL_Texture;
-extern fn IMG_LoadGPUTexture_IO(device: ?*SDL_GPUDevice, copy_pass: ?*SDL_GPUCopyPass, src: ?*SDL_IOStream, closeio: bool, width: ?*c_int, height: ?*c_int) ?*SDL_Texture;
-extern fn IMG_LoadGPUTextureTyped_IO(device: ?*SDL_GPUDevice, copy_pass: ?*SDL_GPUCopyPass, src: ?*SDL_IOStream, closeio: bool, type: ?[*:0]const u8, width: ?*c_int, height: ?*c_int) ?*SDL_Texture;
+extern fn IMG_LoadGPUTexture(device: ?*SDL_GPUDevice, copy_pass: ?*SDL_GPUCopyPass, file: ?[*:0]const u8, width: ?*c_int, height: ?*c_int) ?*gpu.SDL_GPUTexture;
+extern fn IMG_LoadGPUTexture_IO(device: ?*SDL_GPUDevice, copy_pass: ?*SDL_GPUCopyPass, src: ?*SDL_IOStream, closeio: bool, width: ?*c_int, height: ?*c_int) ?*gpu.SDL_GPUTexture;
+extern fn IMG_LoadGPUTextureTyped_IO(device: ?*SDL_GPUDevice, copy_pass: ?*SDL_GPUCopyPass, src: ?*SDL_IOStream, closeio: bool, type: ?[*:0]const u8, width: ?*c_int, height: ?*c_int) ?*gpu.SDL_GPUTexture;
 
 // Cursor
 extern fn IMG_CreateAnimatedCursor(anim: ?*IMG_Animation, hot_x: c_int, hot_y: c_int) ?*SDL_Cursor;
