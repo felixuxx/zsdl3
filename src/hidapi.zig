@@ -11,7 +11,19 @@ pub const Uint32 = core.Uint32;
 // Placeholder for c_wchar_t
 pub const c_wchar_t = u16;
 
-// HID structs
+// HID bus type enum
+pub const SDL_hid_bus_type = enum(c_int) {
+    SDL_HID_API_BUS_UNKNOWN = 0x00,
+    SDL_HID_API_BUS_USB = 0x01,
+    SDL_HID_API_BUS_BLUETOOTH = 0x02,
+    SDL_HID_API_BUS_I2C = 0x03,
+    SDL_HID_API_BUS_SPI = 0x04,
+};
+
+// HID property string constants
+pub const SDL_PROP_HIDAPI_LIBUSB_DEVICE_HANDLE_POINTER = "SDL.hidapi.libusb.device.handle";
+
+// HID device opaque type
 pub const SDL_hid_device = opaque {};
 
 // HID functions
@@ -28,11 +40,15 @@ extern fn SDL_hid_read(dev: ?*SDL_hid_device, data: ?*Uint8, length: usize) c_in
 extern fn SDL_hid_set_nonblocking(dev: ?*SDL_hid_device, nonblock: c_int) c_int;
 extern fn SDL_hid_send_feature_report(dev: ?*SDL_hid_device, data: ?*const Uint8, length: usize) c_int;
 extern fn SDL_hid_get_feature_report(dev: ?*SDL_hid_device, data: ?*Uint8, length: usize) c_int;
-extern fn SDL_hid_close(dev: ?*SDL_hid_device) void;
+extern fn SDL_hid_close(dev: ?*SDL_hid_device) c_int;
 extern fn SDL_hid_get_manufacturer_string(dev: ?*SDL_hid_device, string: ?*c_wchar_t, maxlen: usize) c_int;
 extern fn SDL_hid_get_product_string(dev: ?*SDL_hid_device, string: ?*c_wchar_t, maxlen: usize) c_int;
 extern fn SDL_hid_get_serial_number_string(dev: ?*SDL_hid_device, string: ?*c_wchar_t, maxlen: usize) c_int;
 extern fn SDL_hid_get_indexed_string(dev: ?*SDL_hid_device, string_index: c_int, string: ?*c_wchar_t, maxlen: usize) c_int;
+extern fn SDL_hid_get_properties(dev: ?*SDL_hid_device) core.SDL_PropertiesID;
+extern fn SDL_hid_get_input_report(dev: ?*SDL_hid_device, data: [*]u8, length: usize) c_int;
+extern fn SDL_hid_get_device_info(dev: ?*SDL_hid_device) ?*SDL_hid_device_info;
+extern fn SDL_hid_get_report_descriptor(dev: ?*SDL_hid_device, buf: [*]u8, buf_size: usize) c_int;
 extern fn SDL_hid_ble_scan(scan: bool) void;
 
 // HID device info struct
@@ -50,6 +66,7 @@ pub const SDL_hid_device_info = extern struct {
     interface_class: c_int,
     interface_subclass: c_int,
     interface_protocol: c_int,
+    bus_type: SDL_hid_bus_type,
     next: ?*SDL_hid_device_info,
 };
 
@@ -72,4 +89,8 @@ pub const hid_get_manufacturer_string = SDL_hid_get_manufacturer_string;
 pub const hid_get_product_string = SDL_hid_get_product_string;
 pub const hid_get_serial_number_string = SDL_hid_get_serial_number_string;
 pub const hid_get_indexed_string = SDL_hid_get_indexed_string;
+pub const hid_get_properties = SDL_hid_get_properties;
+pub const hid_get_input_report = SDL_hid_get_input_report;
+pub const hid_get_device_info = SDL_hid_get_device_info;
+pub const hid_get_report_descriptor = SDL_hid_get_report_descriptor;
 pub const hid_ble_scan = SDL_hid_ble_scan;

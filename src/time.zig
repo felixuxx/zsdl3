@@ -10,6 +10,33 @@ pub const SDL_Time = core.Sint64;
 pub const SDL_TimerCallback = ?*const fn (?*anyopaque, SDL_TimerID, Uint32) callconv(.c) Uint32;
 pub const SDL_TimerID = Uint32;
 
+// Time conversion constants
+pub const SDL_MS_PER_SECOND: Uint32 = 1000;
+pub const SDL_US_PER_SECOND: Uint32 = 1000000;
+pub const SDL_NS_PER_SECOND: core.Uint64 = 1000000000;
+pub const SDL_NS_PER_MS: Uint32 = 1000000;
+pub const SDL_NS_PER_US: Uint32 = 1000;
+
+// Time conversion functions (replace C macros)
+pub fn SDL_SECONDS_TO_NS(S: anytype) core.Uint64 {
+    return @as(core.Uint64, @intCast(S)) * SDL_NS_PER_SECOND;
+}
+pub fn SDL_NS_TO_SECONDS(NS: anytype) @TypeOf(NS) {
+    return @divTrunc(NS, SDL_NS_PER_SECOND);
+}
+pub fn SDL_MS_TO_NS(MS: anytype) core.Uint64 {
+    return @as(core.Uint64, @intCast(MS)) * SDL_NS_PER_MS;
+}
+pub fn SDL_NS_TO_MS(NS: anytype) @TypeOf(NS) {
+    return @divTrunc(NS, SDL_NS_PER_MS);
+}
+pub fn SDL_US_TO_NS(US: anytype) core.Uint64 {
+    return @as(core.Uint64, @intCast(US)) * SDL_NS_PER_US;
+}
+pub fn SDL_NS_TO_US(NS: anytype) @TypeOf(NS) {
+    return @divTrunc(NS, SDL_NS_PER_US);
+}
+
 // Time types
 // SDL_Time is Sint64
 
@@ -44,12 +71,12 @@ extern fn SDL_AddTimer(interval: Uint32, callback: SDL_TimerCallback, param: ?*a
 extern fn SDL_RemoveTimer(id: SDL_TimerID) bool;
 extern fn SDL_GetPerformanceCounter() core.Uint64;
 extern fn SDL_GetPerformanceFrequency() core.Uint64;
-extern fn SDL_GetCurrentTime(ticks: ?*core.SDL_Time) bool;
-extern fn SDL_TimeToDateTime(ticks: core.SDL_Time, dt: ?*SDL_DateTime, localTime: bool) bool;
-extern fn SDL_DateTimeToTime(dt: ?*const SDL_DateTime, ticks: ?*core.SDL_Time) bool;
+extern fn SDL_GetCurrentTime(ticks: ?*SDL_Time) bool;
+extern fn SDL_TimeToDateTime(ticks: SDL_Time, dt: ?*SDL_DateTime, localTime: bool) bool;
+extern fn SDL_DateTimeToTime(dt: ?*const SDL_DateTime, ticks: ?*SDL_Time) bool;
 extern fn SDL_GetDateTimeLocalePreferences(dateFormat: ?*SDL_DateFormat, timeFormat: ?*SDL_TimeFormat) bool;
-extern fn SDL_TimeToWindows(ticks: core.SDL_Time, dwLowDateTime: ?*core.Uint32, dwHighDateTime: ?*core.Uint32) void;
-extern fn SDL_TimeFromWindows(dwLowDateTime: core.Uint32, dwHighDateTime: core.Uint32) core.SDL_Time;
+extern fn SDL_TimeToWindows(ticks: SDL_Time, dwLowDateTime: ?*core.Uint32, dwHighDateTime: ?*core.Uint32) void;
+extern fn SDL_TimeFromWindows(dwLowDateTime: core.Uint32, dwHighDateTime: core.Uint32) SDL_Time;
 extern fn SDL_GetDaysInMonth(year: c_int, month: c_int) c_int;
 extern fn SDL_GetDayOfYear(year: c_int, month: c_int, day: c_int) c_int;
 extern fn SDL_GetDayOfWeek(year: c_int, month: c_int, day: c_int) c_int;
