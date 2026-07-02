@@ -1,12 +1,23 @@
 // SDL3 Tray Bindings
 // System tray icons
 
+const core = @import("core.zig");
 const video = @import("video.zig");
+
+pub const Uint32 = core.Uint32;
 
 // Tray structs
 pub const SDL_Tray = opaque {};
 pub const SDL_TrayMenu = opaque {};
 pub const SDL_TrayEntry = opaque {};
+pub const SDL_TrayEntryFlags = Uint32;
+
+// Tray entry flags
+pub const SDL_TRAYENTRY_BUTTON: SDL_TrayEntryFlags = 0x00000001;
+pub const SDL_TRAYENTRY_CHECKBOX: SDL_TrayEntryFlags = 0x00000002;
+pub const SDL_TRAYENTRY_SUBMENU: SDL_TrayEntryFlags = 0x00000004;
+pub const SDL_TRAYENTRY_DISABLED: SDL_TrayEntryFlags = 0x80000000;
+pub const SDL_TRAYENTRY_CHECKED: SDL_TrayEntryFlags = 0x40000000;
 
 // Tray functions
 extern fn SDL_CreateTray(icon: ?*video.SDL_Surface, tooltip: ?[*:0]const u8) ?*SDL_Tray;

@@ -26,6 +26,9 @@ pub const SDL_TouchDeviceType = enum(c_int) {
     SDL_TOUCH_DEVICE_INDIRECT_RELATIVE,
 };
 
+// Touch constants
+pub const SDL_MOUSE_TOUCHID: SDL_TouchID = 0xFFFFFFFFFFFFFFFF;
+
 // Finger struct
 pub const SDL_Finger = extern struct {
     id: SDL_FingerID,
