@@ -11,8 +11,6 @@ pub const SDL_Sandbox = enum(c_int) {
 };
 
 // System functions
-extern fn SDL_GetSystemRAM() c_int;
-extern fn SDL_GetSIMDAlignment() usize;
 extern fn SDL_IsTablet() bool;
 extern fn SDL_IsTV() bool;
 extern fn SDL_GetSandbox() SDL_Sandbox;
@@ -25,8 +23,6 @@ extern fn SDL_OnApplicationDidEnterForeground() void;
 extern fn SDL_OnApplicationDidChangeStatusBarOrientation() void;
 
 // Public API
-pub const getSystemRAM = SDL_GetSystemRAM;
-pub const getSIMDAlignment = SDL_GetSIMDAlignment;
 pub const isTablet = SDL_IsTablet;
 pub const isTV = SDL_IsTV;
 pub const getSandbox = SDL_GetSandbox;
