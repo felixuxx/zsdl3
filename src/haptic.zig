@@ -10,8 +10,53 @@ pub const Uint32 = core.Uint32;
 pub const Sint16 = core.Sint16;
 pub const Sint32 = core.Sint32;
 
+// Haptic infinity constant
+pub const SDL_HAPTIC_INFINITY: Uint32 = 4294967295;
+
+// Haptic effect type and flags
+pub const SDL_HapticEffectType = Uint16;
+pub const SDL_HapticDirectionType = Uint8;
+
+// Effect type flags
+pub const SDL_HAPTIC_CONSTANT: SDL_HapticEffectType = 1 << 0;
+pub const SDL_HAPTIC_SINE: SDL_HapticEffectType = 1 << 1;
+pub const SDL_HAPTIC_SQUARE: SDL_HapticEffectType = 1 << 2;
+pub const SDL_HAPTIC_TRIANGLE: SDL_HapticEffectType = 1 << 3;
+pub const SDL_HAPTIC_SAWTOOTHUP: SDL_HapticEffectType = 1 << 4;
+pub const SDL_HAPTIC_SAWTOOTHDOWN: SDL_HapticEffectType = 1 << 5;
+pub const SDL_HAPTIC_RAMP: SDL_HapticEffectType = 1 << 6;
+pub const SDL_HAPTIC_SPRING: SDL_HapticEffectType = 1 << 7;
+pub const SDL_HAPTIC_DAMPER: SDL_HapticEffectType = 1 << 8;
+pub const SDL_HAPTIC_INERTIA: SDL_HapticEffectType = 1 << 9;
+pub const SDL_HAPTIC_FRICTION: SDL_HapticEffectType = 1 << 10;
+pub const SDL_HAPTIC_LEFTRIGHT: SDL_HapticEffectType = 1 << 11;
+pub const SDL_HAPTIC_RESERVED1: SDL_HapticEffectType = 1 << 12;
+pub const SDL_HAPTIC_RESERVED2: SDL_HapticEffectType = 1 << 13;
+pub const SDL_HAPTIC_RESERVED3: SDL_HapticEffectType = 1 << 14;
+pub const SDL_HAPTIC_CUSTOM: SDL_HapticEffectType = 1 << 15;
+
+// Feature flags
+pub const SDL_HAPTIC_GAIN: Uint32 = 1 << 16;
+pub const SDL_HAPTIC_AUTOCENTER: Uint32 = 1 << 17;
+pub const SDL_HAPTIC_STATUS: Uint32 = 1 << 18;
+pub const SDL_HAPTIC_PAUSE: Uint32 = 1 << 19;
+
+// Direction encoding constants
+pub const SDL_HAPTIC_POLAR: SDL_HapticDirectionType = 0;
+pub const SDL_HAPTIC_CARTESIAN: SDL_HapticDirectionType = 1;
+pub const SDL_HAPTIC_SPHERICAL: SDL_HapticDirectionType = 2;
+pub const SDL_HAPTIC_STEERING_AXIS: SDL_HapticDirectionType = 3;
+
 // Haptic structs
 pub const SDL_Haptic = opaque {};
+
+// Haptic left/right effect
+pub const SDL_HapticLeftRight = extern struct {
+    type: SDL_HapticEffectType,
+    length: Uint32,
+    large_magnitude: Uint16,
+    small_magnitude: Uint16,
+};
 
 // Haptic effect types
 pub const SDL_HapticEffect = extern union {
@@ -20,6 +65,7 @@ pub const SDL_HapticEffect = extern union {
     periodic: SDL_HapticPeriodic,
     condition: SDL_HapticCondition,
     ramp: SDL_HapticRamp,
+    leftright: SDL_HapticLeftRight,
     custom: SDL_HapticCustom,
 };
 
