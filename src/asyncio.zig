@@ -50,6 +50,8 @@ extern fn SDL_CreateAsyncIOQueue() ?*SDL_AsyncIOQueue;
 extern fn SDL_DestroyAsyncIOQueue(queue: ?*SDL_AsyncIOQueue) void;
 extern fn SDL_GetAsyncIOResult(queue: ?*SDL_AsyncIOQueue, outcome: ?*SDL_AsyncIOOutcome) bool;
 extern fn SDL_WaitAsyncIOResult(queue: ?*SDL_AsyncIOQueue, outcome: ?*SDL_AsyncIOOutcome, timeoutMS: Sint32) bool;
+extern fn SDL_SignalAsyncIOQueue(queue: ?*SDL_AsyncIOQueue) void;
+extern fn SDL_LoadFileAsync(file: [*:0]const u8, queue: ?*SDL_AsyncIOQueue, userdata: ?*anyopaque) bool;
 
 // Public API
 pub const asyncIOFromFile = SDL_AsyncIOFromFile;
@@ -61,3 +63,5 @@ pub const createAsyncIOQueue = SDL_CreateAsyncIOQueue;
 pub const destroyAsyncIOQueue = SDL_DestroyAsyncIOQueue;
 pub const getAsyncIOResult = SDL_GetAsyncIOResult;
 pub const waitAsyncIOResult = SDL_WaitAsyncIOResult;
+pub const signalAsyncIOQueue = SDL_SignalAsyncIOQueue;
+pub const loadFileAsync = SDL_LoadFileAsync;
