@@ -1,5 +1,5 @@
 // SDL3 Zig Bindings - Root Module
-// Pure Zig bindings for SDL3 without @cImport
+// Zig bindings for SDL3, SDL3_image, and SDL3_ttf
 
 // Import all subsystems
 pub const core = @import("core.zig");
@@ -49,6 +49,7 @@ pub const endian = @import("endian.zig");
 pub const guid = @import("guid.zig");
 pub const intrinsics = @import("intrinsics.zig");
 pub const ttf = @import("ttf.zig");
+pub const egl = @import("egl.zig");
 
 // Re-export core functions
 pub const init = core.init;
@@ -56,6 +57,9 @@ pub const initSubSystem = core.initSubSystem;
 pub const quitSubSystem = core.quitSubSystem;
 pub const wasInit = core.wasInit;
 pub const quit = core.quit;
+pub const setMainReady = core.setMainReady;
+pub const registerApp = core.registerApp;
+pub const unregisterApp = core.unregisterApp;
 pub const isMainThread = core.isMainThread;
 pub const runOnMainThread = core.runOnMainThread;
 pub const setAppMetadata = core.setAppMetadata;
@@ -66,6 +70,7 @@ pub const clearError = core.clearError;
 pub const setError = core.setError;
 pub const getVersion = core.getVersion;
 pub const getRevision = core.getRevision;
+pub const enterAppMainCallbacks = core.enterAppMainCallbacks;
 
 // Re-export camera functions
 pub const getNumCameraDrivers = camera.getNumCameraDrivers;
@@ -142,6 +147,7 @@ pub const getWindowFullscreenMode = video.getWindowFullscreenMode;
 pub const getWindowPixelFormat = video.getWindowPixelFormat;
 pub const getWindows = video.getWindows;
 pub const createWindow = video.createWindow;
+pub const createWindowWithProperties = video.createWindowWithProperties;
 pub const destroyWindow = video.destroyWindow;
 pub const getWindowID = video.getWindowID;
 pub const getWindowFromID = video.getWindowFromID;
@@ -433,6 +439,41 @@ pub const joystickRumbleTriggers = input.joystickRumbleTriggers;
 pub const joystickHasLED = input.joystickHasLED;
 pub const joystickSetLED = input.joystickSetLED;
 pub const joystickSendEffect = input.joystickSendEffect;
+pub const hasJoystick = input.hasJoystick;
+pub const lockJoysticks = input.lockJoysticks;
+pub const unlockJoysticks = input.unlockJoysticks;
+pub const getJoystickNameForID = input.getJoystickNameForID;
+pub const getJoystickPathForID = input.getJoystickPathForID;
+pub const getJoystickPlayerIndexForID = input.getJoystickPlayerIndexForID;
+pub const getJoystickGUIDForID = input.getJoystickGUIDForID;
+pub const getJoystickVendorForID = input.getJoystickVendorForID;
+pub const getJoystickProductForID = input.getJoystickProductForID;
+pub const getJoystickProductVersionForID = input.getJoystickProductVersionForID;
+pub const getJoystickTypeForID = input.getJoystickTypeForID;
+pub const getJoystickFromID = input.getJoystickFromID;
+pub const getJoystickFromPlayerIndex = input.getJoystickFromPlayerIndex;
+pub const getJoystickProperties = input.getJoystickProperties;
+pub const getJoystickPlayerIndex = input.getJoystickPlayerIndex;
+pub const setJoystickPlayerIndex = input.setJoystickPlayerIndex;
+pub const getJoystickGUIDInfo = input.getJoystickGUIDInfo;
+pub const joystickConnected = input.joystickConnected;
+pub const getJoystickID = input.getJoystickID;
+pub const getNumJoystickAxes = input.getNumJoystickAxes;
+pub const getNumJoystickBalls = input.getNumJoystickBalls;
+pub const getNumJoystickHats = input.getNumJoystickHats;
+pub const getNumJoystickButtons = input.getNumJoystickButtons;
+pub const setJoystickEventsEnabled = input.setJoystickEventsEnabled;
+pub const joystickEventsEnabled = input.joystickEventsEnabled;
+pub const updateJoysticks = input.updateJoysticks;
+pub const isJoystickVirtual = input.isJoystickVirtual;
+pub const setJoystickVirtualAxis = input.setJoystickVirtualAxis;
+pub const setJoystickVirtualBall = input.setJoystickVirtualBall;
+pub const setJoystickVirtualButton = input.setJoystickVirtualButton;
+pub const setJoystickVirtualHat = input.setJoystickVirtualHat;
+pub const setJoystickVirtualTouchpad = input.setJoystickVirtualTouchpad;
+pub const sendJoystickVirtualSensorData = input.sendJoystickVirtualSensorData;
+pub const getJoystickConnectionState = input.getJoystickConnectionState;
+pub const getJoystickPowerInfo = input.getJoystickPowerInfo;
 pub const numGamepads = input.numGamepads;
 pub const isGamepad = input.isGamepad;
 pub const openGamepad = input.openGamepad;
@@ -469,7 +510,6 @@ pub const getGamepadVendorForID = input.getGamepadVendorForID;
 pub const getGamepadProductForID = input.getGamepadProductForID;
 pub const getGamepadProductVersionForID = input.getGamepadProductVersionForID;
 pub const getGamepadFirmwareVersionForID = input.getGamepadFirmwareVersionForID;
-pub const getGamepadSerialForID = input.getGamepadSerialForID;
 pub const gamepadConnected = input.gamepadConnected;
 pub const getGamepadID = input.getGamepadID;
 pub const getGamepadFromID = input.getGamepadFromID;
@@ -484,7 +524,12 @@ pub const getGamepadSensorData = input.getGamepadSensorData;
 pub const setGamepadSensorEnabled = input.setGamepadSensorEnabled;
 pub const gamepadSensorEnabled = input.gamepadSensorEnabled;
 pub const getGamepadProperties = input.getGamepadProperties;
+pub const getGamepadSteamHandle = input.getGamepadSteamHandle;
+pub const getGamepadConnectionState = input.getGamepadConnectionState;
+pub const getGamepadButtonLabelForType = input.getGamepadButtonLabelForType;
 pub const getGamepadIDMap = input.getGamepadIDMap;
+pub const attachVirtualJoystick = input.attachVirtualJoystick;
+pub const detachVirtualJoystick = input.detachVirtualJoystick;
 
 // Re-export render types
 pub const SDL_Renderer = render.SDL_Renderer;
@@ -633,6 +678,7 @@ pub const renderFlush = render.renderFlush;
 pub const textureSize = render.textureSize;
 pub const getRenderVSync = render.getRenderVSync;
 pub const setRenderVSync = render.setRenderVSync;
+pub const addVulkanRenderSemaphores = render.addVulkanRenderSemaphores;
 
 // Re-export audio types and functions
 pub const SDL_AudioSpec = audio.SDL_AudioSpec;
@@ -750,6 +796,8 @@ pub const setThreadPriority = threads.setThreadPriority;
 pub const getCurrentThreadID = threads.getCurrentThreadID;
 pub const detachThread = threads.detachThread;
 pub const getThreadID = threads.getThreadID;
+pub const createThreadRuntime = threads.createThreadRuntime;
+pub const createThreadWithPropertiesRuntime = threads.createThreadWithPropertiesRuntime;
 
 // Re-export filesystem functions
 pub const getBasePath = filesystem.getBasePath;
@@ -863,6 +911,7 @@ pub const logWarn = log.logWarn;
 pub const logError = log.logError;
 pub const logCritical = log.logCritical;
 pub const logMessage = log.logMessage;
+pub const logMessageV = log.logMessageV;
 pub const setLogOutputFunction = log.setLogOutputFunction;
 pub const getLogOutputFunction = log.getLogOutputFunction;
 pub const setLogPriorityPrefix = log.setLogPriorityPrefix;
@@ -884,8 +933,18 @@ pub const SDL_PowerState = power.SDL_PowerState;
 pub const getPowerInfo = power.getPowerInfo;
 
 // Re-export system functions
-pub const getSystemRAM = system.getSystemRAM;
-pub const getSIMDAlignment = system.getSIMDAlignment;
+pub const getSystemRAM = cpuinfo.getSystemRAM;
+pub const getSIMDAlignment = cpuinfo.getSIMDAlignment;
+pub const isTablet = system.isTablet;
+pub const isTV = system.isTV;
+pub const getSandbox = system.getSandbox;
+pub const onApplicationWillTerminate = system.onApplicationWillTerminate;
+pub const onApplicationDidReceiveMemoryWarning = system.onApplicationDidReceiveMemoryWarning;
+pub const onApplicationWillEnterBackground = system.onApplicationWillEnterBackground;
+pub const onApplicationDidEnterBackground = system.onApplicationDidEnterBackground;
+pub const onApplicationWillEnterForeground = system.onApplicationWillEnterForeground;
+pub const onApplicationDidEnterForeground = system.onApplicationDidEnterForeground;
+pub const onApplicationDidChangeStatusBarOrientation = system.onApplicationDidChangeStatusBarOrientation;
 
 // Re-export all keycode types and constants
 pub const SDL_Keycode = keycode.SDL_Keycode;
@@ -1124,11 +1183,10 @@ pub const showSimpleMessageBox = messagebox.showSimpleMessageBox;
 // Re-export misc functions
 pub const openURL = misc.openURL;
 pub const getDefaultLogOutputFunction = misc.getDefaultLogOutputFunction;
-pub const crc16 = misc.crc16;
-pub const crc32 = misc.crc32;
-pub const murmur3_32 = misc.murmur3_32;
-pub const getNumAllocations = misc.getNumAllocations;
-pub const getFullPath = misc.getFullPath;
+pub const crc16 = stdinc.crc16;
+pub const crc32 = stdinc.crc32;
+pub const murmur3_32 = stdinc.murmur3_32;
+pub const getNumAllocations = stdinc.getNumAllocations;
 
 // Re-export Vulkan functions and types
 pub const vulkanLoadLibrary = vulkan.loadLibrary;
@@ -1164,6 +1222,10 @@ pub const hid_open_path = hidapi.hid_open_path;
 pub const hid_write = hidapi.hid_write;
 pub const hid_read = hidapi.hid_read;
 pub const hid_close = hidapi.hid_close;
+pub const hid_get_properties = hidapi.hid_get_properties;
+pub const hid_get_input_report = hidapi.hid_get_input_report;
+pub const hid_get_device_info = hidapi.hid_get_device_info;
+pub const hid_get_report_descriptor = hidapi.hid_get_report_descriptor;
 
 // Re-export Storage types and functions
 pub const SDL_Storage = storage.SDL_Storage;
@@ -1180,6 +1242,7 @@ pub const writeStorageFile = storage.writeStorageFile;
 pub const SDL_AssertState = assert.SDL_AssertState;
 pub const SDL_AssertData = assert.SDL_AssertData;
 pub const setAssertionHandler = assert.setAssertionHandler;
+pub const getDefaultAssertionHandler = assert.getDefaultAssertionHandler;
 pub const getAssertionHandler = assert.getAssertionHandler;
 pub const getAssertionReport = assert.getAssertionReport;
 pub const resetAssertionReport = assert.resetAssertionReport;
@@ -1217,13 +1280,9 @@ pub const readProcess = process.readProcess;
 
 // Re-export metal types and functions
 pub const SDL_MetalView = metal.SDL_MetalView;
-pub const metalLoadLibrary = metal.loadLibrary;
-pub const metalGetLibrary = metal.getLibrary;
-pub const metalUnloadLibrary = metal.unloadLibrary;
 pub const metalCreateView = metal.createView;
 pub const metalDestroyView = metal.destroyView;
 pub const metalGetLayer = metal.getLayer;
-pub const metalGetDrawableSize = metal.getDrawableSize;
 
 // Re-export sensor types and functions
 pub const SDL_SensorType = sensor.SDL_SensorType;
@@ -1239,14 +1298,8 @@ pub const updateSensors = sensor.updateSensors;
 // Re-export pen types and functions
 pub const SDL_PenAxis = pen.SDL_PenAxis;
 pub const SDL_Pen = pen.SDL_Pen;
-pub const getPens = pen.getPens;
-pub const getPenName = pen.getPenName;
-pub const getPenCapabilities = pen.getPenCapabilities;
-pub const getPenStatus = pen.getPenStatus;
-pub const penConnected = pen.penConnected;
-pub const getPenFromID = pen.getPenFromID;
-pub const getPenID = pen.getPenID;
-pub const penAxisSupported = pen.penAxisSupported;
+pub const SDL_PenDeviceType = pen.SDL_PenDeviceType;
+pub const getPenDeviceType = pen.getPenDeviceType;
 
 // Re-export touch types and functions
 pub const SDL_TouchID = touch.SDL_TouchID;
@@ -1271,6 +1324,8 @@ pub const closeAsyncIO = asyncio.closeAsyncIO;
 pub const createAsyncIOQueue = asyncio.createAsyncIOQueue;
 pub const getAsyncIOResult = asyncio.getAsyncIOResult;
 pub const waitAsyncIOResult = asyncio.waitAsyncIOResult;
+pub const signalAsyncIOQueue = asyncio.signalAsyncIOQueue;
+pub const loadFileAsync = asyncio.loadFileAsync;
 
 // Re-export atomic types and functions
 pub const SDL_SpinLock = atomic.SDL_SpinLock;
@@ -1281,6 +1336,17 @@ pub const atomicIncRef = atomic.atomicIncRef;
 pub const atomicDecRef = atomic.atomicDecRef;
 pub const memoryBarrierReleaseFunction = atomic.memoryBarrierReleaseFunction;
 pub const memoryBarrierAcquireFunction = atomic.memoryBarrierAcquireFunction;
+pub const compareAndSwapAtomicInt = atomic.compareAndSwapAtomicInt;
+pub const setAtomicInt = atomic.setAtomicInt;
+pub const getAtomicInt = atomic.getAtomicInt;
+pub const addAtomicInt = atomic.addAtomicInt;
+pub const compareAndSwapAtomicU32 = atomic.compareAndSwapAtomicU32;
+pub const setAtomicU32 = atomic.setAtomicU32;
+pub const getAtomicU32 = atomic.getAtomicU32;
+pub const addAtomicU32 = atomic.addAtomicU32;
+pub const compareAndSwapAtomicPointer = atomic.compareAndSwapAtomicPointer;
+pub const setAtomicPointer = atomic.setAtomicPointer;
+pub const getAtomicPointer = atomic.getAtomicPointer;
 
 // Re-export bits functions
 pub const mostSignificantBitIndex32 = bits.mostSignificantBitIndex32;
@@ -1335,8 +1401,7 @@ pub const guidToString = guid.guidToString;
 pub const stringToGUID = guid.stringToGUID;
 
 // Re-export intrinsics functions
-pub const hasARMSIMD = intrinsics.hasARMSIMD;
-pub const hasARMSVE = intrinsics.hasARMSVE;
+
 
 // Constants
 pub const SDL_INIT_AUDIO = core.SDL_INIT_AUDIO;
@@ -1728,6 +1793,8 @@ pub const bindGPUComputeSamplers = gpu.bindGPUComputeSamplers;
 pub const calculateGPUTextureFormatSize = gpu.calculateGPUTextureFormatSize;
 pub const getPixelFormatFromGPUTextureFormat = gpu.getPixelFormatFromGPUTextureFormat;
 pub const getGPUTextureFormatFromPixelFormat = gpu.getGPUTextureFormatFromPixelFormat;
+pub const createGPURenderState = gpu.createGPURenderState;
+pub const destroyGPURenderState = gpu.destroyGPURenderState;
 
 // GPU driver functions
 pub const getNumGPUDrivers = gpu.getNumGPUDrivers;
