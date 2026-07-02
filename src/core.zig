@@ -50,6 +50,9 @@ pub const SDL_AppQuit_func = ?*const fn (?*anyopaque, SDL_AppResult) callconv(.c
 // Main thread callback
 pub const SDL_MainThreadCallback = ?*const fn (?*anyopaque) callconv(.c) void;
 
+// App entry point type
+pub const SDL_main_func = *const fn (c_int, [*][*:0]u8) callconv(.c) c_int;
+
 // Text input event structures (also defined in events.zig for re-export)
 // These are defined here so they can be used in the SDL_Event union
 pub const SDL_TextEditingEvent = extern struct {
@@ -478,6 +481,8 @@ extern fn SDL_ClearError() bool;
 extern fn SDL_SetError(fmt: [*:0]const u8, ...) bool;
 extern fn SDL_SetErrorV(fmt: [*:0]const u8, ap: [*c]u8) bool; // va_list is platform-specific, using [*c]u8 as approximation
 extern fn SDL_OutOfMemory() bool;
+extern fn SDL_EnterAppMainCallbacks(argc: c_int, argv: ?[*]?[*:0]u8, appinit: SDL_AppInit_func, appiter: SDL_AppIterate_func, appevent: SDL_AppEvent_func, appquit: SDL_AppQuit_func) c_int;
+extern fn SDL_RunApp(argc: c_int, argv: [*][*:0]u8, mainFunction: SDL_main_func, reserved: ?*anyopaque) c_int;
 
 // Version
 pub const SDL_Version = extern struct {
@@ -508,5 +513,7 @@ pub const clearError = SDL_ClearError;
 pub const setError = SDL_SetError;
 pub const setErrorV = SDL_SetErrorV;
 pub const outOfMemory = SDL_OutOfMemory;
+pub const enterAppMainCallbacks = SDL_EnterAppMainCallbacks;
+pub const runApp = SDL_RunApp;
 pub const getVersion = SDL_GetVersion;
 pub const getRevision = SDL_GetRevision;
