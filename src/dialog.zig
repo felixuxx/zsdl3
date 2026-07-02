@@ -26,6 +26,16 @@ pub const SDL_DialogFileFilter = extern struct {
     pattern: ?[*:0]const u8,
 };
 
+// File dialog property string constants
+pub const SDL_PROP_FILE_DIALOG_FILTERS_POINTER = "SDL.filedialog.filters";
+pub const SDL_PROP_FILE_DIALOG_NFILTERS_NUMBER = "SDL.filedialog.nfilters";
+pub const SDL_PROP_FILE_DIALOG_WINDOW_POINTER = "SDL.filedialog.window";
+pub const SDL_PROP_FILE_DIALOG_LOCATION_STRING = "SDL.filedialog.location";
+pub const SDL_PROP_FILE_DIALOG_MANY_BOOLEAN = "SDL.filedialog.many";
+pub const SDL_PROP_FILE_DIALOG_TITLE_STRING = "SDL.filedialog.title";
+pub const SDL_PROP_FILE_DIALOG_ACCEPT_STRING = "SDL.filedialog.accept";
+pub const SDL_PROP_FILE_DIALOG_CANCEL_STRING = "SDL.filedialog.cancel";
+
 // Public API
 pub const showOpenFileDialog = SDL_ShowOpenFileDialog;
 pub const showSaveFileDialog = SDL_ShowSaveFileDialog;

@@ -15,6 +15,25 @@ pub const SDL_ProcessIO = enum(c_int) {
     SDL_PROCESS_IO_REDIRECT,
 };
 
+// Process property string constants
+pub const SDL_PROP_PROCESS_CREATE_ARGS_POINTER = "SDL.process.create.args";
+pub const SDL_PROP_PROCESS_CREATE_ENVIRONMENT_POINTER = "SDL.process.create.environment";
+pub const SDL_PROP_PROCESS_CREATE_WORKING_DIRECTORY_STRING = "SDL.process.create.working_directory";
+pub const SDL_PROP_PROCESS_CREATE_STDIN_NUMBER = "SDL.process.create.stdin_option";
+pub const SDL_PROP_PROCESS_CREATE_STDIN_POINTER = "SDL.process.create.stdin_source";
+pub const SDL_PROP_PROCESS_CREATE_STDOUT_NUMBER = "SDL.process.create.stdout_option";
+pub const SDL_PROP_PROCESS_CREATE_STDOUT_POINTER = "SDL.process.create.stdout_source";
+pub const SDL_PROP_PROCESS_CREATE_STDERR_NUMBER = "SDL.process.create.stderr_option";
+pub const SDL_PROP_PROCESS_CREATE_STDERR_POINTER = "SDL.process.create.stderr_source";
+pub const SDL_PROP_PROCESS_CREATE_STDERR_TO_STDOUT_BOOLEAN = "SDL.process.create.stderr_to_stdout";
+pub const SDL_PROP_PROCESS_CREATE_BACKGROUND_BOOLEAN = "SDL.process.create.background";
+pub const SDL_PROP_PROCESS_CREATE_CMDLINE_STRING = "SDL.process.create.cmdline";
+pub const SDL_PROP_PROCESS_PID_NUMBER = "SDL.process.pid";
+pub const SDL_PROP_PROCESS_STDIN_POINTER = "SDL.process.stdin";
+pub const SDL_PROP_PROCESS_STDOUT_POINTER = "SDL.process.stdout";
+pub const SDL_PROP_PROCESS_STDERR_POINTER = "SDL.process.stderr";
+pub const SDL_PROP_PROCESS_BACKGROUND_BOOLEAN = "SDL.process.background";
+
 // Process functions
 extern fn SDL_CreateProcess(args: ?[*]const ?[*:0]const u8, pipe_stdio: bool) ?*SDL_Process;
 extern fn SDL_GetProcessInput(process: ?*SDL_Process) ?*filesystem.SDL_IOStream;
