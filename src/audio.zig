@@ -30,6 +30,10 @@ pub const SDL_AudioSpec = extern struct {
 
 pub const SDL_AudioStream = opaque {};
 
+// Audio callback types
+pub const SDL_AudioStreamDataCompleteCallback = ?*const fn (userdata: ?*anyopaque, buf: ?*const anyopaque, buflen: c_int) callconv(.c) void;
+pub const SDL_AudioPostmixCallback = ?*const fn (userdata: ?*anyopaque, spec: ?*const SDL_AudioSpec, buffer: ?*f32, buflen: c_int) callconv(.c) void;
+
 // Audio functions
 extern fn SDL_OpenAudioDevice(devid: SDL_AudioDeviceID, spec: ?*const SDL_AudioSpec) SDL_AudioDeviceID;
 extern fn SDL_CloseAudioDevice(dev: SDL_AudioDeviceID) void;
@@ -82,6 +86,7 @@ extern fn SDL_LoadWAV(path: [*:0]const u8, spec: ?*SDL_AudioSpec, audio_buf: ?*?
 // Additional audio functions
 extern fn SDL_GetAudioDeviceGain(devid: SDL_AudioDeviceID) f32;
 extern fn SDL_SetAudioDeviceGain(devid: SDL_AudioDeviceID, gain: f32) bool;
+extern fn SDL_SetAudioPostmixCallback(devid: SDL_AudioDeviceID, callback: SDL_AudioPostmixCallback, userdata: ?*anyopaque) bool;
 extern fn SDL_GetAudioStreamFrequencyRatio(stream: ?*SDL_AudioStream) f32;
 extern fn SDL_SetAudioStreamFrequencyRatio(stream: ?*SDL_AudioStream, ratio: f32) bool;
 extern fn SDL_GetAudioStreamInputChannelMap(stream: ?*SDL_AudioStream, count: ?*c_int) ?[*]c_int;
@@ -89,6 +94,8 @@ extern fn SDL_GetAudioStreamOutputChannelMap(stream: ?*SDL_AudioStream, count: ?
 extern fn SDL_SetAudioStreamInputChannelMap(stream: ?*SDL_AudioStream, chmap: ?[*]const c_int, count: c_int) bool;
 extern fn SDL_SetAudioStreamOutputChannelMap(stream: ?*SDL_AudioStream, chmap: ?[*]const c_int, count: c_int) bool;
 extern fn SDL_GetAudioStreamAvailable(stream: ?*SDL_AudioStream) c_int;
+extern fn SDL_PutAudioStreamDataNoCopy(stream: ?*SDL_AudioStream, buf: ?*const anyopaque, len: c_int, callback: SDL_AudioStreamDataCompleteCallback, userdata: ?*anyopaque) bool;
+extern fn SDL_PutAudioStreamPlanarData(stream: ?*SDL_AudioStream, channel_buffers: ?*const anyopaque, num_channels: c_int, num_samples: c_int) bool;
 extern fn SDL_PauseAudioStreamDevice(stream: ?*SDL_AudioStream) bool;
 extern fn SDL_ResumeAudioStreamDevice(stream: ?*SDL_AudioStream) bool;
 extern fn SDL_AudioStreamDevicePaused(stream: ?*SDL_AudioStream) bool;
@@ -149,3 +156,6 @@ pub const getAudioStreamAvailable = SDL_GetAudioStreamAvailable;
 pub const pauseAudioStreamDevice = SDL_PauseAudioStreamDevice;
 pub const resumeAudioStreamDevice = SDL_ResumeAudioStreamDevice;
 pub const audioStreamDevicePaused = SDL_AudioStreamDevicePaused;
+pub const putAudioStreamDataNoCopy = SDL_PutAudioStreamDataNoCopy;
+pub const putAudioStreamPlanarData = SDL_PutAudioStreamPlanarData;
+pub const setAudioPostmixCallback = SDL_SetAudioPostmixCallback;

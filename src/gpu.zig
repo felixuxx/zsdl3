@@ -29,6 +29,7 @@ pub const SDL_GPURenderPass = opaque {};
 pub const SDL_GPUComputePass = opaque {};
 pub const SDL_GPUCopyPass = opaque {};
 pub const SDL_GPUFence = opaque {};
+pub const SDL_GPURenderState = opaque {};
 
 // Enums
 pub const SDL_GPUPrimitiveType = enum(c_int) {
@@ -703,6 +704,13 @@ pub const SDL_GPUVulkanOptions = extern struct {
     instance_extension_names: ?[*]?[*]const u8,
 };
 
+pub const SDL_GPURenderStateCreateInfo = extern struct {
+    fragment_shader: ?*SDL_GPUShader,
+    num_sampler_bindings: Sint32,
+    sampler_bindings: ?*const SDL_GPUTextureSamplerBinding,
+    props: core.SDL_PropertiesID,
+};
+
 // Buffer functions
 extern fn SDL_CreateGPUBuffer(device: ?*SDL_GPUDevice, create_info: ?*const SDL_GPUBufferCreateInfo) ?*SDL_GPUBuffer;
 extern fn SDL_SetGPUBufferName(device: ?*SDL_GPUDevice, buffer: ?*SDL_GPUBuffer, text: ?[*:0]const u8) void;
@@ -801,10 +809,12 @@ extern fn SDL_CalculateGPUTextureFormatSize(format: SDL_GPUTextureFormat, width:
 extern fn SDL_GetPixelFormatFromGPUTextureFormat(format: SDL_GPUTextureFormat) c_uint;
 extern fn SDL_GetGPUTextureFormatFromPixelFormat(format: c_uint) SDL_GPUTextureFormat;
 
-// video import
-// Import types
-// Import types
-// Shader format type
+// GPU render state functions
+extern fn SDL_CreateGPURenderState(renderer: ?*render.SDL_Renderer, createinfo: ?*const SDL_GPURenderStateCreateInfo) ?*SDL_GPURenderState;
+extern fn SDL_SetGPURenderState(renderer: ?*render.SDL_Renderer, state: ?*SDL_GPURenderState) bool;
+extern fn SDL_SetGPURenderStateFragmentUniforms(state: ?*SDL_GPURenderState, slot_index: Uint32, data: ?*const anyopaque, length: Uint32) bool;
+extern fn SDL_DestroyGPURenderState(state: ?*SDL_GPURenderState) void;
+
 // Shader formats
 pub const SDL_GPU_SHADERFORMAT_INVALID: SDL_GPUShaderFormat = 0;
 pub const SDL_GPU_SHADERFORMAT_PRIVATE: SDL_GPUShaderFormat = 1 << 0;
@@ -909,6 +919,11 @@ pub const getPixelFormatFromGPUTextureFormat = SDL_GetPixelFormatFromGPUTextureF
 pub const getGPUTextureFormatFromPixelFormat = SDL_GetGPUTextureFormatFromPixelFormat;
 
 // GPU driver functions
+pub const createGPURenderState = SDL_CreateGPURenderState;
+pub const setGPURenderState = SDL_SetGPURenderState;
+pub const setGPURenderStateFragmentUniforms = SDL_SetGPURenderStateFragmentUniforms;
+pub const destroyGPURenderState = SDL_DestroyGPURenderState;
+
 pub const getNumGPUDrivers = SDL_GetNumGPUDrivers;
 pub const getGPUDriver = SDL_GetGPUDriver;
 pub const getGPUDeviceDriver = SDL_GetGPUDeviceDriver;
