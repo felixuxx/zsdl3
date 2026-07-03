@@ -11,6 +11,7 @@ pub fn build(b: *std.Build) void {
 
     mod.linkSystemLibrary("SDL3", .{});
     mod.linkSystemLibrary("SDL3_image", .{});
+    mod.linkSystemLibrary("SDL3_mixer", .{});
 
     const exe = b.addExecutable(.{
         .name = "zsdl3",
@@ -284,6 +285,28 @@ pub fn build(b: *std.Build) void {
     run_clipboard_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| {
         run_clipboard_cmd.addArgs(args);
+    }
+
+    // Mixer example
+    const mixer = b.addExecutable(.{
+        .name = "mixer",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("examples/mixer.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "zsdl3", .module = mod },
+            },
+        }),
+    });
+    b.installArtifact(mixer);
+
+    const run_mixer_step = b.step("run-mixer", "Run the mixer example");
+    const run_mixer_cmd = b.addRunArtifact(mixer);
+    run_mixer_step.dependOn(&run_mixer_cmd.step);
+    run_mixer_cmd.step.dependOn(b.getInstallStep());
+    if (b.args) |args| {
+        run_mixer_cmd.addArgs(args);
     }
 
     b.installArtifact(exe);
