@@ -166,6 +166,8 @@ extern fn SDL_IOFromDynamicMem() ?*SDL_IOStream;
 extern fn SDL_OpenIO(iface: ?*const SDL_IOStreamInterface, userdata: ?*anyopaque) ?*SDL_IOStream;
 extern fn SDL_GetIOProperties(stream: ?*SDL_IOStream) core.SDL_PropertiesID;
 extern fn SDL_GetIOStatus(stream: ?*SDL_IOStream) c_int;
+extern fn SDL_IOprintf(context: ?*SDL_IOStream, fmt: [*:0]const u8, ...) usize;
+extern fn SDL_IOvprintf(context: ?*SDL_IOStream, fmt: [*:0]const u8, ap: [*c]u8) usize;
 
 // Public API
 pub const getBasePath = SDL_GetBasePath;
@@ -225,3 +227,5 @@ pub const ioFromDynamicMem = SDL_IOFromDynamicMem;
 pub const openIO = SDL_OpenIO;
 pub const getIOProperties = SDL_GetIOProperties;
 pub const getIOStatus = SDL_GetIOStatus;
+pub const IOprintf = SDL_IOprintf;
+pub const IOvprintf = SDL_IOvprintf;

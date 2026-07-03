@@ -32,6 +32,9 @@ pub const SDL_ThreadState = enum(c_int) {
 
 pub const SDL_TLSDestructorCallback = ?*const fn (?*anyopaque) callconv(.c) void;
 
+pub const SDL_ThreadFunction = ?*const fn (?*anyopaque) callconv(.c) c_int;
+pub const SDL_FunctionPointer = ?*const fn () callconv(.c) void;
+
 pub const SDL_InitState = extern struct {
     status: atomic.SDL_AtomicInt,
     thread: SDL_ThreadID,
@@ -41,18 +44,20 @@ pub const SDL_InitState = extern struct {
 // Thread functions
 extern fn SDL_CreateThread(func: ?*const fn (?*anyopaque) callconv(.c) c_int, name: ?[*:0]const u8, data: ?*anyopaque) ?*SDL_Thread;
 extern fn SDL_CreateThreadWithProperties(props: core.SDL_PropertiesID) ?*SDL_Thread;
+extern fn SDL_CreateThreadRuntime(fn_: SDL_ThreadFunction, name: ?[*:0]const u8, data: ?*anyopaque, pfnBeginThread: SDL_FunctionPointer, pfnEndThread: SDL_FunctionPointer) ?*SDL_Thread;
+extern fn SDL_CreateThreadWithPropertiesRuntime(props: core.SDL_PropertiesID, pfnBeginThread: SDL_FunctionPointer, pfnEndThread: SDL_FunctionPointer) ?*SDL_Thread;
 extern fn SDL_WaitThread(thread: ?*SDL_Thread, status: ?*c_int) void;
 extern fn SDL_CreateMutex() ?*SDL_Mutex;
 extern fn SDL_DestroyMutex(mutex: ?*SDL_Mutex) void;
-extern fn SDL_LockMutex(mutex: ?*SDL_Mutex) bool;
-extern fn SDL_UnlockMutex(mutex: ?*SDL_Mutex) bool;
+extern fn SDL_LockMutex(mutex: ?*SDL_Mutex) void;
+extern fn SDL_UnlockMutex(mutex: ?*SDL_Mutex) void;
 extern fn SDL_TryLockMutex(mutex: ?*SDL_Mutex) bool;
 extern fn SDL_CreateCondition() ?*SDL_Condition;
 extern fn SDL_DestroyCondition(cond: ?*SDL_Condition) void;
-extern fn SDL_SignalCondition(cond: ?*SDL_Condition) bool;
-extern fn SDL_BroadcastCondition(cond: ?*SDL_Condition) bool;
-extern fn SDL_WaitCondition(cond: ?*SDL_Condition, mutex: ?*SDL_Mutex) bool;
-extern fn SDL_WaitConditionTimeout(cond: ?*SDL_Condition, mutex: ?*SDL_Mutex, ms: Uint32) bool;
+extern fn SDL_SignalCondition(cond: ?*SDL_Condition) void;
+extern fn SDL_BroadcastCondition(cond: ?*SDL_Condition) void;
+extern fn SDL_WaitCondition(cond: ?*SDL_Condition, mutex: ?*SDL_Mutex) void;
+extern fn SDL_WaitConditionTimeout(cond: ?*SDL_Condition, mutex: ?*SDL_Mutex, ms: Sint32) bool;
 extern fn SDL_CreateSemaphore(initial_value: Uint32) ?*SDL_Semaphore;
 extern fn SDL_DestroySemaphore(sem: ?*SDL_Semaphore) void;
 extern fn SDL_WaitSemaphore(sem: ?*SDL_Semaphore) void;
@@ -62,7 +67,6 @@ extern fn SDL_SignalSemaphore(sem: ?*SDL_Semaphore) void;
 extern fn SDL_GetSemaphoreValue(sem: ?*SDL_Semaphore) Uint32;
 extern fn SDL_GetThreadName(thread: ?*SDL_Thread) ?[*:0]const u8;
 extern fn SDL_SetCurrentThreadPriority(priority: SDL_ThreadPriority) bool;
-extern fn SDL_GetCurrentThreadPriority() SDL_ThreadPriority;
 extern fn SDL_GetCurrentThreadID() SDL_ThreadID;
 extern fn SDL_DetachThread(thread: ?*SDL_Thread) void;
 extern fn SDL_GetThreadID(thread: ?*SDL_Thread) SDL_ThreadID;
@@ -74,8 +78,8 @@ extern fn SDL_CleanupTLS() void;
 // RWLock functions
 extern fn SDL_CreateRWLock() ?*SDL_RWLock;
 extern fn SDL_DestroyRWLock(rwlock: ?*SDL_RWLock) void;
-extern fn SDL_LockRWLockForReading(rwlock: ?*SDL_RWLock) bool;
-extern fn SDL_LockRWLockForWriting(rwlock: ?*SDL_RWLock) bool;
+extern fn SDL_LockRWLockForReading(rwlock: ?*SDL_RWLock) void;
+extern fn SDL_LockRWLockForWriting(rwlock: ?*SDL_RWLock) void;
 extern fn SDL_TryLockRWLockForReading(rwlock: ?*SDL_RWLock) bool;
 extern fn SDL_TryLockRWLockForWriting(rwlock: ?*SDL_RWLock) bool;
 extern fn SDL_UnlockRWLock(rwlock: ?*SDL_RWLock) void;
@@ -108,7 +112,6 @@ pub const semPost = SDL_SignalSemaphore;
 pub const semValue = SDL_GetSemaphoreValue;
 pub const getThreadName = SDL_GetThreadName;
 pub const setCurrentThreadPriority = SDL_SetCurrentThreadPriority;
-pub const getCurrentThreadPriority = SDL_GetCurrentThreadPriority;
 pub const getCurrentThreadID = SDL_GetCurrentThreadID;
 pub const detachThread = SDL_DetachThread;
 pub const getThreadID = SDL_GetThreadID;
@@ -117,6 +120,8 @@ pub const getTLS = SDL_GetTLS;
 pub const setTLS = SDL_SetTLS;
 pub const cleanupTLS = SDL_CleanupTLS;
 pub const createThreadWithProperties = SDL_CreateThreadWithProperties;
+pub const createThreadRuntime = SDL_CreateThreadRuntime;
+pub const createThreadWithPropertiesRuntime = SDL_CreateThreadWithPropertiesRuntime;
 
 pub const createRWLock = SDL_CreateRWLock;
 pub const destroyRWLock = SDL_DestroyRWLock;
