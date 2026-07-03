@@ -20,7 +20,7 @@ pub const SDL_PenID = Uint32;
 pub const SDL_JoystickID = Uint32;
 pub const SDL_GamepadID = Uint32;
 pub const SDL_Keymod = Uint16;
-pub const SDL_Keycode = c_int;
+pub const SDL_Keycode = Uint32;
 pub const SDL_Scancode = c_int;
 
 // Initialization flags
