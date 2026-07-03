@@ -6,7 +6,7 @@ pub const SDL_SharedObject = opaque {};
 
 // Shared object functions
 extern fn SDL_LoadObject(sofile: ?[*:0]const u8) ?*SDL_SharedObject;
-extern fn SDL_LoadFunction(handle: ?*SDL_SharedObject, name: ?[*:0]const u8) ?*anyopaque;
+extern fn SDL_LoadFunction(handle: ?*SDL_SharedObject, name: ?[*:0]const u8) ?*const fn () callconv(.c) void;
 extern fn SDL_UnloadObject(handle: ?*SDL_SharedObject) void;
 
 // Public API
