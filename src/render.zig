@@ -3,6 +3,7 @@
 
 const core = @import("core.zig");
 pub const Uint32 = core.Uint32;
+pub const Sint64 = core.Sint64;
 const pixels = @import("pixels.zig");
 pub const SDL_PixelFormat = pixels.SDL_PixelFormat;
 pub const SDL_BlendMode = pixels.SDL_BlendMode;
@@ -217,6 +218,11 @@ extern fn SDL_GetRenderColorScale(renderer: ?*SDL_Renderer, scale: ?*f32) bool;
 extern fn SDL_GetTextureSize(texture: ?*SDL_Texture, w: ?*f32, h: ?*f32) bool;
 extern fn SDL_GetRenderVSync(renderer: ?*SDL_Renderer, vsync: ?*c_int) bool;
 extern fn SDL_SetRenderVSync(renderer: ?*SDL_Renderer, vsync: c_int) bool;
+extern fn SDL_AddVulkanRenderSemaphores(renderer: ?*SDL_Renderer, wait_stage_mask: Uint32, wait_semaphore: Sint64, signal_semaphore: Sint64) bool;
+
+// Metal backend access
+extern fn SDL_GetRenderMetalLayer(renderer: ?*SDL_Renderer) ?*anyopaque;
+extern fn SDL_GetRenderMetalCommandEncoder(renderer: ?*SDL_Renderer) ?*anyopaque;
 
 // Public API - Creation
 pub const createRenderer = SDL_CreateRenderer;
@@ -307,6 +313,9 @@ pub const flushRenderer = SDL_FlushRenderer;
 pub const textureSize = SDL_GetTextureSize;
 pub const getRenderVSync = SDL_GetRenderVSync;
 pub const setRenderVSync = SDL_SetRenderVSync;
+pub const addVulkanRenderSemaphores = SDL_AddVulkanRenderSemaphores;
+pub const getRenderMetalLayer = SDL_GetRenderMetalLayer;
+pub const getRenderMetalCommandEncoder = SDL_GetRenderMetalCommandEncoder;
 
 // Query functions
 pub const getNumRenderDrivers = SDL_GetNumRenderDrivers;
