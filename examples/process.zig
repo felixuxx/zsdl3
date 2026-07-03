@@ -55,6 +55,7 @@ pub fn main() void {
         var datasize: usize = 0;
         var read_exitcode: c_int = 0;
         const data = zsdl3.readProcess(proc, &datasize, &read_exitcode);
+        defer if (data) |d| zsdl3.stdinc.free(d);
         if (data) |d| {
             const bytes = @as([*]const u8, @ptrCast(d))[0..datasize];
             std.log.info("readProcess output ({d} bytes): {s}", .{ datasize, bytes });
