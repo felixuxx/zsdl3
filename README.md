@@ -5,6 +5,7 @@
 
 Thin, zero-overhead, **runtime-loaded** bindings for SDL3, SDL3_image, and SDL3_ttf — no `@cImport`, no compile-time dependency on SDL development libraries.
 
+> [!Warning]
 > Bindings partially AI-assisted.
 > Compatible with Zig 0.15.2 and 0.16.0.
 
@@ -26,7 +27,7 @@ Build SDL3 from source if your package manager doesn't have it yet.
 ## Depend on it
 
 ```bash
-zig fetch --save git+https://github.com/felixuxx/zsdl3#cleanup
+zig fetch --save git+https://github.com/felixuxx/zsdl3#runtime-loaded
 ```
 
 Then in `build.zig`:
@@ -41,7 +42,7 @@ No `linkSystemLibrary` needed — all symbols are resolved at runtime via `dlope
 ## Build
 
 ```bash
-git clone -b cleanup https://github.com/felixuxx/zsdl3.git
+git clone -b runtime-loaded https://github.com/felixuxx/zsdl3.git
 cd zsdl3
 zig build          # builds main binary + all examples
 zig build run      # run the app
