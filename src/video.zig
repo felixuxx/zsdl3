@@ -124,6 +124,7 @@ extern fn SDL_GetWindowFullscreenMode(window: ?*SDL_Window) ?*const SDL_DisplayM
 extern fn SDL_GetWindowPixelFormat(window: ?*SDL_Window) c_uint;
 extern fn SDL_GetWindows(count: ?*c_int) ?[*]?*SDL_Window;
 extern fn SDL_CreateWindow(title: ?[*:0]const u8, w: c_int, h: c_int, flags: SDL_WindowFlags) ?*SDL_Window;
+extern fn SDL_CreateWindowWithProperties(props: core.SDL_PropertiesID) ?*SDL_Window;
 extern fn SDL_DestroyWindow(window: ?*SDL_Window) void;
 extern fn SDL_GetWindowID(window: ?*SDL_Window) SDL_WindowID;
 extern fn SDL_GetWindowFromID(id: SDL_WindowID) ?*SDL_Window;
@@ -237,6 +238,7 @@ pub const getWindowFullscreenMode = SDL_GetWindowFullscreenMode;
 pub const getWindowPixelFormat = SDL_GetWindowPixelFormat;
 pub const getWindows = SDL_GetWindows;
 pub const createWindow = SDL_CreateWindow;
+pub const createWindowWithProperties = SDL_CreateWindowWithProperties;
 pub const destroyWindow = SDL_DestroyWindow;
 pub const getWindowID = SDL_GetWindowID;
 pub const getWindowFromID = SDL_GetWindowFromID;
