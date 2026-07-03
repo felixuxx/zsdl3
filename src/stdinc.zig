@@ -28,6 +28,36 @@ pub const SDL_iconv_t = ?*anyopaque;
 // Wide character type (maps to C wchar_t)
 pub const SDL_wchar_t = c_int;
 
+// Utility inline functions (replace C macros/inline)
+pub fn SDL_min(a: anytype, b: @TypeOf(a)) @TypeOf(a) {
+    return if (a < b) a else b;
+}
+pub fn SDL_max(a: anytype, b: @TypeOf(a)) @TypeOf(a) {
+    return if (a > b) a else b;
+}
+pub fn SDL_clamp(val: anytype, min_val: @TypeOf(val), max_val: @TypeOf(val)) @TypeOf(val) {
+    return SDL_min(SDL_max(val, min_val), max_val);
+}
+pub fn SDL_FOURCC(a: u8, b: u8, c: u8, d: u8) Uint32 {
+    return @as(Uint32, a) | (@as(Uint32, b) << 8) | (@as(Uint32, c) << 16) | (@as(Uint32, d) << 24);
+}
+pub fn SDL_size_add_check_overflow(a: usize, b: usize, result: ?*usize) bool {
+    const sum = a +% b;
+    if (sum < a) return false;
+    if (result) |r| r.* = sum;
+    return true;
+}
+pub fn SDL_size_mul_check_overflow(a: usize, b: usize, result: ?*usize) bool {
+    if (a == 0 or b == 0) {
+        if (result) |r| r.* = 0;
+        return true;
+    }
+    const product = a *% b;
+    if (product / a != b) return false;
+    if (result) |r| r.* = product;
+    return true;
+}
+
 // Stdinc functions
 extern fn SDL_memset(dst: ?*anyopaque, c: c_int, len: usize) ?*anyopaque;
 extern fn SDL_memcpy(dst: ?*anyopaque, src: ?*const anyopaque, len: usize) ?*anyopaque;
