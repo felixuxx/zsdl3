@@ -13,6 +13,7 @@ extern fn SDL_LockSpinlock(lock: ?*SDL_SpinLock) void;
 extern fn SDL_UnlockSpinlock(lock: ?*SDL_SpinLock) void;
 extern fn SDL_MemoryBarrierReleaseFunction() void;
 extern fn SDL_MemoryBarrierAcquireFunction() void;
+extern fn SDL_AddAtomicInt(a: ?*SDL_AtomicInt, v: c_int) c_int;
 
 // Inline wrappers for C macros
 pub fn SDL_AtomicIncRef(a: ?*SDL_AtomicInt) void {

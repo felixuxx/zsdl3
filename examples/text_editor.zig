@@ -312,7 +312,7 @@ pub fn main() void {
             
             // Draw cursor at end of text if at end
             if (cursor_pos == text_len and cursor_visible) {
-                const cursor_y: f32 = PADDING + @as(f32, @floatFromInt(cursor_line * LINE_HEIGHT)) - scroll_y;
+                const cursor_y: f32 = PADDING + @as(f32, @floatFromInt(cursor_line * LINE_HEIGHT));
                 _ = zsdl3.setRenderDrawColor(renderer, 255, 255, 255, 255);
                 const cursor_rect = zsdl3.SDL_FRect{
                     .x = PADDING,
