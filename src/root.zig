@@ -49,6 +49,7 @@ pub const endian = @import("endian.zig");
 pub const guid = @import("guid.zig");
 pub const intrinsics = @import("intrinsics.zig");
 pub const ttf = @import("ttf.zig");
+pub const mixer = @import("mixer.zig");
 pub const egl = @import("egl.zig");
 
 // Re-export core functions
@@ -1827,3 +1828,30 @@ pub const SDL_PROP_GPU_DEVICE_NAME_STRING = gpu.SDL_PROP_GPU_DEVICE_NAME_STRING;
 pub const SDL_PROP_GPU_DEVICE_DRIVER_NAME_STRING = gpu.SDL_PROP_GPU_DEVICE_DRIVER_NAME_STRING;
 pub const SDL_PROP_GPU_DEVICE_DRIVER_VERSION_STRING = gpu.SDL_PROP_GPU_DEVICE_DRIVER_VERSION_STRING;
 pub const SDL_PROP_GPU_DEVICE_DRIVER_INFO_STRING = gpu.SDL_PROP_GPU_DEVICE_DRIVER_INFO_STRING;
+
+// Re-export mixer types and functions
+pub const MIX_Mixer = mixer.MIX_Mixer;
+pub const MIX_Audio = mixer.MIX_Audio;
+pub const MIX_Track = mixer.MIX_Track;
+pub const MIX_Group = mixer.MIX_Group;
+pub const MIX_AudioDecoder = mixer.MIX_AudioDecoder;
+pub const MIX_Point3D = mixer.MIX_Point3D;
+pub const MIX_StereoGains = mixer.MIX_StereoGains;
+pub const MIX_DURATION_UNKNOWN = mixer.MIX_DURATION_UNKNOWN;
+pub const MIX_DURATION_INFINITE = mixer.MIX_DURATION_INFINITE;
+pub const mixerInit = mixer.init;
+pub const mixerQuit = mixer.quit;
+pub const createMixerDevice = mixer.createMixerDevice;
+pub const destroyMixer = mixer.destroyMixer;
+pub const loadAudio = mixer.loadAudio;
+pub const loadAudioIO = mixer.loadAudioIO;
+pub const createTrack = mixer.createTrack;
+pub const destroyTrack = mixer.destroyTrack;
+pub const setTrackAudio = mixer.setTrackAudio;
+pub const playTrack = mixer.playTrack;
+pub const playAudio = mixer.playAudio;
+pub const stopTrack = mixer.stopTrack;
+pub const pauseTrack = mixer.pauseTrack;
+pub const resumeTrack = mixer.resumeTrack;
+pub const trackPaused = mixer.trackPaused;
+pub const trackPlaying = mixer.trackPlaying;
