@@ -79,7 +79,6 @@ pub fn main() void {
     var text_buffer: [MAX_TEXT_LENGTH]u8 = undefined;
     var text_len: usize = 0;
     var cursor_pos: usize = 0;
-    const scroll_y: f32 = 0;
     
     // Initialize with some sample text
     const sample_text = "Welcome to Simple Text Editor!\n\nType here...\n\n";
@@ -206,7 +205,7 @@ pub fn main() void {
         if (font) |f| {
             const text_color = zsdl3.SDL_Color{ .r = 220, .g = 220, .b = 220, .a = 255 };
             
-            var y_pos: f32 = PADDING - scroll_y;
+            var y_pos: f32 = PADDING;
             var current_line_start: usize = 0;
             var line_num: usize = 0;
             var cursor_line: usize = 0;

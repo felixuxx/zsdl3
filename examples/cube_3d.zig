@@ -129,6 +129,11 @@ pub fn main() void {
     var pitch: f32 = 0.0;
     var running = true;
 
+    // Pre-compute light direction
+    const light_dir = Vec3{ .x = 0.5, .y = -0.7, .z = -0.5 };
+    const light_len = @sqrt(light_dir.x * light_dir.x + light_dir.y * light_dir.y + light_dir.z * light_dir.z);
+    const light = Vec3{ .x = light_dir.x / light_len, .y = light_dir.y / light_len, .z = light_dir.z / light_len };
+
     while (running) {
         var event: zsdl3.SDL_Event = undefined;
         while (zsdl3.pollEvent(&event)) {
@@ -157,10 +162,6 @@ pub fn main() void {
 
         yaw += 0.008;
         pitch += 0.005;
-
-        const light_dir = Vec3{ .x = 0.5, .y = -0.7, .z = -0.5 };
-        const light_len = @sqrt(light_dir.x * light_dir.x + light_dir.y * light_dir.y + light_dir.z * light_dir.z);
-        const light = Vec3{ .x = light_dir.x / light_len, .y = light_dir.y / light_len, .z = light_dir.z / light_len };
 
         var transformed_verts: [8]Vec3 = undefined;
         for (&cube_verts, 0..) |v, i| {

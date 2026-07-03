@@ -76,9 +76,6 @@ pub fn main() void {
         _ = zsdl3.setRenderColorScale(renderer, 0.5);
         _ = zsdl3.setRenderDrawColor(renderer, 255, 255, 0, 255);
         _ = zsdl3.renderFillRect(renderer, &rect_b);
-        var scale: f32 = 0;
-        _ = zsdl3.getRenderColorScale(renderer, &scale);
-        std.log.info("Color scale: {d:.2}", .{scale});
         _ = zsdl3.setRenderColorScale(renderer, 1.0);
 
         // Draw non-intersecting rect (cyan)
