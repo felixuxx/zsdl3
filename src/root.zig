@@ -1,5 +1,5 @@
 // SDL3 Zig Bindings - Root Module
-// Zig bindings for SDL3, SDL3_image, and SDL3_ttf
+// Zig bindings for SDL3, SDL3_image, SDL3_ttf and SDL3_mixer
 
 // Import all subsystems
 pub const core = @import("core.zig");
@@ -1402,7 +1402,6 @@ pub const guidToString = guid.guidToString;
 pub const stringToGUID = guid.stringToGUID;
 
 // Re-export intrinsics functions
-
 
 // Constants
 pub const SDL_INIT_AUDIO = core.SDL_INIT_AUDIO;

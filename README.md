@@ -3,7 +3,7 @@
 [![Zig](https://img.shields.io/badge/Zig-0.16.0+-orange.svg)](https://ziglang.org)
 [![SDL3](https://img.shields.io/badge/SDL-3.2.0+-blue.svg)](https://www.libsdl.org/)
 
-Thin, zero-overhead bindings for SDL3, SDL3_image, and SDL3_ttf — without `@cImport`.
+Thin, zero-overhead bindings for SDL3, SDL3_image, SDL3_ttf and SDL3_mixer — without `@cImport`.
 
 > **Need Zig 0.15.2?** Use the [`zig-0.15.2`](https://github.com/felixuxx/zsdl3/tree/zig-0.15.2) branch.
 
@@ -63,6 +63,7 @@ zig build run      # run the app
 | `zig build run-dialog` | file open/save dialogs |
 | `zig build run-process` | external process spawning |
 | `zig build run-clipboard` | system clipboard I/O |
+| `zig build run-mixer` | load a 440hz sinewave using SDL mixer|
 
 ## Usage
 
