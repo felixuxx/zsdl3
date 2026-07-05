@@ -1098,6 +1098,198 @@ pub const SDLK_LEFT = keycode.SDLK_LEFT;
 pub const SDLK_DOWN = keycode.SDLK_DOWN;
 pub const SDLK_UP = keycode.SDLK_UP;
 
+// Navigation and editing keys
+pub const SDLK_CAPSLOCK = keycode.SDLK_CAPSLOCK;
+pub const SDLK_PRINTSCREEN = keycode.SDLK_PRINTSCREEN;
+pub const SDLK_SCROLLLOCK = keycode.SDLK_SCROLLLOCK;
+pub const SDLK_PAUSE = keycode.SDLK_PAUSE;
+pub const SDLK_INSERT = keycode.SDLK_INSERT;
+pub const SDLK_HOME = keycode.SDLK_HOME;
+pub const SDLK_PAGEUP = keycode.SDLK_PAGEUP;
+pub const SDLK_DELETE = keycode.SDLK_DELETE;
+pub const SDLK_END = keycode.SDLK_END;
+pub const SDLK_PAGEDOWN = keycode.SDLK_PAGEDOWN;
+pub const SDLK_NUMLOCKCLEAR = keycode.SDLK_NUMLOCKCLEAR;
+
+// Function keys F13-F24
+pub const SDLK_F13 = keycode.SDLK_F13;
+pub const SDLK_F14 = keycode.SDLK_F14;
+pub const SDLK_F15 = keycode.SDLK_F15;
+pub const SDLK_F16 = keycode.SDLK_F16;
+pub const SDLK_F17 = keycode.SDLK_F17;
+pub const SDLK_F18 = keycode.SDLK_F18;
+pub const SDLK_F19 = keycode.SDLK_F19;
+pub const SDLK_F20 = keycode.SDLK_F20;
+pub const SDLK_F21 = keycode.SDLK_F21;
+pub const SDLK_F22 = keycode.SDLK_F22;
+pub const SDLK_F23 = keycode.SDLK_F23;
+pub const SDLK_F24 = keycode.SDLK_F24;
+
+// Modifier key keycodes
+pub const SDLK_LCTRL = keycode.SDLK_LCTRL;
+pub const SDLK_LSHIFT = keycode.SDLK_LSHIFT;
+pub const SDLK_LALT = keycode.SDLK_LALT;
+pub const SDLK_LGUI = keycode.SDLK_LGUI;
+pub const SDLK_RCTRL = keycode.SDLK_RCTRL;
+pub const SDLK_RSHIFT = keycode.SDLK_RSHIFT;
+pub const SDLK_RALT = keycode.SDLK_RALT;
+pub const SDLK_RGUI = keycode.SDLK_RGUI;
+
+// Application / utility keys
+pub const SDLK_APPLICATION = keycode.SDLK_APPLICATION;
+pub const SDLK_POWER = keycode.SDLK_POWER;
+pub const SDLK_EXECUTE = keycode.SDLK_EXECUTE;
+pub const SDLK_HELP = keycode.SDLK_HELP;
+pub const SDLK_MENU = keycode.SDLK_MENU;
+pub const SDLK_SELECT = keycode.SDLK_SELECT;
+pub const SDLK_STOP = keycode.SDLK_STOP;
+pub const SDLK_AGAIN = keycode.SDLK_AGAIN;
+pub const SDLK_UNDO = keycode.SDLK_UNDO;
+pub const SDLK_CUT = keycode.SDLK_CUT;
+pub const SDLK_COPY = keycode.SDLK_COPY;
+pub const SDLK_PASTE = keycode.SDLK_PASTE;
+pub const SDLK_FIND = keycode.SDLK_FIND;
+pub const SDLK_ALTERASE = keycode.SDLK_ALTERASE;
+pub const SDLK_SYSREQ = keycode.SDLK_SYSREQ;
+pub const SDLK_CANCEL = keycode.SDLK_CANCEL;
+pub const SDLK_CLEAR = keycode.SDLK_CLEAR;
+pub const SDLK_PRIOR = keycode.SDLK_PRIOR;
+pub const SDLK_RETURN2 = keycode.SDLK_RETURN2;
+pub const SDLK_SEPARATOR = keycode.SDLK_SEPARATOR;
+pub const SDLK_OUT = keycode.SDLK_OUT;
+pub const SDLK_OPER = keycode.SDLK_OPER;
+pub const SDLK_CLEARAGAIN = keycode.SDLK_CLEARAGAIN;
+pub const SDLK_CRSEL = keycode.SDLK_CRSEL;
+pub const SDLK_EXSEL = keycode.SDLK_EXSEL;
+pub const SDLK_THOUSANDSSEPARATOR = keycode.SDLK_THOUSANDSSEPARATOR;
+pub const SDLK_DECIMALSEPARATOR = keycode.SDLK_DECIMALSEPARATOR;
+pub const SDLK_CURRENCYUNIT = keycode.SDLK_CURRENCYUNIT;
+pub const SDLK_CURRENCYSUBUNIT = keycode.SDLK_CURRENCYSUBUNIT;
+
+// Keypad keys
+pub const SDLK_KP_DIVIDE = keycode.SDLK_KP_DIVIDE;
+pub const SDLK_KP_MULTIPLY = keycode.SDLK_KP_MULTIPLY;
+pub const SDLK_KP_MINUS = keycode.SDLK_KP_MINUS;
+pub const SDLK_KP_PLUS = keycode.SDLK_KP_PLUS;
+pub const SDLK_KP_ENTER = keycode.SDLK_KP_ENTER;
+pub const SDLK_KP_1 = keycode.SDLK_KP_1;
+pub const SDLK_KP_2 = keycode.SDLK_KP_2;
+pub const SDLK_KP_3 = keycode.SDLK_KP_3;
+pub const SDLK_KP_4 = keycode.SDLK_KP_4;
+pub const SDLK_KP_5 = keycode.SDLK_KP_5;
+pub const SDLK_KP_6 = keycode.SDLK_KP_6;
+pub const SDLK_KP_7 = keycode.SDLK_KP_7;
+pub const SDLK_KP_8 = keycode.SDLK_KP_8;
+pub const SDLK_KP_9 = keycode.SDLK_KP_9;
+pub const SDLK_KP_0 = keycode.SDLK_KP_0;
+pub const SDLK_KP_PERIOD = keycode.SDLK_KP_PERIOD;
+pub const SDLK_KP_EQUALS = keycode.SDLK_KP_EQUALS;
+pub const SDLK_KP_COMMA = keycode.SDLK_KP_COMMA;
+pub const SDLK_KP_EQUALSAS400 = keycode.SDLK_KP_EQUALSAS400;
+pub const SDLK_KP_00 = keycode.SDLK_KP_00;
+pub const SDLK_KP_000 = keycode.SDLK_KP_000;
+pub const SDLK_KP_LEFTPAREN = keycode.SDLK_KP_LEFTPAREN;
+pub const SDLK_KP_RIGHTPAREN = keycode.SDLK_KP_RIGHTPAREN;
+pub const SDLK_KP_LEFTBRACE = keycode.SDLK_KP_LEFTBRACE;
+pub const SDLK_KP_RIGHTBRACE = keycode.SDLK_KP_RIGHTBRACE;
+pub const SDLK_KP_TAB = keycode.SDLK_KP_TAB;
+pub const SDLK_KP_BACKSPACE = keycode.SDLK_KP_BACKSPACE;
+pub const SDLK_KP_A = keycode.SDLK_KP_A;
+pub const SDLK_KP_B = keycode.SDLK_KP_B;
+pub const SDLK_KP_C = keycode.SDLK_KP_C;
+pub const SDLK_KP_D = keycode.SDLK_KP_D;
+pub const SDLK_KP_E = keycode.SDLK_KP_E;
+pub const SDLK_KP_F = keycode.SDLK_KP_F;
+pub const SDLK_KP_XOR = keycode.SDLK_KP_XOR;
+pub const SDLK_KP_POWER = keycode.SDLK_KP_POWER;
+pub const SDLK_KP_PERCENT = keycode.SDLK_KP_PERCENT;
+pub const SDLK_KP_LESS = keycode.SDLK_KP_LESS;
+pub const SDLK_KP_GREATER = keycode.SDLK_KP_GREATER;
+pub const SDLK_KP_AMPERSAND = keycode.SDLK_KP_AMPERSAND;
+pub const SDLK_KP_DBLAMPERSAND = keycode.SDLK_KP_DBLAMPERSAND;
+pub const SDLK_KP_VERTICALBAR = keycode.SDLK_KP_VERTICALBAR;
+pub const SDLK_KP_DBLVERTICALBAR = keycode.SDLK_KP_DBLVERTICALBAR;
+pub const SDLK_KP_COLON = keycode.SDLK_KP_COLON;
+pub const SDLK_KP_HASH = keycode.SDLK_KP_HASH;
+pub const SDLK_KP_SPACE = keycode.SDLK_KP_SPACE;
+pub const SDLK_KP_AT = keycode.SDLK_KP_AT;
+pub const SDLK_KP_EXCLAM = keycode.SDLK_KP_EXCLAM;
+pub const SDLK_KP_MEMSTORE = keycode.SDLK_KP_MEMSTORE;
+pub const SDLK_KP_MEMRECALL = keycode.SDLK_KP_MEMRECALL;
+pub const SDLK_KP_MEMCLEAR = keycode.SDLK_KP_MEMCLEAR;
+pub const SDLK_KP_MEMADD = keycode.SDLK_KP_MEMADD;
+pub const SDLK_KP_MEMSUBTRACT = keycode.SDLK_KP_MEMSUBTRACT;
+pub const SDLK_KP_MEMMULTIPLY = keycode.SDLK_KP_MEMMULTIPLY;
+pub const SDLK_KP_MEMDIVIDE = keycode.SDLK_KP_MEMDIVIDE;
+pub const SDLK_KP_PLUSMINUS = keycode.SDLK_KP_PLUSMINUS;
+pub const SDLK_KP_CLEAR = keycode.SDLK_KP_CLEAR;
+pub const SDLK_KP_CLEARENTRY = keycode.SDLK_KP_CLEARENTRY;
+pub const SDLK_KP_BINARY = keycode.SDLK_KP_BINARY;
+pub const SDLK_KP_OCTAL = keycode.SDLK_KP_OCTAL;
+pub const SDLK_KP_DECIMAL = keycode.SDLK_KP_DECIMAL;
+pub const SDLK_KP_HEXADECIMAL = keycode.SDLK_KP_HEXADECIMAL;
+
+// Media keys
+pub const SDLK_MUTE = keycode.SDLK_MUTE;
+pub const SDLK_VOLUMEUP = keycode.SDLK_VOLUMEUP;
+pub const SDLK_VOLUMEDOWN = keycode.SDLK_VOLUMEDOWN;
+pub const SDLK_MEDIA_PLAY = keycode.SDLK_MEDIA_PLAY;
+pub const SDLK_MEDIA_PAUSE = keycode.SDLK_MEDIA_PAUSE;
+pub const SDLK_MEDIA_RECORD = keycode.SDLK_MEDIA_RECORD;
+pub const SDLK_MEDIA_FAST_FORWARD = keycode.SDLK_MEDIA_FAST_FORWARD;
+pub const SDLK_MEDIA_REWIND = keycode.SDLK_MEDIA_REWIND;
+pub const SDLK_MEDIA_NEXT_TRACK = keycode.SDLK_MEDIA_NEXT_TRACK;
+pub const SDLK_MEDIA_PREVIOUS_TRACK = keycode.SDLK_MEDIA_PREVIOUS_TRACK;
+pub const SDLK_MEDIA_STOP = keycode.SDLK_MEDIA_STOP;
+pub const SDLK_MEDIA_EJECT = keycode.SDLK_MEDIA_EJECT;
+pub const SDLK_MEDIA_PLAY_PAUSE = keycode.SDLK_MEDIA_PLAY_PAUSE;
+pub const SDLK_MEDIA_SELECT = keycode.SDLK_MEDIA_SELECT;
+
+// Application control (AC) keys
+pub const SDLK_AC_NEW = keycode.SDLK_AC_NEW;
+pub const SDLK_AC_OPEN = keycode.SDLK_AC_OPEN;
+pub const SDLK_AC_CLOSE = keycode.SDLK_AC_CLOSE;
+pub const SDLK_AC_EXIT = keycode.SDLK_AC_EXIT;
+pub const SDLK_AC_SAVE = keycode.SDLK_AC_SAVE;
+pub const SDLK_AC_PRINT = keycode.SDLK_AC_PRINT;
+pub const SDLK_AC_PROPERTIES = keycode.SDLK_AC_PROPERTIES;
+pub const SDLK_AC_SEARCH = keycode.SDLK_AC_SEARCH;
+pub const SDLK_AC_HOME = keycode.SDLK_AC_HOME;
+pub const SDLK_AC_BACK = keycode.SDLK_AC_BACK;
+pub const SDLK_AC_FORWARD = keycode.SDLK_AC_FORWARD;
+pub const SDLK_AC_STOP = keycode.SDLK_AC_STOP;
+pub const SDLK_AC_REFRESH = keycode.SDLK_AC_REFRESH;
+pub const SDLK_AC_BOOKMARKS = keycode.SDLK_AC_BOOKMARKS;
+
+// Additional printable keys
+pub const SDLK_LEFTBRACE = keycode.SDLK_LEFTBRACE;
+pub const SDLK_PIPE = keycode.SDLK_PIPE;
+pub const SDLK_RIGHTBRACE = keycode.SDLK_RIGHTBRACE;
+pub const SDLK_TILDE = keycode.SDLK_TILDE;
+
+// Extended keycodes
+pub const SDLK_LEFT_TAB = keycode.SDLK_LEFT_TAB;
+pub const SDLK_LEVEL5_SHIFT = keycode.SDLK_LEVEL5_SHIFT;
+pub const SDLK_MULTI_KEY_COMPOSE = keycode.SDLK_MULTI_KEY_COMPOSE;
+pub const SDLK_LMETA = keycode.SDLK_LMETA;
+pub const SDLK_RMETA = keycode.SDLK_RMETA;
+pub const SDLK_LHYPER = keycode.SDLK_LHYPER;
+pub const SDLK_RHYPER = keycode.SDLK_RHYPER;
+
+// Miscellaneous keys
+pub const SDLK_MODE = keycode.SDLK_MODE;
+pub const SDLK_SLEEP = keycode.SDLK_SLEEP;
+pub const SDLK_WAKE = keycode.SDLK_WAKE;
+pub const SDLK_CHANNEL_INCREMENT = keycode.SDLK_CHANNEL_INCREMENT;
+pub const SDLK_CHANNEL_DECREMENT = keycode.SDLK_CHANNEL_DECREMENT;
+pub const SDLK_PLUSMINUS = keycode.SDLK_PLUSMINUS;
+
+// Mobile / phone keys
+pub const SDLK_SOFTLEFT = keycode.SDLK_SOFTLEFT;
+pub const SDLK_SOFTRIGHT = keycode.SDLK_SOFTRIGHT;
+pub const SDLK_CALL = keycode.SDLK_CALL;
+pub const SDLK_ENDCALL = keycode.SDLK_ENDCALL;
+
 // Modifier constants
 pub const KMOD_NONE = keycode.KMOD_NONE;
 pub const KMOD_LSHIFT = keycode.KMOD_LSHIFT;
