@@ -3,6 +3,11 @@ const std = @import("std");
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
+
+    const enable_sdl_image = b.option(bool, "sdl_image", "Enable SDL_image support") orelse true;
+    const enable_sdl_ttf   = b.option(bool, "sdl_ttf",   "Enable SDL_ttf support")   orelse true;
+    const enable_sdl_mixer = b.option(bool, "sdl_mixer", "Enable SDL_mixer support") orelse true;
+
     const mod = b.addModule("zsdl3", .{
         .root_source_file = b.path("src/root.zig"),
         .target = target,
@@ -10,8 +15,14 @@ pub fn build(b: *std.Build) void {
     });
 
     mod.linkSystemLibrary("SDL3", .{});
-    mod.linkSystemLibrary("SDL3_image", .{});
-    mod.linkSystemLibrary("SDL3_mixer", .{});
+    if (enable_sdl_image) mod.linkSystemLibrary("SDL3_image", .{});
+    if (enable_sdl_mixer) mod.linkSystemLibrary("SDL3_mixer", .{});
+
+    const opts = b.addOptions();
+    opts.addOption(bool, "enable_sdl_image", enable_sdl_image);
+    opts.addOption(bool, "enable_sdl_ttf", enable_sdl_ttf);
+    opts.addOption(bool, "enable_sdl_mixer", enable_sdl_mixer);
+    mod.addOptions("build_options", opts);
 
     const exe = b.addExecutable(.{
         .name = "zsdl3",
@@ -25,7 +36,7 @@ pub fn build(b: *std.Build) void {
         }),
     });
     exe.root_module.linkSystemLibrary("SDL3", .{});
-    exe.root_module.linkSystemLibrary("SDL3_ttf", .{});
+    if (enable_sdl_ttf) exe.root_module.linkSystemLibrary("SDL3_ttf", .{});
 
     // Renderer example
     const renderer = b.addExecutable(.{
@@ -97,28 +108,30 @@ pub fn build(b: *std.Build) void {
     }
 
     // Image example
-    const image = b.addExecutable(.{
-        .name = "image",
-        .root_module = b.createModule(.{
-            .root_source_file = b.path("examples/image.zig"),
-            .target = target,
-            .optimize = optimize,
-            .imports = &.{
-                .{ .name = "zsdl3", .module = mod },
-            },
-        }),
-    });
-    image.root_module.linkSystemLibrary("SDL3", .{});
-    image.root_module.linkSystemLibrary("SDL3_image", .{});
-    b.installArtifact(image);
+    if (enable_sdl_image) {
+        const image = b.addExecutable(.{
+            .name = "image",
+            .root_module = b.createModule(.{
+                .root_source_file = b.path("examples/image.zig"),
+                .target = target,
+                .optimize = optimize,
+                .imports = &.{
+                    .{ .name = "zsdl3", .module = mod },
+                },
+            }),
+        });
+        image.root_module.linkSystemLibrary("SDL3", .{});
+        image.root_module.linkSystemLibrary("SDL3_image", .{});
+        b.installArtifact(image);
 
-    const run_image_step = b.step("run-image", "Run the image example");
-    const run_image_cmd = b.addRunArtifact(image);
-    run_image_cmd.setCwd(b.path("examples"));
-    run_image_step.dependOn(&run_image_cmd.step);
-    run_image_cmd.step.dependOn(b.getInstallStep());
-    if (b.args) |args| {
-        run_image_cmd.addArgs(args);
+        const run_image_step = b.step("run-image", "Run the image example");
+        const run_image_cmd = b.addRunArtifact(image);
+        run_image_cmd.setCwd(b.path("examples"));
+        run_image_step.dependOn(&run_image_cmd.step);
+        run_image_cmd.step.dependOn(b.getInstallStep());
+        if (b.args) |args| {
+            run_image_cmd.addArgs(args);
+        }
     }
 
     // Basic 2D example
@@ -145,53 +158,55 @@ pub fn build(b: *std.Build) void {
     }
 
     // TTF example
-    const ttf = b.addExecutable(.{
-        .name = "ttf",
-        .root_module = b.createModule(.{
-            .root_source_file = b.path("examples/ttf.zig"),
-            .target = target,
-            .optimize = optimize,
-            .imports = &.{
-                .{ .name = "zsdl3", .module = mod },
-            },
-        }),
-    });
-    ttf.root_module.linkSystemLibrary("SDL3", .{});
-    ttf.root_module.linkSystemLibrary("SDL3_ttf", .{});
-    b.installArtifact(ttf);
+    if (enable_sdl_ttf) {
+        const ttf = b.addExecutable(.{
+            .name = "ttf",
+            .root_module = b.createModule(.{
+                .root_source_file = b.path("examples/ttf.zig"),
+                .target = target,
+                .optimize = optimize,
+                .imports = &.{
+                    .{ .name = "zsdl3", .module = mod },
+                },
+            }),
+        });
+        ttf.root_module.linkSystemLibrary("SDL3", .{});
+        ttf.root_module.linkSystemLibrary("SDL3_ttf", .{});
+        b.installArtifact(ttf);
 
-    const run_ttf_step = b.step("run-ttf", "Run the TTF example");
-    const run_ttf_cmd = b.addRunArtifact(ttf);
-    run_ttf_cmd.setCwd(b.path("examples"));
-    run_ttf_step.dependOn(&run_ttf_cmd.step);
-    run_ttf_cmd.step.dependOn(b.getInstallStep());
-    if (b.args) |args| {
-        run_ttf_cmd.addArgs(args);
-    }
+        const run_ttf_step = b.step("run-ttf", "Run the TTF example");
+        const run_ttf_cmd = b.addRunArtifact(ttf);
+        run_ttf_cmd.setCwd(b.path("examples"));
+        run_ttf_step.dependOn(&run_ttf_cmd.step);
+        run_ttf_cmd.step.dependOn(b.getInstallStep());
+        if (b.args) |args| {
+            run_ttf_cmd.addArgs(args);
+        }
 
-    // Text editor example
-    const text_editor = b.addExecutable(.{
-        .name = "text_editor",
-        .root_module = b.createModule(.{
-            .root_source_file = b.path("examples/text_editor.zig"),
-            .target = target,
-            .optimize = optimize,
-            .imports = &.{
-                .{ .name = "zsdl3", .module = mod },
-            },
-        }),
-    });
-    text_editor.root_module.linkSystemLibrary("SDL3", .{});
-    text_editor.root_module.linkSystemLibrary("SDL3_ttf", .{});
-    b.installArtifact(text_editor);
+        // Text editor example
+        const text_editor = b.addExecutable(.{
+            .name = "text_editor",
+            .root_module = b.createModule(.{
+                .root_source_file = b.path("examples/text_editor.zig"),
+                .target = target,
+                .optimize = optimize,
+                .imports = &.{
+                    .{ .name = "zsdl3", .module = mod },
+                },
+            }),
+        });
+        text_editor.root_module.linkSystemLibrary("SDL3", .{});
+        text_editor.root_module.linkSystemLibrary("SDL3_ttf", .{});
+        b.installArtifact(text_editor);
 
-    const run_text_editor_step = b.step("run-text-editor", "Run the text editor example");
-    const run_text_editor_cmd = b.addRunArtifact(text_editor);
-    run_text_editor_cmd.setCwd(b.path("examples"));
-    run_text_editor_step.dependOn(&run_text_editor_cmd.step);
-    run_text_editor_cmd.step.dependOn(b.getInstallStep());
-    if (b.args) |args| {
-        run_text_editor_cmd.addArgs(args);
+        const run_text_editor_step = b.step("run-text-editor", "Run the text editor example");
+        const run_text_editor_cmd = b.addRunArtifact(text_editor);
+        run_text_editor_cmd.setCwd(b.path("examples"));
+        run_text_editor_step.dependOn(&run_text_editor_cmd.step);
+        run_text_editor_cmd.step.dependOn(b.getInstallStep());
+        if (b.args) |args| {
+            run_text_editor_cmd.addArgs(args);
+        }
     }
 
     // Audio example
@@ -288,25 +303,27 @@ pub fn build(b: *std.Build) void {
     }
 
     // Mixer example
-    const mixer = b.addExecutable(.{
-        .name = "mixer",
-        .root_module = b.createModule(.{
-            .root_source_file = b.path("examples/mixer.zig"),
-            .target = target,
-            .optimize = optimize,
-            .imports = &.{
-                .{ .name = "zsdl3", .module = mod },
-            },
-        }),
-    });
-    b.installArtifact(mixer);
+    if (enable_sdl_mixer) {
+        const mixer = b.addExecutable(.{
+            .name = "mixer",
+            .root_module = b.createModule(.{
+                .root_source_file = b.path("examples/mixer.zig"),
+                .target = target,
+                .optimize = optimize,
+                .imports = &.{
+                    .{ .name = "zsdl3", .module = mod },
+                },
+            }),
+        });
+        b.installArtifact(mixer);
 
-    const run_mixer_step = b.step("run-mixer", "Run the mixer example");
-    const run_mixer_cmd = b.addRunArtifact(mixer);
-    run_mixer_step.dependOn(&run_mixer_cmd.step);
-    run_mixer_cmd.step.dependOn(b.getInstallStep());
-    if (b.args) |args| {
-        run_mixer_cmd.addArgs(args);
+        const run_mixer_step = b.step("run-mixer", "Run the mixer example");
+        const run_mixer_cmd = b.addRunArtifact(mixer);
+        run_mixer_step.dependOn(&run_mixer_cmd.step);
+        run_mixer_cmd.step.dependOn(b.getInstallStep());
+        if (b.args) |args| {
+            run_mixer_cmd.addArgs(args);
+        }
     }
 
     b.installArtifact(exe);
@@ -325,6 +342,8 @@ pub fn build(b: *std.Build) void {
         .root_module = mod,
     });
     mod_tests.root_module.linkSystemLibrary("SDL3", .{});
+    if (enable_sdl_image) mod_tests.root_module.linkSystemLibrary("SDL3_image", .{});
+    if (enable_sdl_mixer) mod_tests.root_module.linkSystemLibrary("SDL3_mixer", .{});
 
     const run_mod_tests = b.addRunArtifact(mod_tests);
 
