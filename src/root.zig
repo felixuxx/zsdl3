@@ -1,6 +1,8 @@
 // SDL3 Zig Bindings - Root Module
 // Zig bindings for SDL3, SDL3_image, and SDL3_ttf
 
+const build_opts = @import("build_options");
+
 // Import all subsystems
 pub const core = @import("core.zig");
 pub const camera = @import("camera.zig");
@@ -11,7 +13,7 @@ pub const events = @import("events.zig");
 pub const input = @import("input.zig");
 pub const render = @import("render.zig");
 pub const gpu = @import("gpu.zig");
-pub const image = @import("image.zig");
+pub const image = if (build_opts.enable_sdl_image) @import("image.zig") else struct {};
 pub const audio = @import("audio.zig");
 pub const time = @import("time.zig");
 pub const threads = @import("threads.zig");
@@ -48,8 +50,8 @@ pub const dialog = @import("dialog.zig");
 pub const endian = @import("endian.zig");
 pub const guid = @import("guid.zig");
 pub const intrinsics = @import("intrinsics.zig");
-pub const ttf = @import("ttf.zig");
-pub const mixer = @import("mixer.zig");
+pub const ttf = if (build_opts.enable_sdl_ttf) @import("ttf.zig") else struct {};
+pub const mixer = if (build_opts.enable_sdl_mixer) @import("mixer.zig") else struct {};
 pub const egl = @import("egl.zig");
 
 // Re-export core functions
@@ -1830,28 +1832,28 @@ pub const SDL_PROP_GPU_DEVICE_DRIVER_VERSION_STRING = gpu.SDL_PROP_GPU_DEVICE_DR
 pub const SDL_PROP_GPU_DEVICE_DRIVER_INFO_STRING = gpu.SDL_PROP_GPU_DEVICE_DRIVER_INFO_STRING;
 
 // Re-export mixer types and functions
-pub const MIX_Mixer = mixer.MIX_Mixer;
-pub const MIX_Audio = mixer.MIX_Audio;
-pub const MIX_Track = mixer.MIX_Track;
-pub const MIX_Group = mixer.MIX_Group;
-pub const MIX_AudioDecoder = mixer.MIX_AudioDecoder;
-pub const MIX_Point3D = mixer.MIX_Point3D;
-pub const MIX_StereoGains = mixer.MIX_StereoGains;
-pub const MIX_DURATION_UNKNOWN = mixer.MIX_DURATION_UNKNOWN;
-pub const MIX_DURATION_INFINITE = mixer.MIX_DURATION_INFINITE;
-pub const mixerInit = mixer.init;
-pub const mixerQuit = mixer.quit;
-pub const createMixerDevice = mixer.createMixerDevice;
-pub const destroyMixer = mixer.destroyMixer;
-pub const loadAudio = mixer.loadAudio;
-pub const loadAudioIO = mixer.loadAudioIO;
-pub const createTrack = mixer.createTrack;
-pub const destroyTrack = mixer.destroyTrack;
-pub const setTrackAudio = mixer.setTrackAudio;
-pub const playTrack = mixer.playTrack;
-pub const playAudio = mixer.playAudio;
-pub const stopTrack = mixer.stopTrack;
-pub const pauseTrack = mixer.pauseTrack;
-pub const resumeTrack = mixer.resumeTrack;
-pub const trackPaused = mixer.trackPaused;
-pub const trackPlaying = mixer.trackPlaying;
+pub const MIX_Mixer = if (build_opts.enable_sdl_mixer) mixer.MIX_Mixer else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const MIX_Audio = if (build_opts.enable_sdl_mixer) mixer.MIX_Audio else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const MIX_Track = if (build_opts.enable_sdl_mixer) mixer.MIX_Track else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const MIX_Group = if (build_opts.enable_sdl_mixer) mixer.MIX_Group else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const MIX_AudioDecoder = if (build_opts.enable_sdl_mixer) mixer.MIX_AudioDecoder else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const MIX_Point3D = if (build_opts.enable_sdl_mixer) mixer.MIX_Point3D else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const MIX_StereoGains = if (build_opts.enable_sdl_mixer) mixer.MIX_StereoGains else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const MIX_DURATION_UNKNOWN = if (build_opts.enable_sdl_mixer) mixer.MIX_DURATION_UNKNOWN else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const MIX_DURATION_INFINITE = if (build_opts.enable_sdl_mixer) mixer.MIX_DURATION_INFINITE else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const mixerInit = if (build_opts.enable_sdl_mixer) mixer.init else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const mixerQuit = if (build_opts.enable_sdl_mixer) mixer.quit else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const createMixerDevice = if (build_opts.enable_sdl_mixer) mixer.createMixerDevice else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const destroyMixer = if (build_opts.enable_sdl_mixer) mixer.destroyMixer else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const loadAudio = if (build_opts.enable_sdl_mixer) mixer.loadAudio else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const loadAudioIO = if (build_opts.enable_sdl_mixer) mixer.loadAudioIO else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const createTrack = if (build_opts.enable_sdl_mixer) mixer.createTrack else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const destroyTrack = if (build_opts.enable_sdl_mixer) mixer.destroyTrack else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const setTrackAudio = if (build_opts.enable_sdl_mixer) mixer.setTrackAudio else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const playTrack = if (build_opts.enable_sdl_mixer) mixer.playTrack else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const playAudio = if (build_opts.enable_sdl_mixer) mixer.playAudio else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const stopTrack = if (build_opts.enable_sdl_mixer) mixer.stopTrack else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const pauseTrack = if (build_opts.enable_sdl_mixer) mixer.pauseTrack else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const resumeTrack = if (build_opts.enable_sdl_mixer) mixer.resumeTrack else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const trackPaused = if (build_opts.enable_sdl_mixer) mixer.trackPaused else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
+pub const trackPlaying = if (build_opts.enable_sdl_mixer) mixer.trackPlaying else @compileError("SDL_mixer not enabled; rebuild with -Dsdl_mixer=true");
