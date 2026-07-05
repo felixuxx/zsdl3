@@ -78,14 +78,12 @@ pub const enterAppMainCallbacks = core.enterAppMainCallbacks;
 // Re-export camera functions
 pub const getNumCameraDrivers = camera.getNumCameraDrivers;
 pub const getCameraDriver = camera.getCameraDriver;
-pub const getCameraDevices = camera.getCameraDevices;
-pub const getCameraDeviceName = camera.getCameraDeviceName;
-pub const openCameraDevice = camera.openCameraDevice;
-pub const closeCameraDevice = camera.closeCameraDevice;
-pub const getCameraSpec = camera.getCameraSpec;
-pub const startCamera = camera.startCamera;
-pub const stopCamera = camera.stopCamera;
-pub const getCameraFrame = camera.getCameraFrame;
+pub const getCameras = camera.getCameras;
+pub const getCameraName = camera.getCameraName;
+pub const openCamera = camera.openCamera;
+pub const closeCamera = camera.closeCamera;
+pub const getCameraFormat = camera.getCameraFormat;
+pub const acquireCameraFrame = camera.acquireCameraFrame;
 
 // Re-export pixel/rect types and functions
 pub const SDL_Point = pixels.SDL_Point;
@@ -107,13 +105,11 @@ pub const mapRGB = pixels.mapRGB;
 pub const mapRGBA = pixels.mapRGBA;
 pub const getRGB = pixels.getRGB;
 pub const getRGBA = pixels.getRGBA;
-pub const allocPalette = pixels.allocPalette;
+pub const createPalette = pixels.createPalette;
 pub const setPaletteColors = pixels.setPaletteColors;
-pub const freePalette = pixels.freePalette;
+pub const destroyPalette = pixels.destroyPalette;
 pub const getPixelFormatForMasks = pixels.getPixelFormatForMasks;
 pub const getPixelFormatDetails = pixels.getPixelFormatDetails;
-pub const createPalette = pixels.createPalette;
-pub const destroyPalette = pixels.destroyPalette;
 pub const hasRectIntersection = pixels.hasRectIntersection;
 pub const getRectIntersection = pixels.getRectIntersection;
 pub const getRectUnion = pixels.getRectUnion;
@@ -188,14 +184,12 @@ pub const destroyWindowSurface = video.destroyWindowSurface;
 pub const setWindowGrab = video.setWindowGrab;
 pub const setWindowKeyboardGrab = video.setWindowKeyboardGrab;
 pub const setWindowMouseGrab = video.setWindowMouseGrab;
-pub const getWindowGrab = video.getWindowGrab;
 pub const getWindowKeyboardGrab = video.getWindowKeyboardGrab;
 pub const getWindowMouseGrab = video.getWindowMouseGrab;
 pub const setWindowMouseRect = video.setWindowMouseRect;
 pub const getWindowMouseRect = video.getWindowMouseRect;
 pub const setWindowOpacity = video.setWindowOpacity;
 pub const getWindowOpacity = video.getWindowOpacity;
-pub const setWindowModalFor = video.setWindowModalFor;
 pub const setWindowFocusable = video.setWindowFocusable;
 pub const showWindowSystemMenu = video.showWindowSystemMenu;
 pub const setWindowHitTest = video.setWindowHitTest;
@@ -206,12 +200,9 @@ pub const getWindowProgressState = video.getWindowProgressState;
 pub const setWindowProgressValue = video.setWindowProgressValue;
 pub const getWindowProgressValue = video.getWindowProgressValue;
 pub const flashWindow = video.flashWindow;
-pub const setWindowGammaRamp = video.setWindowGammaRamp;
-pub const getWindowGammaRamp = video.getWindowGammaRamp;
 pub const disableScreenSaver = video.disableScreenSaver;
 pub const enableScreenSaver = video.enableScreenSaver;
 pub const isScreenSaverEnabled = video.isScreenSaverEnabled;
-pub const getWindowWMInfo = video.getWindowWMInfo;
 
 // Re-export surface functions
 pub const createSurface = surface.createSurface;
@@ -277,8 +268,6 @@ pub const stretchSurface = surface.stretchSurface;
 pub const readSurfacePixelFloat = surface.readSurfacePixelFloat;
 pub const writeSurfacePixel = surface.writeSurfacePixel;
 pub const writeSurfacePixelFloat = surface.writeSurfacePixelFloat;
-pub const softStretch = surface.softStretch;
-pub const softStretchLinear = surface.softStretchLinear;
 
 // Re-export event types (core already has basic ones)
 pub const SDL_Event = events.SDL_Event;
@@ -301,6 +290,8 @@ pub const SDL_EVENT_WILL_ENTER_BACKGROUND = events.SDL_EVENT_WILL_ENTER_BACKGROU
 pub const SDL_EVENT_DID_ENTER_BACKGROUND = events.SDL_EVENT_DID_ENTER_BACKGROUND;
 pub const SDL_EVENT_WILL_ENTER_FOREGROUND = events.SDL_EVENT_WILL_ENTER_FOREGROUND;
 pub const SDL_EVENT_DID_ENTER_FOREGROUND = events.SDL_EVENT_DID_ENTER_FOREGROUND;
+pub const SDL_EVENT_LOCALE_CHANGED = events.SDL_EVENT_LOCALE_CHANGED;
+pub const SDL_EVENT_SYSTEM_THEME_CHANGED = events.SDL_EVENT_SYSTEM_THEME_CHANGED;
 
 // Window event types (not in core)
 pub const SDL_EVENT_WINDOW_SHOWN = events.SDL_EVENT_WINDOW_SHOWN;
@@ -308,7 +299,6 @@ pub const SDL_EVENT_WINDOW_HIDDEN = events.SDL_EVENT_WINDOW_HIDDEN;
 pub const SDL_EVENT_WINDOW_EXPOSED = events.SDL_EVENT_WINDOW_EXPOSED;
 pub const SDL_EVENT_WINDOW_MOVED = events.SDL_EVENT_WINDOW_MOVED;
 pub const SDL_EVENT_WINDOW_RESIZED = events.SDL_EVENT_WINDOW_RESIZED;
-pub const SDL_EVENT_WINDOW_SIZE_CHANGED = events.SDL_EVENT_WINDOW_SIZE_CHANGED;
 pub const SDL_EVENT_WINDOW_MINIMIZED = events.SDL_EVENT_WINDOW_MINIMIZED;
 pub const SDL_EVENT_WINDOW_MAXIMIZED = events.SDL_EVENT_WINDOW_MAXIMIZED;
 pub const SDL_EVENT_WINDOW_RESTORED = events.SDL_EVENT_WINDOW_RESTORED;
@@ -317,21 +307,27 @@ pub const SDL_EVENT_WINDOW_MOUSE_LEAVE = events.SDL_EVENT_WINDOW_MOUSE_LEAVE;
 pub const SDL_EVENT_WINDOW_FOCUS_GAINED = events.SDL_EVENT_WINDOW_FOCUS_GAINED;
 pub const SDL_EVENT_WINDOW_FOCUS_LOST = events.SDL_EVENT_WINDOW_FOCUS_LOST;
 pub const SDL_EVENT_WINDOW_CLOSE_REQUESTED = events.SDL_EVENT_WINDOW_CLOSE_REQUESTED;
-pub const SDL_EVENT_WINDOW_TAKE_FOCUS = events.SDL_EVENT_WINDOW_TAKE_FOCUS;
 pub const SDL_EVENT_WINDOW_HIT_TEST = events.SDL_EVENT_WINDOW_HIT_TEST;
 pub const SDL_EVENT_WINDOW_ICCPROF_CHANGED = events.SDL_EVENT_WINDOW_ICCPROF_CHANGED;
 pub const SDL_EVENT_WINDOW_DISPLAY_CHANGED = events.SDL_EVENT_WINDOW_DISPLAY_CHANGED;
-pub const SDL_EVENT_WINDOW_DISPLAY_STATE_CHANGED = events.SDL_EVENT_WINDOW_DISPLAY_STATE_CHANGED;
+pub const SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED = events.SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED;
 pub const SDL_EVENT_WINDOW_OCCLUDED = events.SDL_EVENT_WINDOW_OCCLUDED;
 pub const SDL_EVENT_WINDOW_ENTER_FULLSCREEN = events.SDL_EVENT_WINDOW_ENTER_FULLSCREEN;
 pub const SDL_EVENT_WINDOW_LEAVE_FULLSCREEN = events.SDL_EVENT_WINDOW_LEAVE_FULLSCREEN;
 pub const SDL_EVENT_WINDOW_DESTROYED = events.SDL_EVENT_WINDOW_DESTROYED;
 pub const SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED = events.SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED;
+pub const SDL_EVENT_WINDOW_SAFE_AREA_CHANGED = events.SDL_EVENT_WINDOW_SAFE_AREA_CHANGED;
+pub const SDL_EVENT_WINDOW_HDR_STATE_CHANGED = events.SDL_EVENT_WINDOW_HDR_STATE_CHANGED;
 
 // Additional keyboard and text events (not in core)
 pub const SDL_EVENT_TEXT_EDITING = events.SDL_EVENT_TEXT_EDITING;
 pub const SDL_EVENT_TEXT_INPUT = events.SDL_EVENT_TEXT_INPUT;
 pub const SDL_EVENT_KEYMAP_CHANGED = events.SDL_EVENT_KEYMAP_CHANGED;
+pub const SDL_EVENT_KEYBOARD_ADDED = events.SDL_EVENT_KEYBOARD_ADDED;
+pub const SDL_EVENT_KEYBOARD_REMOVED = events.SDL_EVENT_KEYBOARD_REMOVED;
+pub const SDL_EVENT_TEXT_EDITING_CANDIDATES = events.SDL_EVENT_TEXT_EDITING_CANDIDATES;
+pub const SDL_EVENT_MOUSE_ADDED = events.SDL_EVENT_MOUSE_ADDED;
+pub const SDL_EVENT_MOUSE_REMOVED = events.SDL_EVENT_MOUSE_REMOVED;
 
 // Window event structures
 pub const SDL_WindowEvent = events.SDL_WindowEvent;
@@ -347,10 +343,10 @@ pub const SDL_MouseButtonEvent = events.SDL_MouseButtonEvent;
 pub const SDL_MouseWheelEvent = events.SDL_MouseWheelEvent;
 
 // Joystick event structures
-pub const SDL_JoystickDeviceEvent = events.SDL_JoystickDeviceEvent;
-pub const SDL_JoystickButtonEvent = events.SDL_JoystickButtonEvent;
-pub const SDL_JoystickHatEvent = events.SDL_JoystickHatEvent;
-pub const SDL_JoystickAxisEvent = events.SDL_JoystickAxisEvent;
+pub const SDL_JoyDeviceEvent = events.SDL_JoyDeviceEvent;
+pub const SDL_JoyButtonEvent = events.SDL_JoyButtonEvent;
+pub const SDL_JoyHatEvent = events.SDL_JoyHatEvent;
+pub const SDL_JoyAxisEvent = events.SDL_JoyAxisEvent;
 
 // Gamepad event structures
 pub const SDL_GamepadDeviceEvent = events.SDL_GamepadDeviceEvent;
@@ -364,15 +360,11 @@ pub const SDL_TextInputEvent = events.SDL_TextInputEvent;
 // Touch event structures
 pub const SDL_TouchFingerEvent = events.SDL_TouchFingerEvent;
 
-// Gesture event structures
-pub const SDL_GestureEvent = events.SDL_GestureEvent;
-
 // Drop and other event structures
 pub const SDL_DropEvent = events.SDL_DropEvent;
 pub const SDL_AudioDeviceEvent = events.SDL_AudioDeviceEvent;
 pub const SDL_CameraDeviceEvent = events.SDL_CameraDeviceEvent;
 pub const SDL_SensorEvent = events.SDL_SensorEvent;
-pub const SDL_PenEvent = events.SDL_PenEvent;
 pub const SDL_PenAxisEvent = events.SDL_PenAxisEvent;
 pub const pumpEvents = events.pumpEvents;
 pub const pollEvent = events.pollEvent;
@@ -381,7 +373,7 @@ pub const waitEventTimeout = events.waitEventTimeout;
 pub const pushEvent = events.pushEvent;
 pub const filterEvents = events.filterEvents;
 pub const addEventWatch = events.addEventWatch;
-pub const delEventWatch = events.delEventWatch;
+pub const removeEventWatch = events.removeEventWatch;
 pub const peepEvents = events.peepEvents;
 pub const hasEvent = events.hasEvent;
 pub const hasEvents = events.hasEvents;
@@ -392,9 +384,6 @@ pub const eventEnabled = events.eventEnabled;
 pub const registerEvents = events.registerEvents;
 pub const getEventFilter = events.getEventFilter;
 pub const setEventFilter = events.setEventFilter;
-pub const getNumTouchFingers = events.getNumTouchFingers;
-pub const getTouchFinger = events.getTouchFinger;
-pub const getEventName = events.getEventName;
 
 // Re-export input types
 pub const SDL_JoystickType = input.SDL_JoystickType;
@@ -421,27 +410,26 @@ pub const getGlobalMouseState = input.getGlobalMouseState;
 pub const getRelativeMouseState = input.getRelativeMouseState;
 pub const warpMouseInWindow = input.warpMouseInWindow;
 pub const warpMouseGlobal = input.warpMouseGlobal;
-pub const numJoysticks = input.numJoysticks;
-pub const joystickOpen = input.joystickOpen;
-pub const joystickClose = input.joystickClose;
-pub const joystickName = input.joystickName;
-pub const joystickPath = input.joystickPath;
-pub const joystickGetType = input.joystickGetType;
-pub const joystickGetGUID = input.joystickGetGUID;
-pub const joystickGetVendor = input.joystickGetVendor;
-pub const joystickGetProduct = input.joystickGetProduct;
-pub const joystickGetProductVersion = input.joystickGetProductVersion;
-pub const joystickGetFirmwareVersion = input.joystickGetFirmwareVersion;
-pub const joystickGetSerial = input.joystickGetSerial;
-pub const joystickGetAxis = input.joystickGetAxis;
-pub const joystickGetHat = input.joystickGetHat;
-pub const joystickGetBall = input.joystickGetBall;
-pub const joystickGetButton = input.joystickGetButton;
-pub const joystickRumble = input.joystickRumble;
-pub const joystickRumbleTriggers = input.joystickRumbleTriggers;
-pub const joystickHasLED = input.joystickHasLED;
-pub const joystickSetLED = input.joystickSetLED;
-pub const joystickSendEffect = input.joystickSendEffect;
+pub const getJoysticks = input.getJoysticks;
+pub const openJoystick = input.openJoystick;
+pub const closeJoystick = input.closeJoystick;
+pub const getJoystickName = input.getJoystickName;
+pub const getJoystickPath = input.getJoystickPath;
+pub const getJoystickType = input.getJoystickType;
+pub const getJoystickGUID = input.getJoystickGUID;
+pub const getJoystickVendor = input.getJoystickVendor;
+pub const getJoystickProduct = input.getJoystickProduct;
+pub const getJoystickProductVersion = input.getJoystickProductVersion;
+pub const getJoystickFirmwareVersion = input.getJoystickFirmwareVersion;
+pub const getJoystickSerial = input.getJoystickSerial;
+pub const getJoystickAxis = input.getJoystickAxis;
+pub const getJoystickHat = input.getJoystickHat;
+pub const getJoystickBall = input.getJoystickBall;
+pub const getJoystickButton = input.getJoystickButton;
+pub const rumbleJoystick = input.rumbleJoystick;
+pub const rumbleJoystickTriggers = input.rumbleJoystickTriggers;
+pub const setJoystickLED = input.setJoystickLED;
+pub const sendJoystickEffect = input.sendJoystickEffect;
 pub const hasJoystick = input.hasJoystick;
 pub const lockJoysticks = input.lockJoysticks;
 pub const unlockJoysticks = input.unlockJoysticks;
@@ -477,14 +465,12 @@ pub const setJoystickVirtualTouchpad = input.setJoystickVirtualTouchpad;
 pub const sendJoystickVirtualSensorData = input.sendJoystickVirtualSensorData;
 pub const getJoystickConnectionState = input.getJoystickConnectionState;
 pub const getJoystickPowerInfo = input.getJoystickPowerInfo;
-pub const numGamepads = input.numGamepads;
 pub const isGamepad = input.isGamepad;
 pub const openGamepad = input.openGamepad;
 pub const closeGamepad = input.closeGamepad;
 pub const getGamepadName = input.getGamepadName;
 pub const getGamepadPath = input.getGamepadPath;
 pub const getGamepadType = input.getGamepadType;
-pub const getGamepadGUID = input.getGamepadGUID;
 pub const getGamepadVendor = input.getGamepadVendor;
 pub const getGamepadProduct = input.getGamepadProduct;
 pub const getGamepadProductVersion = input.getGamepadProductVersion;
@@ -530,7 +516,6 @@ pub const getGamepadProperties = input.getGamepadProperties;
 pub const getGamepadSteamHandle = input.getGamepadSteamHandle;
 pub const getGamepadConnectionState = input.getGamepadConnectionState;
 pub const getGamepadButtonLabelForType = input.getGamepadButtonLabelForType;
-pub const getGamepadIDMap = input.getGamepadIDMap;
 pub const attachVirtualJoystick = input.attachVirtualJoystick;
 pub const detachVirtualJoystick = input.detachVirtualJoystick;
 
@@ -645,7 +630,6 @@ pub const setRenderDrawBlendMode = render.setRenderDrawBlendMode;
 
 // Texture operations
 pub const createTextureFromSurface = render.createTextureFromSurface;
-pub const queryTexture = render.queryTexture;
 pub const lockTexture = render.lockTexture;
 pub const unlockTexture = render.unlockTexture;
 pub const setTextureColorMod = render.setTextureColorMod;
@@ -669,15 +653,13 @@ pub const renderClipEnabled = render.renderClipEnabled;
 // Logical presentation
 pub const setRenderLogicalPresentation = render.setRenderLogicalPresentation;
 pub const getRenderLogicalPresentation = render.getRenderLogicalPresentation;
-pub const setRenderLogicalSize = render.setRenderLogicalSize;
-pub const getRenderLogicalSize = render.getRenderLogicalSize;
 
 // Debug
 pub const renderDebugText = render.renderDebugText;
 pub const renderDebugTextFormat = render.renderDebugTextFormat;
 pub const renderGeometryRaw = render.renderGeometryRaw;
 pub const renderReadPixels = render.renderReadPixels;
-pub const renderFlush = render.renderFlush;
+pub const flushRenderer = render.flushRenderer;
 pub const textureSize = render.textureSize;
 pub const getRenderVSync = render.getRenderVSync;
 pub const setRenderVSync = render.setRenderVSync;
@@ -735,10 +717,6 @@ pub const convertAudioSamples = audio.convertAudioSamples;
 pub const getAudioFormatName = audio.getAudioFormatName;
 pub const getSilenceValueForFormat = audio.getSilenceValueForFormat;
 pub const mixAudio = audio.mixAudio;
-pub const queueAudio = audio.queueAudio;
-pub const dequeueAudio = audio.dequeueAudio;
-pub const getQueuedAudioSize = audio.getQueuedAudioSize;
-pub const clearQueuedAudio = audio.clearQueuedAudio;
 pub const getAudioStreamGain = audio.getAudioStreamGain;
 pub const setAudioStreamGain = audio.setAudioStreamGain;
 pub const loadWAV_IO = audio.loadWAV_IO;
@@ -795,7 +773,7 @@ pub const semWaitTimeout = threads.semWaitTimeout;
 pub const semPost = threads.semPost;
 pub const semValue = threads.semValue;
 pub const getThreadName = threads.getThreadName;
-pub const setThreadPriority = threads.setThreadPriority;
+pub const setCurrentThreadPriority = threads.setCurrentThreadPriority;
 pub const getCurrentThreadID = threads.getCurrentThreadID;
 pub const detachThread = threads.detachThread;
 pub const getThreadID = threads.getThreadID;
@@ -856,25 +834,21 @@ pub const setHintWithPriority = hints.setHintWithPriority;
 pub const resetHint = hints.resetHint;
 pub const addHintCallback = hints.addHintCallback;
 pub const removeHintCallback = hints.removeHintCallback;
-pub const delHintCallback = hints.delHintCallback;
 pub const getHintBoolean = hints.getHintBoolean;
 
 // Re-export properties types and functions
 pub const SDL_PropertyType = properties.SDL_PropertyType;
 pub const createProperties = properties.createProperties;
 pub const destroyProperties = properties.destroyProperties;
-pub const setProperty = properties.setProperty;
 pub const setStringProperty = properties.setStringProperty;
 pub const setNumberProperty = properties.setNumberProperty;
 pub const setFloatProperty = properties.setFloatProperty;
 pub const setBooleanProperty = properties.setBooleanProperty;
-pub const getProperty = properties.getProperty;
 pub const getStringProperty = properties.getStringProperty;
 pub const getNumberProperty = properties.getNumberProperty;
 pub const getFloatProperty = properties.getFloatProperty;
 pub const getBooleanProperty = properties.getBooleanProperty;
 pub const getPropertyType = properties.getPropertyType;
-pub const propertyIterator = properties.propertyIterator;
 pub const clearProperty = properties.clearProperty;
 pub const enumerateProperties = properties.enumerateProperties;
 pub const lockProperties = properties.lockProperties;
@@ -1142,6 +1116,7 @@ pub const KMOD_NUM = keycode.KMOD_NUM;
 pub const KMOD_CAPS = keycode.KMOD_CAPS;
 pub const KMOD_MODE = keycode.KMOD_MODE;
 pub const KMOD_SCROLL = keycode.KMOD_SCROLL;
+pub const KMOD_LEVEL5 = keycode.KMOD_LEVEL5;
 
 // Re-export mouse button constants
 pub const SDL_BUTTON_LEFT = keycode.SDL_BUTTON_LEFT;
@@ -1185,7 +1160,7 @@ pub const showSimpleMessageBox = messagebox.showSimpleMessageBox;
 
 // Re-export misc functions
 pub const openURL = misc.openURL;
-pub const getDefaultLogOutputFunction = misc.getDefaultLogOutputFunction;
+pub const getDefaultLogOutputFunction = log.getDefaultLogOutputFunction;
 pub const crc16 = stdinc.crc16;
 pub const crc32 = stdinc.crc32;
 pub const murmur3_32 = stdinc.murmur3_32;
@@ -1260,12 +1235,12 @@ pub const unloadObject = sharedobject.unloadObject;
 pub const SDL_Haptic = haptic.SDL_Haptic;
 pub const SDL_HapticEffect = haptic.SDL_HapticEffect;
 pub const SDL_HapticDirection = haptic.SDL_HapticDirection;
-pub const numHaptics = haptic.numHaptics;
-pub const hapticOpen = haptic.hapticOpen;
-pub const hapticClose = haptic.hapticClose;
+pub const getHaptics = haptic.getHaptics;
+pub const openHaptic = haptic.openHaptic;
+pub const closeHaptic = haptic.closeHaptic;
 pub const hapticRumbleSupported = haptic.hapticRumbleSupported;
-pub const hapticRumblePlay = haptic.hapticRumblePlay;
-pub const hapticRumbleStop = haptic.hapticRumbleStop;
+pub const playHapticRumble = haptic.playHapticRumble;
+pub const stopHapticRumble = haptic.stopHapticRumble;
 
 // Re-export process types and functions
 pub const SDL_Process = process.SDL_Process;
@@ -1273,7 +1248,6 @@ pub const SDL_ProcessIO = process.SDL_ProcessIO;
 pub const createProcess = process.createProcess;
 pub const getProcessInput = process.getProcessInput;
 pub const getProcessOutput = process.getProcessOutput;
-pub const getProcessError = process.getProcessError;
 pub const waitProcess = process.waitProcess;
 pub const killProcess = process.killProcess;
 pub const destroyProcess = process.destroyProcess;
@@ -1356,7 +1330,7 @@ pub const mostSignificantBitIndex32 = bits.mostSignificantBitIndex32;
 pub const hasExactlyOneBitSet32 = bits.hasExactlyOneBitSet32;
 
 // Re-export cpuinfo functions
-pub const getCPUCount = cpuinfo.getCPUCount;
+pub const getNumLogicalCPUCores = cpuinfo.getNumLogicalCPUCores;
 pub const getCPUCacheLineSize = cpuinfo.getCPUCacheLineSize;
 pub const hasAltiVec = cpuinfo.hasAltiVec;
 pub const hasMMX = cpuinfo.hasMMX;
@@ -1463,14 +1437,11 @@ pub const SDL_EVENT_GAMEPAD_TOUCHPAD_DOWN = events.SDL_EVENT_GAMEPAD_TOUCHPAD_DO
 pub const SDL_EVENT_GAMEPAD_TOUCHPAD_MOTION = events.SDL_EVENT_GAMEPAD_TOUCHPAD_MOTION;
 pub const SDL_EVENT_GAMEPAD_TOUCHPAD_UP = events.SDL_EVENT_GAMEPAD_TOUCHPAD_UP;
 pub const SDL_EVENT_GAMEPAD_SENSOR_UPDATE = events.SDL_EVENT_GAMEPAD_SENSOR_UPDATE;
-pub const SDL_EVENT_GAMEPAD_STEAM_HANDLE_CHANGED = events.SDL_EVENT_GAMEPAD_STEAM_HANDLE_CHANGED;
 
-// Touch and gesture events (not in core)
+// Touch events
 pub const SDL_EVENT_FINGER_DOWN = events.SDL_EVENT_FINGER_DOWN;
 pub const SDL_EVENT_FINGER_UP = events.SDL_EVENT_FINGER_UP;
 pub const SDL_EVENT_FINGER_MOTION = events.SDL_EVENT_FINGER_MOTION;
-pub const SDL_EVENT_GESTURE_SWIPE = events.SDL_EVENT_GESTURE_SWIPE;
-pub const SDL_EVENT_GESTURE_MULTIGESTURE = events.SDL_EVENT_GESTURE_MULTIGESTURE;
 
 // Other events (not in core)
 pub const SDL_EVENT_CLIPBOARD_UPDATE = events.SDL_EVENT_CLIPBOARD_UPDATE;
@@ -1484,16 +1455,17 @@ pub const SDL_EVENT_AUDIO_DEVICE_REMOVED = events.SDL_EVENT_AUDIO_DEVICE_REMOVED
 pub const SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED = events.SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED;
 pub const SDL_EVENT_SENSOR_UPDATE = events.SDL_EVENT_SENSOR_UPDATE;
 pub const SDL_EVENT_DISPLAY_ORIENTATION = events.SDL_EVENT_DISPLAY_ORIENTATION;
-pub const SDL_EVENT_DISPLAY_CONNECTED = events.SDL_EVENT_DISPLAY_CONNECTED;
-pub const SDL_EVENT_DISPLAY_DISCONNECTED = events.SDL_EVENT_DISPLAY_DISCONNECTED;
-pub const SDL_EVENT_POWER_STATE_CHANGED = events.SDL_EVENT_POWER_STATE_CHANGED;
+pub const SDL_EVENT_DISPLAY_ADDED = events.SDL_EVENT_DISPLAY_ADDED;
+pub const SDL_EVENT_DISPLAY_REMOVED = events.SDL_EVENT_DISPLAY_REMOVED;
+pub const SDL_EVENT_DISPLAY_MOVED = events.SDL_EVENT_DISPLAY_MOVED;
+pub const SDL_EVENT_DISPLAY_DESKTOP_MODE_CHANGED = events.SDL_EVENT_DISPLAY_DESKTOP_MODE_CHANGED;
+pub const SDL_EVENT_DISPLAY_CURRENT_MODE_CHANGED = events.SDL_EVENT_DISPLAY_CURRENT_MODE_CHANGED;
+pub const SDL_EVENT_DISPLAY_CONTENT_SCALE_CHANGED = events.SDL_EVENT_DISPLAY_CONTENT_SCALE_CHANGED;
 pub const SDL_EVENT_PEN_DOWN = events.SDL_EVENT_PEN_DOWN;
 pub const SDL_EVENT_PEN_UP = events.SDL_EVENT_PEN_UP;
 pub const SDL_EVENT_PEN_MOTION = events.SDL_EVENT_PEN_MOTION;
 pub const SDL_EVENT_PEN_BUTTON_DOWN = events.SDL_EVENT_PEN_BUTTON_DOWN;
 pub const SDL_EVENT_PEN_BUTTON_UP = events.SDL_EVENT_PEN_BUTTON_UP;
-pub const SDL_EVENT_PEN_ERASER_DOWN = events.SDL_EVENT_PEN_ERASER_DOWN;
-pub const SDL_EVENT_PEN_ERASER_UP = events.SDL_EVENT_PEN_ERASER_UP;
 pub const SDL_EVENT_PEN_AXIS = events.SDL_EVENT_PEN_AXIS;
 pub const SDL_EVENT_CAMERA_DEVICE_ADDED = events.SDL_EVENT_CAMERA_DEVICE_ADDED;
 pub const SDL_EVENT_CAMERA_DEVICE_REMOVED = events.SDL_EVENT_CAMERA_DEVICE_REMOVED;
@@ -1707,8 +1679,6 @@ pub const SDL_GPUStorageBufferReadWriteBinding = gpu.SDL_GPUStorageBufferReadWri
 pub const createGPUDevice = gpu.createGPUDevice;
 pub const createGPUDeviceWithProperties = gpu.createGPUDeviceWithProperties;
 pub const getGPUShaderFormats = gpu.getGPUShaderFormats;
-pub const createGPUVertexBuffer = gpu.createGPUVertexBuffer;
-pub const createGPUIndexBuffer = gpu.createGPUIndexBuffer;
 pub const destroyGPUDevice = gpu.destroyGPUDevice;
 pub const claimWindowForGPUDevice = gpu.claimWindowForGPUDevice;
 pub const releaseWindowFromGPUDevice = gpu.releaseWindowFromGPUDevice;
@@ -1723,11 +1693,9 @@ pub const waitForGPUFences = gpu.waitForGPUFences;
 pub const releaseGPUFence = gpu.releaseGPUFence;
 pub const createGPUBuffer = gpu.createGPUBuffer;
 pub const setGPUBufferName = gpu.setGPUBufferName;
-pub const getGPUBufferSizeInBytes = gpu.getGPUBufferSizeInBytes;
 pub const releaseGPUBuffer = gpu.releaseGPUBuffer;
 pub const createGPUTexture = gpu.createGPUTexture;
 pub const setGPUTextureName = gpu.setGPUTextureName;
-pub const getGPUTextureSize = gpu.getGPUTextureSize;
 pub const releaseGPUTexture = gpu.releaseGPUTexture;
 pub const createGPUSampler = gpu.createGPUSampler;
 pub const releaseGPUSampler = gpu.releaseGPUSampler;
@@ -1781,7 +1749,6 @@ pub const setGPUAllowedFramesInFlight = gpu.setGPUAllowedFramesInFlight;
 pub const gpuSupportsShaderFormats = gpu.gpuSupportsShaderFormats;
 pub const gpuSupportsProperties = gpu.gpuSupportsProperties;
 pub const gpuTextureSupportsFormat = gpu.gpuTextureSupportsFormat;
-pub const gpuBufferSize = gpu.gpuBufferSize;
 pub const gpuTextureFormatTexelBlockSize = gpu.gpuTextureFormatTexelBlockSize;
 pub const gpuTextureSupportsSampleCount = gpu.gpuTextureSupportsSampleCount;
 pub const getGPUDeviceProperties = gpu.getGPUDeviceProperties;
