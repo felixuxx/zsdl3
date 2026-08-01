@@ -34,7 +34,11 @@ zig fetch --save git+https://github.com/felixuxx/zsdl3.git
 Then in `build.zig`:
 
 ```zig
-const zsdl3 = b.dependency("zsdl3", .{});
+const zsdl3 = b.dependency("zsdl3", .{
+    // .sdl_ttf = false,
+    // .sdl_image = false,
+    // .sdl_mixer = false,
+});
 exe.root_module.addImport("zsdl3", zsdl3.module("zsdl3"));
 exe.root_module.linkSystemLibrary("SDL3", .{});
 ```
